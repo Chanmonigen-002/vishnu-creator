@@ -1,10 +1,61 @@
 # Vishnu Creator Project Agent Rules
 
+These rules apply to every contributor: people, Claude Code, Hermes, Codex and any other AI agent. `CLAUDE.md` imports this file.
+
+## Vishnu Creator Project Rules
+
+### Where things live (single source of truth)
+
+| What | Where |
+|---|---|
+| Master plan: goals, scope, phases, risks | [`docs/project/master-plan.md`](docs/project/master-plan.md) |
+| Task tracking: status + evidence per task | [`docs/tasks/`](docs/tasks/README.md), one file per phase |
+| Architecture decisions | [`docs/adr/`](docs/adr/README.md) |
+| Docs index | [`docs/README.md`](docs/README.md) |
+| Superseded plans | `docs/plans/archive/` (read-only history) |
+| Upstream reference sources | `File clone Resource/` (read-only, see ADR-0004) |
+
+Don't create plan or TODO files in the repo root. Update the existing ones above.
+
+### Before starting work
+
+1. Read the master plan and the task file for the phase you're working on.
+2. Pick a task ID (`T<phase>.<n>`). Work that has no task: add it to the right phase file first, or ask the owner.
+3. Check that the task's phase dependencies and any blocking ADR are resolved. If not, mark the task `blocked` and stop.
+4. Work on a branch named `phase-<n>/<short-name>` (or `docs/<short-name>` for docs-only work). Never commit directly to `main`.
+
+### Evidence-only completion (no bypass, no fake build)
+
+- A task is `done` only when its **Evidence** column holds the exact command run and its real result, or a link to a saved report or screenshot.
+- Never mark a check as passed that was not run. Never stub, mock or hard-code a result to make a gate pass. Mocks are allowed only in unit tests and must be named as mocks.
+- Acceptance tests run against the real engine and real models on the stated hardware tier (ADR-0003). If a check can't run here, say what wasn't verified and why.
+- Don't skip, delete or weaken a failing test to get green. Fix the cause, or record the failure in the task's evidence and mark the task `blocked`.
+- Validation depth follows the risk tiers below (P0/P1/P2). Each task file states its default tier.
+
+### Reference folder and copied code
+
+- Never build, run, install or edit anything in `File clone Resource/`. No repo script or config may point into it.
+- Code taken from a reference source must be copied into the repo, adapted and rebranded, then **security-reviewed**. That means no telemetry, no hidden network calls, no `eval` or shell injection, no hard-coded keys, and no auto-update URLs.
+- Each copied file gets a header naming its origin and license. ZastTranslate code may be copied only once ADR-0005 is accepted.
+
+### Decisions
+
+- Any change to architecture, dependencies, the runtime or the compute model needs an ADR in `docs/adr/` (copy `template.md`). Never rewrite an accepted ADR; supersede it with a new one.
+
+### Khmer-first
+
+- `km` is the default target language. User-facing Khmer text must be natural spoken Khmer, with no spaces between words and correct `។` punctuation.
+- Khmer rendering changes (fonts, line-breaking, burn-in) need a visual check of real Khmer text, including subscript consonants (coeng) and stacked vowels.
+
+### Models and storage
+
+- Models, caches and job files go to the configured model folder (by default the drive with the most free space). Never fill the system drive.
+
 ## Language Requirements for Git Commit Messages and Release Materials
 
 - Mandatory: All Git commit messages in this project must be in English, including subjects, bodies, and messages produced by merge, squash, revert, and similar operations.
 - GitHub Release titles and complete bodies, release notes files, and annotated tag messages must also be in English, including feature updates and download and installation instructions. Chinese and mixed Chinese-English text are prohibited.
-- These English requirements for Git commit messages and Release materials take precedence over the global rule that responses and documents must be in Chinese. Responses and other project documents must remain in Chinese.
+- New project documents (plans, tasks, ADRs, guides) are written in English. Khmer is used for Khmer-language user-facing content. Existing upstream documents in Chinese may stay as they are until they are rewritten.
 - Before committing, review the complete message to be used. Accurately translate any Chinese descriptions into English before committing. Do not translate only the subject while leaving the body in Chinese.
 - During merges, rebases, cherry-picks, or reverts, inspect automatically generated commit messages to avoid reintroducing Chinese descriptions.
 - After committing, verify the complete message with `git log -1 --format=%B`. Before pushing, inspect the subjects and bodies of all commits to be pushed. Do not push if any contain Chinese descriptions.
