@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { createKrillinCreatorServicesCapabilities } from '../../src/creator/krillin/capabilities.js';
+import { createVishnuCreatorServicesCapabilities } from '../../src/creator/vishnu/capabilities.js';
 
-describe('KrillinAI transcription capabilities', () => {
+describe('VishnuAI transcription capabilities', () => {
   it('offers WhisperKit only on Apple Silicon macOS', () => {
-    const capabilities = createKrillinCreatorServicesCapabilities('darwin', 'arm64');
+    const capabilities = createVishnuCreatorServicesCapabilities('darwin', 'arm64');
 
     expect(capabilities.transcription.providers).toEqual(expect.arrayContaining([
       expect.objectContaining({
@@ -39,7 +39,7 @@ describe('KrillinAI transcription capabilities', () => {
   });
 
   it('offers Whisper.cpp on Windows x64 while keeping unsupported local providers disabled', () => {
-    const capabilities = createKrillinCreatorServicesCapabilities('win32', 'x64');
+    const capabilities = createVishnuCreatorServicesCapabilities('win32', 'x64');
     const localProviders = capabilities.transcription.providers.filter(
       provider => provider.kind === 'local'
     );
@@ -69,7 +69,7 @@ describe('KrillinAI transcription capabilities', () => {
   });
 
   it('keeps Whisper.cpp unavailable on unsupported Windows architectures', () => {
-    const provider = createKrillinCreatorServicesCapabilities('win32', 'arm64')
+    const provider = createVishnuCreatorServicesCapabilities('win32', 'arm64')
       .transcription.providers.find(candidate => candidate.provider === 'whisper.cpp');
 
     expect(provider).toMatchObject({

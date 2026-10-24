@@ -2,7 +2,7 @@
 
 > [English](../../CONTRIBUTING.md) | [简体中文](../zh/CONTRIBUTING.md) | [日本語](../ja/CONTRIBUTING.md) | [한국어](../ko/CONTRIBUTING.md) | [Bahasa Indonesia](../id/CONTRIBUTING.md) | [Español](../es/CONTRIBUTING.md) | [Français](../fr/CONTRIBUTING.md) | [Deutsch](../de/CONTRIBUTING.md) | [Português](../pt/CONTRIBUTING.md) | [Русский](../ru/CONTRIBUTING.md) | **العربية**
 
-شكرًا لتفكيرك في المساهمة. OpenCreator هو مساحة عمل للمبدعين تعمل محليًا أولًا ومبنية على حلقة وكيل Codex، ومعظم قيمته تأتي من إضافات صغيرة ومركّزة: مجلد Skill واحد، قالب إنشاء واحد، أو إصلاح واحد محدد النطاق. يوضح هذا الدليل أين يجب أن يكون كل نوع من المساهمات وما المعايير التي يجب أن يستوفيها طلب الدمج قبل قبوله.
+شكرًا لتفكيرك في المساهمة. Vishnu Creator هو مساحة عمل للمبدعين تعمل محليًا أولًا ومبنية على حلقة وكيل Codex، ومعظم قيمته تأتي من إضافات صغيرة ومركّزة: مجلد Skill واحد، قالب إنشاء واحد، أو إصلاح واحد محدد النطاق. يوضح هذا الدليل أين يجب أن يكون كل نوع من المساهمات وما المعايير التي يجب أن يستوفيها طلب الدمج قبل قبوله.
 
 ---
 
@@ -19,7 +19,7 @@
 
 ## أين تطرح الأسئلة ومن يراجع
 
-استخدم [Issue](https://github.com/krillinai/OpenCreator/issues/new) لمناقشة فكرة أو السؤال عن مجالها المناسب. عند إرسال PR، اذكر عضو [الفريق](../../README.md#the-crew) المعني بالشفرة والأخطاء أو القوالب أو التصميم والأصول أو Skills والوثائق. يساعد الفريق في المعايير والمراجعات وأسئلة المجتمع؛ ويخضع الدمج لصلاحيات المستودع والفحوص المطلوبة.
+استخدم [Issue](https://github.com/vishnuai/Vishnu Creator/issues/new) لمناقشة فكرة أو السؤال عن مجالها المناسب. عند إرسال PR، اذكر عضو [الفريق](../../README.md#the-crew) المعني بالشفرة والأخطاء أو القوالب أو التصميم والأصول أو Skills والوثائق. يساعد الفريق في المعايير والمراجعات وأسئلة المجتمع؛ ويخضع الدمج لصلاحيات المستودع والفحوص المطلوبة.
 
 ---
 
@@ -28,8 +28,8 @@
 الإعداد الكامل موجود في [البدء السريع في README](../../README.md#quick-start). الملخص للمساهمين:
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable          # يختار إصدار pnpm المثبت في packageManager
 pnpm install
 pnpm web:dev             # ‏web + الخادم المحلي عند الطلب
@@ -43,7 +43,7 @@ pnpm test                # اختبارات الوحدة والتكامل في �
 
 ## كيفية المساهمة
 
-1. صِف المشكلة وحالة الاستخدام والسلوك المتوقع في [مشكلة](https://github.com/krillinai/OpenCreator/issues).
+1. صِف المشكلة وحالة الاستخدام والسلوك المتوقع في [مشكلة](https://github.com/vishnuai/Vishnu Creator/issues).
 2. أنشئ فرعًا مركّزًا للميزة أو الإصلاح من أحدث فرع تطوير.
 3. اتبع البنية الحالية: تُنفَّذ القدرات العامة للمنتج **مرة واحدة** في Web وDaemon، وتُعزل الاختلافات الأصلية في Desktop خلف قدرات صريحة (مثل `canSelectDirectory`).
 4. أضف تغطية اختبارات وحدة أو تكامل أو E2E مناسبة لتغييرات السلوك، واذكر في طلب الدمج التحققات المنفَّذة والمتخطّاة معًا.
@@ -66,4 +66,4 @@ pnpm test                # اختبارات الوحدة والتكامل في �
 
 ---
 
-OpenCreator · Create locally, work continuously.
+Vishnu Creator · Create locally, work continuously.

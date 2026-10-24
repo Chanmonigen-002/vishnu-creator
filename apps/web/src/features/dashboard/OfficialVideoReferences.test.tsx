@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import type { GatewayModel, VideoGenerationReference } from '@opencreator/protocol';
+import type { GatewayModel, VideoGenerationReference } from '@vishnucreator/protocol';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import OfficialVideoReferences, { readVideoReferences, videoReferenceIssue } from './OfficialVideoReferences.js';

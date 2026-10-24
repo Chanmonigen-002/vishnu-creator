@@ -9,7 +9,7 @@ import {
   type CreatorJson,
   type CreatorPresetRequirements,
   type CreatorRuntimeWorkspace
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 import type { CreatorPresetModuleDefinition } from './types.js';
 

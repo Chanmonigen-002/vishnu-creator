@@ -1,4 +1,4 @@
-# KrillinAI 视频翻译的源语言扩展评估
+# VishnuAI 视频翻译的源语言扩展评估
 
 排查日期：2026-10-16。本文记录实施前的源码排查和本地算法验证；下文“当前”“未修改”均指排查时状态。其后已按用户批准的[实施方案](./video-translation-language-plan.md)完成代码扩展，最新范围见[实施与验收记录](./video-translation-language-validation.md)。排查及实施均未调用付费识别或翻译服务。
 
@@ -37,7 +37,7 @@ Whisper 多语言模型覆盖远多于这 14 种。上游 tokenizer 包含阿拉
 - 火山引擎：目前显式地区代码映射覆盖现有 14 项，其余代码直接透传；需要按实际模型和 Resource ID 确认服务语言格式与支持范围。
 - faster-whisper：有 Runtime 实现，但当前组件能力将其标记为不可用，不能把它列为用户目前可用的默认解决路径。
 
-`apps/daemon/src/creator/krillin/capabilities.ts` 目前提供后端可用性和模型列表，没有按模型提供支持语言清单；执行前也缺少相应的语言兼容性检查。
+`apps/daemon/src/creator/vishnu/capabilities.ts` 目前提供后端可用性和模型列表，没有按模型提供支持语言清单；执行前也缺少相应的语言兼容性检查。
 
 ## 必须补齐的具体问题
 
@@ -55,7 +55,7 @@ Whisper 多语言模型覆盖远多于这 14 种。上游 tokenizer 包含阿拉
 现有 5 项定向测试通过：
 
 ```sh
-cd runtime/krillinai
+cd runtime/vishnuai
 go test ./internal/service -run '^(TestSubtitleUnicodeBoundariesAndDisplayUnits|TestPairedTranslationRejectsSourceOverflowAndUnsafeBreaks|TestPairedTranslationUsesWordTimingAndVariableCueCount|TestShortSubtitleSharesWordInteriorTiming|TestGenerateSrtWithTimestampsWritesThaiShortSubtitle)$' -count=1
 ```
 
@@ -77,4 +77,4 @@ go test ./internal/service -run '^(TestSubtitleUnicodeBoundariesAndDisplayUnits|
 
 最后用有人工核对稿的短视频，逐个验证实际可用 ASR、翻译、时间轴、横竖屏输出；配音仅对对应 TTS 服务支持的目标语言开放。记录每种后端与模型已验收的语言，不以候选清单替代验收结果。
 
-这是 Web 与 Desktop 共享的产品能力，应通过共享 Web、Daemon 和 Krillin Runtime 实现一次。本轮只做评估；后续涉及 Runtime 的修改按 P2 选择相关集成测试和构建，涉及字体交付资产时增加相应资产及渲染验证，涉及实际 Desktop 包交付时再执行打包和资源一致性门禁。
+这是 Web 与 Desktop 共享的产品能力，应通过共享 Web、Daemon 和 Vishnu Runtime 实现一次。本轮只做评估；后续涉及 Runtime 的修改按 P2 选择相关集成测试和构建，涉及字体交付资产时增加相应资产及渲染验证，涉及实际 Desktop 包交付时再执行打包和资源一致性门禁。

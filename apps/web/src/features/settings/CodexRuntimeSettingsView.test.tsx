@@ -1,4 +1,4 @@
-import type { CodexProviderConfig } from '@opencreator/protocol';
+import type { CodexProviderConfig } from '@vishnucreator/protocol';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';

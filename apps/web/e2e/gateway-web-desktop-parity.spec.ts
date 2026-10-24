@@ -7,7 +7,7 @@ test('个人中心在 Browser/Desktop 使用同一布局与网页充值入口', 
     for (const platform of ['browser', 'desktop']) {
       const context = await browser.newContext({ viewport, reducedMotion: 'reduce' });
       const page = await context.newPage();
-      await page.addInitScript(() => localStorage.setItem('opencreator.agent-setup-confirmed.v1', '1'));
+      await page.addInitScript(() => localStorage.setItem('vishnucreator.agent-setup-confirmed.v1', '1'));
       const handoffURL = runtime.origin + '/auth?lang=zh#handoff=' + 'a'.repeat(43);
       const requests: Array<{ destination: string; locale: string }> = [];
       await context.route('**/auth?lang=zh*', route => route.fulfill({ body: '<html><body>Account portal</body></html>', contentType: 'text/html' }));
@@ -22,8 +22,8 @@ test('个人中心在 Browser/Desktop 使用同一布局与网页充值入口', 
         await route.fulfill({ json: value });
       });
       if (platform === 'desktop') await page.addInitScript(() => {
-        Object.defineProperty(window, 'opencreatorDesktop', { value: {
-          kind: 'desktop', readAppVersion: async () => '3.2.5', readConnectionConfig: async () => ({ baseUrl: '/.opencreator/runtime' }), subscribeConnectionConfig: () => () => {},
+        Object.defineProperty(window, 'vishnucreatorDesktop', { value: {
+          kind: 'desktop', readAppVersion: async () => '3.2.5', readConnectionConfig: async () => ({ baseUrl: '/.vishnucreator/runtime' }), subscribeConnectionConfig: () => () => {},
           readDesktopPreferences: async () => ({ closeBehavior: 'hide' }), updateDesktopPreferences: async () => ({ closeBehavior: 'hide' }), workspaceReady: () => {},
           subscribeNavigation: () => () => {}, notify: async () => {}, configureBackgroundNotifications: async () => ({ ok: true }),
           openExternal: async (url: string) => { (window as unknown as { __gatewayURL?: string }).__gatewayURL = url; }

@@ -1,5 +1,5 @@
 import { fireEvent, render, screen } from '@testing-library/react';
-import type { CreatorJob } from '@opencreator/protocol';
+import type { CreatorJob } from '@vishnucreator/protocol';
 import { FileVideo } from 'lucide-react';
 import { describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';

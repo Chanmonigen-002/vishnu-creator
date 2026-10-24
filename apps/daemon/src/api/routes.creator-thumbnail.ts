@@ -1,4 +1,4 @@
-import type { CreatorServicesConfig } from '@opencreator/protocol';
+import type { CreatorServicesConfig } from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import { downloadThumbnail } from '../creator/cover/executor.js';
 import type { CreatorService } from '../creator/service.js';

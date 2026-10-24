@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import { mkdtemp, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -153,7 +153,7 @@ describe('creator short video script', () => {
     expect(artifact).toMatchObject({
       status: 'completed',
       metadata: {
-        fileName: 'OpenCreator-short-video-script.md',
+        fileName: 'VishnuCreator-short-video-script.md',
         mimeType: 'text/markdown',
         title: '从一个小功能开始参与开源',
         platform: 'bilibili',
@@ -217,7 +217,7 @@ describe('creator short video script', () => {
     } as unknown as CreatorExecutorInput);
     if (accepted) {
       await expect(run).resolves.toMatchObject({ outputs: [{ metadata: { actualDurationSeconds: actual } }] });
-      expect(await readdir(tempDir)).toEqual(['OpenCreator-short-video-script.md']);
+      expect(await readdir(tempDir)).toEqual(['VishnuCreator-short-video-script.md']);
     } else {
       await expect(run).rejects.toMatchObject({ code: 'creator_llm_upstream_error', message: expect.stringContaining('script duration') });
       expect(await readdir(tempDir)).toEqual([]);

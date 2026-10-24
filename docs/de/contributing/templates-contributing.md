@@ -99,4 +99,4 @@ Wenn dein Template einen veröffentlichten Prompt oder Stil anderer adaptiert:
 
 ---
 
-Fragen? [Öffne ein Issue](https://github.com/krillinai/OpenCreator/issues/new) mit deiner Template-Idee und einem Beispiel-Ergebnis — wir helfen beim Abgrenzen.
+Fragen? [Öffne ein Issue](https://github.com/vishnuai/Vishnu Creator/issues/new) mit deiner Template-Idee und einem Beispiel-Ergebnis — wir helfen beim Abgrenzen.

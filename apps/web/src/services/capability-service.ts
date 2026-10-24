@@ -2,10 +2,10 @@ import type {
   CodexMcpListResponse,
   CodexProfileListResponse,
   CodexSkillListResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
-export type { CodexProfileListResponse } from '@opencreator/protocol';
+export type { CodexProfileListResponse } from '@vishnucreator/protocol';
 
 export function createCapabilityService(client: RuntimeClient) {
   return {

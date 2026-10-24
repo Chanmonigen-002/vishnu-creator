@@ -1,5 +1,5 @@
 import Fastify from 'fastify';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { afterEach, expect, it, vi } from 'vitest';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -18,7 +18,7 @@ async function fixture(fetcher: typeof fetch) {
   const db = openRuntimeDatabase(join(root, 'runtime.sqlite'));
   const repository = createCreatorRepository(db);
   const job = repository.createJob({ projectId: 'project', templateId: 'video-translation', templateVersion: 1, status: 'running', state: {} });
-  const stage = repository.createStageRun({ jobId: job.id, stageId: 'tts', executor: 'krillin', status: 'running' });
+  const stage = repository.createStageRun({ jobId: job.id, stageId: 'tts', executor: 'vishnu', status: 'running' });
   const ledger = new CreatorProviderRequestLedger(repository);
   const manual = createDefaultCreatorServicesConfig();
   const source = createGatewayCreatorSource({ ledger, readStageRun: repository.getStageRun,
@@ -35,7 +35,7 @@ async function fixture(fetcher: typeof fetch) {
   cleanup.push(async () => { await source.revoke(); await server.close(); db.close(); await rm(root, { recursive: true, force: true }); });
   const synthesize = (stageId = stage.id) => source.runForJob(job.id, stageId, async () => {
     const config = await source.store.read();
-    return server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/audio/speech',
+    return server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/audio/speech',
       headers: { Authorization: `Bearer ${config.tts.openai.apiKey}` }, payload: { model: 'speech', voice: 'marin', input: 'Hello', response_format: 'wav' } });
   });
   return { repository, ledger, job, stage, synthesize };
@@ -57,7 +57,7 @@ it('waits for an accepted speech request and reuses its audio across stage retri
   expect(response.headers['x-request-id']).toBe(requestId);
   expect(response.body).toBe('RIFF-test-audio');
   expect(f.repository.listProviderRequests(f.job.id)).toEqual([expect.objectContaining({ status: 'succeeded', remoteTaskId: requestId })]);
-  const retry = f.repository.createStageRun({ jobId: f.job.id, stageId: 'tts', executor: 'krillin', status: 'running', progress: { resumedFromStageRunId: f.stage.id } });
+  const retry = f.repository.createStageRun({ jobId: f.job.id, stageId: 'tts', executor: 'vishnu', status: 'running', progress: { resumedFromStageRunId: f.stage.id } });
   expect((await f.synthesize(retry.id)).body).toBe('RIFF-test-audio');
   expect(fetcher.mock.calls.filter(([, options]) => options?.method === 'POST')).toHaveLength(1);
   expect(fetcher.mock.calls.filter(([url]) => String(url).endsWith('/result'))).toHaveLength(2);
@@ -96,7 +96,7 @@ it('recovers an uncertain speech outcome by querying the original request', asyn
   const f = await fixture(fetcher);
   expect((await f.synthesize()).statusCode).toBe(409);
   state = 'succeeded';
-  const retry = f.repository.createStageRun({ jobId: f.job.id, stageId: 'tts', executor: 'krillin', status: 'running', progress: { resumedFromStageRunId: f.stage.id } });
+  const retry = f.repository.createStageRun({ jobId: f.job.id, stageId: 'tts', executor: 'vishnu', status: 'running', progress: { resumedFromStageRunId: f.stage.id } });
   const response = await f.synthesize(retry.id);
   expect(response.statusCode).toBe(200);
   expect(response.body).toBe('RIFF-recovered-audio');

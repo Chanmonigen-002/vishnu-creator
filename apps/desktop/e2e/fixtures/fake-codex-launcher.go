@@ -42,7 +42,7 @@ func loadFixtureEnvironment() {
 	var environment map[string]string
 	must(json.Unmarshal(data, &environment))
 	for name, value := range environment {
-		if strings.HasPrefix(name, "OPENCREATOR_E2E_") && os.Getenv(name) == "" {
+		if strings.HasPrefix(name, "VISHNUCREATOR_E2E_") && os.Getenv(name) == "" {
 			must(os.Setenv(name, value))
 		}
 	}
@@ -77,12 +77,12 @@ func printHelp(args []string) bool {
 }
 
 func runProbe(args []string, outputIndex int) {
-	stateDir := requireEnv("OPENCREATOR_E2E_FAKE_CODEX_STATE_DIR")
+	stateDir := requireEnv("VISHNUCREATOR_E2E_FAKE_CODEX_STATE_DIR")
 	must(os.MkdirAll(stateDir, 0o755))
 	increment(filepath.Join(stateDir, "probe-count.txt"))
 	must(os.WriteFile(filepath.Join(stateDir, "probe-pid.txt"), []byte(strconv.Itoa(os.Getpid())), 0o644))
 
-	mode := os.Getenv("OPENCREATOR_E2E_FAKE_CODEX_MODE")
+	mode := os.Getenv("VISHNUCREATOR_E2E_FAKE_CODEX_MODE")
 	switch mode {
 	case "probe-failure":
 		fmt.Fprintln(os.Stderr, "fake Codex probe failed by request")
@@ -107,7 +107,7 @@ func runProbe(args []string, outputIndex int) {
 
 	prompt, err := io.ReadAll(bufio.NewReader(os.Stdin))
 	must(err)
-	marker := regexp.MustCompile(`OPENCREATOR_READY_[a-f0-9]+`).FindString(string(prompt))
+	marker := regexp.MustCompile(`VISHNUCREATOR_READY_[a-f0-9]+`).FindString(string(prompt))
 	response := "hello from fake Codex"
 	if marker != "" {
 		response += " " + marker
@@ -123,8 +123,8 @@ func runProbe(args []string, outputIndex int) {
 
 func runJavaScriptFixture(args []string) {
 	recordCurrentProcess()
-	nodeBinary := requireEnv("OPENCREATOR_E2E_NODE_BINARY")
-	script := requireEnv("OPENCREATOR_E2E_FAKE_CODEX_SCRIPT")
+	nodeBinary := requireEnv("VISHNUCREATOR_E2E_NODE_BINARY")
+	script := requireEnv("VISHNUCREATOR_E2E_FAKE_CODEX_SCRIPT")
 	command := exec.Command(nodeBinary, append([]string{script}, args...)...)
 	command.Env = os.Environ()
 	command.Stdin = os.Stdin
@@ -140,7 +140,7 @@ func runJavaScriptFixture(args []string) {
 }
 
 func recordCurrentProcess() {
-	stateDir := requireEnv("OPENCREATOR_E2E_FAKE_CODEX_STATE_DIR")
+	stateDir := requireEnv("VISHNUCREATOR_E2E_FAKE_CODEX_STATE_DIR")
 	must(os.MkdirAll(stateDir, 0o755))
 	file, err := os.OpenFile(
 		filepath.Join(stateDir, "app-server-pids.txt"),

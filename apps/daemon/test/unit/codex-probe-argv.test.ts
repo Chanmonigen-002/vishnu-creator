@@ -4,8 +4,8 @@ import { buildCodexProbeArgs } from '../../src/codex/probe-argv.js';
 describe('Codex Probe argv', () => {
   it('uses an ephemeral read-only invocation with external integrations disabled', () => {
     const args = buildCodexProbeArgs({
-      cwd: '/tmp/opencreator-probe',
-      outputPath: '/tmp/opencreator-probe/result.txt'
+      cwd: '/tmp/vishnucreator-probe',
+      outputPath: '/tmp/vishnucreator-probe/result.txt'
     });
 
     expect(args).toEqual([
@@ -57,9 +57,9 @@ describe('Codex Probe argv', () => {
       '--disable',
       'shell_snapshot',
       '-C',
-      '/tmp/opencreator-probe',
+      '/tmp/vishnucreator-probe',
       '--output-last-message',
-      '/tmp/opencreator-probe/result.txt'
+      '/tmp/vishnucreator-probe/result.txt'
     ]);
     expect(args).not.toContain('--ignore-user-config');
   });

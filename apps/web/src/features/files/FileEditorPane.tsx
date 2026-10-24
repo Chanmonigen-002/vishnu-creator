@@ -1,6 +1,6 @@
 import type { LocalizeCopy } from '../../i18n/useLocalizedCopy.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
-import type { WorkspaceFileMeta } from '@opencreator/protocol';
+import type { WorkspaceFileMeta } from '@vishnucreator/protocol';
 import { FileCode2, FileImage, FileText, Image as ImageIcon } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { MarkdownRenderer } from '../../components/markdown/MarkdownRenderer.js';

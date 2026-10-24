@@ -1,7 +1,7 @@
 import AppSelect from '../../components/forms/Select.js';
 import { useEffect, useRef, useState } from 'react';
 import { CreditCard, ExternalLink, LogIn, LogOut, MoreHorizontal, RefreshCw } from 'lucide-react';
-import type { GatewayAccountState, GatewayAuthorization } from '@opencreator/protocol';
+import type { GatewayAccountState, GatewayAuthorization } from '@vishnucreator/protocol';
 import type { GatewayAccountSettingsService } from '../../services/gateway-account-service.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import { ApiClientError } from '../../runtime/errors.js';

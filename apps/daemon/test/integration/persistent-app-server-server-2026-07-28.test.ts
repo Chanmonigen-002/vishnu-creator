@@ -267,7 +267,7 @@ describe('persistent app-server server integration', () => {
   });
 
   it('closes the persistent process before session and capability resources', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-persistent-close-order-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-persistent-close-order-'));
     const fakeCodex = createFakeAppServer(tempDir);
     const capabilities = createUnknownCapabilityMatrix();
     capabilities.appServer = true;
@@ -326,7 +326,7 @@ async function createFixture(
   readMessages(): Array<Record<string, unknown>>;
   readDiagnostics(runId: string): Record<string, unknown>;
 }> {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-persistent-server-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-persistent-server-'));
   const fakeCodex = createFakeAppServer(tempDir);
   if (input.followLocalConfiguration) {
     mkdirSync(join(tempDir, 'local-codex'));
@@ -459,7 +459,7 @@ rl.on('line', line => {
     return;
   }
   if (message.method === 'skills/list') {
-    send({ id: message.id, result: { data: [{ skills: [{ name: 'opencreator-runtime' }] }] } });
+    send({ id: message.id, result: { data: [{ skills: [{ name: 'vishnucreator-runtime' }] }] } });
     return;
   }
   if (message.method === 'thread/read') {

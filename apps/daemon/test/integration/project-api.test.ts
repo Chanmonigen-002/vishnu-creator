@@ -35,7 +35,7 @@ describe('project API', () => {
     expect(first.statusCode).toBe(200);
     expect(first.json().project).toMatchObject({
       name: 'Default project',
-      cwd: join(tempDir, 'OpenCreator', 'Default Project'),
+      cwd: join(tempDir, 'VishnuCreator', 'Default Project'),
       directoryState: 'available'
     });
     expect(repeated.statusCode).toBe(200);
@@ -45,7 +45,7 @@ describe('project API', () => {
     ).toEqual({ count: 1 });
   });
 
-  it('creates managed projects under the configured OpenCreator directory', async () => {
+  it('creates managed projects under the configured VishnuCreator directory', async () => {
     await createSetup();
 
     const created = await request('POST', '/projects/managed', { name: ' 浏览器项目 ' });
@@ -54,7 +54,7 @@ describe('project API', () => {
     const createdProject = created.json().project as { cwd: string; name: string };
     expect(created.json().project).toMatchObject({
       name: '浏览器项目',
-      cwd: expect.stringMatching(join(tempDir, 'OpenCreator', 'project-')),
+      cwd: expect.stringMatching(join(tempDir, 'VishnuCreator', 'project-')),
       directoryState: 'available'
     });
     expect(realpathSync(createdProject.cwd)).toBe(created.json().project.canonicalCwd);
@@ -94,7 +94,7 @@ describe('project API', () => {
       title: 'Owned',
       codexThreadId: 'codex_owned',
       projectId: created.id,
-      origin: 'opencreator_created',
+      origin: 'vishnucreator_created',
       cwd: firstDir,
       canonicalCwd: realpathSync(firstDir),
       workspaceMode: 'external',
@@ -179,7 +179,7 @@ describe('project API', () => {
     createThreadRepository(setup.db).insertThread({
       id: 'thread_running',
       projectId,
-      origin: 'opencreator_created',
+      origin: 'vishnucreator_created',
       cwd: projectDir,
       canonicalCwd: realpathSync(projectDir),
       workspaceMode: 'external',
@@ -228,7 +228,7 @@ describe('project API', () => {
       id: 'thread_owned',
       title: 'Owned',
       projectId: null,
-      origin: 'opencreator_created',
+      origin: 'vishnucreator_created',
       cwd: sharedDir,
       canonicalCwd: realpathSync(sharedDir),
       workspaceMode: 'external',
@@ -241,7 +241,7 @@ describe('project API', () => {
       id: 'thread_unassigned',
       title: 'Unassigned',
       projectId: null,
-      origin: 'opencreator_created',
+      origin: 'vishnucreator_created',
       cwd: tempDir,
       canonicalCwd: realpathSync(tempDir),
       workspaceMode: 'external',
@@ -346,7 +346,7 @@ describe('project API', () => {
     ).toEqual(projectCount);
   });
 
-  it('assigns an unowned OpenCreator thread without changing its execution directory', async () => {
+  it('assigns an unowned VishnuCreator thread without changing its execution directory', async () => {
     const setup = await createSetup();
     const projectDir = join(tempDir, 'project');
     const legacyDir = join(tempDir, 'legacy');
@@ -362,7 +362,7 @@ describe('project API', () => {
       id: 'thread_unowned',
       title: 'Unowned',
       projectId: null,
-      origin: 'opencreator_created',
+      origin: 'vishnucreator_created',
       cwd: legacyDir,
       canonicalCwd: realpathSync(legacyDir),
       workspaceMode: 'external',
@@ -416,7 +416,7 @@ describe('project API', () => {
 });
 
 async function createSetup(): Promise<{ db: Database.Database }> {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-project-api-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-project-api-'));
   db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
   server = await buildServer({
     token: 'secret',

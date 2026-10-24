@@ -7,7 +7,7 @@ import { access, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { setTimeout as delay } from 'node:timers/promises';
 import { join, resolve } from 'node:path';
 import { stringify } from '@iarna/toml';
-import { createDefaultCreatorServicesConfig, gatewayVideoSizes, type VideoGenerationSize } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, gatewayVideoSizes, type VideoGenerationSize } from '@vishnucreator/protocol';
 import { createGatewayCreatorSource } from '../src/gateway/creator-service-source.js';
 import { createDirectTransport, DIRECT_MEDIA_ADAPTER_VERSION } from '../src/gateway/direct-transport.js';
 import { generateImageContents } from '../src/image-generation/provider.js';
@@ -82,7 +82,7 @@ if (!evidenceOnly) for await (const chunk of process.stdin) {
 const credential = evidenceOnly ? {} : JSON.parse(Buffer.concat(chunks).toString('utf8')) as { key?: string; costBearer?: string; name?: string; accountRemainingUsd?: number; productionReserveUsd?: number; balanceCheckedAt?: string };
 const key = credential.key;
 if (!evidenceOnly) {
-  if (!key?.startsWith('sk-or-') || credential.costBearer !== 'platform' || !credential.name?.startsWith('OpenCreator platform media verification')) throw new Error('Use a dedicated platform verification key');
+  if (!key?.startsWith('sk-or-') || credential.costBearer !== 'platform' || !credential.name?.startsWith('VishnuCreator platform media verification')) throw new Error('Use a dedicated platform verification key');
   const checkedAt = Date.parse(credential.balanceCheckedAt ?? '');
   if (!Number.isFinite(checkedAt) || Date.now() - checkedAt > 60_000 || checkedAt > Date.now() + 5_000
     || typeof credential.accountRemainingUsd !== 'number' || !Number.isFinite(credential.accountRemainingUsd)

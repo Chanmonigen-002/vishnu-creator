@@ -1,4 +1,4 @@
-import type { VideoMetadataResponse } from '@opencreator/protocol';
+import type { VideoMetadataResponse } from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 export type VideoMetadataService = ReturnType<typeof createVideoMetadataService>;

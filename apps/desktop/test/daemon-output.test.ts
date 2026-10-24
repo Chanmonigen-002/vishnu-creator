@@ -15,7 +15,7 @@ describe('Daemon stdout parser', () => {
   afterEach(() => vi.unstubAllEnvs());
   it('parses bootstrap events and the final connection without logging assumptions', () => {
     expect(parseDaemonOutputLine(JSON.stringify({
-      type: 'opencreator_daemon_bootstrap',
+      type: 'vishnucreator_daemon_bootstrap',
       phase: 'probe_succeeded',
       at: '2026-07-16T00:00:00.000Z',
       durationMs: 2_100,
@@ -80,7 +80,7 @@ describe('Daemon stdout parser', () => {
   it('parses bootstrap and ready events delivered over the parent port', () => {
     expect(parseDaemonParentMessage({
       data: {
-        type: 'opencreator_daemon_bootstrap_error',
+        type: 'vishnucreator_daemon_bootstrap_error',
         code: 'DAEMON_IMPORT_FAILED',
         message: 'Cannot find module',
         at: '2026-09-05T00:00:00.000Z'
@@ -93,7 +93,7 @@ describe('Daemon stdout parser', () => {
       }
     });
     expect(parseDaemonParentMessage({
-      type: 'opencreator_daemon_ready',
+      type: 'vishnucreator_daemon_ready',
       address: '127.0.0.1:6000',
       token: 'secret'
     })).toEqual({
@@ -115,12 +115,12 @@ describe('Daemon stdout parser', () => {
       entryPath: '/app/daemon/main.js',
       cwd: '/Users/demo',
       env: {},
-      appHome: '/Users/demo/.opencreator',
+      appHome: '/Users/demo/.vishnucreator',
       codexBin: '/app/codex',
-      codexHome: '/Users/demo/.opencreator/runtime/codex',
+      codexHome: '/Users/demo/.vishnucreator/runtime/codex',
       codexVersion: '0.149.0',
       codexCommit: 'bundled-commit',
-      dataDir: '/Users/demo/.opencreator/data',
+      dataDir: '/Users/demo/.vishnucreator/data',
       defaultCwd: '/Users/demo',
       defaultProjectRoot: '/Users/demo/Documents',
       requireProbe: false,
@@ -128,13 +128,13 @@ describe('Daemon stdout parser', () => {
     });
 
     expect(environment).toMatchObject({
-      OPENCREATOR_HOME: '/Users/demo/.opencreator',
-      OPENCREATOR_DATA_DIR: '/Users/demo/.opencreator/data',
-      CODEX_HOME: '/Users/demo/.opencreator/runtime/codex',
-      OPENCREATOR_LOCAL_CODEX_HOME: '/Users/demo/.codex-custom',
-      OPENCREATOR_CODEX_VERSION: '0.149.0',
-      OPENCREATOR_CODEX_COMMIT: 'bundled-commit',
-      OPENCREATOR_MANAGED_PARENT_PID: String(process.pid)
+      VISHNUCREATOR_HOME: '/Users/demo/.vishnucreator',
+      VISHNUCREATOR_DATA_DIR: '/Users/demo/.vishnucreator/data',
+      CODEX_HOME: '/Users/demo/.vishnucreator/runtime/codex',
+      VISHNUCREATOR_LOCAL_CODEX_HOME: '/Users/demo/.codex-custom',
+      VISHNUCREATOR_CODEX_VERSION: '0.149.0',
+      VISHNUCREATOR_CODEX_COMMIT: 'bundled-commit',
+      VISHNUCREATOR_MANAGED_PARENT_PID: String(process.pid)
     });
   });
 

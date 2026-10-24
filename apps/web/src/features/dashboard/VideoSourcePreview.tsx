@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Download, ExternalLink, FileVideo, Link2, LoaderCircle, Play, RotateCcw, Trash2 } from 'lucide-react';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
-import { supportedVideoSourcePlatform, parseBilibiliVideoSource, type VideoMetadataResponse } from '@opencreator/protocol';
+import { supportedVideoSourcePlatform, parseBilibiliVideoSource, type VideoMetadataResponse } from '@vishnucreator/protocol';
 import type { VideoMetadataService } from '../../services/video-metadata-service.js';
 
 type VideoSource =

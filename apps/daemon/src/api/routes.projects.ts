@@ -8,7 +8,7 @@ import type {
   ReasoningEffort,
   ReplaceProjectDirectoryRequest,
   UpdateProjectRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import {
   ProjectManagerError,

@@ -10,15 +10,15 @@
 
 真实复测完成：复用用户原始英文字幕和上轮西班牙语、斯洛伐克语中间字幕，使用修复后的临时 CLI 串行翻译成中文，分别输出 121、123、117 条。三份原文覆盖、原译时间配对及首尾覆盖通过；西班牙语、斯洛伐克语中的独立“哥伦比亚。”均由 1 处降为 0 处，三份地址句均完整输入并正确译为“华盛顿特区待一周”。共尝试 57 次请求（含 5 次内容纠错），收到 56 次上游 HTTP 200，另有 1 次超时后串行重试成功，429 为 0，观察到的客户端峰值并发为 1。应用默认并发 3 未修改。
 
-全文复核仍发现结尾 `premium titles` 被泛化为“优质书籍”，以及少量较短的显示片段；本轮没有调整术语或重新评分。详见[复测报告](/Users/leggett/Documents/OpenCreator/Exports/分句修复复测-20261017-083652/复测报告.md)及同目录的 `复核记录.md`。本次只验证源码和临时构建产物，尚未更新已安装 App 的 Runtime 包；未覆盖 Codex app-server、ASR、配音或最终视频，也未重跑 52 项质量评分。
+全文复核仍发现结尾 `premium titles` 被泛化为“优质书籍”，以及少量较短的显示片段；本轮没有调整术语或重新评分。详见[复测报告](/Users/leggett/Documents/Vishnu Creator/Exports/分句修复复测-20261017-083652/复测报告.md)及同目录的 `复核记录.md`。本次只验证源码和临时构建产物，尚未更新已安装 App 的 Runtime 包；未覆盖 Codex app-server、ASR、配音或最终视频，也未重跑 52 项质量评分。
 
 ## 1. 目标与评测依据
 
 本轮使用用户提供的完整英文字幕，完成 52 个语言选项的正向翻译和中文回译，共 104 份 SRT。模型回译均分 98.81，中位数 99，范围 94–100；全部字幕通过结构及 CLI 原文侧覆盖检查。优化目标是消除已复现的增译、术语和关键事实偏差，并约束实际请求数量与重试行为。
 
-评测材料位于 `/Users/leggett/Documents/OpenCreator/Exports/多语言回译评测-20261016`，优先参考其中的 `结论与建议.md`、`复核记录.md`、各语言 `评分.json` 和原始请求记录。旧评测结果保留为基线，优化后的产物使用新的运行目录和版本标识。
+评测材料位于 `/Users/leggett/Documents/Vishnu Creator/Exports/多语言回译评测-20261016`，优先参考其中的 `结论与建议.md`、`复核记录.md`、各语言 `评分.json` 和原始请求记录。旧评测结果保留为基线，优化后的产物使用新的运行目录和版本标识。
 
-这组数据有三个适用边界：中间语言由英文生成，不能代表自然母语素材；同一模型参与生成和评分，分数存在偏差；调用经过真实 Krillin CLI，但使用直接兼容接口，未覆盖 Codex app-server、界面、自然音频 ASR、配音和最终视频。韩语回译低分也不能直接归因于韩语正向译文。
+这组数据有三个适用边界：中间语言由英文生成，不能代表自然母语素材；同一模型参与生成和评分，分数存在偏差；调用经过真实 Vishnu CLI，但使用直接兼容接口，未覆盖 Codex app-server、界面、自然音频 ASR、配音和最终视频。韩语回译低分也不能直接归因于韩语正向译文。
 
 本任务后续真实调用继续遵守用户要求：**一个语言、一个方向、一个实际模型请求依次执行，评分也进入同一串行队列。应用默认并发 3 保持现有配置。**
 
@@ -26,14 +26,14 @@
 
 | 位置 | 当前行为 | 对优化的影响 |
 | --- | --- | --- |
-| `runtime/krillinai/internal/service/paired_translation.go`：`splitTranslationSentences` | 使用 UAX29 候选句界，再仅按末词缩写表决定是否延后提交 | 缺少带空格首字母缩写的保护；需要看候选句界前后内容 |
-| `runtime/krillinai/internal/service/translate.go`：`isSentenceEnding` | 以结尾标点判断 SRT cue 是否结束一句 | cue 合并与后续分句存在两层判断，跨 cue 缩写必须一起处理 |
+| `runtime/vishnuai/internal/service/paired_translation.go`：`splitTranslationSentences` | 使用 UAX29 候选句界，再仅按末词缩写表决定是否延后提交 | 缺少带空格首字母缩写的保护；需要看候选句界前后内容 |
+| `runtime/vishnuai/internal/service/translate.go`：`isSentenceEnding` | 以结尾标点判断 SRT cue 是否结束一句 | cue 合并与后续分句存在两层判断，跨 cue 缩写必须一起处理 |
 | `subtitle_text.go`：`subtitleAbbreviations` | 包含 Dr.、Mr.、etc. 等静态词表 | 扩充词表只能覆盖部分情况，不能代替边界判断 |
 | `translate.go`：`isTranslationValid`、`isSpecialContent` | 原样输出仅允许数字、特定全大写词或已知专名；中文、英文、日文另做文字特征检查，其余语言暂默认通过 | 孤立 `C.` 被拒绝；全大写普通词也可能被误放行。文字特征检查只能提供有限证据 |
 | `paired_translation.go`：`parsePairedTranslation` | 检查 JSON、ID、长度、字素边界及覆盖；一处出错使整批进入纠错 | 结构检查应保留，但需要分类错误并复用已正确句子 |
 | `paired_translation.go`：请求重试 | 429 与 5xx 同属临时错误，通常按 1 秒、2 秒退避；与内容纠错分别计数 | 限流应独立处理，避免内容层和接口层叠加请求 |
 | `config/config.go`、`translation_parallel.go` | 单任务默认并发 3 | 外层串行不保证实际请求串行 |
-| `apps/daemon/src/creator/krillin/codex-llm-gateway.ts` | 每个网关实例有 2 个 Host 槽、最多 32 个等待请求；非流式失败统一返回 502，流式失败销毁连接 | 已有网关队列，但没有据此保证本任务请求上限 1；上游限流原因也可能丢失 |
+| `apps/daemon/src/creator/vishnu/codex-llm-gateway.ts` | 每个网关实例有 2 个 Host 槽、最多 32 个等待请求；非流式失败统一返回 502，流式失败销毁连接 | 已有网关队列，但没有据此保证本任务请求上限 1；上游限流原因也可能丢失 |
 | 同一网关的响应转换 | 当前返回 usage 为 0，完成原因固定为 stop；未将传入 max_tokens 转换为明确的 Host 输出限制 | 直接接口的 token、截断和预算结论不能直接套到 app-server 路径 |
 
 最后两项是代码检查发现的产品路径差异，尚未通过真实 app-server 复现本轮质量问题。本方案不把本轮直接接口的历史 429 归因于该网关。
@@ -89,7 +89,7 @@
 
 验收使用模拟 429、5xx、取消和多个任务争用：串行策略下所有受管请求的实际并发峰值为 1；429 后不再派发新请求；取消后队列不继续运行。真实验证无需主动制造账号限流。
 
-涉及 `translation_parallel.go`、`paired_translation.go`、`pkg/openai/openai.go`、Daemon 的 Krillin 启动配置与 Codex 网关、对应集成测试。错误展示复用既有协议和共享协作面板；确需新增错误码时同步完成协议映射。
+涉及 `translation_parallel.go`、`paired_translation.go`、`pkg/openai/openai.go`、Daemon 的 Vishnu 启动配置与 Codex 网关、对应集成测试。错误展示复用既有协议和共享协作面板；确需新增错误码时同步完成协议映射。
 
 ## 5. 第二批：术语、数字与语义约束
 

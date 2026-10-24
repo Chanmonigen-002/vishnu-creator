@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, type RefObject } from 'react';
-import type { CreatorSubtitleRenderRequest } from '@opencreator/protocol';
+import type { CreatorSubtitleRenderRequest } from '@vishnucreator/protocol';
 import type { CreatorWebService } from '../../services/creator-service.js';
 import type JASSUB from 'jassub';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';

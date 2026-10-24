@@ -1,5 +1,5 @@
 import { expect, test as base, type Page } from '@playwright/test';
-import type { CreatorActionRequest, CreatorJob, CreatorPreflightResponse } from '@opencreator/protocol';
+import type { CreatorActionRequest, CreatorJob, CreatorPreflightResponse } from '@vishnucreator/protocol';
 import { execFileSync, spawn, type ChildProcess } from 'node:child_process';
 import {
   copyFileSync,
@@ -114,7 +114,7 @@ let daemonDevelopmentPrepared = false;
 
 export const test = base.extend<TestFixtures>({
   runtime: async ({}, use, testInfo) => {
-    const rootDir = mkdtempSync(join(tmpdir(), 'opencreator-web-e2e-'));
+    const rootDir = mkdtempSync(join(tmpdir(), 'vishnucreator-web-e2e-'));
     const dataDir = join(rootDir, 'runtime');
     const codexHome = join(rootDir, 'codex-home');
     const stateDir = join(rootDir, 'fake-codex-state');
@@ -144,7 +144,7 @@ export const test = base.extend<TestFixtures>({
     let serverLog = '';
     const packageManagerArgs = [
       '--filter',
-      '@opencreator/web',
+      '@vishnucreator/web',
       'exec',
       'vite',
       '--host',
@@ -160,7 +160,7 @@ export const test = base.extend<TestFixtures>({
         : undefined
     ].find(candidate => candidate !== undefined && existsSync(candidate));
     prepareDaemonDevelopment(packageManagerScript);
-    let presetCatalogRoot = process.env.OPENCREATOR_E2E_PRESET_CATALOG_ROOT;
+    let presetCatalogRoot = process.env.VISHNUCREATOR_E2E_PRESET_CATALOG_ROOT;
     const startRuntime = () => {
       const next = spawn(
         packageManagerScript === undefined ? 'pnpm' : process.execPath,
@@ -172,20 +172,20 @@ export const test = base.extend<TestFixtures>({
           detached: process.platform !== 'win32',
           env: {
             ...process.env,
-            OPENCREATOR_DATA_DIR: dataDir,
-            OPENCREATOR_CODEX_BIN: wrapperPath,
+            VISHNUCREATOR_DATA_DIR: dataDir,
+            VISHNUCREATOR_CODEX_BIN: wrapperPath,
             CODEX_HOME: codexHome,
-            OPENCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD: '0',
-            OPENCREATOR_RUNTIME_DEV_PREPARED: '1',
-            OPENCREATOR_E2E_FAKE_CODEX_CONFIG: configPath,
-            OPENCREATOR_E2E_FAKE_CODEX_STATE_DIR: stateDir,
-            OPENCREATOR_E2E_NODE_BINARY: process.execPath,
-            OPENCREATOR_E2E_FAKE_CODEX_SCRIPT: fakeCodexScript,
-            OPENCREATOR_E2E_CREATOR_RUNTIME_PLATFORM: 'win32',
-            OPENCREATOR_E2E_CREATOR_RUNTIME_ARCH: 'x64',
+            VISHNUCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD: '0',
+            VISHNUCREATOR_RUNTIME_DEV_PREPARED: '1',
+            VISHNUCREATOR_E2E_FAKE_CODEX_CONFIG: configPath,
+            VISHNUCREATOR_E2E_FAKE_CODEX_STATE_DIR: stateDir,
+            VISHNUCREATOR_E2E_NODE_BINARY: process.execPath,
+            VISHNUCREATOR_E2E_FAKE_CODEX_SCRIPT: fakeCodexScript,
+            VISHNUCREATOR_E2E_CREATOR_RUNTIME_PLATFORM: 'win32',
+            VISHNUCREATOR_E2E_CREATOR_RUNTIME_ARCH: 'x64',
             ...(presetCatalogRoot === undefined
               ? {}
-              : { OPENCREATOR_PRESET_CATALOG_ROOT: presetCatalogRoot })
+              : { VISHNUCREATOR_PRESET_CATALOG_ROOT: presetCatalogRoot })
           },
           stdio: ['ignore', 'pipe', 'pipe']
         }
@@ -264,7 +264,7 @@ export const test = base.extend<TestFixtures>({
         async restart(options = {}) {
           await stopFixtureRuntime(child, dataDir, stateDir);
           presetCatalogRoot = options.presetCatalogRoot ?? presetCatalogRoot;
-          serverLog += '\n[opencreator-e2e] restarting Vite and Daemon\n';
+          serverLog += '\n[vishnucreator-e2e] restarting Vite and Daemon\n';
           child = startRuntime();
           runtimeConfig = await waitForRuntime(origin, child, () => serverLog);
           runtimeBaseUrl = new URL(runtimeConfig.baseUrl, origin)
@@ -287,25 +287,25 @@ export const test = base.extend<TestFixtures>({
             legacyProjects
           }) => {
             if (window.top !== window) return;
-            localStorage.setItem('opencreator.preferences.dynamicBackground', 'false');
-            localStorage.setItem('opencreator.preferences.language', 'zh-CN');
-            localStorage.setItem('opencreator.tasks.notifications.v1', JSON.stringify({
+            localStorage.setItem('vishnucreator.preferences.dynamicBackground', 'false');
+            localStorage.setItem('vishnucreator.preferences.language', 'zh-CN');
+            localStorage.setItem('vishnucreator.tasks.notifications.v1', JSON.stringify({
               enabled: true,
               permission: 'granted'
             }));
-            localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+            localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
               currentProjectId: storedProjectId,
               selectedThreadId: storedThreadId
             }));
             if (legacyProjects !== undefined) {
-              localStorage.setItem('opencreator.projects.v1', JSON.stringify(legacyProjects));
+              localStorage.setItem('vishnucreator.projects.v1', JSON.stringify(legacyProjects));
             }
             const notifications: Array<{
               title: string;
               body?: string;
               click(): void;
             }> = [];
-            Object.defineProperty(window, '__opencreatorE2eNotifications', {
+            Object.defineProperty(window, '__vishnucreatorE2eNotifications', {
               configurable: true,
               value: notifications
             });
@@ -333,7 +333,7 @@ export const test = base.extend<TestFixtures>({
           });
           await page.goto(`${origin}/#/thread/${encodeURIComponent(selectedThreadId)}`);
           await expect(page.getByRole('status', { name: '本地运行内核正常' })).toBeVisible();
-          if (await page.evaluate(() => localStorage.getItem('opencreator.agent-setup-confirmed.v1') === null)) {
+          if (await page.evaluate(() => localStorage.getItem('vishnucreator.agent-setup-confirmed.v1') === null)) {
             const setup = page.getByRole('region', { name: '开始使用 Agent' });
             await expect(setup).toBeVisible();
             await setup.getByRole('button', { name: '本地模式', exact: true }).click();
@@ -412,7 +412,7 @@ export const test = base.extend<TestFixtures>({
         });
       }
       await stopFixtureRuntime(child, dataDir, stateDir);
-      if (process.env.OPENCREATOR_E2E_KEEP_TEMP !== '1') {
+      if (process.env.VISHNUCREATOR_E2E_KEEP_TEMP !== '1') {
         rmSync(rootDir, {
           recursive: true,
           force: true,
@@ -589,7 +589,7 @@ function writeFakeCodexLauncher(targetPath: string): void {
 
 function prepareDaemonDevelopment(packageManagerScript: string | undefined): void {
   if (daemonDevelopmentPrepared) return;
-  const args = ['--filter', '@opencreator/daemon', 'run', 'predev'];
+  const args = ['--filter', '@vishnucreator/daemon', 'run', 'predev'];
   if (packageManagerScript !== undefined) {
     execFileSync(process.execPath, [packageManagerScript, ...args], {
       cwd: repoRoot,
@@ -644,7 +644,7 @@ async function waitForRuntime(
       throw new Error(`Vite exited with code ${child.exitCode}.\n${readLog()}`);
     }
     try {
-      const response = await fetch(`${origin}/.opencreator/runtime-config`);
+      const response = await fetch(`${origin}/.vishnucreator/runtime-config`);
       if (response.ok) return await response.json() as RuntimeConfig;
       latestError = `${response.status} ${await response.text()}`;
     } catch (error) {

@@ -1,7 +1,7 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createCreatorAgentRepository } from '../../src/creator/agent/repository.js';
 import { createCreatorCommandDispatcher } from '../../src/creator/command-dispatcher.js';
@@ -33,7 +33,7 @@ describe('video translation workflow', () => {
     }));
     const runner = createCreatorStageRunner({
       repository: fixture.repository, templates: fixture.service.templates,
-      executors: [{ id: 'krillinai', run }], workRoot: join(tempDir, 'work'),
+      executors: [{ id: 'vishnuai', run }], workRoot: join(tempDir, 'work'),
       onStageSucceeded(stage) { void workflow.handleStageChanged(stage); }
     });
     try {
@@ -305,7 +305,7 @@ describe('video translation workflow', () => {
       repository: fixture.repository,
       templates: fixture.service.templates,
       executors: [{
-        id: 'krillinai',
+        id: 'vishnuai',
         async run(stage) {
           stage.reportProgress({ executorStep: 'working' });
           return {
@@ -362,7 +362,7 @@ describe('video translation workflow', () => {
       repository: fixture.repository,
       templates: fixture.service.templates,
       executors: [{
-        id: 'krillinai',
+        id: 'vishnuai',
         async run({ stageRun }) {
           if (stageRun.stageId === 'subtitle') {
             writeFileSync(join(tempDir, 'source.mp4'), 'fixture-video');

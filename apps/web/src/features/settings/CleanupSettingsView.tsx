@@ -7,7 +7,7 @@ import type {
   CleanupDeleteResponse,
   CleanupPreviewItem,
   CleanupPreviewResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { AlertTriangle, CheckCircle2, RefreshCw, Trash2 } from 'lucide-react';
 import { useState } from 'react';
 import { IssueList } from '../issues/IssuePresenter.js';

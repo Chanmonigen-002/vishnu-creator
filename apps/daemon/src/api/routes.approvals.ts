@@ -1,4 +1,4 @@
-import type { ApprovalListQuery, ApprovalStatus } from '@opencreator/protocol';
+import type { ApprovalListQuery, ApprovalStatus } from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import {
   ApprovalManagerError,

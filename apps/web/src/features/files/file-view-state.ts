@@ -1,4 +1,4 @@
-import type { WorkspaceDirectoryResponse, WorkspaceFileNode } from '@opencreator/protocol';
+import type { WorkspaceDirectoryResponse, WorkspaceFileNode } from '@vishnucreator/protocol';
 
 export function workspaceKey(canonicalCwd: string): string {
   const encoder = new TextEncoder();

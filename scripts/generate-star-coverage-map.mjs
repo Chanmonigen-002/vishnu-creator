@@ -91,8 +91,8 @@ const markers = [
   `<circle cx="${x(longitude)}" cy="${y(latitude)}" r="3.3"/>`).join('\n    ');
 
 const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${width} ${height}" role="img" aria-labelledby="title desc">
-  <title id="title">OpenCreator Star coverage around the world</title>
-  <desc id="desc">At least ${starredCodes.size} countries and regions with GitHub users who have starred OpenCreator are highlighted.</desc>
+  <title id="title">VishnuCreator Star coverage around the world</title>
+  <desc id="desc">At least ${starredCodes.size} countries and regions with GitHub users who have starred VishnuCreator are highlighted.</desc>
   <rect width="${width}" height="${height}" rx="12" fill="#edf5f4"/>
   <g fill="none" stroke="#d8e9e6" stroke-width="1">
     ${grid}

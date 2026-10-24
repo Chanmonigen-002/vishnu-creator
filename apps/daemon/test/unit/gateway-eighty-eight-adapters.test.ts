@@ -3,7 +3,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, expect, it, vi } from 'vitest';
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 import { createDirectTransport } from '../../src/gateway/direct-transport.js';
 import { eightyEightImageRequest, eightyEightImageResult } from '../../src/gateway/eighty-eight-image.js';
 import { eightyEightVideoRequest } from '../../src/gateway/eighty-eight-video.js';

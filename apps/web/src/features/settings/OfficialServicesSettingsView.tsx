@@ -1,7 +1,7 @@
-import { gatewayModelIdMatches } from '@opencreator/protocol';
+import { gatewayModelIdMatches } from '@vishnucreator/protocol';
 import { useEffect, useRef, useState } from 'react';
 import { AudioLines, Image, LoaderCircle, Mic, RefreshCw, TextCursorInput, Video, type LucideIcon } from 'lucide-react';
-import { gatewayModelCompatible, gatewayModelSupports, gatewayModelReady, type GatewayAccountState, type GatewayModelPurpose } from '@opencreator/protocol';
+import { gatewayModelCompatible, gatewayModelSupports, gatewayModelReady, type GatewayAccountState, type GatewayModelPurpose } from '@vishnucreator/protocol';
 import type { GatewayAccountSettingsService } from '../../services/gateway-account-service.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import OfficialModelSelect from '../../components/forms/OfficialModelSelect.js';
@@ -58,7 +58,7 @@ export function OfficialServicesSettingsView(props: { state: GatewayAccountState
   ];
   return <div className="official-services-models">
     {props.state.transport === 'gateway' ? <div className="official-catalog-toolbar">
-      <a href={l('https://www.open-creator.ai/models?lang=zh', 'https://www.open-creator.ai/models')} target="_blank" rel="noreferrer">{l('模型目录', 'Model catalog')}</a>
+      <a href={l('https://www.vishnu-creator.ai/models?lang=zh', 'https://www.vishnu-creator.ai/models')} target="_blank" rel="noreferrer">{l('模型目录', 'Model catalog')}</a>
       <button type="button" disabled={refreshing || pendingModality !== null} aria-label={l('刷新模型列表', 'Refresh model list')} title={l('刷新模型列表', 'Refresh model list')} onClick={() => void refreshModels()}>
         <RefreshCw size={16} className={refreshing ? 'official-services-spinner' : undefined} />
       </button>

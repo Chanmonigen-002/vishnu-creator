@@ -1,4 +1,4 @@
-import type { CreatorLocalComponent } from '@opencreator/protocol';
+import type { CreatorLocalComponent } from '@vishnucreator/protocol';
 import type { LocalizeCopy } from '../../i18n/localized-copy.js';
 
 export function localComponentPreparationMessage(state: CreatorLocalComponent['state'], localize: LocalizeCopy): string {

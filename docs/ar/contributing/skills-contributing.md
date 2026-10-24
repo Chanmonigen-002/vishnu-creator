@@ -21,15 +21,15 @@
 ## البدء السريع
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable && pnpm install
-cp -r skills/krillinai-tts skills/<skill-الخاص-بك>   # ابدأ من أقرب Skill موجود
+cp -r skills/vishnuai-tts skills/<skill-الخاص-بك>   # ابدأ من أقرب Skill موجود
 # حرّر skills/<skill-الخاص-بك>/SKILL.md
 pnpm web:dev                                         # تحقق من أن الوكيل يتعرف عليه في محادثة
 ```
 
-أسرع طريق هو نسخ الـ Skill الأقرب لفكرتك ثم إعادة كتابته — الـ Skills الموجودة `krillinai-*` توضح البنية والأسلوب المتوقعين.
+أسرع طريق هو نسخ الـ Skill الأقرب لفكرتك ثم إعادة كتابته — الـ Skills الموجودة `vishnuai-*` توضح البنية والأسلوب المتوقعين.
 
 ## بنية الـ Skill
 
@@ -93,4 +93,4 @@ description: Use when <شرط التفعيل>, including <القدرات الر�
 
 ---
 
-لديك أسئلة؟ [افتح مشكلة](https://github.com/krillinai/OpenCreator/issues/new) بموضوع `skill` وسنساعدك في تحديد النطاق.
+لديك أسئلة؟ [افتح مشكلة](https://github.com/vishnuai/Vishnu Creator/issues/new) بموضوع `skill` وسنساعدك في تحديد النطاق.

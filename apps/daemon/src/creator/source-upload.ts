@@ -4,12 +4,12 @@ import { mkdir, rename, rm } from 'node:fs/promises';
 import { basename, extname, join, resolve } from 'node:path';
 import { Transform, type Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
-import type { CreatorSourceUploadResponse } from '@opencreator/protocol';
+import type { CreatorSourceUploadResponse } from '@vishnucreator/protocol';
 import { CreatorServiceError, type CreatorService } from './service.js';
 import type { MediaProbe } from './validators/media.js';
 
 export const CREATOR_SOURCE_UPLOAD_CONTENT_TYPE =
-  'application/vnd.opencreator.creator-source';
+  'application/vnd.vishnucreator.creator-source';
 export const CREATOR_SOURCE_MAX_SIZE_BYTES = 8 * 1024 * 1024 * 1024;
 
 export type CreatorSourceUploadService = ReturnType<typeof createCreatorSourceUploadService>;

@@ -1,7 +1,7 @@
 import type {
   CreatorArtifact,
   WechatArticleLayoutStyleId
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { existsSync } from 'node:fs';
 import { createWriteStream } from 'node:fs';
 import { readFile, writeFile } from 'node:fs/promises';
@@ -126,7 +126,7 @@ export async function writeArticlePdf(
     size: 'A4',
     margins: { top: 58, right: 62, bottom: 58, left: 62 },
     bufferPages: true,
-    info: { Title: input.title, Creator: 'OpenCreator' }
+    info: { Title: input.title, Creator: 'VishnuCreator' }
   });
   document.registerFont('ArticleRegular', fonts.regular.path, fonts.regular.family);
   document.registerFont('ArticleBold', fonts.bold.path, fonts.bold.family);

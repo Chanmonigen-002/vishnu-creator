@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { describe, expect, it, vi } from 'vitest';
 import type { CodexAppServerResult } from '../../src/codex/app-server-host-2026-07-28.js';
 import { createStickmanCodexJsonCompletion } from '../../src/creator/stickman/codex-json-completion.js';

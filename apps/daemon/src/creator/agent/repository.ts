@@ -16,7 +16,7 @@ import type {
   CreatorCommandReceipt,
   CreatorCommandReceiptStatus,
   CreatorJson
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 type RepositoryOptions = {
   idFactory?(prefix: string): string;

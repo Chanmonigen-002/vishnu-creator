@@ -13,7 +13,7 @@
 - `prepare-creator-runtime.mjs` 将 wheel 的库文件放进便携 Python 的
   `site-packages`，不打包 console scripts，不运行目标平台的二进制安装代码。
 - 原生构建使用便携 Python 执行标准库解包脚本；交叉构建需要构建机上的
-  Python，仅使用其标准库，可用 `OPENCREATOR_BUILD_PYTHON` 指定路径。
+  Python，仅使用其标准库，可用 `VISHNUCREATOR_BUILD_PYTHON` 指定路径。
 - 新增库、模型、锁文件均纳入 Creator Runtime 文件哈希清单。原生构建及
   最终安装包校验均实际加载模型、执行依存分析。
 
@@ -25,7 +25,7 @@
 ## 调用与覆盖
 
 清单中的 `nlp.executable` 绑定实际便携 Python。Web 和 Desktop 共用 Daemon
-启动逻辑，通过 `KRILLINAI_NLP_PYTHON` 将该路径传给 KrillinAI，不继承外部
+启动逻辑，通过 `VISHNUAI_NLP_PYTHON` 将该路径传给 VishnuAI，不继承外部
 Python 路径配置。NLP 子进程使用 `-I -B`，隔离用户包且不生成字节码缓存，
 避免安装包运行后与哈希清单不一致。
 

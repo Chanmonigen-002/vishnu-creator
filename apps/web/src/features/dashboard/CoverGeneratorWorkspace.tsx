@@ -6,7 +6,7 @@ import {
   type CreatorArtifact,
   type CreatorJson,
   type ImageGenerationQuality
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   Check,
   Download,

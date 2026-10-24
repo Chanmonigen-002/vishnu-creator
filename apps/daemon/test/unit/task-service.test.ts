@@ -149,7 +149,7 @@ describe('task service', () => {
         type: 'diagnostic',
         code: 'INTERNAL_PROMPT',
         severity: 'warning',
-        message: '这是 OpenCreator 已经触发的一次计划任务执行。',
+        message: '这是 VishnuCreator 已经触发的一次计划任务执行。',
         details: { token: 'occap_diagnostic' }
       },
       normalizerVersion: 1
@@ -167,7 +167,7 @@ describe('task service', () => {
     expect(task?.resultSummary).toContain('[REDACTED]');
     expect(task?.resultSummary).not.toContain('private');
     expect(task?.resultSummary).not.toContain('occap_sensitive');
-    expect(task?.resultSummary).not.toContain('OpenCreator 已经触发');
+    expect(task?.resultSummary).not.toContain('VishnuCreator 已经触发');
   });
 
   it('omits result summaries when no final assistant message was persisted', () => {
@@ -230,7 +230,7 @@ describe('task service', () => {
 });
 
 function setup() {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-task-service-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-task-service-'));
   db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
   const threads = createThreadRepository(db);
   threads.insertThread({

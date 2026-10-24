@@ -6,7 +6,7 @@ export function parseManagedParentPid(
   if (normalized === undefined || normalized.length === 0) return undefined;
   const pid = Number(normalized);
   if (!Number.isSafeInteger(pid) || pid <= 0 || pid === currentPid) {
-    throw new Error(`Invalid OpenCreator managed parent PID: ${normalized}`);
+    throw new Error(`Invalid VishnuCreator managed parent PID: ${normalized}`);
   }
   return pid;
 }

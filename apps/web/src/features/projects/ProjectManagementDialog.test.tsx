@@ -1,5 +1,5 @@
 import { changeControl, selectOption } from '../../test/select-option.js';
-import type { ProjectResponse, ThreadResponse } from '@opencreator/protocol';
+import type { ProjectResponse, ThreadResponse } from '@vishnucreator/protocol';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';
@@ -177,7 +177,7 @@ describe('ProjectManagementDialog', () => {
 
     await user.click(screen.getByRole('button', { name: '移除' }));
     expect(screen.getByRole('alertdialog', { name: '移除项目' })).toBeInTheDocument();
-    expect(screen.getByText('确认从 OpenCreator 中移除“内容项目”？项目目录和文件不会被删除。'))
+    expect(screen.getByText('确认从 VishnuCreator 中移除“内容项目”？项目目录和文件不会被删除。'))
       .toBeInTheDocument();
     expect(onArchive).not.toHaveBeenCalled();
 
@@ -211,7 +211,7 @@ function thread(): ThreadResponse {
     id: 'thread-unassigned',
     title: 'Legacy conversation',
     projectId: null,
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     codexThreadId: 'codex-one',
     cwd: '/workspace/legacy',
     canonicalCwd: '/workspace/legacy',

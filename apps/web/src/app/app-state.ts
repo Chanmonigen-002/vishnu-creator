@@ -1,4 +1,4 @@
-import type { PublicRunStatus } from '@opencreator/protocol';
+import type { PublicRunStatus } from '@vishnucreator/protocol';
 
 export type RightPanelMode = 'closed' | 'file' | 'change' | 'run_detail';
 export type ActiveView =

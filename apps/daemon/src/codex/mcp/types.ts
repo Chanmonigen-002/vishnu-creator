@@ -1,4 +1,4 @@
-import type { RuntimeErrorCode } from '@opencreator/protocol';
+import type { RuntimeErrorCode } from '@vishnucreator/protocol';
 
 export type McpTransport = 'stdio' | 'http' | 'sse';
 

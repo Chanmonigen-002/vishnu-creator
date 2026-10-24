@@ -1,4 +1,4 @@
-import { isPublicErrorFacts, publicErrorKindForCode, sanitizePublicErrorFacts, type PublicErrorFacts } from '@opencreator/protocol';
+import { isPublicErrorFacts, publicErrorKindForCode, sanitizePublicErrorFacts, type PublicErrorFacts } from '@vishnucreator/protocol';
 
 const ERROR_KINDS: Record<string, PublicErrorFacts['kind']> = {
   ERR_FS_FILE_TOO_LARGE: 'storage',

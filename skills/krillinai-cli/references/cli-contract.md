@@ -1,19 +1,19 @@
-# KrillinAI CLI Contract
+# VishnuAI CLI Contract
 
 ## Build And Binary
 
-Use the repository build script from the OpenCreator root:
+Use the repository build script from the Vishnu Creator root:
 
 ```bash
-pnpm krillinai:build
+pnpm vishnuai:build
 ```
 
-It builds `runtime/krillinai/cmd/cli` and `runtime/krillinai/cmd/server`. Native binaries and a manifest are written under:
+It builds `runtime/vishnuai/cmd/cli` and `runtime/vishnuai/cmd/server`. Native binaries and a manifest are written under:
 
 ```text
-.runtime/build/krillinai/<platform>-<arch>/
-├── bin/krillinai-cli[.exe]
-├── bin/krillinai-server[.exe]
+.runtime/build/vishnuai/<platform>-<arch>/
+├── bin/vishnuai-cli[.exe]
+├── bin/vishnuai-server[.exe]
 └── manifest.json
 ```
 
@@ -23,10 +23,10 @@ Set reusable absolute paths from the repository root:
 REPO_ROOT="$PWD"
 TARGET="$(node -p "process.platform + '-' + process.arch")"
 SUFFIX="$(node -p "process.platform === 'win32' ? '.exe' : ''")"
-KRILLINAI_CLI="$REPO_ROOT/.runtime/build/krillinai/$TARGET/bin/krillinai-cli$SUFFIX"
-KRILLINAI_CWD="$REPO_ROOT/runtime/krillinai"
+VISHNUAI_CLI="$REPO_ROOT/.runtime/build/vishnuai/$TARGET/bin/vishnuai-cli$SUFFIX"
+VISHNUAI_CWD="$REPO_ROOT/runtime/vishnuai"
 WORKDIR="$REPO_ROOT/tasks/demo"
-test -f "$KRILLINAI_CLI"
+test -f "$VISHNUAI_CLI"
 mkdir -p "$WORKDIR"
 ```
 
@@ -34,9 +34,9 @@ mkdir -p "$WORKDIR"
 
 The CLI loads `config/config.toml` relative to the process working directory.
 
-- Source checkout: run real commands with `runtime/krillinai` as the working directory. Create the ignored `runtime/krillinai/config/config.toml` from `config-example.toml` and configure only the providers needed by the requested stage.
+- Source checkout: run real commands with `runtime/vishnuai` as the working directory. Create the ignored `runtime/vishnuai/config/config.toml` from `config-example.toml` and configure only the providers needed by the requested stage.
 - Release archive: run from the unpacked package root after creating `config/config.toml` from `config/config-example.toml`.
-- OpenCreator: the Daemon prepares an isolated launcher directory and configuration automatically; do not replace that flow with a source-tree config.
+- Vishnu Creator: the Daemon prepares an isolated launcher directory and configuration automatically; do not replace that flow with a source-tree config.
 
 Use absolute `--workdir`, input, subtitle, audio, and output paths when changing the process working directory.
 
@@ -59,7 +59,7 @@ Use absolute `--workdir`, input, subtitle, audio, and output paths when changing
 Every working directory should contain:
 
 ```text
-krillinai_manifest.json
+vishnuai_manifest.json
 ```
 
 Read this file to locate stage outputs. Important default paths:
@@ -87,7 +87,7 @@ Horizontal and vertical dubbed variants use `horizontal_dubbed.mp4` and `vertica
 
 Parse stdout one line at a time as JSON. The terminal response is the object containing `ok`.
 
-When `OPENCREATOR_KRILLINAI_CLI=1`, `subtitle` and `tts` can emit progress frames before the terminal response:
+When `VISHNUCREATOR_VISHNUAI_CLI=1`, `subtitle` and `tts` can emit progress frames before the terminal response:
 
 ```json
 {"type":"progress","phase":"translating_subtitles","percent":50,"message":"正在翻译字幕"}
@@ -140,7 +140,7 @@ Internal errors currently also exit with code `1`, so use `error.kind` rather th
 ## Dry Run
 
 - `subtitle`, `render-horizontal`, `render-vertical`, `speech`, and `pipeline` validate without writing a task manifest.
-- `tts` and `cover` dry-runs apply default outputs and write `krillinai_manifest.json`, but do not produce media.
+- `tts` and `cover` dry-runs apply default outputs and write `vishnuai_manifest.json`, but do not produce media.
 - `voices --dry-run` returns the same local voice list without an external provider call; use `aliyun`, `openai`, or `minimax`.
 
 ## Command-Shape Verification
@@ -148,7 +148,7 @@ Internal errors currently also exit with code `1`, so use `error.kind` rather th
 This check does not need provider credentials or media dependencies:
 
 ```bash
-(cd "$KRILLINAI_CWD" && "$KRILLINAI_CLI" subtitle local:demo.mp4 \
+(cd "$VISHNUAI_CWD" && "$VISHNUAI_CLI" subtitle local:demo.mp4 \
   --origin-lang en \
   --target-lang zh_cn \
   --workdir "$WORKDIR" \

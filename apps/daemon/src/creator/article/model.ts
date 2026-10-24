@@ -1,4 +1,4 @@
-import type { WechatArticleImagePlanItem, WechatArticleTopic } from '@opencreator/protocol';
+import type { WechatArticleImagePlanItem, WechatArticleTopic } from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 import type { CreatorServicesConfigStore } from '../../creator-services/config-store.js';
 import {

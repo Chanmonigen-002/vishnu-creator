@@ -1,4 +1,4 @@
-import type { CreatorActivity, CreatorStageRun } from '@opencreator/protocol';
+import type { CreatorActivity, CreatorStageRun } from '@vishnucreator/protocol';
 import { describe, expect, it } from 'vitest';
 import { createLocalizedCopy } from '../../i18n/localized-copy.js';
 import {
@@ -356,7 +356,7 @@ describe('stickmanVideoPanelAdapter', () => {
     });
   });
 
-  it('starts the aggregated URL workflow at the KrillinAI transcript stage', () => {
+  it('starts the aggregated URL workflow at the VishnuAI transcript stage', () => {
     const aggregated = stickmanVideoPanelAdapter.aggregateStages?.([
       stage('transcript', '', 'running', null, 'source-transcript', 20, 'reading_platform_captions')
     ]);

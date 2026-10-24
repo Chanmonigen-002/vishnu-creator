@@ -5,9 +5,9 @@ import { join } from 'node:path';
 import sharp from 'sharp';
 
 export async function verifyMacAppIcon(iconPath, sourcePath, options = {}) {
-  const temporary = mkdtempSync(join(tmpdir(), 'opencreator-icon-'));
+  const temporary = mkdtempSync(join(tmpdir(), 'vishnucreator-icon-'));
   try {
-    const iconset = join(temporary, 'OpenCreator.iconset');
+    const iconset = join(temporary, 'VishnuCreator.iconset');
     (options.execFileSync ?? execFileSync)('iconutil', [
       '--convert', 'iconset', '--output', iconset, iconPath
     ], { encoding: 'utf8', timeout: 30_000 });

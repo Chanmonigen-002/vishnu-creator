@@ -2,7 +2,7 @@ import type {
   RunScheduleNowResponse,
   ScheduleDetailResponse,
   ScheduleResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { Client } from '@modelcontextprotocol/sdk/client/index.js';
 import { StreamableHTTPClientTransport } from '@modelcontextprotocol/sdk/client/streamableHttp.js';
 import type { FastifyInstance } from 'fastify';
@@ -342,7 +342,7 @@ describe('agent tool internal api', () => {
   });
 
   it('rejects mutation routes for automatic schedule runs even with a forged scope grant', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-agent-tool-automatic-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-agent-tool-automatic-'));
     const operations = createOperations();
     const automaticGrantStore = {
       issue: vi.fn(() => ({
@@ -469,7 +469,7 @@ describe('agent tool internal api', () => {
   });
 
   it('revokes a run capability when the run reaches a terminal state', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-agent-capability-run-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-agent-capability-run-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const tokens = createAgentCapabilityTokenStore();
     const projectManager = createProjectManager({ db, homeDir: tempDir });
@@ -530,7 +530,7 @@ describe('agent tool internal api', () => {
   });
 
   it('revokes a run capability when an active run is canceled', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-agent-capability-cancel-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-agent-capability-cancel-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const tokens = createAgentCapabilityTokenStore();
     const projectManager = createProjectManager({ db, homeDir: tempDir });
@@ -612,7 +612,7 @@ describe('agent tool internal api', () => {
   });
 
   it('injects the listening daemon origin into production Run child environments', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-agent-tool-listen-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-agent-tool-listen-'));
     const fakeCodex = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'thread.started', thread_id: 'codex-thread-agent-tools' },
@@ -671,15 +671,15 @@ describe('agent tool internal api', () => {
     }, { timeout: RUN_STATUS_TIMEOUT_MS }).toBe('succeeded');
 
     expect(fakeCodex.readAgentToolEnv()).toMatchObject({
-      OPENCREATOR_AGENT_CAPABILITY_TOKEN: expect.stringMatching(/^occap_/),
+      VISHNUCREATOR_AGENT_CAPABILITY_TOKEN: expect.stringMatching(/^occap_/),
       NO_PROXY: expect.stringContaining('127.0.0.1'),
       no_proxy: expect.stringContaining('127.0.0.1')
     });
     expect(fakeCodex.readArgv()).toEqual(expect.arrayContaining([
       '-c',
-      `mcp_servers.opencreator_schedule.url="http://127.0.0.1:${address.port}/internal/agent-tools/mcp"`,
+      `mcp_servers.vishnucreator_schedule.url="http://127.0.0.1:${address.port}/internal/agent-tools/mcp"`,
       '-c',
-      'mcp_servers.opencreator_schedule.bearer_token_env_var="OPENCREATOR_AGENT_CAPABILITY_TOKEN"'
+      'mcp_servers.vishnucreator_schedule.bearer_token_env_var="VISHNUCREATOR_AGENT_CAPABILITY_TOKEN"'
     ]));
   });
 
@@ -714,7 +714,7 @@ describe('agent tool internal api', () => {
     expect(unauthorized.status).toBe(401);
 
     const client = new Client({
-      name: 'opencreator-http-test',
+      name: 'vishnucreator-http-test',
       version: '1.0.0'
     });
     const transport = new StreamableHTTPClientTransport(endpoint, {
@@ -726,11 +726,11 @@ describe('agent tool internal api', () => {
       await client.connect(transport);
       const listed = await client.listTools();
       expect(listed.tools.map(tool => tool.name)).toEqual([
-        'opencreator_schedule_get'
+        'vishnucreator_schedule_get'
       ]);
 
       const result = await client.callTool({
-        name: 'opencreator_schedule_get',
+        name: 'vishnucreator_schedule_get',
         arguments: { scheduleId: 'schedule-1' }
       });
       expect(result.isError).not.toBe(true);
@@ -791,7 +791,7 @@ describe('agent tool internal api', () => {
       scopes: ['schedule:update']
     });
     const client = new Client({
-      name: 'opencreator-process-http-test',
+      name: 'vishnucreator-process-http-test',
       version: '1.0.0'
     });
     const transport = new StreamableHTTPClientTransport(endpoint, {
@@ -803,7 +803,7 @@ describe('agent tool internal api', () => {
       await client.connect(transport);
       const listed = await client.listTools();
       expect(listed.tools.map(tool => tool.name)).toEqual([
-        'opencreator_schedule_update'
+        'vishnucreator_schedule_update'
       ]);
     } finally {
       await client.close();
@@ -827,7 +827,7 @@ async function createServerFixture(): Promise<{
   tokens: AgentCapabilityTokenStore;
   operations: ReturnType<typeof createOperations>;
 }> {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-agent-tool-api-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-agent-tool-api-'));
   const tokens = createAgentCapabilityTokenStore();
   const operations = createOperations();
   server = await buildServer({
@@ -881,7 +881,7 @@ async function createRealServerFixture(): Promise<{
   projectManager: ReturnType<typeof createProjectManager>;
   projectId: string;
 }> {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-agent-tool-real-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-agent-tool-real-'));
   db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
   const tokens = createAgentCapabilityTokenStore();
   const projectManager = createProjectManager({ db, homeDir: tempDir });
@@ -995,7 +995,7 @@ function runtimeThread(overrides: Partial<RuntimeThread> = {}): RuntimeThread {
     scheduleId: 'schedule-1',
     title: '每日总结',
     projectId: null,
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     codexThreadId: null,
     cwd: '/workspace/current',
     canonicalCwd: '/workspace/current',

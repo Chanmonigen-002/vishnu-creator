@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import { readStickmanRatio, stickmanCanvasForRatio } from '@opencreator/protocol';
+import { readStickmanRatio, stickmanCanvasForRatio } from '@vishnucreator/protocol';
 import type { CreatorExecutor } from '../executor.js';
 import { CreatorExecutorError } from '../executor.js';
 import { stickmanShotSpecSchema, stickmanVisualValidationSchema } from './contracts.js';

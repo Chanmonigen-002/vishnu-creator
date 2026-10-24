@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { z } from 'zod/v3';
-import type { CreatorJson } from '@opencreator/protocol';
+import type { CreatorJson } from '@vishnucreator/protocol';
 import type { CreatorServicesConfigStore } from '../../creator-services/config-store.js';
 import {
   creatorServiceErrorInfo,
@@ -84,7 +84,7 @@ export function createXiaohongshuPostExecutor(input: {
         }
         const post = generatedPostSchema.parse(JSON.parse(content));
         const markdown = formatPost(post);
-        const fileName = 'OpenCreator-xiaohongshu-post.md';
+        const fileName = 'VishnuCreator-xiaohongshu-post.md';
         const path = join(stage.workdir, fileName);
         await writeFile(path, markdown, { encoding: 'utf8', mode: 0o600 });
         return {

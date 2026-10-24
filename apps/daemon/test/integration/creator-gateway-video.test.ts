@@ -1,5 +1,5 @@
 import Fastify from 'fastify';
-import { createDefaultCreatorServicesConfig, type GatewayModel } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type GatewayModel } from '@vishnucreator/protocol';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';

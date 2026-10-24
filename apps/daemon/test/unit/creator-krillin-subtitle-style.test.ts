@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { buildKrillinSubtitleStyle } from '../../src/creator/krillin/adapter.js';
+import { buildVishnuSubtitleStyle } from '../../src/creator/vishnu/adapter.js';
 
-describe('Creator KrillinAI subtitle style mapping', () => {
+describe('Creator VishnuAI subtitle style mapping', () => {
   it.each([
-    ['system', 'regular', 'small', 'OpenCreator Sans Regular', false, [14, 10, 12, 7]],
-    ['sans', 'medium', 'medium', 'OpenCreator Sans Medium', false, [18, 12, 15, 9]],
-    ['serif', 'bold', 'large', 'OpenCreator Serif Bold', true, [22, 15, 18, 11]],
-    ['rounded', 'bold', 'medium', 'OpenCreator Rounded Bold', true, [18, 12, 15, 9]]
+    ['system', 'regular', 'small', 'VishnuCreator Sans Regular', false, [14, 10, 12, 7]],
+    ['sans', 'medium', 'medium', 'VishnuCreator Sans Medium', false, [18, 12, 15, 9]],
+    ['serif', 'bold', 'large', 'VishnuCreator Serif Bold', true, [22, 15, 18, 11]],
+    ['rounded', 'bold', 'medium', 'VishnuCreator Rounded Bold', true, [18, 12, 15, 9]]
   ] as const)(
     'maps %s/%s/%s to validated horizontal and vertical ASS styles',
     (fontPreset, fontWeight, fontSize, fontName, bold, sizes) => {
-      const result = buildKrillinSubtitleStyle({
+      const result = buildVishnuSubtitleStyle({
         fontPreset,
         fontWeight,
         fontSize,
@@ -55,7 +55,7 @@ describe('Creator KrillinAI subtitle style mapping', () => {
   );
 
   it('disables shadow without retaining controlled override tags', () => {
-    const result = buildKrillinSubtitleStyle({
+    const result = buildVishnuSubtitleStyle({
       shadow: { enabled: false }
     }) as {
       horizontal: { major: Record<string, unknown> };
@@ -66,15 +66,15 @@ describe('Creator KrillinAI subtitle style mapping', () => {
   });
 
   it('rejects unsupported style fields instead of dropping them', () => {
-    expect(() => buildKrillinSubtitleStyle({
+    expect(() => buildVishnuSubtitleStyle({
       rawAssStyle: 'Style: unsafe'
     })).toThrowError(expect.objectContaining({
       code: 'creator_subtitle_style_unsupported'
     }));
   });
 
-  it('omits empty style state instead of overriding KrillinAI defaults', () => {
-    expect(buildKrillinSubtitleStyle(undefined)).toBeUndefined();
-    expect(buildKrillinSubtitleStyle({})).toBeUndefined();
+  it('omits empty style state instead of overriding VishnuAI defaults', () => {
+    expect(buildVishnuSubtitleStyle(undefined)).toBeUndefined();
+    expect(buildVishnuSubtitleStyle({})).toBeUndefined();
   });
 });

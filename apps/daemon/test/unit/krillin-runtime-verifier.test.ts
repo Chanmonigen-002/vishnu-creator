@@ -9,7 +9,7 @@ import {
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { startKrillinRuntimeVerification } from '../../src/creator/krillin/runtime-verifier.js';
+import { startVishnuRuntimeVerification } from '../../src/creator/vishnu/runtime-verifier.js';
 
 let tempDir = '';
 
@@ -18,11 +18,11 @@ afterEach(() => {
   tempDir = '';
 });
 
-describe('Krillin Runtime 后台校验', () => {
+describe('Vishnu Runtime 后台校验', () => {
   it('异步完成完整校验并复用生成的缓存', async () => {
     const fixture = createFixture();
 
-    const first = startKrillinRuntimeVerification({
+    const first = startVishnuRuntimeVerification({
       resourceRoot: fixture.root,
       cachePath: fixture.cachePath
     });
@@ -30,7 +30,7 @@ describe('Krillin Runtime 后台校验', () => {
     expect(existsSync(fixture.cachePath)).toBe(false);
     await expect(first).resolves.toEqual({ cacheHit: false });
     expect(existsSync(fixture.cachePath)).toBe(true);
-    await expect(startKrillinRuntimeVerification({
+    await expect(startVishnuRuntimeVerification({
       resourceRoot: fixture.root,
       cachePath: fixture.cachePath
     })).resolves.toEqual({ cacheHit: true });
@@ -40,19 +40,19 @@ describe('Krillin Runtime 后台校验', () => {
     const fixture = createFixture();
     writeFileSync(fixture.executable, 'tampered-runtime');
 
-    await expect(startKrillinRuntimeVerification({
+    await expect(startVishnuRuntimeVerification({
       resourceRoot: fixture.root,
       cachePath: fixture.cachePath
-    })).rejects.toThrow('dependency_hash_mismatch: bin/krillinai-cli');
+    })).rejects.toThrow('dependency_hash_mismatch: bin/vishnuai-cli');
     expect(existsSync(fixture.cachePath)).toBe(false);
   });
 });
 
 function createFixture() {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-runtime-verifier-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-runtime-verifier-'));
   const root = join(tempDir, 'runtime');
-  const executable = join(root, 'bin', 'krillinai-cli');
-  const cachePath = join(tempDir, 'cache', 'krillinai.json');
+  const executable = join(root, 'bin', 'vishnuai-cli');
+  const cachePath = join(tempDir, 'cache', 'vishnuai.json');
   mkdirSync(dirname(executable), { recursive: true });
   writeFileSync(executable, 'packaged-runtime');
   writeFileSync(join(root, 'manifest.json'), JSON.stringify({
@@ -60,7 +60,7 @@ function createFixture() {
     platform: process.platform,
     arch: process.arch,
     resources: [{
-      path: 'bin/krillinai-cli',
+      path: 'bin/vishnuai-cli',
       kind: 'executable',
       sha256: createHash('sha256').update('packaged-runtime').digest('hex')
     }]

@@ -99,4 +99,4 @@ template/<module>/<id>/1/
 
 ---
 
-質問がありますか？ テンプレートのアイデアとサンプル出力を添えて [Issue を作成](https://github.com/krillinai/OpenCreator/issues/new)してください。範囲の調整をお手伝いします。
+質問がありますか？ テンプレートのアイデアとサンプル出力を添えて [Issue を作成](https://github.com/vishnuai/Vishnu Creator/issues/new)してください。範囲の調整をお手伝いします。

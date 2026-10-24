@@ -45,7 +45,7 @@
 
 ```bash
 pnpm perf:measure
-pnpm --filter @opencreator/web build
+pnpm --filter @vishnucreator/web build
 pnpm perf:check
 ```
 

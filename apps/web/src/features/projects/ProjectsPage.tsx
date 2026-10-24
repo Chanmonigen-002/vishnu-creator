@@ -1,4 +1,4 @@
-import type { CreatorArtifact, CreatorJob } from '@opencreator/protocol';
+import type { CreatorArtifact, CreatorJob } from '@vishnucreator/protocol';
 import {
   Captions,
   CirclePlay,
@@ -22,7 +22,7 @@ import { useLocalizedCopy, type LocalizeCopy } from '../../i18n/useLocalizedCopy
 import { ApiClientError } from '../../runtime/client.js';
 import type { CreatorWebService } from '../../services/creator-service.js';
 import { CreateProjectDropdown } from './CreateProjectDropdown.js';
-import type { OpenCreatorProject } from './project-model.js';
+import type { VishnuCreatorProject } from './project-model.js';
 import type { CreatorProjectType } from './project-types.js';
 import { IssueList } from '../issues/IssuePresenter.js';
 import { usePageIssueState } from '../issues/page-issue-state.js';
@@ -91,7 +91,7 @@ type CreatorProject = {
 
 export default function ProjectsPage(props: {
   jobs: CreatorJob[];
-  workspaces: OpenCreatorProject[];
+  workspaces: VishnuCreatorProject[];
   loading?: boolean;
   error?: string;
   service?: Pick<CreatorWebService, 'openProjectCover'>
@@ -225,8 +225,8 @@ export default function ProjectsPage(props: {
   }
 
   return (
-    <main className="opencreator-scroll-page projects-page">
-      <div className="opencreator-page-content projects-page-inner">
+    <main className="vishnucreator-scroll-page projects-page">
+      <div className="vishnucreator-page-content projects-page-inner">
         <header className="projects-page-header">
           <div>
             <h1>{l('我的项目', 'My Projects')}</h1>
@@ -636,7 +636,7 @@ export default function ProjectsPage(props: {
 
 function createCreatorProject(
   job: CreatorJob,
-  workspaces: OpenCreatorProject[],
+  workspaces: VishnuCreatorProject[],
   l: LocalizeCopy
 ): CreatorProject | undefined {
   const type = templateLabel(job.templateId, l);

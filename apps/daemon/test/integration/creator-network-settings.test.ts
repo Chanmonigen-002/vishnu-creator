@@ -1,6 +1,6 @@
 import Fastify from 'fastify';
 import { afterEach, expect, it, vi } from 'vitest';
-import { createDefaultCreatorServicesConfig, type GatewayAccountState } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type GatewayAccountState } from '@vishnucreator/protocol';
 import { registerCreatorServicesRoutes } from '../../src/api/routes.creator-services.js';
 import { createGatewayCreatorSource } from '../../src/gateway/creator-service-source.js';
 

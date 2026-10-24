@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig, type CreatorJson, type GatewayAccountState, type GatewayModel } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type CreatorJson, type GatewayAccountState, type GatewayModel } from '@vishnucreator/protocol';
 import { expect, it } from 'vitest';
 import { createGatewayCreatorSource } from '../../src/gateway/creator-service-source.js';
 

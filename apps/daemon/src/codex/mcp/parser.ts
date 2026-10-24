@@ -3,7 +3,7 @@ import type {
   CodexMcpListResponse,
   CodexMcpServerResponse,
   CodexMcpTransport
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { redactMcpText } from './redaction.js';
 
 const REDACTED = '[REDACTED]';

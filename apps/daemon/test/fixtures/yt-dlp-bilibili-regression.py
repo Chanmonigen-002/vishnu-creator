@@ -61,7 +61,7 @@ class BilibiliRegression(unittest.TestCase):
             "format": format_selector,
         }) as ydl:
             extractor = ydl.get_info_extractor("BiliBili")
-            self.assertEqual(extractor.PLUGIN_NAME, "opencreator")
+            self.assertEqual(extractor.PLUGIN_NAME, "vishnucreator")
             with patch.object(extractor, "_download_webpage", return_value=webpage), \
                     patch.object(extractor, "_download_webpage_handle", return_value=(webpage, SimpleNamespace(url="https://www.bilibili.com/video/BV18Qhf6hE8P?p=1"))), \
                     patch.object(extractor, "_download_json", side_effect=response), \

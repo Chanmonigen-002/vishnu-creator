@@ -1,7 +1,7 @@
 import type {
   CreatorServicesConfig,
   ImageGenerationProvider
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { imageGenerationCapabilities } from '../image-generation/provider.js';
 import { gatewayCreatorBinding } from '../gateway/creator-service-source.js';
 

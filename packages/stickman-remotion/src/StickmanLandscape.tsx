@@ -13,14 +13,14 @@ import notoSansScBold from '../assets/fonts/NotoSansSC-Bold.woff2';
 
 const localFontFaces = `
 @font-face {
-  font-family: "OpenCreator Noto Sans";
+  font-family: "VishnuCreator Noto Sans";
   src: url("${notoSansBold}") format("woff2");
   font-style: normal;
   font-weight: 700;
   font-display: block;
 }
 @font-face {
-  font-family: "OpenCreator Noto Sans SC";
+  font-family: "VishnuCreator Noto Sans SC";
   src: url("${notoSansScBold}") format("woff2");
   font-style: normal;
   font-weight: 700;
@@ -42,7 +42,7 @@ const StickmanVideo: React.FC<StickmanTimelineProps> = props => {
   return (
     <AbsoluteFill style={{
       backgroundColor: '#f7f7f5',
-      fontFamily: '"OpenCreator Noto Sans SC", "OpenCreator Noto Sans", sans-serif'
+      fontFamily: '"VishnuCreator Noto Sans SC", "VishnuCreator Noto Sans", sans-serif'
     }}>
       <style>{localFontFaces}</style>
       {narrationTrack.map(clip => (

@@ -5,14 +5,14 @@ import {
   type RuntimeErrorCode,
   type SmartDubbingResult,
   type SmartDubbingStyle
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { createHash, randomBytes } from 'node:crypto';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
 import {
-  KrillinTtsServiceError,
-  type KrillinTtsService
-} from '../creator/krillin/tts-service.js';
+  VishnuTtsServiceError,
+  type VishnuTtsService
+} from '../creator/vishnu/tts-service.js';
 import { smartDubbingInstructions } from './styles.js';
 import { publicFactsFromFailure } from '../creator/public-error-facts.js';
 
@@ -49,7 +49,7 @@ export class SmartDubbingError extends Error {
 
 export function createSmartDubbingService(input: {
   dataDir: string;
-  ttsService: Pick<KrillinTtsService, 'synthesize'>;
+  ttsService: Pick<VishnuTtsService, 'synthesize'>;
   now?: () => Date;
   createId?: () => string;
 }): SmartDubbingService {
@@ -94,7 +94,7 @@ export function createSmartDubbingService(input: {
       validateResultId(id);
       const result: SmartDubbingResult = {
         id,
-        fileName: `OpenCreator-dubbing-${id}.${synthesis.format}`,
+        fileName: `VishnuCreator-dubbing-${id}.${synthesis.format}`,
         mime: synthesis.mime,
         size: synthesis.content.length,
         provider: synthesis.provider,
@@ -177,7 +177,7 @@ function validateRequest(request: CreateSmartDubbingRequest) {
 }
 
 function mapTtsError(error: unknown): SmartDubbingError {
-  if (error instanceof KrillinTtsServiceError) {
+  if (error instanceof VishnuTtsServiceError) {
     if (error.code === 'creator_tts_config_missing') {
       return new SmartDubbingError(
         'SMART_DUBBING_CONFIG_REQUIRED',

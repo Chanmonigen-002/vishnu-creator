@@ -1,4 +1,4 @@
-import type { AgentEventEnvelope } from '@opencreator/protocol';
+import type { AgentEventEnvelope } from '@vishnucreator/protocol';
 
 export const normalizerVersion = 1;
 

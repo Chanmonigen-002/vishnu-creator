@@ -7,13 +7,13 @@ import { verifyEnglishReleaseNotes } from '../scripts/verify-release-notes.mjs';
 
 describe('English release notes verification', () => {
   it('accepts English updates with Unicode punctuation and product names', () => {
-    expect(() => verifyEnglishReleaseNotes('## What’s New\n\n- Improved OpenCreator’s SRT translation — including bilingual subtitles.')).not.toThrow();
+    expect(() => verifyEnglishReleaseNotes('## What’s New\n\n- Improved VishnuCreator’s SRT translation — including bilingual subtitles.')).not.toThrow();
   });
 
   it.each([
     '',
     ' \n ',
-    '# OpenCreator v3.2.7',
+    '# VishnuCreator v3.2.7',
     '## 更新内容\n\n- Improved video downloads.',
     '## What\'s New\n\n- Improved 视频 downloads.',
     '## What\'s New\n\n- Added support for \u{20000}.'
@@ -22,7 +22,7 @@ describe('English release notes verification', () => {
   });
 
   it('checks every supplied file and exits unsuccessfully on missing or Chinese notes', () => {
-    const directory = mkdtempSync(join(tmpdir(), 'opencreator-check-notes-'));
+    const directory = mkdtempSync(join(tmpdir(), 'vishnucreator-check-notes-'));
     try {
       const english = join(directory, 'english.md');
       const chinese = join(directory, 'chinese.md');

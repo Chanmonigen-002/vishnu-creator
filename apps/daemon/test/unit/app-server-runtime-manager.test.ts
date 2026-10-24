@@ -347,7 +347,7 @@ function thread(): RuntimeThread {
     id: 'thread-1',
     title: '测试会话',
     projectId: 'project-1',
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     cwd: 'D:\\creator-project',
     canonicalCwd: 'D:\\creator-project',
     workspaceMode: 'external',

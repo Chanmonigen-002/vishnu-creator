@@ -10,10 +10,10 @@ import {
 
 describe('daemon production startup', () => {
   it('requires explicit paid-test opt-in instead of charging for desktop readiness checks', () => {
-    expect(requiresPaidStartupProbe({ OPENCREATOR_REQUIRE_CODEX_PROBE: '1' })).toBe(false);
-    expect(requiresPaidStartupProbe({ OPENCREATOR_ENABLE_PAID_STARTUP_PROBE: '1' })).toBe(false);
-    expect(requiresPaidStartupProbe({ OPENCREATOR_REQUIRE_CODEX_PROBE: '1', OPENCREATOR_ENABLE_PAID_STARTUP_PROBE: '1' })).toBe(true);
-    expect(requiresPaidStartupProbe({ OPENCREATOR_REQUIRE_CODEX_PROBE: '1', OPENCREATOR_ENABLE_PAID_STARTUP_PROBE: '1', OPENCREATOR_CODEX_PROBE_VERIFIED: '1' })).toBe(false);
+    expect(requiresPaidStartupProbe({ VISHNUCREATOR_REQUIRE_CODEX_PROBE: '1' })).toBe(false);
+    expect(requiresPaidStartupProbe({ VISHNUCREATOR_ENABLE_PAID_STARTUP_PROBE: '1' })).toBe(false);
+    expect(requiresPaidStartupProbe({ VISHNUCREATOR_REQUIRE_CODEX_PROBE: '1', VISHNUCREATOR_ENABLE_PAID_STARTUP_PROBE: '1' })).toBe(true);
+    expect(requiresPaidStartupProbe({ VISHNUCREATOR_REQUIRE_CODEX_PROBE: '1', VISHNUCREATOR_ENABLE_PAID_STARTUP_PROBE: '1', VISHNUCREATOR_CODEX_PROBE_VERIFIED: '1' })).toBe(false);
   });
 
   it('enables scheduler autostart and built-in agent tools for the production server', () => {
@@ -50,18 +50,18 @@ describe('daemon production startup', () => {
 
   it('maps isolated runtime paths from non-empty environment variables', () => {
     expect(resolveProductionServerEnvironment({
-      OPENCREATOR_DATA_DIR: ' /tmp/opencreator-data ',
-      OPENCREATOR_CODEX_BIN: ' /tmp/fake-codex ',
-      CODEX_HOME: ' /tmp/opencreator-codex-home ',
-      OPENCREATOR_LOCAL_CODEX_HOME: ' /tmp/local-codex-home ',
-      OPENCREATOR_DEFAULT_CWD: ' /tmp/default-workspace ',
-      OPENCREATOR_DEFAULT_PROJECT_ROOT: ' /tmp/Documents ',
-      OPENCREATOR_YT_DLP_PATH: ' /tmp/yt-dlp '
+      VISHNUCREATOR_DATA_DIR: ' /tmp/vishnucreator-data ',
+      VISHNUCREATOR_CODEX_BIN: ' /tmp/fake-codex ',
+      CODEX_HOME: ' /tmp/vishnucreator-codex-home ',
+      VISHNUCREATOR_LOCAL_CODEX_HOME: ' /tmp/local-codex-home ',
+      VISHNUCREATOR_DEFAULT_CWD: ' /tmp/default-workspace ',
+      VISHNUCREATOR_DEFAULT_PROJECT_ROOT: ' /tmp/Documents ',
+      VISHNUCREATOR_YT_DLP_PATH: ' /tmp/yt-dlp '
     })).toEqual({
-      gatewayOrigin: 'https://www.open-creator.ai',
-      dataDir: '/tmp/opencreator-data',
+      gatewayOrigin: 'https://www.vishnu-creator.ai',
+      dataDir: '/tmp/vishnucreator-data',
       codexBin: '/tmp/fake-codex',
-      codexHome: '/tmp/opencreator-codex-home',
+      codexHome: '/tmp/vishnucreator-codex-home',
       localCodexHome: '/tmp/local-codex-home',
       defaultCwd: '/tmp/default-workspace',
       defaultProjectRoot: '/tmp/Documents',
@@ -69,50 +69,50 @@ describe('daemon production startup', () => {
     });
 
     expect(resolveProductionServerEnvironment({
-      OPENCREATOR_DATA_DIR: ' ',
-      OPENCREATOR_CODEX_BIN: '',
+      VISHNUCREATOR_DATA_DIR: ' ',
+      VISHNUCREATOR_CODEX_BIN: '',
       CODEX_HOME: '\t',
-      OPENCREATOR_LOCAL_CODEX_HOME: ' ',
-      OPENCREATOR_DEFAULT_CWD: '\n',
-      OPENCREATOR_DEFAULT_PROJECT_ROOT: ' ',
-      OPENCREATOR_YT_DLP_PATH: ''
-    })).toEqual({ gatewayOrigin: 'https://www.open-creator.ai' });
+      VISHNUCREATOR_LOCAL_CODEX_HOME: ' ',
+      VISHNUCREATOR_DEFAULT_CWD: '\n',
+      VISHNUCREATOR_DEFAULT_PROJECT_ROOT: ' ',
+      VISHNUCREATOR_YT_DLP_PATH: ''
+    })).toEqual({ gatewayOrigin: 'https://www.vishnu-creator.ai' });
   });
 
   it('uses the production gateway by default and allows an explicit local gateway', () => {
     expect(resolveProductionServerEnvironment({
-      OPENCREATOR_GATEWAY_ORIGIN: ' '
-    }).gatewayOrigin).toBe('https://www.open-creator.ai');
+      VISHNUCREATOR_GATEWAY_ORIGIN: ' '
+    }).gatewayOrigin).toBe('https://www.vishnu-creator.ai');
     expect(resolveProductionServerEnvironment({
-      OPENCREATOR_GATEWAY_ORIGIN: ' http://127.0.0.1:8787 '
+      VISHNUCREATOR_GATEWAY_ORIGIN: ' http://127.0.0.1:8787 '
     }).gatewayOrigin).toBe('http://127.0.0.1:8787');
   });
 
   it('prefers standard CODEX_HOME and keeps the legacy variable as a fallback', () => {
     expect(resolveProductionServerEnvironment({
       CODEX_HOME: '/tmp/standard-codex-home',
-      OPENCREATOR_CODEX_HOME: '/tmp/legacy-codex-home'
+      VISHNUCREATOR_CODEX_HOME: '/tmp/legacy-codex-home'
     })).toMatchObject({
       codexHome: '/tmp/standard-codex-home'
     });
     expect(resolveProductionServerEnvironment({
-      OPENCREATOR_CODEX_HOME: '/tmp/legacy-codex-home'
+      VISHNUCREATOR_CODEX_HOME: '/tmp/legacy-codex-home'
     })).toMatchObject({
       codexHome: '/tmp/legacy-codex-home'
     });
   });
 
-  it('resolves the default OpenCreator layout without a Codex home segment', () => {
+  it('resolves the default VishnuCreator layout without a Codex home segment', () => {
     expect(resolveProductionRuntimePaths({}, {
       homeDir: '/Users/demo'
     })).toEqual({
-      appHome: '/Users/demo/.opencreator',
-      dataDir: '/Users/demo/.opencreator/data',
-      configFile: '/Users/demo/.opencreator/config.toml',
-      credentialsFile: '/Users/demo/.opencreator/credentials.json',
-      runtimeDir: '/Users/demo/.opencreator/runtime',
-      creatorDir: '/Users/demo/.opencreator/creator',
-      codexHome: '/Users/demo/.opencreator/runtime/codex'
+      appHome: '/Users/demo/.vishnucreator',
+      dataDir: '/Users/demo/.vishnucreator/data',
+      configFile: '/Users/demo/.vishnucreator/config.toml',
+      credentialsFile: '/Users/demo/.vishnucreator/credentials.json',
+      runtimeDir: '/Users/demo/.vishnucreator/runtime',
+      creatorDir: '/Users/demo/.vishnucreator/creator',
+      codexHome: '/Users/demo/.vishnucreator/runtime/codex'
     });
   });
 
@@ -121,13 +121,13 @@ describe('daemon production startup', () => {
       homeDir: '/Users/demo',
       runtimeChannel: 'development'
     })).toEqual({
-      appHome: '/Users/demo/.opencreator/development',
-      dataDir: '/Users/demo/.opencreator/development/data',
-      configFile: '/Users/demo/.opencreator/development/config.toml',
-      credentialsFile: '/Users/demo/.opencreator/development/credentials.json',
-      runtimeDir: '/Users/demo/.opencreator/development/runtime',
-      creatorDir: '/Users/demo/.opencreator/development/creator',
-      codexHome: '/Users/demo/.opencreator/development/runtime/codex'
+      appHome: '/Users/demo/.vishnucreator/development',
+      dataDir: '/Users/demo/.vishnucreator/development/data',
+      configFile: '/Users/demo/.vishnucreator/development/config.toml',
+      credentialsFile: '/Users/demo/.vishnucreator/development/credentials.json',
+      runtimeDir: '/Users/demo/.vishnucreator/development/runtime',
+      creatorDir: '/Users/demo/.vishnucreator/development/creator',
+      codexHome: '/Users/demo/.vishnucreator/development/runtime/codex'
     });
   });
 
@@ -136,19 +136,19 @@ describe('daemon production startup', () => {
     expect(parseRuntimeChannel(' production ')).toBe('production');
     expect(parseRuntimeChannel(' development ')).toBe('development');
     expect(() => parseRuntimeChannel('preview')).toThrow(
-      /Unsupported OpenCreator Runtime channel/
+      /Unsupported VishnuCreator Runtime channel/
     );
   });
 
   it('keeps isolated test configuration next to an explicit data directory', () => {
     expect(resolveProductionRuntimePaths({
-      dataDir: '/tmp/opencreator-e2e/runtime'
+      dataDir: '/tmp/vishnucreator-e2e/runtime'
     })).toMatchObject({
-      appHome: '/tmp/opencreator-e2e',
-      dataDir: '/tmp/opencreator-e2e/runtime',
-      configFile: '/tmp/opencreator-e2e/config.toml',
-      credentialsFile: '/tmp/opencreator-e2e/credentials.json',
-      codexHome: '/tmp/opencreator-e2e/runtime/codex'
+      appHome: '/tmp/vishnucreator-e2e',
+      dataDir: '/tmp/vishnucreator-e2e/runtime',
+      configFile: '/tmp/vishnucreator-e2e/config.toml',
+      credentialsFile: '/tmp/vishnucreator-e2e/credentials.json',
+      codexHome: '/tmp/vishnucreator-e2e/runtime/codex'
     });
   });
 });

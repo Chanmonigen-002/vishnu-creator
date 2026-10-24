@@ -9,7 +9,7 @@ import type {
   ScheduleOperationListResponse,
   ScheduleResponse,
   UpdateScheduleRequest,
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   Bell,
   CalendarClock,
@@ -33,7 +33,7 @@ import {
 } from 'react';
 import { useConfirmDialog } from '../../components/dialogs/ConfirmDialogProvider.js';
 import { ApiClientError } from '../../runtime/errors.js';
-import type { OpenCreatorProject } from '../projects/project-model.js';
+import type { VishnuCreatorProject } from '../projects/project-model.js';
 import { IssueList } from '../issues/IssuePresenter.js';
 import { usePageIssueState } from '../issues/page-issue-state.js';
 import {
@@ -82,7 +82,7 @@ type ScheduleFilter = 'all' | 'enabled' | 'paused';
 export type SchedulesViewProps = {
   connected: boolean;
   service: ScheduleViewService | null;
-  projects: OpenCreatorProject[];
+  projects: VishnuCreatorProject[];
   currentProjectId: string;
   editScheduleId?: string;
   profiles?: CodexProfileResponse[];
@@ -600,7 +600,7 @@ export function SchedulesView(props: SchedulesViewProps) {
 }
 
 function createDefaultValues(
-  project: OpenCreatorProject | undefined,
+  project: VishnuCreatorProject | undefined,
   timezone: string
 ): ScheduleEditorValues {
   return {

@@ -26,49 +26,49 @@ const scriptDir = dirname(fileURLToPath(import.meta.url));
 const desktopDir = resolve(scriptDir, '..');
 const rootDir = resolve(desktopDir, '../..');
 const targetPlatform = normalizePlatform(
-  process.env.OPENCREATOR_DESKTOP_TARGET_PLATFORM
-    ?? process.env.OPENCREATOR_CREATOR_RUNTIME_PLATFORM
+  process.env.VISHNUCREATOR_DESKTOP_TARGET_PLATFORM
+    ?? process.env.VISHNUCREATOR_CREATOR_RUNTIME_PLATFORM
     ?? process.platform
 );
-const targetArch = process.env.OPENCREATOR_DESKTOP_TARGET_ARCH
-  ?? process.env.OPENCREATOR_CREATOR_RUNTIME_ARCH
+const targetArch = process.env.VISHNUCREATOR_DESKTOP_TARGET_ARCH
+  ?? process.env.VISHNUCREATOR_CREATOR_RUNTIME_ARCH
   ?? process.arch;
-const outputRoot = resolve(process.env.OPENCREATOR_CREATOR_RUNTIME_OUTPUT ?? join(desktopDir, '.pack', 'creator-runtime', 'krillinai'));
+const outputRoot = resolve(process.env.VISHNUCREATOR_CREATOR_RUNTIME_OUTPUT ?? join(desktopDir, '.pack', 'creator-runtime', 'vishnuai'));
 const vendorRoot = resolve(
-  process.env.OPENCREATOR_CREATOR_RUNTIME_VENDOR
+  process.env.VISHNUCREATOR_CREATOR_RUNTIME_VENDOR
     ?? join(rootDir, '.runtime', 'vendor', 'creator-runtime', `${targetPlatform}-${targetArch}`)
 );
-const krillinBuildRoot = resolve(
-  process.env.OPENCREATOR_KRILLINAI_BUILD_OUTPUT
-    ?? join(rootDir, '.runtime', 'build', 'krillinai', `${targetPlatform}-${targetArch}`)
+const vishnuBuildRoot = resolve(
+  process.env.VISHNUCREATOR_VISHNUAI_BUILD_OUTPUT
+    ?? join(rootDir, '.runtime', 'build', 'vishnuai', `${targetPlatform}-${targetArch}`)
 );
 const binDir = join(outputRoot, 'bin');
 const executableSuffix = targetPlatform === 'win32' ? '.exe' : '';
-const configuredYtDlpPath = process.env.OPENCREATOR_YT_DLP_PATH?.trim();
+const configuredYtDlpPath = process.env.VISHNUCREATOR_YT_DLP_PATH?.trim();
 const runtimeMode = 'cli';
 const subtitleFontSourceRoot = join(rootDir, 'assets', 'creator-subtitle-fonts');
 
-ensureKrillinBuild();
+ensureVishnuBuild();
 ensureExternalDependencies();
-const krillinBuild = readKrillinBuildManifest();
+const vishnuBuild = readVishnuBuildManifest();
 const vendorVersions = readVendorVersions();
-const cliVersion = krillinBuild.componentVersion;
-const sourceCommit = krillinBuild.sourceCommit;
-const sourceSha256 = krillinBuild.sourceSha256;
+const cliVersion = vishnuBuild.componentVersion;
+const sourceCommit = vishnuBuild.sourceCommit;
+const sourceSha256 = vishnuBuild.sourceSha256;
 rmSync(outputRoot, { recursive: true, force: true });
 mkdirSync(binDir, { recursive: true });
 const subtitleFonts = prepareSubtitleFonts();
 
-const primaryExecutablePath = join(binDir, `krillinai-cli${executableSuffix}`);
+const primaryExecutablePath = join(binDir, `vishnuai-cli${executableSuffix}`);
 copyExecutable(
-  resolve(krillinBuildRoot, krillinBuild.binaries['krillinai-cli'].path),
+  resolve(vishnuBuildRoot, vishnuBuild.binaries['vishnuai-cli'].path),
   primaryExecutablePath
 );
-verifyStandaloneKrillinCli(primaryExecutablePath);
+verifyStandaloneVishnuCli(primaryExecutablePath);
 
 const externalInputs = [
-  ['ffmpeg', process.env.OPENCREATOR_FFMPEG_PATH, join(vendorRoot, `ffmpeg${executableSuffix}`)],
-  ['ffprobe', process.env.OPENCREATOR_FFPROBE_PATH, join(vendorRoot, `ffprobe${executableSuffix}`)]
+  ['ffmpeg', process.env.VISHNUCREATOR_FFMPEG_PATH, join(vendorRoot, `ffmpeg${executableSuffix}`)],
+  ['ffprobe', process.env.VISHNUCREATOR_FFPROBE_PATH, join(vendorRoot, `ffprobe${executableSuffix}`)]
 ];
 for (const [name, configured, vendored] of externalInputs) {
   const source = resolveExecutable(name, configured, vendored);
@@ -117,7 +117,7 @@ const buildRecord = {
     resourceCount: subtitleFonts.resourcePaths.length
   },
   integrationPatchSha256: hashFiles([
-    join(rootDir, 'scripts', 'build-krillinai.mjs'),
+    join(rootDir, 'scripts', 'build-vishnuai.mjs'),
     join(scriptDir, 'install-creator-runtime-dependencies.mjs'),
     join(scriptDir, 'creator-runtime-releases.mjs'),
     join(scriptDir, 'prepare-creator-runtime.mjs'),
@@ -125,11 +125,11 @@ const buildRecord = {
     join(scriptDir, 'creator-nlp-runtime.mjs'),
     join(scriptDir, 'install-creator-nlp-wheels.py'),
     creatorNlpLockPath,
-    join(rootDir, 'apps', 'daemon', 'src', 'creator', 'krillin', 'adapter.ts'),
-    join(rootDir, 'apps', 'daemon', 'src', 'creator', 'krillin', 'cli-runner.ts'),
-    join(rootDir, 'apps', 'daemon', 'src', 'creator', 'krillin', 'config-bridge.ts'),
-    join(rootDir, 'apps', 'daemon', 'src', 'creator', 'krillin', 'dependency-loader.ts'),
-    join(rootDir, 'apps', 'daemon', 'src', 'creator', 'krillin', 'dependency-preflight.ts'),
+    join(rootDir, 'apps', 'daemon', 'src', 'creator', 'vishnu', 'adapter.ts'),
+    join(rootDir, 'apps', 'daemon', 'src', 'creator', 'vishnu', 'cli-runner.ts'),
+    join(rootDir, 'apps', 'daemon', 'src', 'creator', 'vishnu', 'config-bridge.ts'),
+    join(rootDir, 'apps', 'daemon', 'src', 'creator', 'vishnu', 'dependency-loader.ts'),
+    join(rootDir, 'apps', 'daemon', 'src', 'creator', 'vishnu', 'dependency-preflight.ts'),
     join(rootDir, 'apps', 'daemon', 'src', 'creator', 'templates', 'video-translation.ts')
   ]),
   platform: targetPlatform,
@@ -329,30 +329,30 @@ function resolveAssetPath(root, path) {
   return result;
 }
 
-function ensureKrillinBuild() {
-  execFileSync(process.execPath, [join(rootDir, 'scripts', 'build-krillinai.mjs')], {
+function ensureVishnuBuild() {
+  execFileSync(process.execPath, [join(rootDir, 'scripts', 'build-vishnuai.mjs')], {
     cwd: rootDir,
     env: {
       ...process.env,
-      OPENCREATOR_DESKTOP_TARGET_PLATFORM: targetPlatform,
-      OPENCREATOR_DESKTOP_TARGET_ARCH: targetArch,
-      OPENCREATOR_KRILLINAI_BUILD_OUTPUT: krillinBuildRoot
+      VISHNUCREATOR_DESKTOP_TARGET_PLATFORM: targetPlatform,
+      VISHNUCREATOR_DESKTOP_TARGET_ARCH: targetArch,
+      VISHNUCREATOR_VISHNUAI_BUILD_OUTPUT: vishnuBuildRoot
     },
     stdio: 'inherit'
   });
 }
 
-function readKrillinBuildManifest() {
-  const path = join(krillinBuildRoot, 'manifest.json');
+function readVishnuBuildManifest() {
+  const path = join(vishnuBuildRoot, 'manifest.json');
   if (!existsSync(path)) {
-    throw new Error(`KrillinAI build manifest is missing: ${path}`);
+    throw new Error(`VishnuAI build manifest is missing: ${path}`);
   }
   const manifest = JSON.parse(readFileSync(path, 'utf8'));
-  const cli = manifest?.binaries?.['krillinai-cli'];
-  const server = manifest?.binaries?.['krillinai-server'];
+  const cli = manifest?.binaries?.['vishnuai-cli'];
+  const server = manifest?.binaries?.['vishnuai-server'];
   if (
     manifest?.version !== 1
-    || manifest.component !== 'opencreator-krillinai'
+    || manifest.component !== 'vishnucreator-vishnuai'
     || typeof manifest.componentVersion !== 'string'
     || typeof manifest.sourceCommit !== 'string'
     || !/^[a-f0-9]{64}$/i.test(manifest.sourceSha256 ?? '')
@@ -363,28 +363,28 @@ function readKrillinBuildManifest() {
     || typeof cli?.path !== 'string'
     || typeof server?.path !== 'string'
   ) {
-    throw new Error('KrillinAI build manifest is invalid or targets another platform');
+    throw new Error('VishnuAI build manifest is invalid or targets another platform');
   }
   return manifest;
 }
 
 function ensureExternalDependencies() {
   const required = [
-    [process.env.OPENCREATOR_FFMPEG_PATH, join(vendorRoot, `ffmpeg${executableSuffix}`)],
-    [process.env.OPENCREATOR_FFPROBE_PATH, join(vendorRoot, `ffprobe${executableSuffix}`)],
+    [process.env.VISHNUCREATOR_FFMPEG_PATH, join(vendorRoot, `ffmpeg${executableSuffix}`)],
+    [process.env.VISHNUCREATOR_FFPROBE_PATH, join(vendorRoot, `ffprobe${executableSuffix}`)],
     [configuredYtDlpPath, join(vendorRoot, 'yt-dlp')],
     [undefined, join(vendorRoot, 'python-runtime.tar.gz')],
     [configuredYtDlpPath, join(vendorRoot, 'cacert.pem')],
-    [process.env.OPENCREATOR_YT_DLP_NODE_PATH, join(vendorRoot, targetPlatform === 'win32' ? 'node-runtime.zip' : 'node-runtime.tar.gz')]
+    [process.env.VISHNUCREATOR_YT_DLP_NODE_PATH, join(vendorRoot, targetPlatform === 'win32' ? 'node-runtime.zip' : 'node-runtime.tar.gz')]
   ];
   if (configuredYtDlpPath && required.every(([configured, vendored]) => configured || existsSync(vendored))) return;
   execFileSync(process.execPath, [join(scriptDir, 'install-creator-runtime-dependencies.mjs')], {
     cwd: rootDir,
     env: {
       ...process.env,
-      OPENCREATOR_CREATOR_RUNTIME_PLATFORM: targetPlatform,
-      OPENCREATOR_CREATOR_RUNTIME_ARCH: targetArch,
-      OPENCREATOR_CREATOR_RUNTIME_VENDOR: vendorRoot
+      VISHNUCREATOR_CREATOR_RUNTIME_PLATFORM: targetPlatform,
+      VISHNUCREATOR_CREATOR_RUNTIME_ARCH: targetArch,
+      VISHNUCREATOR_CREATOR_RUNTIME_VENDOR: vendorRoot
     },
     stdio: 'inherit'
   });
@@ -411,7 +411,7 @@ function resolveExecutable(name, configured, vendored) {
   const locator = process.platform === 'win32' ? 'where.exe' : 'which';
   const located = commandOutput(locator, [name], rootDir).split(/\r?\n/).find(Boolean);
   if (!located || !existsSync(located)) {
-    throw new Error(`Set OPENCREATOR_${name.replace('-', '_').toUpperCase()}_PATH to a pinned ${name} binary`);
+    throw new Error(`Set VISHNUCREATOR_${name.replace('-', '_').toUpperCase()}_PATH to a pinned ${name} binary`);
   }
   return resolve(located);
 }
@@ -486,7 +486,7 @@ function prepareYtDlpRuntime(vendorVersions) {
 }
 
 function prepareYtDlpJavascriptRuntime(vendorVersions) {
-  const configured = process.env.OPENCREATOR_YT_DLP_NODE_PATH?.trim();
+  const configured = process.env.VISHNUCREATOR_YT_DLP_NODE_PATH?.trim();
   const executable = join(binDir, `node${executableSuffix}`);
   const resourcePaths = [executable];
   let version = vendorVersions?.dependencies?.nodeRuntime?.version;
@@ -495,7 +495,7 @@ function prepareYtDlpJavascriptRuntime(vendorVersions) {
     version = commandOutput(executable, ['--version'], rootDir).trim().replace(/^v/, '');
   } else {
     if (!version) throw new Error('yt-dlp JavaScript runtime version is missing');
-    const extractionRoot = mkdtempSync(join(tmpdir(), 'opencreator-node-runtime-'));
+    const extractionRoot = mkdtempSync(join(tmpdir(), 'vishnucreator-node-runtime-'));
     try {
       execFileSync(process.platform === 'win32' ? 'tar.exe' : 'tar', [
         '-xf', join(vendorRoot, targetPlatform === 'win32' ? 'node-runtime.zip' : 'node-runtime.tar.gz'),
@@ -583,8 +583,8 @@ function clearMacOSFileMetadata(path, recursive = false) {
   });
 }
 
-function verifyStandaloneKrillinCli(path) {
-  const verificationRoot = mkdtempSync(join(tmpdir(), 'opencreator-krillin-cli-'));
+function verifyStandaloneVishnuCli(path) {
+  const verificationRoot = mkdtempSync(join(tmpdir(), 'vishnucreator-vishnu-cli-'));
   let help;
   try {
     help = execFileSync(path, ['--help'], {
@@ -599,12 +599,12 @@ function verifyStandaloneKrillinCli(path) {
     const detail = error instanceof Error
       ? `${error.message}\n${String(error.stderr ?? '')}`.trim().slice(-2_000)
       : String(error);
-    throw new Error(`KrillinAI CLI must run in the packaged minimal environment: ${detail}`);
+    throw new Error(`VishnuAI CLI must run in the packaged minimal environment: ${detail}`);
   } finally {
     rmSync(verificationRoot, { recursive: true, force: true });
   }
-  if (!/krillinai-cli <command>/i.test(help)) {
-    throw new Error('KrillinAI CLI emitted an unexpected help response');
+  if (!/vishnuai-cli <command>/i.test(help)) {
+    throw new Error('VishnuAI CLI emitted an unexpected help response');
   }
 }
 

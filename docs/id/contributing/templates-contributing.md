@@ -99,4 +99,4 @@ Jika templat Anda mengadaptasi prompt atau gaya yang dipublikasikan orang lain:
 
 ---
 
-Ada pertanyaan? [Buka issue](https://github.com/krillinai/OpenCreator/issues/new) dengan ide templat Anda dan contoh hasilnya, dan kami akan membantu menentukan cakupannya.
+Ada pertanyaan? [Buka issue](https://github.com/vishnuai/Vishnu Creator/issues/new) dengan ide templat Anda dan contoh hasilnya, dan kami akan membantu menentukan cakupannya.

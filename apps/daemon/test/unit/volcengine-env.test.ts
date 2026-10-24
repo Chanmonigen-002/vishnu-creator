@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { applyVolcengineEnvironmentOverrides } from '../../src/creator-services/volcengine-env.js';
 
 describe('volcengine environment overrides', () => {

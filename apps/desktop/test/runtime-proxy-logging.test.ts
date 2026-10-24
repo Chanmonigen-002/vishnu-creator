@@ -29,14 +29,14 @@ describe('Desktop Runtime proxy logging', () => {
 
     const handler = vi.mocked(protocol.handle).mock.calls[0]![1];
     const response = await handler(new Request(
-      'opencreator-app://app/.opencreator/runtime/tasks?token=private-value'
+      'vishnucreator-app://app/.vishnucreator/runtime/tasks?token=private-value'
     ));
 
     expect(response.status).toBe(503);
     expect(logger.warnRateLimited).toHaveBeenCalledWith(
       'runtime-proxy-unavailable',
       'Runtime proxy connection unavailable',
-      { method: 'GET', path: '/.opencreator/runtime/tasks' },
+      { method: 'GET', path: '/.vishnucreator/runtime/tasks' },
       5_000
     );
   });
@@ -60,7 +60,7 @@ describe('Desktop Runtime proxy logging', () => {
 
     const handler = vi.mocked(protocol.handle).mock.calls[0]![1];
     const response = await handler(new Request(
-      'opencreator-app://app/.opencreator/runtime/healthz?token=private-value'
+      'vishnucreator-app://app/.vishnucreator/runtime/healthz?token=private-value'
     ));
 
     expect(response.status).toBe(502);
@@ -69,7 +69,7 @@ describe('Desktop Runtime proxy logging', () => {
     });
     expect(logger.warn).toHaveBeenCalledWith('Runtime proxy request failed', {
       method: 'GET',
-      path: '/.opencreator/runtime/healthz',
+      path: '/.vishnucreator/runtime/healthz',
       phase: 'fetch',
       durationMs: expect.any(Number),
       daemonPort: '60764',
@@ -94,7 +94,7 @@ describe('Desktop Runtime proxy logging', () => {
     });
 
     const handler = vi.mocked(protocol.handle).mock.calls[0]![1];
-    const response = await handler(new Request('opencreator-app://app/.opencreator/runtime/tasks'));
+    const response = await handler(new Request('vishnucreator-app://app/.vishnucreator/runtime/tasks'));
     expect(response.status).toBe(500);
     expect(onTransportFailure).not.toHaveBeenCalled();
   });

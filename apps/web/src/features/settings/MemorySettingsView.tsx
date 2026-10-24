@@ -12,7 +12,7 @@ import type {
   MemoryResponse,
   MemoryScope,
   UpdateMemoryRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   AlertTriangle,
   Brain,

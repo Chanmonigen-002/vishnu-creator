@@ -140,7 +140,7 @@ export type DaemonConnection = {
 
 export type DaemonBootstrapEvent =
   | {
-      type: 'opencreator_daemon_bootstrap';
+      type: 'vishnucreator_daemon_bootstrap';
       phase: 'probing_codex' | 'probe_succeeded' | 'starting_runtime';
       at: string;
       durationMs?: number;
@@ -149,7 +149,7 @@ export type DaemonBootstrapEvent =
       probeTimings?: DesktopProbeTimings;
     }
   | {
-      type: 'opencreator_daemon_bootstrap_error';
+      type: 'vishnucreator_daemon_bootstrap_error';
       code: string;
       message: string;
       at?: string;

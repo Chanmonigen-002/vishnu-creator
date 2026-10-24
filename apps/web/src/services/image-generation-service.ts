@@ -1,7 +1,7 @@
 import type {
   CreateImageGenerationRequest,
   ImageGenerationResultResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 type ImageGenerationClient = Pick<RuntimeClient, 'post' | 'rawGet'>;

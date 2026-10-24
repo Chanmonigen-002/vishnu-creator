@@ -1,6 +1,6 @@
 # Research Paper Writing
 
-本模板接入自 `Master-cai/Research-Paper-Writing-Skills`，用于提升科研论文和学术内容的章节结构、段落流畅性、论点证据对齐及审稿人可读性。上游说明其大部分写作知识与方法来自彭思达教授公开的学习笔记和 `pengsida/learning_research`；本模板保留该归属，并将方法适配到 OpenCreator 的写作流程。
+本模板接入自 `Master-cai/Research-Paper-Writing-Skills`，用于提升科研论文和学术内容的章节结构、段落流畅性、论点证据对齐及审稿人可读性。上游说明其大部分写作知识与方法来自彭思达教授公开的学习笔记和 `pengsida/learning_research`；本模板保留该归属，并将方法适配到 Vishnu Creator 的写作流程。
 
 ## 核心工作流
 

@@ -2,7 +2,7 @@
 
 > [English](../../CONTRIBUTING.md) | [简体中文](../zh/CONTRIBUTING.md) | [日本語](../ja/CONTRIBUTING.md) | [한국어](../ko/CONTRIBUTING.md) | **Bahasa Indonesia** | [Español](../es/CONTRIBUTING.md) | [Français](../fr/CONTRIBUTING.md) | [Deutsch](../de/CONTRIBUTING.md) | [Português](../pt/CONTRIBUTING.md) | [Русский](../ru/CONTRIBUTING.md) | [العربية](../ar/CONTRIBUTING.md)
 
-Terima kasih telah mempertimbangkan untuk berkontribusi. OpenCreator adalah workspace kreator local-first yang dibangun di atas loop agen Codex, dan sebagian besar nilainya berasal dari tambahan yang kecil dan terfokus: satu folder Skill, satu templat kreasi, satu perbaikan dengan cakupan jelas. Panduan ini menjelaskan di mana setiap jenis kontribusi ditempatkan dan standar apa yang harus dipenuhi PR sebelum digabungkan.
+Terima kasih telah mempertimbangkan untuk berkontribusi. Vishnu Creator adalah workspace kreator local-first yang dibangun di atas loop agen Codex, dan sebagian besar nilainya berasal dari tambahan yang kecil dan terfokus: satu folder Skill, satu templat kreasi, satu perbaikan dengan cakupan jelas. Panduan ini menjelaskan di mana setiap jenis kontribusi ditempatkan dan standar apa yang harus dipenuhi PR sebelum digabungkan.
 
 ---
 
@@ -19,7 +19,7 @@ Terima kasih telah mempertimbangkan untuk berkontribusi. OpenCreator adalah work
 
 ## Tempat bertanya dan peninjau
 
-Gunakan [Issue](https://github.com/krillinai/OpenCreator/issues/new) untuk membahas ide atau menanyakan bidang yang sesuai. Saat mengirim PR, sebutkan anggota [Tim Inti](../../README.md#the-crew) yang terkait dengan kode dan bug, template kreasi, desain dan aset, atau Skills dan dokumentasi. Tim membantu standar kontribusi, peninjauan, dan pertanyaan komunitas; penggabungan mengikuti izin repositori dan pemeriksaan wajib.
+Gunakan [Issue](https://github.com/vishnuai/Vishnu Creator/issues/new) untuk membahas ide atau menanyakan bidang yang sesuai. Saat mengirim PR, sebutkan anggota [Tim Inti](../../README.md#the-crew) yang terkait dengan kode dan bug, template kreasi, desain dan aset, atau Skills dan dokumentasi. Tim membantu standar kontribusi, peninjauan, dan pertanyaan komunitas; penggabungan mengikuti izin repositori dan pemeriksaan wajib.
 
 ---
 
@@ -28,8 +28,8 @@ Gunakan [Issue](https://github.com/krillinai/OpenCreator/issues/new) untuk memba
 Persiapan lengkap ada di [Panduan Cepat README](../../README.md#quick-start). Ringkasan untuk kontributor:
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable          # memilih pnpm yang dikunci dari packageManager
 pnpm install
 pnpm web:dev             # web + daemon lokal sesuai kebutuhan
@@ -43,7 +43,7 @@ Node.js 22+ dan executable Codex CLI diperlukan. Buka `http://127.0.0.1:19861/` 
 
 ## Cara berkontribusi
 
-1. Jelaskan masalah, kasus penggunaan, dan perilaku yang diharapkan dalam [issue](https://github.com/krillinai/OpenCreator/issues).
+1. Jelaskan masalah, kasus penggunaan, dan perilaku yang diharapkan dalam [issue](https://github.com/vishnuai/Vishnu Creator/issues).
 2. Buat branch fitur atau perbaikan yang terfokus dari branch pengembangan terbaru.
 3. Ikuti arsitektur yang ada: kemampuan produk umum diimplementasikan **sekali** di Web dan Daemon, dan perbedaan native Desktop diisolasi di balik capability eksplisit (misalnya `canSelectDirectory`).
 4. Tambahkan cakupan pengujian unit, integrasi, atau E2E yang sesuai untuk perubahan perilaku, dan cantumkan verifikasi yang dilakukan maupun yang dilewati dalam PR.
@@ -66,4 +66,4 @@ Node.js 22+ dan executable Codex CLI diperlukan. Buka `http://127.0.0.1:19861/` 
 
 ---
 
-OpenCreator · Create locally, work continuously.
+Vishnu Creator · Create locally, work continuously.

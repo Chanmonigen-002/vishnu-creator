@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest';
-import { openCreatorLanguages } from '@opencreator/protocol';
+import { vishnuCreatorLanguages } from '@vishnucreator/protocol';
 import {
   applyAppLanguage,
   appLanguageOptions,
@@ -13,7 +13,7 @@ import {
 
 describe('display language preference', () => {
   it('offers every supported language exactly once', () => {
-    expect(appLanguageOptions.map(option => option.value).sort()).toEqual([...openCreatorLanguages].sort());
+    expect(appLanguageOptions.map(option => option.value).sort()).toEqual([...vishnuCreatorLanguages].sort());
   });
 
   beforeEach(() => {
@@ -104,7 +104,7 @@ describe('display language preference', () => {
     expect(document.documentElement).toHaveAttribute('data-locale', 'en-US');
   });
 
-  it.each(openCreatorLanguages)('resolves and persists %s', language => {
+  it.each(vishnuCreatorLanguages)('resolves and persists %s', language => {
     writeLanguagePreference(language);
     expect(readLanguagePreference()).toBe(language);
     expect(resolveSystemLanguage([language])).toBe(language);

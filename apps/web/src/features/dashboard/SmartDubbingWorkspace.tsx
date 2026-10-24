@@ -6,7 +6,7 @@ import {
   type SmartDubbingFormat,
   type SmartDubbingStyle,
   type SmartDubbingVoice
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   Download,
   FileAudio,

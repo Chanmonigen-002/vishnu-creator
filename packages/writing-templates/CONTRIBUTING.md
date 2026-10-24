@@ -10,7 +10,7 @@ Writing templates are reviewed, declarative capability packages. They are not ex
 4. Give the template a `sortOrder`; community templates should normally start at 100 or later.
 5. Pin GitHub sources to a full commit SHA. Do not point at a moving branch.
 6. Provide complete `zh-CN` and `en-US` localized metadata. Keep `name` as the canonical upstream name for attribution.
-7. Run `pnpm --filter @opencreator/writing-templates test`.
+7. Run `pnpm --filter @vishnucreator/writing-templates test`.
 
 Only `verified` and `featured` templates are published in the application. New pull requests should normally use `submitted`; maintainers change the status after license, content, safety, and generation-quality review.
 

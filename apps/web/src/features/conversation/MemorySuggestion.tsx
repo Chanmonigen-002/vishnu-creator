@@ -1,6 +1,6 @@
 import AppSelect from '../../components/forms/Select.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
-import type { CreateMemoryRequest, MemoryScope } from '@opencreator/protocol';
+import type { CreateMemoryRequest, MemoryScope } from '@vishnucreator/protocol';
 import { AlertTriangle, Brain, Check, X } from 'lucide-react';
 import { useState } from 'react';
 import { ApiClientError } from '../../runtime/errors.js';

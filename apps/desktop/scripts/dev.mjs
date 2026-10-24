@@ -12,10 +12,10 @@ const rootDir = resolve(desktopDir, '../..');
 let webProcess;
 
 try {
-  await run('pnpm', ['--filter', '@opencreator/daemon', 'build'], rootDir);
-  await run('pnpm', ['--filter', '@opencreator/desktop', 'build'], rootDir);
+  await run('pnpm', ['--filter', '@vishnucreator/daemon', 'build'], rootDir);
+  await run('pnpm', ['--filter', '@vishnucreator/desktop', 'build'], rootDir);
   if (!(await isPortOpen(19861))) {
-    webProcess = spawn('pnpm', ['--filter', '@opencreator/web', 'dev'], {
+    webProcess = spawn('pnpm', ['--filter', '@vishnucreator/web', 'dev'], {
       cwd: rootDir,
       env: process.env,
       stdio: 'inherit'
@@ -24,7 +24,7 @@ try {
   }
   const code = await run(electron, ['.'], desktopDir, {
     ...process.env,
-    OPENCREATOR_DESKTOP_DEV: '1'
+    VISHNUCREATOR_DESKTOP_DEV: '1'
   });
   process.exitCode = code;
 } finally {

@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { gatewayDefaultVoiceId, gatewayModelOperations, gatewayVideoSizeParameters, safePublicRequestId, type GatewayModel, type GatewayModelOperation, type PublicErrorFacts } from '@opencreator/protocol';
+import { gatewayDefaultVoiceId, gatewayModelOperations, gatewayVideoSizeParameters, safePublicRequestId, type GatewayModel, type GatewayModelOperation, type PublicErrorFacts } from '@vishnucreator/protocol';
 import { join } from 'node:path';
 import { readPrivateJsonFile, writePrivateJsonFile } from '../config/private-json-file.js';
 import { GatewayError } from './client.js';
@@ -351,7 +351,7 @@ export function createDirectTransport(root: string, fetcher: typeof fetch = fetc
         }
         if (resource === 'audio/speech') {
           const { voice, response_format: _format, ...fields } = body as Record<string, unknown>;
-          // OpenCreator consumes the actual audio MIME; native encoding also supports PCM-only providers.
+          // VishnuCreator consumes the actual audio MIME; native encoding also supports PCM-only providers.
           const format = eightyEight ? 'wav' : input.model?.capabilities.includes('pcm_speech') ? 'pcm' : undefined;
           if (eightyEight && Buffer.byteLength(String(fields.input ?? '') + String(fields.instructions ?? '') + (fields.speed === undefined ? '' : `Speak at ${fields.speed}x speed.`), 'utf8') > 8000) throw new GatewayError('capability_unsupported', 400);
           if (typeof fields.input !== 'string' || !fields.input.trim()

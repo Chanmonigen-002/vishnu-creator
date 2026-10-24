@@ -1,5 +1,5 @@
 import type { Locator } from '@playwright/test';
-import { createDefaultCreatorServicesConfig, type CreatorRuntimeComponentsResponse, type CreatorServicesCapabilitiesResponse, type CreatorYtDlpStatusResponse, type YouTubeConnectionState } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type CreatorRuntimeComponentsResponse, type CreatorServicesCapabilitiesResponse, type CreatorYtDlpStatusResponse, type YouTubeConnectionState } from '@vishnucreator/protocol';
 import { test, expect, stubVideoDownloadProbe } from './fixtures/runtime.js';
 
 async function selectChoice(control: Locator, value: string) {
@@ -140,7 +140,7 @@ test('首页和项目页按需加载管理、登录与插件资源且 Browser/De
       await expect(page.locator('.startup-agent-setup')).toHaveCount(0);
       expect(resources).toHaveLength(0);
       await page.getByRole('button', { name: '我的项目', exact: true }).click();
-      const workspace = page.getByRole('region', { name: 'OpenCreator 工作区' });
+      const workspace = page.getByRole('region', { name: 'VishnuCreator 工作区' });
       const heading = workspace.getByRole('heading', { name: '我的项目', exact: true });
       await expect(heading).toBeVisible();
       expect(resources).toHaveLength(0);
@@ -338,7 +338,7 @@ test('Creator Issue 在 Browser/Desktop Bridge 下保持相同展示和 Agent �
         + `&jobId=${encodeURIComponent(created.job.id)}`
       );
 
-      const panel = page.getByRole('complementary', { name: 'OpenCreator' });
+      const panel = page.getByRole('complementary', { name: 'VishnuCreator' });
       const issue = panel.locator(`.creator-collaboration-issue[data-issue-id="${reported.issue.id}"]`);
       await expect(issue).toContainText('操作未完成，请在 Agent 区域查看诊断。');
       await expect(issue).toContainText('错误码：creator_e2e_failure');
@@ -478,7 +478,7 @@ test('浅深色基准色与中性灰表面不随强调色变化且 Browser/Deskt
             const surface = document.createElement('div');
             surface.style.backgroundColor = 'var(--surface-2)';
             document.body.append(surface);
-            const result = { theme, accent, page: getComputedStyle(document.body).backgroundColor, text: getComputedStyle(document.body).color, sidebar: getComputedStyle(document.querySelector('.opencreator-sidebar-pane')!).backgroundColor, surface: getComputedStyle(surface).backgroundColor };
+            const result = { theme, accent, page: getComputedStyle(document.body).backgroundColor, text: getComputedStyle(document.body).color, sidebar: getComputedStyle(document.querySelector('.vishnucreator-sidebar-pane')!).backgroundColor, surface: getComputedStyle(surface).backgroundColor };
             surface.remove();
             return result;
           }, { theme, accent });
@@ -661,7 +661,7 @@ test('各主页面标题行在 Browser/Desktop 下与左侧品牌行同轴', asy
         await expect(page.locator(selector).first()).toBeVisible();
         const measured = await page.locator(selector).first().evaluate(element => {
           const brand = document.querySelector('.sidebar-brand')?.getBoundingClientRect();
-          const main = document.querySelector('.opencreator-main-pane')!;
+          const main = document.querySelector('.vishnucreator-main-pane')!;
           const mainBox = main.getBoundingClientRect();
           const referenceCenter = brand && brand.height > 0
             ? (brand.top + brand.bottom) / 2
@@ -684,7 +684,7 @@ test('各主页面标题行在 Browser/Desktop 下与左侧品牌行同轴', asy
       await page.evaluate(() => { window.location.hash = '/projects'; });
       await expect(page.locator('.projects-page-header h1')).toBeVisible();
       await page.locator('.sidebar-collapse-button').click();
-      await expect(page.locator('.opencreator-sidebar')).toHaveAttribute('data-collapsed', 'true');
+      await expect(page.locator('.vishnucreator-sidebar')).toHaveAttribute('data-collapsed', 'true');
       const collapsedOffset = await page.evaluate(() => {
         const brand = document.querySelector('.sidebar-brand')!.getBoundingClientRect();
         const heading = document.querySelector('.projects-page-header h1')!.getBoundingClientRect();
@@ -1050,7 +1050,7 @@ test('导航与文章模板图标在 Browser/Desktop 下只保留外层容器', 
       try {
         await runtime.openApp(page);
         await page.evaluate(theme => { document.documentElement.dataset.theme = theme; }, theme);
-        const sidebar = page.locator('.opencreator-sidebar');
+        const sidebar = page.locator('.vishnucreator-sidebar');
         const measurements = [];
         for (const collapsed of [false, true]) {
           if (collapsed) await sidebar.locator('.sidebar-collapse-button').click();
@@ -1132,14 +1132,14 @@ test('通用界面设置在 Browser/Desktop Bridge 下读取并写入相同 Runt
     '一致性规格内部固定创建 Browser/Desktop Chromium 上下文'
   );
   const projectRoot = process.platform === 'win32'
-    ? 'D:\\tmp\\opencreator-parity\\projects'
-    : '/tmp/opencreator-parity/projects';
+    ? 'D:\\tmp\\vishnucreator-parity\\projects'
+    : '/tmp/vishnucreator-parity/projects';
   const outputRoot = process.platform === 'win32'
-    ? 'D:\\tmp\\opencreator-parity\\exports'
-    : '/tmp/opencreator-parity/exports';
+    ? 'D:\\tmp\\vishnucreator-parity\\exports'
+    : '/tmp/vishnucreator-parity/exports';
   const savedOutputRoot = process.platform === 'win32'
-    ? 'D:\\tmp\\opencreator-parity\\saved-exports'
-    : '/tmp/opencreator-parity/saved-exports';
+    ? 'D:\\tmp\\vishnucreator-parity\\saved-exports'
+    : '/tmp/vishnucreator-parity/saved-exports';
 
   const results: Array<{
     theme: string | undefined;
@@ -1179,7 +1179,7 @@ test('通用界面设置在 Browser/Desktop Bridge 下读取并写入相同 Runt
       if (!url.pathname.endsWith('/settings/ui')
         && !url.pathname.endsWith('/settings/storage')) return;
       requests.push(
-        `${request.method()} ${url.pathname.replace('/.opencreator/runtime', '')}`
+        `${request.method()} ${url.pathname.replace('/.vishnucreator/runtime', '')}`
       );
     });
 
@@ -1188,7 +1188,7 @@ test('通用界面设置在 Browser/Desktop Bridge 下读取并写入相同 Runt
       await page.goto(`${runtime.origin}/#/settings`);
 
       const settings = page
-        .getByRole('region', { name: 'OpenCreator 工作区' })
+        .getByRole('region', { name: 'VishnuCreator 工作区' })
         .getByRole('main');
       const lightButton = settings.getByRole('button', { name: '浅色' });
       const permission = settings.getByRole('combobox', { name: '默认权限' });
@@ -1302,7 +1302,7 @@ test('视频下载在 Browser/Desktop Bridge 下保持相同界面、请求和�
     templateId: 'video-download',
     creationKey: 'parity-video-download',
     state: {
-      sourceUrl: 'https://www.youtube.com/watch?v=OpenCreatorParity'
+      sourceUrl: 'https://www.youtube.com/watch?v=VishnuCreatorParity'
     }
   });
   const results: Array<{
@@ -1329,7 +1329,7 @@ test('视频下载在 Browser/Desktop Bridge 下保持相同界面、请求和�
         const url = new URL(request.url());
         if (!url.pathname.includes('/creator/')) return;
         requests.push(
-          `${request.method()} ${url.pathname.replace('/.opencreator/runtime', '')}`
+          `${request.method()} ${url.pathname.replace('/.vishnucreator/runtime', '')}`
         );
       });
       await page.goto(
@@ -1338,15 +1338,15 @@ test('视频下载在 Browser/Desktop Bridge 下保持相同界面、请求和�
       );
 
       const workspace = page.getByRole('region', { name: '视频下载 操作区' });
-      const panel = page.getByRole('complementary', { name: 'OpenCreator' });
+      const panel = page.getByRole('complementary', { name: 'VishnuCreator' });
       const sources = workspace.getByRole('list', { name: '视频链接列表' });
-      await expect(sources).toContainText('https://www.youtube.com/watch?v=OpenCreatorParity');
+      await expect(sources).toContainText('https://www.youtube.com/watch?v=VishnuCreatorParity');
       await expect(panel).toContainText('YouTube · 待解析');
       await expect(workspace.getByText('正在加载链接列表')).toHaveCount(0);
       await sources.getByRole('button', { name: /^移除链接/ }).click();
       await expect(sources).toHaveCount(0);
       await workspace.getByRole('textbox', { name: '视频链接', exact: true })
-        .fill('https://www.youtube.com/watch?v=OpenCreatorParity');
+        .fill('https://www.youtube.com/watch?v=VishnuCreatorParity');
       await workspace.getByRole('button', { name: '获取' }).click();
       await expect(sources.getByRole('listitem')).toHaveCount(1);
       await expect(workspace.getByRole('textbox', { name: '视频链接', exact: true })).toHaveCount(0);
@@ -1442,7 +1442,7 @@ test('视频生成在 Browser/Desktop Bridge 下保持相同界面、请求和�
         if (!url.pathname.includes('/creator/')) return;
         requests.push(
           `${request.method()} ${url.pathname
-            .replace('/.opencreator/runtime', '')
+            .replace('/.vishnucreator/runtime', '')
             .replace(created.job.id, '{jobId}')}`
         );
       });
@@ -1452,7 +1452,7 @@ test('视频生成在 Browser/Desktop Bridge 下保持相同界面、请求和�
       );
 
       const workspace = page.getByRole('region', { name: '视频生成 操作区' });
-      const panel = page.getByRole('complementary', { name: 'OpenCreator' });
+      const panel = page.getByRole('complementary', { name: 'VishnuCreator' });
       const provider = workspace.getByRole('combobox', { name: '模型', exact: true });
       const model = workspace.getByRole('combobox', { name: '模型版本' });
       const format = workspace.getByRole('combobox', { name: '画幅' });
@@ -1565,7 +1565,7 @@ test('小红书帖子在 Browser/Desktop Bridge 下保持相同界面、请求�
         if (!url.pathname.includes('/creator/')) return;
         requests.push(
           `${request.method()} ${url.pathname
-            .replace('/.opencreator/runtime', '')
+            .replace('/.vishnucreator/runtime', '')
             .replace(created.job.id, '{jobId}')}`
         );
       });
@@ -1575,7 +1575,7 @@ test('小红书帖子在 Browser/Desktop Bridge 下保持相同界面、请求�
       );
 
       const workspace = page.getByRole('region', { name: '小红书帖子生成器 操作区' });
-      const panel = page.getByRole('complementary', { name: 'OpenCreator' });
+      const panel = page.getByRole('complementary', { name: 'VishnuCreator' });
       const topic = workspace.getByRole('textbox', { name: '小红书帖子主题或素材' });
       await topic.fill('第一次参与开源项目的真实过程');
       await workspace.getByRole('radio', { name: '教程干货' }).click();
@@ -1665,14 +1665,14 @@ test('本地 Whisper 在 Browser/Desktop Bridge 下遵守相同 Runtime 能力�
     page.on('request', request => {
       const url = new URL(request.url());
       if (!url.pathname.includes('/creator-services/')) return;
-      requests.push(`${request.method()} ${url.pathname.replace('/.opencreator/runtime', '')}`);
+      requests.push(`${request.method()} ${url.pathname.replace('/.vishnucreator/runtime', '')}`);
     });
 
     try {
       await runtime.openApp(page);
       await page.goto(`${runtime.origin}/#/settings?tab=ai-services&section=transcription`);
       const settings = page
-        .getByRole('region', { name: 'OpenCreator 工作区' })
+        .getByRole('region', { name: 'VishnuCreator 工作区' })
         .getByRole('main');
       const localMode = settings.getByRole('button', { name: '本地 Whisper' });
       if (localProvider) {
@@ -1768,7 +1768,7 @@ test('火山引擎语音识别设置在 Browser/Desktop Bridge 下保持相同�
     page.on('request', request => {
       const url = new URL(request.url());
       if (!url.pathname.includes('/creator-services/')) return;
-      requests.push(`${request.method()} ${url.pathname.replace('/.opencreator/runtime', '')}`);
+      requests.push(`${request.method()} ${url.pathname.replace('/.vishnucreator/runtime', '')}`);
     });
 
     try {
@@ -1851,7 +1851,7 @@ test('短视频脚本在 Browser/Desktop Bridge 下保持相同界面、请求�
         if (!url.pathname.includes('/creator/')) return;
         requests.push(
           `${request.method()} ${url.pathname
-            .replace('/.opencreator/runtime', '')
+            .replace('/.vishnucreator/runtime', '')
             .replace(created.job.id, '{jobId}')}`
         );
       });
@@ -1861,7 +1861,7 @@ test('短视频脚本在 Browser/Desktop Bridge 下保持相同界面、请求�
       );
 
       const workspace = page.getByRole('region', { name: '短视频脚本生成器 操作区' });
-      const panel = page.getByRole('complementary', { name: 'OpenCreator' });
+      const panel = page.getByRole('complementary', { name: 'VishnuCreator' });
       const topic = workspace.getByRole('textbox', { name: '短视频脚本主题或素材' });
       const platformSelect = workspace.getByRole('combobox', { name: '发布平台或场景' });
       const duration = workspace.getByRole('spinbutton', { name: '目标时长（秒）' });
@@ -1948,7 +1948,7 @@ test('视频切片在 Browser/Desktop Bridge 下保持相同界面、请求和�
       projectId: runtime.projectId,
       templateId: 'auto-clip',
       state: {
-        sourceUrl: 'https://example.com/watch/opencreator-parity'
+        sourceUrl: 'https://example.com/watch/vishnucreator-parity'
       }
     });
     const context = await browser.newContext({
@@ -1968,7 +1968,7 @@ test('视频切片在 Browser/Desktop Bridge 下保持相同界面、请求和�
         if (!url.pathname.includes('/creator/')) return;
         requests.push(
           `${request.method()} ${url.pathname
-            .replace('/.opencreator/runtime', '')
+            .replace('/.vishnucreator/runtime', '')
             .replace(encodeURIComponent(created.job.id), ':jobId')}`
         );
       });
@@ -1978,7 +1978,7 @@ test('视频切片在 Browser/Desktop Bridge 下保持相同界面、请求和�
       );
 
       const workspace = page.getByRole('region', { name: '视频切片 操作区' });
-      const panel = page.getByRole('complementary', { name: 'OpenCreator' });
+      const panel = page.getByRole('complementary', { name: 'VishnuCreator' });
       await expect(workspace.getByRole('button', { name: '下一步：切片设置' }))
         .toBeEnabled();
       await workspace.getByRole('button', { name: '下一步：切片设置' }).click();
@@ -1994,7 +1994,7 @@ test('视频切片在 Browser/Desktop Bridge 下保持相同界面、请求和�
           job: { state: Record<string, unknown> };
         }>('GET', `/creator/jobs/${encodeURIComponent(created.job.id)}`)
       ).job.state).toMatchObject({
-        sourceUrl: 'https://example.com/watch/opencreator-parity',
+        sourceUrl: 'https://example.com/watch/vishnucreator-parity',
         focus: 'viral',
         duration: '30-60',
         clipCount: 6,
@@ -2074,7 +2074,7 @@ test('第三方组件设置在 Browser/Desktop Bridge 下保持相同状态、�
       platform: 'darwin', arch: 'arm64', selectedProvider: 'bailian', selectedModel: null,
       components: [{
         id: 'remotion', name: 'Remotion', available: true, version: null, supportedVersion: '4.0.473',
-        installedAt: null, path: '/runtime/stickman', source: 'OpenCreator release · SHA-256 verified',
+        installedAt: null, path: '/runtime/stickman', source: 'VishnuCreator release · SHA-256 verified',
         models: [], model: null, state: 'not_installed', item: null, downloadedBytes: 0,
         totalBytes: null, percent: null, bytesPerSecond: null, remainingSeconds: null, error: null
       }]
@@ -2083,17 +2083,17 @@ test('第三方组件设置在 Browser/Desktop Bridge 下保持相同状态、�
       const url = new URL(request.url());
       if (!url.pathname.includes('/creator/yt-dlp/') && !url.pathname.includes('/creator/components/')) return;
       requests.push(
-        `${request.method()} ${url.pathname.replace('/.opencreator/runtime', '')}`
+        `${request.method()} ${url.pathname.replace('/.vishnucreator/runtime', '')}`
       );
     });
-    await page.route('**/.opencreator/runtime/creator/components/status', route => route.fulfill({ json: components }));
-    await page.route('**/.opencreator/runtime/creator/components/download', route => {
+    await page.route('**/.vishnucreator/runtime/creator/components/status', route => route.fulfill({ json: components }));
+    await page.route('**/.vishnucreator/runtime/creator/components/download', route => {
       downloads.push(route.request().postDataJSON());
       components.components[0]!.state = 'ready';
       components.components[0]!.version = components.components[0]!.supportedVersion;
       return route.fulfill({ json: components });
     });
-    await page.route('**/.opencreator/runtime/creator/yt-dlp/{status,check}', route => route.fulfill({
+    await page.route('**/.vishnucreator/runtime/creator/yt-dlp/{status,check}', route => route.fulfill({
       json: {
         ytDlp: {
           channel: 'nightly',
@@ -2115,7 +2115,7 @@ test('第三方组件设置在 Browser/Desktop Bridge 下保持相同状态、�
       await page.goto(`${runtime.origin}/#/settings?tab=local-components`);
 
       const settings = page
-        .getByRole('region', { name: 'OpenCreator 工作区' })
+        .getByRole('region', { name: 'VishnuCreator 工作区' })
         .getByRole('main');
       const component = settings.locator('.runtime-component-item').filter({
         has: page.getByRole('heading', { name: 'yt-dlp nightly' })
@@ -2189,7 +2189,7 @@ test('第三方组件设置在 Browser/Desktop Bridge 下保持相同状态、�
 test('工作台模块新建 Creator Job，刷新和最近项目精确恢复历史且不启动普通 Codex Run', async ({ page, runtime }) => {
   await stubVideoDownloadProbe(page, runtime);
   await page.route(
-    /^https:\/\/i\.ytimg\.com\/vi\/OpenCreator(?:Demo|Second|Child)\/maxresdefault\.jpg$/,
+    /^https:\/\/i\.ytimg\.com\/vi\/VishnuCreator(?:Demo|Second|Child)\/maxresdefault\.jpg$/,
     route => route.fulfill({
       contentType: 'image/png',
       body: Buffer.from(
@@ -2205,7 +2205,7 @@ test('工作台模块新建 Creator Job，刷新和最近项目精确恢复历�
   await page.getByRole('button', { name: /^视频下载/ }).click();
   const input = page.getByRole('textbox', { name: '视频链接', exact: true });
   await expect(input).toBeVisible();
-  await input.fill('https://www.youtube.com/watch?v=OpenCreatorDemo');
+  await input.fill('https://www.youtube.com/watch?v=VishnuCreatorDemo');
   await page.getByRole('button', { name: '获取' }).click();
   await expect(page).toHaveURL(/#\/workbench\?tool=video-download&jobId=creator_job_/);
   const firstJobId = new URL(page.url()).hash.match(/jobId=([^&]+)/)?.[1];
@@ -2213,7 +2213,7 @@ test('工作台模块新建 Creator Job，刷新和最近项目精确恢复历�
 
   const mobileAgentTab = page.getByRole('tab', { name: 'Agent', exact: true });
   if (await mobileAgentTab.isVisible()) await mobileAgentTab.click();
-  await expect(page.getByRole('complementary', { name: 'OpenCreator' }))
+  await expect(page.getByRole('complementary', { name: 'VishnuCreator' }))
     .toContainText('YouTube');
   if (await mobileAgentTab.isVisible()) await page.getByRole('tab', { name: '创作', exact: true }).click();
   await expect.poll(async () => {
@@ -2221,7 +2221,7 @@ test('工作台模块新建 Creator Job，刷新和最近项目精确恢复历�
       jobs: Array<{ id: string; templateId: string; state: Record<string, unknown> }>;
     }>('GET', `/creator/jobs?projectId=${encodeURIComponent(runtime.projectId)}`);
     return listed.jobs.find(job => job.id === decodeURIComponent(firstJobId!))?.state.sourceUrl;
-  }).toBe('https://www.youtube.com/watch?v=OpenCreatorDemo');
+  }).toBe('https://www.youtube.com/watch?v=VishnuCreatorDemo');
   await expect.poll(async () => {
     const listed = await runtime.api<{
       jobs: Array<{ templateId: string }>;
@@ -2231,20 +2231,20 @@ test('工作台模块新建 Creator Job，刷新和最近项目精确恢复历�
   expect(runtime.readInvocationCount()).toBe(0);
 
   await page.getByRole('button', { name: '添加链接', exact: true }).click();
-  await input.fill('https://www.youtube.com/watch?v=OpenCreatorChild');
+  await input.fill('https://www.youtube.com/watch?v=VishnuCreatorChild');
   await page.getByRole('button', { name: '获取' }).click();
   await expect(page.getByRole('list', { name: '视频链接列表' }).getByRole('listitem')).toHaveCount(2);
   const children = await runtime.api<{ jobs: Array<{ state: Record<string, unknown> }> }>(
     'GET', `/creator/jobs?projectId=${encodeURIComponent(runtime.projectId)}`
   );
-  expect(children.jobs.find(job => job.state.sourceUrl === 'https://www.youtube.com/watch?v=OpenCreatorChild')?.state.downloadBatchId)
+  expect(children.jobs.find(job => job.state.sourceUrl === 'https://www.youtube.com/watch?v=VishnuCreatorChild')?.state.downloadBatchId)
     .toBe(decodeURIComponent(firstJobId!));
 
   await page.reload();
   await expect(page.getByRole('heading', { name: '视频下载' })).toBeVisible();
   await expect(page.getByRole('list', { name: '视频链接列表' }).getByRole('listitem')).toHaveCount(2);
   await expect(page.getByRole('list', { name: '视频链接列表' }))
-    .toContainText('youtube.com · OpenCreatorDemo');
+    .toContainText('youtube.com · VishnuCreatorDemo');
 
   await page.getByRole('region', { name: '视频下载 操作区' })
     .getByRole('button', { name: '返回', exact: true })
@@ -2252,7 +2252,7 @@ test('工作台模块新建 Creator Job，刷新和最近项目精确恢复历�
   await page.getByRole('button', { name: /^视频下载/ }).click();
   await expect(page.getByRole('textbox', { name: '视频链接', exact: true })).toHaveValue('');
   await page.getByRole('textbox', { name: '视频链接', exact: true })
-    .fill('https://www.youtube.com/watch?v=OpenCreatorSecond');
+    .fill('https://www.youtube.com/watch?v=VishnuCreatorSecond');
   await page.getByRole('button', { name: '获取' }).click();
   await expect(page).toHaveURL(/#\/workbench\?tool=video-download&jobId=creator_job_/);
   const secondJobId = new URL(page.url()).hash.match(/jobId=([^&]+)/)?.[1];
@@ -2266,11 +2266,11 @@ test('工作台模块新建 Creator Job，刷新和最近项目精确恢复历�
   }).toBe(3);
 
   await page.goto(`${runtime.origin}/#/projects`);
-  await page.getByRole('button', { name: '打开项目 youtube.com · OpenCreatorDemo' }).click();
+  await page.getByRole('button', { name: '打开项目 youtube.com · VishnuCreatorDemo' }).click();
   await expect(page).toHaveURL(new RegExp(`jobId=${firstJobId}`));
   await expect(page.getByRole('list', { name: '视频链接列表' }).getByRole('listitem')).toHaveCount(2);
   await expect(page.getByRole('list', { name: '视频链接列表' }))
-    .toContainText('youtube.com · OpenCreatorDemo');
+    .toContainText('youtube.com · VishnuCreatorDemo');
 });
 
 test('图像生成在桌面和移动视口创建、持久化并从项目中心恢复 Creator Job', async ({
@@ -2484,7 +2484,7 @@ test('Creator Preset 在 Browser/Desktop Bridge 下创建相同工作台状态',
         };
       }>('GET', `/creator/jobs/${encodeURIComponent(jobId!)}`);
       const workspace = page.getByRole('region', { name: /图像生成\s*操作区/ });
-      const panel = page.getByRole('complementary', { name: 'OpenCreator' });
+      const panel = page.getByRole('complementary', { name: 'VishnuCreator' });
       await expect(workspace).toBeVisible();
       await expect(panel).toBeVisible();
 
@@ -2542,7 +2542,7 @@ async function installDesktopBridge(
 ): Promise<void> {
   await page.addInitScript((integratedTitleBar) => {
     const success = { ok: true as const };
-    Object.defineProperty(window, 'opencreatorDesktop', {
+    Object.defineProperty(window, 'vishnucreatorDesktop', {
       configurable: true,
       value: {
         kind: 'desktop',
@@ -2552,7 +2552,7 @@ async function installDesktopBridge(
           trafficLightInset: 76
         } } : {}),
         readAppVersion: async () => '3.2.2',
-        readConnectionConfig: async () => ({ baseUrl: '/.opencreator/runtime' }),
+        readConnectionConfig: async () => ({ baseUrl: '/.vishnucreator/runtime' }),
         subscribeConnectionConfig: () => () => undefined,
         restartRuntime: async () => success,
         selectCodexPath: async () => success,

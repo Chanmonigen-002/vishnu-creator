@@ -1,17 +1,17 @@
-# OpenCreator 视觉与组件规范
+# Vishnu Creator 视觉与组件规范
 
 本文档整理当前 Web 客户端已经形成的视觉语言和组件规则，后续新增功能或页面时优先延续这些规范。对应实现主要位于：
 
 - `apps/web/src/styles/tokens.css`
 - `apps/web/src/styles/app.css`
-- `apps/web/src/features/shell/OpenCreatorSidebar.tsx`
+- `apps/web/src/features/shell/Vishnu CreatorSidebar.tsx`
 - `apps/web/src/features/runs/Composer.tsx`
 - `apps/web/src/features/files/FileTopBar.tsx`
 - `apps/web/src/components/timeline/Timeline.tsx`
 
 ## 1. 视觉基调
 
-OpenCreator 当前是深色、低噪声、偏工具型的桌面应用界面。整体气质应该克制、轻量、专注，不做营销页式大卡片和强装饰。
+Vishnu Creator 当前是深色、低噪声、偏工具型的桌面应用界面。整体气质应该克制、轻量、专注，不做营销页式大卡片和强装饰。
 
 核心方向：
 
@@ -155,7 +155,7 @@ OpenCreator 当前是深色、低噪声、偏工具型的桌面应用界面。�
 
 展开态：
 
-- 使用 `OpenCreator` 文字品牌，不加载图片标识。
+- 使用 `Vishnu Creator` 文字品牌，不加载图片标识。
 - 品牌文字宽度约 `124px`，高度约 `24px`。
 - 右侧展示收起按钮。
 
@@ -265,7 +265,7 @@ Agent 消息：
 
 容器：
 
-- 类名：`.opencreator-composer`。
+- 类名：`.vishnucreator-composer`。
 - 最大宽度：`980px`。
 - 背景为深色半透明渐变。
 - 边框使用渐变色：白色亮边到暖橙色，再回到低透明白色。
@@ -488,14 +488,14 @@ Loading：
 
 - `apps/desktop/resources/icon.png`：桌面应用图标，使用深色圆角底板和白色 v2 图标。
 - `apps/desktop/resources/tray.png`：macOS 菜单栏模板图，只保留透明背景的 v2 图标。
-- Web 不提供旧 OpenCreator logo 或历史兼容路径；Agent 消息不加载品牌图片。
+- Web 不提供旧 Vishnu Creator logo 或历史兼容路径；Agent 消息不加载品牌图片。
 
 使用规则：
 
 - Web 暂不加载品牌 favicon。
 - Agent 消息不展示头像或品牌图片。
 - 品牌图不要拉伸，保持 `object-fit: contain`。
-- 不再保留 `logo.png`、`logo-cor.png`、`logo-all.png` 等旧 OpenCreator 静态资源或兼容路径。
+- 不再保留 `logo.png`、`logo-cor.png`、`logo-all.png` 等旧 Vishnu Creator 静态资源或兼容路径。
 - 新增 icon 优先从 `lucide-react` 选取。
 
 ## 17. 新增页面检查清单

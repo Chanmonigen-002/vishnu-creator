@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseVolcengineV3Audio } from '../../src/creator/krillin/volcengine-tts-v3.js';
+import { parseVolcengineV3Audio } from '../../src/creator/vishnu/volcengine-tts-v3.js';
 
 describe('volcengine V3 TTS frames', () => {
   it('concatenates multi-chunk audio and stops at the completion frame', () => {

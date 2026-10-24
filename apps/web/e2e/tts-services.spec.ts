@@ -1,7 +1,7 @@
 import { expect, test, type Page } from './fixtures/runtime.js';
 
 test('统一配音配置在设置、文本转语音和视频翻译中保持一致', async ({ page, runtime }) => {
-  await page.route('**/.opencreator/runtime/creator-services/tts/voices?**', async route => {
+  await page.route('**/.vishnucreator/runtime/creator-services/tts/voices?**', async route => {
     const url = new URL(route.request().url());
     const provider = url.searchParams.get('provider');
     if (provider === 'aliyun') {
@@ -103,7 +103,7 @@ test('统一配音配置在设置、文本转语音和视频翻译中保持一�
     creationKey: 'tts-services-video-translation',
     state: {
       sourceType: 'url',
-      sourceUrl: 'https://www.youtube.com/watch?v=OpenCreatorTtsE2E',
+      sourceUrl: 'https://www.youtube.com/watch?v=VishnuCreatorTtsE2E',
       sourceLanguage: 'en',
       targetLanguage: 'zh_cn',
       dubbing: true,

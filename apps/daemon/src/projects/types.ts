@@ -7,7 +7,7 @@ import type {
   ProjectStatus,
   ReplaceProjectDirectoryRequest,
   UpdateProjectRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export type ProjectManagerErrorCode =
   | 'PROJECT_NOT_FOUND'

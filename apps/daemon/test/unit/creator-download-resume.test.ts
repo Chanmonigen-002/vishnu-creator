@@ -1,4 +1,4 @@
-import type { CreatorJob, CreatorJson, CreatorStageRun } from '@opencreator/protocol';
+import type { CreatorJob, CreatorJson, CreatorStageRun } from '@vishnucreator/protocol';
 import { describe, expect, it } from 'vitest';
 import { downloadWorkdirStageId } from '../../src/creator/download/resume.js';
 

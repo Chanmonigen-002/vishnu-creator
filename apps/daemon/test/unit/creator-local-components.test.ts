@@ -1,6 +1,6 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { describe, expect, it, vi } from 'vitest';
-import { createKrillinDependencyLoader } from '../../src/creator/krillin/dependency-loader.js';
+import { createVishnuDependencyLoader } from '../../src/creator/vishnu/dependency-loader.js';
 
 function fixture() {
   let installed = false;
@@ -11,7 +11,7 @@ function fixture() {
     await new Promise<void>(resolve => { finish = resolve; });
     installed = true;
   });
-  const loader = createKrillinDependencyLoader({ root: '/tmp/opencreator-components-unit', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => installed, install } });
+  const loader = createVishnuDependencyLoader({ root: '/tmp/vishnucreator-components-unit', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => installed, install } });
   const config = createDefaultCreatorServicesConfig();
   config.transcription.provider = 'whisperkit';
   return { loader, config, install, finish: () => finish() };
@@ -41,7 +41,7 @@ describe('shared local transcription components', () => {
   it('uses the requested component model and proxy without changing transcription settings', async () => {
     let installed = false;
     const install = vi.fn(async () => { installed = true; });
-    const loader = createKrillinDependencyLoader({ root: '/tmp/opencreator-independent-whispercpp', platform: 'win32', arch: 'x64', whisperCppInstaller: { isInstalled: async () => installed, install } });
+    const loader = createVishnuDependencyLoader({ root: '/tmp/vishnucreator-independent-whispercpp', platform: 'win32', arch: 'x64', whisperCppInstaller: { isInstalled: async () => installed, install } });
     const config = createDefaultCreatorServicesConfig();
     config.transcription.provider = 'openai';
     config.transcription.whisperCpp.model = 'large-v3-turbo';
@@ -60,7 +60,7 @@ describe('shared local transcription components', () => {
   it('checks a ready component without downloading valid resources again', async () => {
     const install = vi.fn();
     const isInstalled = vi.fn(async () => true);
-    const loader = createKrillinDependencyLoader({ root: '/tmp/opencreator-ready-whisperkit', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled, install } });
+    const loader = createVishnuDependencyLoader({ root: '/tmp/vishnucreator-ready-whisperkit', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled, install } });
     const config = createDefaultCreatorServicesConfig();
     expect((await loader.status(config)).components.find(component => component.id === 'whisperkit')?.state).toBe('ready');
     const checksBefore = isInstalled.mock.calls.length;
@@ -77,7 +77,7 @@ describe('shared local transcription components', () => {
   it('exposes a failed installation and lets users retry the same component', async () => {
     let installed = false;
     const install = vi.fn().mockRejectedValueOnce(new Error('download connection failed')).mockImplementationOnce(async () => { installed = true; });
-    const loader = createKrillinDependencyLoader({ root: '/tmp/opencreator-component-retry', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => installed, install } });
+    const loader = createVishnuDependencyLoader({ root: '/tmp/vishnucreator-component-retry', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => installed, install } });
     const config = createDefaultCreatorServicesConfig();
     config.transcription.provider = 'whisperkit';
     await expect(loader.ensure({ config, signal: new AbortController().signal, reportProgress() {} })).rejects.toThrow('download connection failed');
@@ -120,7 +120,7 @@ describe('shared local transcription components', () => {
   });
 
   it('does not offer installation on an unsupported Runtime', async () => {
-    const loader = createKrillinDependencyLoader({ root: '/tmp/opencreator-components-unit', platform: 'linux', arch: 'x64' });
+    const loader = createVishnuDependencyLoader({ root: '/tmp/vishnucreator-components-unit', platform: 'linux', arch: 'x64' });
     const config = createDefaultCreatorServicesConfig();
     config.transcription.provider = 'whisperkit';
     expect((await loader.status(config)).components.find(component => component.id === 'whisperkit')?.state).toBe('unsupported');

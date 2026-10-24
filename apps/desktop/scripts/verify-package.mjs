@@ -47,18 +47,18 @@ import { runStapler } from './apple-notarization.mjs';
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const desktopDir = resolve(scriptDir, '..');
 const manifestPath = resolve(
-  process.env.OPENCREATOR_DESKTOP_BUILD_MANIFEST
-    ?? join(desktopDir, 'release', 'opencreator-desktop-build-manifest.json')
+  process.env.VISHNUCREATOR_DESKTOP_BUILD_MANIFEST
+    ?? join(desktopDir, 'release', 'vishnucreator-desktop-build-manifest.json')
 );
 const manifest = readBuildManifest(manifestPath);
-const targetArch = process.env.OPENCREATOR_DESKTOP_TARGET_ARCH
+const targetArch = process.env.VISHNUCREATOR_DESKTOP_TARGET_ARCH
   ?? manifest.arch
   ?? process.arch;
-const targetPlatform = process.env.OPENCREATOR_DESKTOP_TARGET_PLATFORM
+const targetPlatform = process.env.VISHNUCREATOR_DESKTOP_TARGET_PLATFORM
   ?? manifest.platform
   ?? process.platform;
-const packageRoot = process.env.OPENCREATOR_DESKTOP_PACKAGE_ROOT
-  ? resolve(process.env.OPENCREATOR_DESKTOP_PACKAGE_ROOT)
+const packageRoot = process.env.VISHNUCREATOR_DESKTOP_PACKAGE_ROOT
+  ? resolve(process.env.VISHNUCREATOR_DESKTOP_PACKAGE_ROOT)
   : resolve(manifest.packageRoot);
 const resourcesDir = platformResourcesDir(packageRoot);
 const buildProfilePath = join(resourcesDir, 'desktop-build-profile.json');
@@ -67,14 +67,14 @@ const daemonDir = join(resourcesDir, 'daemon');
 const webDir = join(resourcesDir, 'web');
 const daemonCreatorPresetDir = join(daemonDir, 'runtime', 'creator-presets');
 const webCreatorPresetDir = join(webDir, 'creator-presets');
-const webCreatorSubtitleFontDir = join(webDir, 'fonts', 'opencreator');
-const creatorRuntimeDir = join(resourcesDir, 'creator-runtime', 'krillinai');
+const webCreatorSubtitleFontDir = join(webDir, 'fonts', 'vishnucreator');
+const creatorRuntimeDir = join(resourcesDir, 'creator-runtime', 'vishnuai');
 const codexRuntimeDir = join(resourcesDir, 'codex-runtime');
 const stickmanRuntimeDir = join(resourcesDir, 'stickman-runtime');
 const sourceWebDir = resolve(desktopDir, '../web/dist');
 const sourceCreatorAgentRuntimeDir = resolve(
   desktopDir,
-  '../daemon/runtime/opencreator-runtime'
+  '../daemon/runtime/vishnucreator-runtime'
 );
 const sourceStickmanRuntimeDir = resolve(desktopDir, '.pack', 'stickman-runtime');
 const sourceCreatorSubtitleFontManifestPath = resolve(
@@ -107,8 +107,8 @@ assertExists(join(
   'better_sqlite3.node'
 ));
 assertExists(join(webDir, 'index.html'));
-assertExists(join(daemonDir, 'runtime', 'opencreator-runtime', 'SKILL.md'));
-assertExists(join(daemonDir, 'runtime', 'opencreator-runtime', 'manifest.json'));
+assertExists(join(daemonDir, 'runtime', 'vishnucreator-runtime', 'SKILL.md'));
+assertExists(join(daemonDir, 'runtime', 'vishnucreator-runtime', 'manifest.json'));
 
 assertAsarContents();
 await assertBrandingContents();
@@ -142,12 +142,12 @@ console.log(JSON.stringify({
 
 function readBuildManifest(path) {
   if (!existsSync(path)) {
-    if (process.env.OPENCREATOR_DESKTOP_PACKAGE_ROOT) {
+    if (process.env.VISHNUCREATOR_DESKTOP_PACKAGE_ROOT) {
       return {};
     }
     throw new Error(
       `Desktop build manifest is missing: ${path}. `
-      + 'Run the Desktop package command or set OPENCREATOR_DESKTOP_PACKAGE_ROOT.'
+      + 'Run the Desktop package command or set VISHNUCREATOR_DESKTOP_PACKAGE_ROOT.'
     );
   }
   const parsed = JSON.parse(readFileSync(path, 'utf8'));
@@ -183,9 +183,9 @@ function assertBuildProfile() {
 
 function packagedExecutable(root) {
   if (process.platform === 'darwin') {
-    return join(root, 'Contents', 'MacOS', 'OpenCreator');
+    return join(root, 'Contents', 'MacOS', 'VishnuCreator');
   }
-  return join(root, process.platform === 'win32' ? 'OpenCreator.exe' : 'opencreator');
+  return join(root, process.platform === 'win32' ? 'VishnuCreator.exe' : 'vishnucreator');
 }
 
 function assertAsarContents() {
@@ -232,8 +232,8 @@ async function assertBrandingContents() {
     appAsar,
     join('dist', 'bootstrap', 'index.html')
   ).toString('utf8');
-  if (!bootstrapHtml.includes('<title>OpenCreator</title>')) {
-    throw new Error('Packaged Desktop bootstrap branding is missing OpenCreator');
+  if (!bootstrapHtml.includes('<title>VishnuCreator</title>')) {
+    throw new Error('Packaged Desktop bootstrap branding is missing VishnuCreator');
   }
 
   if (targetPlatform === 'darwin') {
@@ -276,7 +276,7 @@ function assertDaemonContents() {
     ['protocol', 'Protocol'],
     ['config', 'Config']
   ]) {
-    const packageDir = join(daemonDir, 'node_modules', '@opencreator', name);
+    const packageDir = join(daemonDir, 'node_modules', '@vishnucreator', name);
     const packageJson = JSON.parse(
       readFileSync(join(packageDir, 'package.json'), 'utf8')
     );
@@ -291,7 +291,7 @@ function assertDaemonContents() {
   assertPortableDaemonDependencies();
 
   const packagedCreatorAgentRuntime = hashDirectory(
-    join(daemonDir, 'runtime', 'opencreator-runtime')
+    join(daemonDir, 'runtime', 'vishnucreator-runtime')
   );
   const sourceCreatorAgentRuntime = hashDirectory(sourceCreatorAgentRuntimeDir);
   const firstDifferentPath = findFirstDifferentPath(
@@ -305,7 +305,7 @@ function assertDaemonContents() {
   }
   if (sourceCreatorAgentRuntime.hash !== packagedCreatorAgentRuntime.hash) {
     throw new Error(
-      'Packaged Creator Agent Runtime contents differ from apps/daemon/runtime/opencreator-runtime'
+      'Packaged Creator Agent Runtime contents differ from apps/daemon/runtime/vishnucreator-runtime'
     );
   }
   if (
@@ -322,7 +322,7 @@ function assertDaemonContents() {
 }
 
 function assertPortableDaemonDependencies() {
-  const isolatedRoot = mkdtempSync(join(tmpdir(), 'opencreator-daemon-package-'));
+  const isolatedRoot = mkdtempSync(join(tmpdir(), 'vishnucreator-daemon-package-'));
   const isolatedDaemon = join(isolatedRoot, 'daemon');
   try {
     cpSync(daemonDir, isolatedDaemon, { recursive: true });
@@ -349,9 +349,9 @@ function assertPortableDaemonDependencies() {
           '@modelcontextprotocol/sdk/server/mcp.js',
           '@modelcontextprotocol/sdk/server/stdio.js',
           '@modelcontextprotocol/sdk/server/streamableHttp.js',
-          '@opencreator/config',
-          '@opencreator/protocol',
-          '@opencreator/skill-market',
+          '@vishnucreator/config',
+          '@vishnucreator/protocol',
+          '@vishnucreator/skill-market',
           'sharp',
           'nanoid',
           'yaml',
@@ -557,7 +557,7 @@ function assertCreatorSubtitleFontContents() {
       throw new Error(`Creator subtitle source Web font hash mismatch: ${source}`);
     }
     return {
-      path: `fonts/opencreator/${basename(font.webFile)}`,
+      path: `fonts/vishnucreator/${basename(font.webFile)}`,
       sha256: font.webSha256.toLowerCase()
     };
   });
@@ -607,10 +607,10 @@ function assertCreatorRuntime() {
   }
   if (typeof manifest.packageRoot !== 'string') return;
   if (
-    manifest.krillinCliVersion !== runtime.cliVersion
-    || manifest.krillinSourceCommit !== runtime.sourceCommit
-    || manifest.krillinSourceSha256 !== runtime.sourceSha256
-    || manifest.krillinIntegrationPatchSha256 !== runtime.integrationPatchSha256
+    manifest.vishnuCliVersion !== runtime.cliVersion
+    || manifest.vishnuSourceCommit !== runtime.sourceCommit
+    || manifest.vishnuSourceSha256 !== runtime.sourceSha256
+    || manifest.vishnuIntegrationPatchSha256 !== runtime.integrationPatchSha256
     || manifest.ytDlpRuntimeMode !== runtime.ytDlp?.mode
     || manifest.ytDlpVersion !== runtime.ytDlp?.version
     || manifest.ytDlpPythonVersion !== runtime.ytDlp?.pythonVersion
@@ -751,7 +751,7 @@ function assertNoLocalData() {
     homedir(),
     process.env.HOME,
     process.env.USERPROFILE,
-    '~/develop/opencreator/',
+    '~/develop/vishnucreator/',
     '~/develop/content-design',
     'content-design',
     'Playground'
@@ -848,7 +848,7 @@ async function verifyMacPackageMetadata() {
     verifyDeveloperIdSignature();
     verifyEmbeddedRuntimeSignatures();
   }
-  if (process.env.OPENCREATOR_REQUIRE_NOTARIZED_MAC_APP === '1') {
+  if (process.env.VISHNUCREATOR_REQUIRE_NOTARIZED_MAC_APP === '1') {
     if (!requiresDeveloperIdSignature()) {
       throw new Error(
         'A notarized macOS package must also require Developer ID verification'
@@ -960,13 +960,13 @@ function verifyEmbeddedRuntimeSignatures() {
 function requiresDeveloperIdSignature() {
   return targetPlatform === 'darwin'
     && (
-      process.env.OPENCREATOR_REQUIRE_DEVELOPER_ID === '1'
+      process.env.VISHNUCREATOR_REQUIRE_DEVELOPER_ID === '1'
       || manifest.macSigningMode === 'developer-id'
     );
 }
 
 function expectedAppleTeamId() {
-  return process.env.OPENCREATOR_APPLE_TEAM_ID?.trim()
+  return process.env.VISHNUCREATOR_APPLE_TEAM_ID?.trim()
     || (typeof manifest.appleTeamId === 'string'
       ? manifest.appleTeamId.trim()
       : undefined);

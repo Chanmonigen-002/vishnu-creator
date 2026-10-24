@@ -1,4 +1,4 @@
-import { safePublicErrorMessage } from '@opencreator/protocol';
+import { safePublicErrorMessage } from '@vishnucreator/protocol';
 import { ApiClientError } from '../runtime/errors.js';
 
 export function modelProbeErrorMessage(error: unknown, l: (zh: string, en: string) => string): string | undefined {

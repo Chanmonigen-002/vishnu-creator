@@ -1,4 +1,4 @@
-OpenCreator 字幕预览与烧录一致性改造方案
+Vishnu Creator 字幕预览与烧录一致性改造方案
 
 本文记录实施方案。2026-10-20 已完成共用字幕编译器、浏览器 libass 预览、完整时间线、随包字体校验与回退、横竖屏布局和全屏接入；具体实现、验收数据和剩余差异见[实施与验收报告](subtitle-preview-burnin-validation.md)。以下保留方案设计，协议示例应以实际代码为准。
 
@@ -41,7 +41,7 @@ OpenCreator 字幕预览与烧录一致性改造方案
 ```mermaid
 flowchart TD
     A[字幕草稿、样式、视频与输出规格] --> B[Daemon 生成确定的渲染修订]
-    B --> C[Krillin 共用字幕编译器]
+    B --> C[Vishnu 共用字幕编译器]
     C --> D[ASS、布局、字体清单、内容哈希]
     D --> E[Web 与 Desktop 共用预览组件]
     E --> F[JASSUB / WASM libass 随视频帧渲染]
@@ -196,11 +196,11 @@ type SubtitleRenderBundle = {
 | 模块 | 改造内容 |
 | --- | --- |
 | `packages/protocol/src/creator.ts` | 新增渲染输入、修订、布局和字体资源契约 |
-| `apps/daemon/src/creator/krillin/subtitle-preview.ts` | 从逐句 PNG 调度扩展为渲染包准备、缓存和原生参考帧 |
-| `apps/daemon/src/creator/krillin/adapter.ts` | 保留统一样式映射，输出确定的样式与布局输入 |
-| `apps/daemon/src/creator/krillin/cli-runner.ts` | 支持独立编译、冻结修订和同一 ASS 烧录 |
-| `runtime/krillinai/internal/service/srt_embed.go` | 提取共用编译器，统一内容、角色、换行和字体回退 |
-| `runtime/krillinai/internal/service/render_stage.go` | 消费共享 ASS，统一输出画布和视频变换 |
+| `apps/daemon/src/creator/vishnu/subtitle-preview.ts` | 从逐句 PNG 调度扩展为渲染包准备、缓存和原生参考帧 |
+| `apps/daemon/src/creator/vishnu/adapter.ts` | 保留统一样式映射，输出确定的样式与布局输入 |
+| `apps/daemon/src/creator/vishnu/cli-runner.ts` | 支持独立编译、冻结修订和同一 ASS 烧录 |
+| `runtime/vishnuai/internal/service/srt_embed.go` | 提取共用编译器，统一内容、角色、换行和字体回退 |
+| `runtime/vishnuai/internal/service/render_stage.go` | 消费共享 ASS，统一输出画布和视频变换 |
 | `apps/web/.../VideoTranslationResultWorkspace.tsx` | 普通/深度预览共享组件，按完整时间线播放与同步 |
 | `apps/web/.../VideoTranslationWorkspace.tsx` | 移除预览专有截字/拼接，绑定真实草稿修订与输出布局 |
 | `apps/web/.../VideoTranslationStylePreview.tsx` | 复用同一渲染器显示样式示例；原生图片保留作兼容路径 |
@@ -251,7 +251,7 @@ Desktop 已有 `.wasm → application/wasm` 映射，不重复实现。新增组
 
 已有 384×288 样式、竖屏标题和混合时间线分别保留回归样本，防止修复一致性的同时改变历史样式。若技术验证需要更新底层字体/排版库，必须先说明并验证外观变化，再决定项目版本迁移。
 
-推荐落地顺序为：先完成同一 ASS、同一字体的技术验证，再依次完成共享编译、实时预览、合成布局和真实成片验收。整个改造沿现有 Daemon/Krillin 渲染能力实施，无需重新调用翻译模型。
+推荐落地顺序为：先完成同一 ASS、同一字体的技术验证，再依次完成共享编译、实时预览、合成布局和真实成片验收。整个改造沿现有 Daemon/Vishnu 渲染能力实施，无需重新调用翻译模型。
 
 参考：
 

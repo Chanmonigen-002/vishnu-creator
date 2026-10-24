@@ -25,7 +25,7 @@
   "tags": ["学术论文", "章节结构", "论点证据", "投稿自审"],
   "structure": ["研究任务与问题", "相关工作与技术挑战", "方法与核心贡献", "实验与证据", "结论、局限与未来方向"],
   "instructions": "先明确研究故事、技术问题和核心贡献，再按章节组织论证。每段只传递一个信息，首句说明段落作用，术语前后一致；摘要和引言中的重要主张必须由实验或来源证据支持。成稿后使用审稿人视角检查贡献、表达、实验、评估完整性和方法合理性。",
-  "author": "Master-cai / OpenCreator adapted",
+  "author": "Master-cai / VishnuCreator adapted",
   "status": "featured",
   "sortOrder": 120,
   "source": {

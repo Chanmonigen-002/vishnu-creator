@@ -7,7 +7,7 @@ export function deepLinkToRoute(value: string): string | undefined {
   } catch {
     return undefined;
   }
-  if (url.protocol !== 'opencreator:' || url.username || url.password || url.port) return undefined;
+  if (url.protocol !== 'vishnucreator:' || url.username || url.password || url.port) return undefined;
 
   const rawSegments = [url.hostname, ...url.pathname.split('/')]
     .filter(segment => segment.length > 0);
@@ -48,7 +48,7 @@ export function deepLinkToRoute(value: string): string | undefined {
 }
 
 export function findDeepLink(argv: string[]): string | undefined {
-  return argv.find(value => value.startsWith('opencreator://'));
+  return argv.find(value => value.startsWith('vishnucreator://'));
 }
 
 function optionalValidatedId(

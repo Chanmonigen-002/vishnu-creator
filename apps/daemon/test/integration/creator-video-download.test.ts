@@ -1,5 +1,5 @@
 import type { CreatorExecutor } from '../../src/creator/executor.js';
-import type { CreatorJson, CreatorStageRun } from '@opencreator/protocol';
+import type { CreatorJson, CreatorStageRun } from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import { mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -394,7 +394,7 @@ function fakeDownloadExecutor(subtitles = false): CreatorExecutor {
           requestedUrl: 'https://www.youtube.com/watch?v=download-demo',
           url: 'https://www.youtube.com/watch?v=download-demo',
           platform: 'youtube',
-          uploader: 'OpenCreator',
+          uploader: 'VishnuCreator',
           thumbnailUrl: null,
           duration: 30,
           width: 1920,

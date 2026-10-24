@@ -18,7 +18,7 @@ import {
   type OpenAiCompatibleConfig,
   type VolcengineAsrConfig,
   type VolcengineTtsConfig
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   AudioLines,
   Check,
@@ -247,8 +247,8 @@ export function CreatorServicesSettingsView(props: {
       const confirmed = await confirm({
         title: l('启用本地语音识别', 'Enable local transcription'),
         description: l(
-          `保存后，KrillinAI 下次启动时会检查并按需下载 ${transcriptionProviderLabel(config.transcription.provider, l)} ${selectedTranscriptionModel(config)}。首次准备可能需要较长时间。`,
-          `After saving, KrillinAI will check and download ${transcriptionProviderLabel(config.transcription.provider, l)} ${selectedTranscriptionModel(config)} when it next starts. Initial preparation may take a while.`
+          `保存后，VishnuAI 下次启动时会检查并按需下载 ${transcriptionProviderLabel(config.transcription.provider, l)} ${selectedTranscriptionModel(config)}。首次准备可能需要较长时间。`,
+          `After saving, VishnuAI will check and download ${transcriptionProviderLabel(config.transcription.provider, l)} ${selectedTranscriptionModel(config)} when it next starts. Initial preparation may take a while.`
         ),
         confirmLabel: l('保存并启用', 'Save and enable')
       });
@@ -736,8 +736,8 @@ function TranscriptionSettings(props: SettingsGroupProps & {
     <SettingsFieldset
       title={l('语音识别', 'Speech transcription')}
       description={l(
-        '选择实际需要语音识别时使用的服务。KrillinAI 会严格使用保存的配置，不会在云端与本地服务之间自动切换。',
-        'Choose the provider used when speech recognition is actually required. KrillinAI follows the saved setting and never switches automatically between cloud and local providers.'
+        '选择实际需要语音识别时使用的服务。VishnuAI 会严格使用保存的配置，不会在云端与本地服务之间自动切换。',
+        'Choose the provider used when speech recognition is actually required. VishnuAI follows the saved setting and never switches automatically between cloud and local providers.'
       )}
     >
       <p className="creator-services-runtime-note">
@@ -878,8 +878,8 @@ function TranscriptionSettings(props: SettingsGroupProps & {
       {selectedCapability?.kind === 'local' && selectedCapability.available ? (
         <p className="creator-services-inline-note">
           {l(
-            '保存后，KrillinAI 下次启动时会检查所选本地模型，缺失时才开始下载。未选择本地 Whisper 时不会下载。',
-            'After saving, KrillinAI checks the selected local model the next time it starts and downloads it only if missing. No model is downloaded unless local Whisper is selected.'
+            '保存后，VishnuAI 下次启动时会检查所选本地模型，缺失时才开始下载。未选择本地 Whisper 时不会下载。',
+            'After saving, VishnuAI checks the selected local model the next time it starts and downloads it only if missing. No model is downloaded unless local Whisper is selected.'
           )}
         </p>
       ) : null}

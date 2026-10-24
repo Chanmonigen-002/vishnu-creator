@@ -390,7 +390,7 @@ function createRepository(input: {
   now?: string;
   nowValues?: string[];
 } = {}): ScheduleRepository {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-schedule-repository-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-schedule-repository-'));
   db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
   const ids = [...(input.ids ?? [])];
   const operationIds = [...(input.operationIds ?? [])];

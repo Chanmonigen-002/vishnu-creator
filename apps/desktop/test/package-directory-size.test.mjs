@@ -10,7 +10,7 @@ afterEach(() => {
 });
 
 function fixture() {
-  const path = mkdtempSync(join(tmpdir(), 'opencreator-package-size-'));
+  const path = mkdtempSync(join(tmpdir(), 'vishnucreator-package-size-'));
   directories.push(path);
   return path;
 }

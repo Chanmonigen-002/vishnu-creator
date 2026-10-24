@@ -34,7 +34,7 @@ describe('Desktop logger redaction', () => {
   });
 
   it('writes asynchronously and flushes redacted entries', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-logger-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-logger-'));
     const path = join(tempDir, 'desktop.log');
     const logger = createDesktopLogger(path);
 

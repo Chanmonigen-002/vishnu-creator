@@ -2,7 +2,7 @@ import {
   createDefaultCreatorServicesConfig,
   creatorRuntimeWorkspaces,
   videoGenerationModelIds
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { describe, expect, it } from 'vitest';
 import {
   creatorPresetModuleDefinitions,

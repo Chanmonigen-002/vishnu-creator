@@ -6,7 +6,7 @@ import type {
   WorkspaceFileMeta,
   WorkspaceFileRevealRequest,
   WorkspaceFileSaveRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CSSProperties, KeyboardEvent as ReactKeyboardEvent, MouseEvent as ReactMouseEvent } from 'react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useConfirmDialog } from '../../components/dialogs/ConfirmDialogProvider.js';
@@ -39,7 +39,7 @@ type FileWorkspaceViewProps = {
   onOpenExternal?(url: string): void;
 };
 
-const RECENT_PATH_STORAGE_PREFIX = 'opencreator.file-workspace.recent.';
+const RECENT_PATH_STORAGE_PREFIX = 'vishnucreator.file-workspace.recent.';
 const FILE_TREE_MIN_WIDTH = 220;
 const FILE_TREE_MAX_WIDTH = 420;
 const FILE_EDITOR_MIN_WIDTH = 360;

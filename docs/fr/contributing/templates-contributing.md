@@ -99,4 +99,4 @@ Si votre modèle adapte un prompt ou un style publié par quelqu'un d'autre :
 
 ---
 
-Des questions ? [Ouvrez une issue](https://github.com/krillinai/OpenCreator/issues/new) avec votre idée de modèle et un exemple de résultat, et nous vous aiderons à cadrer.
+Des questions ? [Ouvrez une issue](https://github.com/vishnuai/Vishnu Creator/issues/new) avec votre idée de modèle et un exemple de résultat, et nous vous aiderons à cadrer.

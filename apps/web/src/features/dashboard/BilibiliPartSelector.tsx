@@ -1,5 +1,5 @@
 import AppSelect from '../../components/forms/Select.js';
-import type { VideoMetadataResponse } from '@opencreator/protocol';
+import type { VideoMetadataResponse } from '@vishnucreator/protocol';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import { OriginalErrorDetails } from '../issues/OriginalErrorDetails.js';
 

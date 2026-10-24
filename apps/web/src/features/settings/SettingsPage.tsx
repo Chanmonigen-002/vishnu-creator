@@ -1,1 +1,1 @@
-export { OpenCreatorSettingsView as default } from './OpenCreatorSettingsView.js';
+export { VishnuCreatorSettingsView as default } from './VishnuCreatorSettingsView.js';

@@ -1,4 +1,4 @@
-import type { CreatorArtifact, WechatArticleSourceLink } from '@opencreator/protocol';
+import type { CreatorArtifact, WechatArticleSourceLink } from '@vishnucreator/protocol';
 import { createRequire } from 'node:module';
 import { readFile } from 'node:fs/promises';
 import { extname } from 'node:path';
@@ -93,7 +93,7 @@ async function extractWebpage(
     method: 'GET',
     headers: {
       Accept: 'text/html,application/xhtml+xml,text/plain;q=0.9,*/*;q=0.5',
-      'User-Agent': 'OpenCreator/1.0'
+      'User-Agent': 'VishnuCreator/1.0'
     },
     proxy,
     signal,

@@ -2,7 +2,7 @@
 
 > [English](../../CONTRIBUTING.md) | **简体中文** | [日本語](../ja/CONTRIBUTING.md) | [한국어](../ko/CONTRIBUTING.md) | [Bahasa Indonesia](../id/CONTRIBUTING.md) | [Español](../es/CONTRIBUTING.md) | [Français](../fr/CONTRIBUTING.md) | [Deutsch](../de/CONTRIBUTING.md) | [Português](../pt/CONTRIBUTING.md) | [Русский](../ru/CONTRIBUTING.md) | [العربية](../ar/CONTRIBUTING.md)
 
-感谢你愿意为 OpenCreator 做贡献。OpenCreator 是一个基于 Codex Agent 循环的本地优先创作工作区，项目的大部分价值来自小而聚焦的补充：一个 Skill 文件夹、一个创作模板、一个边界清晰的修复。本指南说明每类贡献应该放在哪里，以及 PR 需要达到什么标准才能合并。
+感谢你愿意为 Vishnu Creator 做贡献。Vishnu Creator 是一个基于 Codex Agent 循环的本地优先创作工作区，项目的大部分价值来自小而聚焦的补充：一个 Skill 文件夹、一个创作模板、一个边界清晰的修复。本指南说明每类贡献应该放在哪里，以及 PR 需要达到什么标准才能合并。
 
 ---
 
@@ -19,7 +19,7 @@
 
 ## 在哪里提问、由谁审核
 
-请通过 [Issue](https://github.com/krillinai/OpenCreator/issues/new) 讨论想法或询问所属领域，我们会指引合适的方向。提交 PR 时，请联系[核心团队](../../README.md#the-crew)中负责代码与问题修复、创作模板、设计与素材或 Skills 与文档的成员。团队负责贡献规范、审核和社区答疑；合并须遵守仓库权限及必要检查。
+请通过 [Issue](https://github.com/vishnuai/Vishnu Creator/issues/new) 讨论想法或询问所属领域，我们会指引合适的方向。提交 PR 时，请联系[核心团队](../../README.md#the-crew)中负责代码与问题修复、创作模板、设计与素材或 Skills 与文档的成员。团队负责贡献规范、审核和社区答疑；合并须遵守仓库权限及必要检查。
 
 ---
 
@@ -28,8 +28,8 @@
 完整的环境准备见 [README 快速开始](../../README.md#quick-start)。贡献者只需要记住：
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable          # 使用 packageManager 字段锁定的 pnpm
 pnpm install
 pnpm web:dev             # Web + 按需启动本地 daemon
@@ -43,7 +43,7 @@ pnpm test                # 工作区单元与集成测试
 
 ## 贡献流程
 
-1. 在 [Issue](https://github.com/krillinai/OpenCreator/issues) 中描述问题、使用场景和预期行为。
+1. 在 [Issue](https://github.com/vishnuai/Vishnu Creator/issues) 中描述问题、使用场景和预期行为。
 2. 从最新的开发分支切出一个聚焦的功能或修复分支。
 3. 遵循现有架构：通用产品能力在 Web 和 Daemon 中**只实现一次**，Desktop 原生差异必须通过显式 capability（例如 `canSelectDirectory`）隔离。
 4. 为行为变化添加合适的单元、集成或 E2E 测试，并在 PR 中同时列出已执行和已跳过的验证。
@@ -66,4 +66,4 @@ pnpm test                # 工作区单元与集成测试
 
 ---
 
-OpenCreator · Create locally, work continuously.
+Vishnu Creator · Create locally, work continuously.

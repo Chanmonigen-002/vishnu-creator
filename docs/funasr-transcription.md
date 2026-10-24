@@ -1,6 +1,6 @@
 # FunASR / SenseVoice transcription
 
-OpenCreator can use a user-managed FunASR server through its OpenAI-compatible API. OpenCreator does not package Python, CUDA, model files, or a resident Python process.
+Vishnu Creator can use a user-managed FunASR server through its OpenAI-compatible API. Vishnu Creator does not package Python, CUDA, model files, or a resident Python process.
 
 Start the official server separately, for example:
 

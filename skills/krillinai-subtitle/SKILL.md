@@ -1,16 +1,16 @@
 ---
-name: krillinai-subtitle
-description: Use when generating subtitles with KrillinAI CLI from a YouTube link, Bilibili/local video, or existing media, including platform caption download, Whisper fallback, translation, bilingual SRT, and short vertical subtitle output.
+name: vishnuai-subtitle
+description: Use when generating subtitles with VishnuAI CLI from a YouTube link, Bilibili/local video, or existing media, including platform caption download, Whisper fallback, translation, bilingual SRT, and short vertical subtitle output.
 ---
 
-# KrillinAI Subtitle
+# VishnuAI Subtitle
 
-Use this skill for the `subtitle` stage. Read `skills/krillinai-cli/references/cli-contract.md` first for binary location, execution working directory, configuration, and JSON behavior.
+Use this skill for the `subtitle` stage. Read `skills/vishnuai-cli/references/cli-contract.md` first for binary location, execution working directory, configuration, and JSON behavior.
 
 ## Command
 
 ```bash
-(cd "$KRILLINAI_CWD" && "$KRILLINAI_CLI" subtitle "<input>" \
+(cd "$VISHNUAI_CWD" && "$VISHNUAI_CLI" subtitle "<input>" \
   --origin-lang en \
   --target-lang zh_cn \
   --workdir "$WORKDIR" \
@@ -40,7 +40,7 @@ Use this skill for the `subtitle` stage. Read `skills/krillinai-cli/references/c
 
 ## Outputs
 
-After a real run, read paths from `krillinai_manifest.json`. Main files:
+After a real run, read paths from `vishnuai_manifest.json`. Main files:
 
 - `origin_language_srt.srt`
 - `target_language_srt.srt`
@@ -54,7 +54,7 @@ After a real run, read paths from `krillinai_manifest.json`. Main files:
 ## Verification
 
 - Require terminal JSON with `"ok": true`.
-- Confirm `krillinai_manifest.json` exists under `--workdir`.
+- Confirm `vishnuai_manifest.json` exists under `--workdir`.
 - Spot-check `bilingual_srt.srt` ordering and `short_origin_mixed_srt.srt` readability.
 - When `--prepare-video` was requested, require a non-empty `origin_video` output.
-- For Agent integration details, read `skills/krillinai-cli/references/cli-contract.md`.
+- For Agent integration details, read `skills/vishnuai-cli/references/cli-contract.md`.

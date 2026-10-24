@@ -1,7 +1,7 @@
 import Fastify from 'fastify';
 import { describe, expect, it, vi } from 'vitest';
 import { registerCreatorRoutes } from '../../src/api/routes.creator.js';
-import type { CreatorSubtitleRenderRequest } from '@opencreator/protocol';
+import type { CreatorSubtitleRenderRequest } from '@vishnucreator/protocol';
 
 describe('subtitle preview API', () => {
   it('compiles full timelines and exposes only manifest font IDs', async () => {

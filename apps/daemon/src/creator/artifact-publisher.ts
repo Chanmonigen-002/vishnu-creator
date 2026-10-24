@@ -1,4 +1,4 @@
-import type { CreatorJob, ProjectResponse } from '@opencreator/protocol';
+import type { CreatorJob, ProjectResponse } from '@vishnucreator/protocol';
 import { copyFile, mkdir, rename, rm } from 'node:fs/promises';
 import { basename, extname, join, resolve } from 'node:path';
 

@@ -1,4 +1,4 @@
-import type { CreatorJob } from '@opencreator/protocol';
+import type { CreatorJob } from '@vishnucreator/protocol';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';

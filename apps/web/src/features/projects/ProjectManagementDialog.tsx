@@ -3,12 +3,12 @@ import type {
   ReasoningEffort,
   ThreadResponse,
   UpdateProjectRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { FolderCog, FolderMinus, FolderPlus, RefreshCw, Save, X } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { ConfirmDialog } from '../../components/dialogs/ConfirmDialog.js';
 import { useConfirmDialog } from '../../components/dialogs/ConfirmDialogProvider.js';
-import type { OpenCreatorProject } from './project-model.js';
+import type { VishnuCreatorProject } from './project-model.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import './project-management.css';
 
@@ -22,8 +22,8 @@ const reasoningOptions: Array<{ value: '' | ReasoningEffort; label: string }> = 
 
 export function ProjectManagementDialog(props: {
   open: boolean;
-  projects: OpenCreatorProject[];
-  archivedProjects: OpenCreatorProject[];
+  projects: VishnuCreatorProject[];
+  archivedProjects: VishnuCreatorProject[];
   unassignedThreads: ThreadResponse[];
   initialProjectId?: string;
   busy?: boolean;
@@ -38,7 +38,7 @@ export function ProjectManagementDialog(props: {
 }) {
   const l = useLocalizedCopy();
   const [editingProjectId, setEditingProjectId] = useState<string>();
-  const [projectPendingRemoval, setProjectPendingRemoval] = useState<OpenCreatorProject>();
+  const [projectPendingRemoval, setProjectPendingRemoval] = useState<VishnuCreatorProject>();
   const [removingProjectId, setRemovingProjectId] = useState<string>();
   const [assignmentByThreadId, setAssignmentByThreadId] = useState<Record<string, string>>({});
 
@@ -274,7 +274,7 @@ export function ProjectManagementDialog(props: {
 }
 
 function ProjectEditForm(props: {
-  project: OpenCreatorProject;
+  project: VishnuCreatorProject;
   disabled?: boolean;
   onCancel(): void;
   onSave(input: UpdateProjectRequest): Promise<void>;
@@ -326,7 +326,7 @@ function ProjectEditForm(props: {
         <AppSelect
           value={normalizeProjectSandbox(sandbox)}
           onChange={async event => {
-            const value = event.currentTarget.value as OpenCreatorProject['sandbox'];
+            const value = event.currentTarget.value as VishnuCreatorProject['sandbox'];
             if (
               value === 'danger-full-access'
               && sandbox !== 'danger-full-access'
@@ -370,7 +370,7 @@ function normalizePath(value: string): string {
 }
 
 function normalizeProjectSandbox(
-  value: OpenCreatorProject['sandbox']
+  value: VishnuCreatorProject['sandbox']
 ): 'follow-global' | 'workspace-write' | 'danger-full-access' {
   if (value === 'danger-full-access' || value === 'follow-global') return value;
   return 'workspace-write';

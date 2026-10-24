@@ -3,7 +3,7 @@ import type {
   CreatorAgentItemKind,
   CreatorAgentItemStatus,
   CreatorJson
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export type NormalizedCreatorRuntimeEvent = {
   name: string;

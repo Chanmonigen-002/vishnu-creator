@@ -1,5 +1,5 @@
 import { test, expect } from './fixtures/runtime.js';
-import { createDefaultCreatorServicesConfig, type GatewayAccountState } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type GatewayAccountState } from '@vishnucreator/protocol';
 
 test('登录只显示官方模型，退出登录后恢复用户配置', async ({ page, runtime }, testInfo) => {
   const custom = createDefaultCreatorServicesConfig();
@@ -31,7 +31,7 @@ test('登录只显示官方模型，退出登录后恢复用户配置', async ({
     } else if (!path.endsWith('/gateway/account')) { await route.continue(); return; }
     await route.fulfill({ contentType: 'application/json', body: JSON.stringify(state) });
   });
-  await page.addInitScript(() => localStorage.setItem('opencreator.agent-setup-confirmed.v1', '1'));
+  await page.addInitScript(() => localStorage.setItem('vishnucreator.agent-setup-confirmed.v1', '1'));
   await runtime.openApp(page);
   await page.goto(`${runtime.origin}/#/settings?tab=ai-services`);
   const model = page.getByRole('combobox', { name: '文本模型' });

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { normalizeSubtitleRenderCues } from '@opencreator/protocol';
+import { normalizeSubtitleRenderCues } from '@vishnucreator/protocol';
 
 const cue = (text: string, start = '00:00:00,000', end = '00:00:04,000') => ({ text, start, end });
 describe('shared subtitle role adapter', () => {

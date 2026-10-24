@@ -1,4 +1,4 @@
-import type { ReasoningEffort, SandboxMode } from '@opencreator/protocol';
+import type { ReasoningEffort, SandboxMode } from '@vishnucreator/protocol';
 
 export type BuildCodexExecArgsInput = {
   profile?: string;

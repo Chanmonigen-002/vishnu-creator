@@ -1,4 +1,4 @@
-import type { CreatorJob } from '@opencreator/protocol';
+import type { CreatorJob } from '@vishnucreator/protocol';
 import { describe, expect, it, vi } from 'vitest';
 import {
   createCreatorToolDefinitions,
@@ -66,7 +66,7 @@ function job(status: CreatorJob['stages'][number]['status'], revision = 1): Crea
       id: 'stage_1',
       jobId: 'job_1',
       stageId: 'render-horizontal',
-      executor: 'krillinai',
+      executor: 'vishnuai',
       status,
       dispatchStatus: status === 'running' ? 'claimed' : 'finished',
       claimOwner: status === 'running' ? 'scheduler_1' : null,

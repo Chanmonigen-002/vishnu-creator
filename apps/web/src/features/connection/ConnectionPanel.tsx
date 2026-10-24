@@ -1,5 +1,5 @@
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
-import type { CodexStatusResponse } from '@opencreator/protocol';
+import type { CodexStatusResponse } from '@vishnucreator/protocol';
 
 export function ConnectionPanel(props: {
   status: 'connected' | 'disconnected' | 'invalid_token';

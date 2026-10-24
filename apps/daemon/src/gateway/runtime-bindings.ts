@@ -78,14 +78,14 @@ export function createGatewayRuntimeBindings(input: GatewayRuntimeBindingsInput)
       if (process.platform !== 'win32') chmodSync(input.codexHome, 0o700);
       const config = [
         `model = ${JSON.stringify(input.model)}`,
-        'model_provider = "opencreator_gateway"',
+        'model_provider = "vishnucreator_gateway"',
         'cli_auth_credentials_store = "file"',
         ...(input.gateway ? ['web_search = "disabled"'] : []),
         '[shell_environment_policy]',
         'inherit = "core"',
         'exclude = ["OC_GATEWAY_MODEL_KEY"]',
-        '[model_providers.opencreator_gateway]',
-        'name = "OpenCreator Gateway"',
+        '[model_providers.vishnucreator_gateway]',
+        'name = "VishnuCreator Gateway"',
         `base_url = ${JSON.stringify(connection?.baseUrl ?? baseUrl.href.replace(/\/$/, ''))}`,
         'env_key = "OC_GATEWAY_MODEL_KEY"',
         'wire_api = "responses"',

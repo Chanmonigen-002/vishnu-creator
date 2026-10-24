@@ -1,4 +1,4 @@
-import type { CreatorLocalComponent, CreatorRuntimeComponentsResponse } from '@opencreator/protocol';
+import type { CreatorLocalComponent, CreatorRuntimeComponentsResponse } from '@vishnucreator/protocol';
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';

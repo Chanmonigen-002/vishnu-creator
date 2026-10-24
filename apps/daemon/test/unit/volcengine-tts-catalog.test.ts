@@ -5,7 +5,7 @@ import {
   resolveVolcengineTtsRoute,
   volcengineSpeechRate,
   volcengineTtsVoices
-} from '../../src/creator/krillin/volcengine-tts-catalog.js';
+} from '../../src/creator/vishnu/volcengine-tts-catalog.js';
 
 describe('volcengine TTS catalog', () => {
   it('maps official small-model voice names instead of the old 御姐 mix-up', () => {

@@ -23,7 +23,7 @@
 
 **Actually ran:**
 
-<!-- e.g. `pnpm --filter @opencreator/web typecheck`, `pnpm test -- skills` -->
+<!-- e.g. `pnpm --filter @vishnucreator/web typecheck`, `pnpm test -- skills` -->
 
 **Intentionally skipped, and why:**
 

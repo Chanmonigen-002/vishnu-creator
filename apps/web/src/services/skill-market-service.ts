@@ -1,7 +1,7 @@
 import type {
   CodexSkillMarketInstallRecordListResponse,
   CodexSkillMarketMutationResponse,
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'post'>;

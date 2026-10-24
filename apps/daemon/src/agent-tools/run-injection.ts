@@ -10,11 +10,11 @@ import {
 } from './schedule-tools.js';
 import { AGENT_SCHEDULE_MCP_ROUTE } from './internal-routes.js';
 
-export const AGENT_SCHEDULE_MCP_SERVER_NAME = 'opencreator_schedule';
-export const AGENT_CREATOR_MCP_SERVER_NAME = 'opencreator_tools';
+export const AGENT_SCHEDULE_MCP_SERVER_NAME = 'vishnucreator_schedule';
+export const AGENT_CREATOR_MCP_SERVER_NAME = 'vishnucreator_tools';
 export const AGENT_CREATOR_MCP_ROUTE = '/internal/agent-tools/mcp/creator';
-export const AGENT_TOOL_BASE_URL_ENV = 'OPENCREATOR_AGENT_TOOL_URL';
-export const AGENT_TOOL_CAPABILITY_TOKEN_ENV = 'OPENCREATOR_AGENT_CAPABILITY_TOKEN';
+export const AGENT_TOOL_BASE_URL_ENV = 'VISHNUCREATOR_AGENT_TOOL_URL';
+export const AGENT_TOOL_CAPABILITY_TOKEN_ENV = 'VISHNUCREATOR_AGENT_CAPABILITY_TOKEN';
 
 export type AgentToolRunInjection = {
   mcpServers: CodexMcpServerConfig[];
@@ -68,12 +68,12 @@ const TOOL_SCOPES: Array<{
   name: AgentScheduleToolName;
   scope: AgentCapabilityScope;
 }> = [
-  { name: 'opencreator_schedule_create', scope: 'schedule:create' },
-  { name: 'opencreator_schedule_update', scope: 'schedule:update' },
-  { name: 'opencreator_schedule_pause', scope: 'schedule:pause' },
-  { name: 'opencreator_schedule_resume', scope: 'schedule:resume' },
-  { name: 'opencreator_schedule_run_now', scope: 'schedule:run_now' },
-  { name: 'opencreator_schedule_get', scope: 'schedule:get' }
+  { name: 'vishnucreator_schedule_create', scope: 'schedule:create' },
+  { name: 'vishnucreator_schedule_update', scope: 'schedule:update' },
+  { name: 'vishnucreator_schedule_pause', scope: 'schedule:pause' },
+  { name: 'vishnucreator_schedule_resume', scope: 'schedule:resume' },
+  { name: 'vishnucreator_schedule_run_now', scope: 'schedule:run_now' },
+  { name: 'vishnucreator_schedule_get', scope: 'schedule:get' }
 ];
 
 export function createAgentScheduleRunInjector(input: {

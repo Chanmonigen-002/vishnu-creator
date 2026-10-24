@@ -1,6 +1,6 @@
 import { request as httpsRequest } from 'node:https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
-import { safePublicRequestId, sanitizePublicErrorFacts, type PublicErrorFacts } from '@opencreator/protocol';
+import { safePublicRequestId, sanitizePublicErrorFacts, type PublicErrorFacts } from '@vishnucreator/protocol';
 import { publicFactsFromHttpResponse } from '../creator/public-error-facts.js';
 
 export async function fetchCreatorService(input: {

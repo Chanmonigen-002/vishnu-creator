@@ -4,8 +4,8 @@ import type {
   CreatorProviderRequest,
   CreatorProviderRequestStatus,
   CreatorStageRun
-} from '@opencreator/protocol';
-import { isPublicErrorFacts } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { isPublicErrorFacts } from '@vishnucreator/protocol';
 import { sanitizeIssueDetail, type CreatorIssueService } from './issues.js';
 import { publicFactsFromFailure } from './public-error-facts.js';
 import type { CreatorRepository } from './repository.js';
@@ -179,7 +179,7 @@ export class CreatorProviderRequestLedger {
         || !['creator_provider_request_failed', 'creator_provider_resolution_required'].includes(issue.code)
         || issue.stageRunId === undefined || !lineage.has(issue.stageRunId)
         || issue.scopeKey !== (stage.scopeKey ?? undefined)
-        || !issue.publicFacts?.provider?.startsWith('opencreator-gateway-')) continue;
+        || !issue.publicFacts?.provider?.startsWith('vishnucreator-gateway-')) continue;
       if (requests.some(request => request.provider === issue.publicFacts!.provider && isPendingRemote(request.status))) continue;
       const resolutionAttemptId = issue.status === 'resolving'
         ? this.repository.getIssueResolutionAttemptId(stage.jobId, issue.id)

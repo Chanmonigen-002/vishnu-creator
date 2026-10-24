@@ -3,7 +3,7 @@ import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import type {
   CodexAvailabilityProbe,
   CodexStatusResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { AlertTriangle, CheckCircle2, HardDrive, SquareTerminal } from 'lucide-react';
 import { RuntimeRecoveryNotice } from '../../runtime/runtime-recovery.js';
 

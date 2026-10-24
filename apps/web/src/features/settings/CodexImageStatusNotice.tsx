@@ -1,4 +1,4 @@
-import type { CodexImageStatus } from '@opencreator/protocol';
+import type { CodexImageStatus } from '@vishnucreator/protocol';
 import { useEffect, useState } from 'react';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import type { CreatorServicesSettingsService } from '../../services/creator-services-service.js';

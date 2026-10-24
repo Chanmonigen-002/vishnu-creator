@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import { z } from 'zod/v3';
-import type { CreatorJson } from '@opencreator/protocol';
+import type { CreatorJson } from '@vishnucreator/protocol';
 import type { CreatorServicesConfigStore } from '../../creator-services/config-store.js';
 import {
   creatorServiceErrorInfo,
@@ -122,7 +122,7 @@ export function createShortVideoScriptExecutor(input: {
           );
         }
         const markdown = formatScript(script, request);
-        const fileName = 'OpenCreator-short-video-script.md';
+        const fileName = 'VishnuCreator-short-video-script.md';
         const path = join(stage.workdir, fileName);
         await writeFile(path, markdown, { encoding: 'utf8', mode: 0o600 });
         return {

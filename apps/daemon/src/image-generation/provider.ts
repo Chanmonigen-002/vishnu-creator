@@ -2,9 +2,9 @@ import type {
   CreateImageGenerationRequest,
   CreatorServicesConfig,
   ImageGenerationAsset
-} from '@opencreator/protocol';
-import type { PublicErrorFacts } from '@opencreator/protocol';
-import { imageModelOptions, imageModelPixelSize, imageSizeAspectRatio, migrateOpenAiImageModel, publicErrorKindForCode, sanitizePublicErrorFacts } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import type { PublicErrorFacts } from '@vishnucreator/protocol';
+import { imageModelOptions, imageModelPixelSize, imageSizeAspectRatio, migrateOpenAiImageModel, publicErrorKindForCode, sanitizePublicErrorFacts } from '@vishnucreator/protocol';
 import {
   LocalCodexProviderError,
   type LocalCodexProvider
@@ -427,7 +427,7 @@ function createImageEditBody(input: {
   officialQuality?: string;
   official?: boolean;
 }): { contentType: string; body: Buffer } {
-  const boundary = `opencreator-${crypto.randomUUID()}`;
+  const boundary = `vishnucreator-${crypto.randomUUID()}`;
   const parts: Buffer[] = [];
   const addField = (name: string, value: string) => {
     parts.push(Buffer.from([

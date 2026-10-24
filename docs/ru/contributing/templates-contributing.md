@@ -99,4 +99,4 @@ template/<модуль>/<id>/1/
 
 ---
 
-Вопросы? [Откройте issue](https://github.com/krillinai/OpenCreator/issues/new) с вашей идеей шаблона и примером результата — мы поможем определить рамки.
+Вопросы? [Откройте issue](https://github.com/vishnuai/Vishnu Creator/issues/new) с вашей идеей шаблона и примером результата — мы поможем определить рамки.

@@ -10,9 +10,9 @@ const child = spawn(
     cwd: daemonDir,
     env: {
       ...process.env,
-      OPENCREATOR_RUNTIME_CHANNEL: 'development',
-      OPENCREATOR_MANAGED_PARENT_PID:
-        process.env.OPENCREATOR_MANAGED_PARENT_PID ?? String(process.pid)
+      VISHNUCREATOR_RUNTIME_CHANNEL: 'development',
+      VISHNUCREATOR_MANAGED_PARENT_PID:
+        process.env.VISHNUCREATOR_MANAGED_PARENT_PID ?? String(process.pid)
     },
     stdio: 'inherit'
   }

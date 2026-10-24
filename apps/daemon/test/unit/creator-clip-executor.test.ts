@@ -6,7 +6,7 @@ import {
   type CreatorArtifact,
   type CreatorJob,
   type CreatorStageRun
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createClipExecutor } from '../../src/creator/clip/executor.js';
 

@@ -4,8 +4,8 @@ import type {
   CreateImageGenerationRequest,
   ImageGenerationQuality,
   ImageGenerationSize
-} from '@opencreator/protocol';
-import { imagePromptRequiresReference } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { imagePromptRequiresReference } from '@vishnucreator/protocol';
 import { readFile, rm, writeFile } from 'node:fs/promises';
 import { createHash } from 'node:crypto';
 import { gatewayCreatorBinding } from '../../gateway/creator-service-source.js';
@@ -121,7 +121,7 @@ export function createImageExecutor(input: {
           const gateway = gatewayCreatorBinding(config);
           const logicalId = `${gateway?.logicalId ?? stage.stageRun.id}:candidate:${index}`;
           let ledger = gateway && input.ledger ? input.ledger.registerBeforeSubmit({
-            jobId:stage.job.id, stageRunId:stage.stageRun.id, provider:'opencreator-gateway-image', requestKey:logicalId,
+            jobId:stage.job.id, stageRunId:stage.stageRun.id, provider:'vishnucreator-gateway-image', requestKey:logicalId,
             gateway:{ accountId:gateway.accountId, bindingVersion:gateway.bindingVersion, logicalId },
             request:{prompt:request.prompt,size:request.size,quality:request.quality,model:gateway.models.image ?? '',reference:referenceImage ? createHash('sha256').update(referenceImage.content).digest('hex') : null}
           }) : undefined;
@@ -161,14 +161,14 @@ export function createImageExecutor(input: {
                 const candidate = result.contents.length === 1 ? index + 1 : index * result.contents.length + imageIndex + 1;
                 const extension = extensionForMime(image.mime);
                 const fileName = result.contents.length === 1
-                  ? `OpenCreator-image-${candidate}.${extension}`
-                  : `OpenCreator-image-${index + 1}-${imageIndex + 1}.${extension}`;
+                  ? `VishnuCreator-image-${candidate}.${extension}`
+                  : `VishnuCreator-image-${index + 1}-${imageIndex + 1}.${extension}`;
                 const path = join(stage.workdir, fileName);
                 const coverRatio = stage.job.templateId === 'cover'
                   ? readCoverRatio(stage)
                   : undefined;
                 const sourcePath = coverRatio !== undefined && input.normalizeCoverImage !== undefined
-                  ? join(stage.workdir, `OpenCreator-image-${candidate}-source.${extension}`)
+                  ? join(stage.workdir, `VishnuCreator-image-${candidate}-source.${extension}`)
                   : path;
                 await writeFile(sourcePath, image.content);
                 let normalized: { width: number; height: number } | undefined;

@@ -2,7 +2,7 @@ import type {
   ThreadHistoryItem,
   ThreadHistoryQuery,
   ThreadHistoryResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { useCallback, useEffect, useRef, useState } from 'react';
 
 const HISTORY_PAGE_SIZE = 50;

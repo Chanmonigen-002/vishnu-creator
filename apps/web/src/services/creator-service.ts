@@ -16,7 +16,7 @@ import type {
   CreatorJobListResponse,
   CreatorClientIssueReportRequest,
   CreatorIssueListResponse,
-  OpenCreatorIssue,
+  VishnuCreatorIssue,
   CreatorPresetListResponse,
   CreatorPreflightResponse,
   CreatorStageRun,
@@ -27,7 +27,7 @@ import type {
   CreatorTemplateListResponse,
   CreatorVisualAssetCatalogResponse,
   CreatorVisualAssetKind
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 type ClientLike = {
   get(path: string, options?: { signal?: AbortSignal }): Promise<unknown>;
@@ -38,11 +38,11 @@ type ClientLike = {
 };
 
 const CREATOR_SOURCE_UPLOAD_CONTENT_TYPE =
-  'application/vnd.opencreator.creator-source';
+  'application/vnd.vishnucreator.creator-source';
 const CREATOR_REFERENCE_IMAGE_CONTENT_TYPE =
-  'application/vnd.opencreator.creator-reference-image';
+  'application/vnd.vishnucreator.creator-reference-image';
 const CREATOR_DOCUMENT_UPLOAD_CONTENT_TYPE =
-  'application/vnd.opencreator.creator-document';
+  'application/vnd.vishnucreator.creator-document';
 
 export type CreatorJobControlResponse = {
   job: CreatorJob;
@@ -167,7 +167,7 @@ export function createCreatorService(client: ClientLike) {
     },
     uploadVideoReference(file: File): Promise<{ assetId: string; expiresAt: string }> {
       if (!client.postBinary) return Promise.reject(new Error('Video reference upload transport is unavailable'));
-      return client.postBinary(`/video-generation/assets?${new URLSearchParams({ mime: file.type })}`, file, 'application/vnd.opencreator.video-reference') as Promise<{ assetId: string; expiresAt: string }>;
+      return client.postBinary(`/video-generation/assets?${new URLSearchParams({ mime: file.type })}`, file, 'application/vnd.vishnucreator.video-reference') as Promise<{ assetId: string; expiresAt: string }>;
     },
     uploadArticleImage(jobId: string, input: {
       file: File;
@@ -238,11 +238,11 @@ export function createCreatorService(client: ClientLike) {
     reportClientIssue(
       jobId: string,
       request: CreatorClientIssueReportRequest
-    ): Promise<{ clientIssueId: string; issue: OpenCreatorIssue }> {
+    ): Promise<{ clientIssueId: string; issue: VishnuCreatorIssue }> {
       return client.post(
         `/creator/jobs/${encodeURIComponent(jobId)}/issues/report`,
         request
-      ) as Promise<{ clientIssueId: string; issue: OpenCreatorIssue }>;
+      ) as Promise<{ clientIssueId: string; issue: VishnuCreatorIssue }>;
     },
     controlDownload(jobId: string, stageRunId: string, action: CreatorDownloadControl): Promise<CreatorDownloadControlResponse> {
       return client.post(`/creator/jobs/${encodeURIComponent(jobId)}/downloads/${encodeURIComponent(stageRunId)}/${action}`) as Promise<CreatorDownloadControlResponse>;

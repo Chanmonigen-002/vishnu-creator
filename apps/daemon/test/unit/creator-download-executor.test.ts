@@ -3,9 +3,9 @@ import type {
   CreatorJob,
   CreatorStageRun,
   DownloadProbe
-} from '@opencreator/protocol';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
-import { extractDouyinShareUrl } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
+import { extractDouyinShareUrl } from '@vishnucreator/protocol';
 import {
   chmod,
   mkdir,
@@ -632,7 +632,7 @@ describe('creator download executor', () => {
     expect(JSON.parse(await readFile(join(workdir, 'args.json'), 'utf8'))).toEqual(expect.arrayContaining(['--cookies', '/test/douyin-cookies.txt', sourceUrl]));
   });
 
-  it.each(['Douyin', 'Douyin+opencreator'])('distinguishes the confirmed %s signature incompatibility from cookie and model permissions', async prefix => {
+  it.each(['Douyin', 'Douyin+vishnucreator'])('distinguishes the confirmed %s signature incompatibility from cookie and model permissions', async prefix => {
     const binaries = await fakeBinaries({ failure: `ERROR: [${prefix}] Douyin request signature is required (HTTP Error 403; Signature Not Found). Reconnecting cookies alone cannot fix it.` });
     await expect(createDownloadExecutor(binaries).run(stageInput({ workdir: tempDir, stageId: 'probe',
       state: { sourceUrl: 'https://www.douyin.com/video/7693859410975690010' }
@@ -735,7 +735,7 @@ describe('creator download executor', () => {
     expect(probe).toMatchObject({
       requestedUrl: 'https://www.youtube.com/watch?v=demo',
       platform: 'youtube',
-      uploader: 'OpenCreator',
+      uploader: 'VishnuCreator',
       width: 1920,
       height: 1080
     });
@@ -1542,7 +1542,7 @@ function parsedProbe(): DownloadProbe {
     title: 'Creator Download',
     webpage_url: 'https://www.youtube.com/watch?v=demo',
     extractor_key: 'Youtube',
-    uploader: 'OpenCreator',
+    uploader: 'VishnuCreator',
     thumbnail: 'https://i.ytimg.com/vi/demo/hqdefault.jpg',
     duration: 12,
     width: 1920,

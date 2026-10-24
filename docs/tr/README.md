@@ -2,8 +2,8 @@
 
 <h1>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="../images/OpenCreator_logo_vector_dark.svg" />
-    <img src="../images/OpenCreator_logo_vector.svg" alt="OpenCreator" width="380" />
+    <source media="(prefers-color-scheme: dark)" srcset="../images/Vishnu Creator_logo_vector_dark.svg" />
+    <img src="../images/Vishnu Creator_logo_vector.svg" alt="Vishnu Creator" width="380" />
   </picture>
   <br />
   İçerik üreticileri için açık kaynaklı yapay zekâ çalışma alanı ve Skills
@@ -11,16 +11,16 @@
 
 <p>Senaryoları, videoları, görselleri, sesi, avatarları, çeviriyi ve düzenlemeyi; görsel araçları, yeniden kullanılabilir Skills ve Agents ile tek bir çalışma alanında birleştirir.</p>
 
-<p><strong>OpenCreator daha önce KrillinAI adıyla biliniyordu.</strong></p>
+<p><strong>Vishnu Creator daha önce VishnuAI adıyla biliniyordu.</strong></p>
 
-<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="OpenCreator, eski adıyla KrillinAI: Trendshift Günün 1 Numaralı Deposu" width="250" height="55" /></a>
+<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="Vishnu Creator, eski adıyla VishnuAI: Trendshift Günün 1 Numaralı Deposu" width="250" height="55" /></a>
 
 [English](../../README.md) | [简体中文](../zh/README.md) | [日本語](../ja/README.md) | [한국어](../ko/README.md) | [Bahasa Indonesia](../id/README.md) | [Español](../es/README.md) | [Français](../fr/README.md) | [Deutsch](../de/README.md) | [Português](../pt/README.md) | [Русский](../ru/README.md) | [العربية](../ar/README.md) | [ภาษาไทย](../th/README.md) | **Türkçe** | [हिन्दी](../hi/README.md) | [বাংলা](../bn/README.md) | [اردو](../ur/README.md) | [Tiếng Việt](../vi/README.md) | [Filipino](../fil/README.md)
 
-[![GitHub Stars](https://badgen.net/github/stars/krillinai/OpenCreator?icon=github&label=Stars&color=EAB308)](https://github.com/krillinai/OpenCreator/stargazers)
+[![GitHub Stars](https://badgen.net/github/stars/vishnuai/Vishnu Creator?icon=github&label=Stars&color=EAB308)](https://github.com/vishnuai/Vishnu Creator/stargazers)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Bilibili](https://img.shields.io/badge/dynamic/json?label=Bilibili&query=%24.data.follower&suffix=%E7%B2%89%E4%B8%9D&url=https%3A%2F%2Fapi.bilibili.com%2Fx%2Frelation%2Fstat%3Fvmid%3D242124650&logo=bilibili&color=00A1D6&labelColor=FE7398&logoColor=FFFFFF)](https://space.bilibili.com/242124650)
-[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/krillinai/OpenCreator)
+[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/vishnuai/Vishnu Creator)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/fUNvbqDaw)
 [![QQ Grubu](https://img.shields.io/badge/QQ%20群-754069680-green?logo=tencent-qq)](https://qm.qq.com/q/W4YC0PLMeA)
 
@@ -28,13 +28,13 @@
 
 </div>
 
-![OpenCreator Agent çalışma alanı](../images/opencreator-home-en.png)
+![Vishnu Creator Agent çalışma alanı](../images/vishnucreator-home-en.png)
 
 ## Proje Özeti
 
-OpenCreator, yaratıcı ve yazılım geliştirme çalışmalarını yerel bilgisayarında sürdürmek isteyen bireyler ve ekipler için tasarlanmıştır. Yeni bir Agent döngüsü geliştirmek yerine Codex CLI'ı yürütme motoru olarak kullanır; bunun çevresine kararlı bir yerel Runtime, görsel bir çalışma alanı ve Desktop uygulaması ekler.
+Vishnu Creator, yaratıcı ve yazılım geliştirme çalışmalarını yerel bilgisayarında sürdürmek isteyen bireyler ve ekipler için tasarlanmıştır. Yeni bir Agent döngüsü geliştirmek yerine Codex CLI'ı yürütme motoru olarak kullanır; bunun çevresine kararlı bir yerel Runtime, görsel bir çalışma alanı ve Desktop uygulaması ekler.
 
-OpenCreator birbirine bağlı iki çalışma biçimi sunar:
+Vishnu Creator birbirine bağlı iki çalışma biçimi sunar:
 
 - **İçerik çalışma alanı:** Video çevirme ve indirme, görsel ve video üretimi, seslendirme, makale ve sosyal medya gönderisi yazımı, kısa video senaryosu ve çöp adam animasyonu için görsel araçları ve üretim şablonlarını kullanın.
 - **Agent görüşmesi:** Yaratıcı veya teknik görevleri doğal dille başlatın ve yönetin; görüşmeleri projelere göre düzenleyin; Runs işlemlerini arka planda sürdürün; onayları, ekleri, dosyaları, Skills, MCP'yi, zamanlamaları, bildirimleri, belleği ve tanılama bilgilerini tek yerden yönetin.
@@ -62,7 +62,7 @@ Mevcut sürüm on içerik üretim aracı içerir. Kullanılabilir modeller ve se
 
 Dashboard'u açarak makale, Xiaohongshu gönderisi ve kısa video senaryosu yazın; çöp adam animasyonu oluşturun; video çevirin veya indirin; küçük resim, görsel ve video üretin; Text to Speech ile seslendirme yapın.
 
-![OpenCreator içerik üretim paneli](../images/product/opencreator-dashboard-en.png)
+![Vishnu Creator içerik üretim paneli](../images/product/vishnucreator-dashboard-en.png)
 
 > Yeni içerik üretim araçları sürekli eklenmektedir.
 
@@ -95,7 +95,7 @@ Dashboard'u açarak makale, Xiaohongshu gönderisi ve kısa video senaryosu yaz�
 
 Her istemi ve ayarı sıfırdan oluşturmak yerine bir şablonla üretime başlayın. Video üretimi ve görsel tasarım gibi kategorilerde öne çıkan şablonları inceleyerek fikrinize uygun bir başlangıç noktası bulun.
 
-Koleksiyon, OpenCreator ve bağımsız üreticiler tarafından hazırlanan şablonları bir araya getirir. Üçüncü taraf şablonlar, ayrıntı sayfasında üreticilerini belirtir ve özgün kaynağa bağlantı verir.
+Koleksiyon, Vishnu Creator ve bağımsız üreticiler tarafından hazırlanan şablonları bir araya getirir. Üçüncü taraf şablonlar, ayrıntı sayfasında üreticilerini belirtir ve özgün kaynağa bağlantı verir.
 
 Bir şablonu açarak örnek sonucu, istemi, ayarları, etiketleri, yazarı ve özgün kaynağı inceleyin. Kendi çalışmanızı başlatmak için **Use this template** seçeneğini kullanın, ardından girdileri çalışmanıza göre ayarlayın.
 
@@ -105,27 +105,27 @@ Bir şablonu açarak örnek sonucu, istemi, ayarları, etiketleri, yazarı ve ö
 
 İçerik üretim araçları görsel kontroller sunar; Skills ise Agent'a yeniden kullanılabilir talimatlar ve araç iş akışları sağlar. Depo, video üretim Skills'lerinin yanı sıra yerel Codex Skills'lerini yönetme desteği içerir.
 
-Depodaki [skills/](../../skills/) klasörü, gömülü KrillinAI CLI ile çalışan Agent'lar için yeniden kullanılabilir talimatlar içerir.
+Depodaki [skills/](../../skills/) klasörü, gömülü VishnuAI CLI ile çalışan Agent'lar için yeniden kullanılabilir talimatlar içerir.
 
 | Skill | Yetenekler |
 | --- | --- |
-| [KrillinAI CLI](../../skills/krillinai-cli/SKILL.md) | Komut seçme, yapılandırmayı denetleme, ilerleme, manifest, çıktı ve hataları yorumlama |
-| [Subtitle](../../skills/krillinai-subtitle/SKILL.md) | Platform altyazılarını indirme veya medyayı yazıya dökme, altyazı çevirme, çift dilli ve kısa dikey altyazı üretme |
-| [TTS](../../skills/krillinai-tts/SKILL.md) | Altyazılardan hedef dil dublajı üretme ve isteğe bağlı dublajlı video oluşturma |
-| [Landscape Render](../../skills/krillinai-render-horizontal/SKILL.md) | Çift dilli altyazı veya dublajlı ses ve hedef dil altyazılarıyla yatay video oluşturma |
-| [Portrait Render](../../skills/krillinai-render-vertical/SKILL.md) | Başlık, çift dilli altyazı veya dublajla dikey video oluşturma |
-| [Cover](../../skills/krillinai-cover/SKILL.md) | Eksiksiz bir metin isteminden kapak görseli üretme ve son istemi kaydetme |
-| [Pipeline Plan](../../skills/krillinai-pipeline/SKILL.md) | Çok aşamalı çıktı planını deneme modunda doğrulama; gerçek işi aşama Skills'leriyle yürütme |
+| [VishnuAI CLI](../../skills/vishnuai-cli/SKILL.md) | Komut seçme, yapılandırmayı denetleme, ilerleme, manifest, çıktı ve hataları yorumlama |
+| [Subtitle](../../skills/vishnuai-subtitle/SKILL.md) | Platform altyazılarını indirme veya medyayı yazıya dökme, altyazı çevirme, çift dilli ve kısa dikey altyazı üretme |
+| [TTS](../../skills/vishnuai-tts/SKILL.md) | Altyazılardan hedef dil dublajı üretme ve isteğe bağlı dublajlı video oluşturma |
+| [Landscape Render](../../skills/vishnuai-render-horizontal/SKILL.md) | Çift dilli altyazı veya dublajlı ses ve hedef dil altyazılarıyla yatay video oluşturma |
+| [Portrait Render](../../skills/vishnuai-render-vertical/SKILL.md) | Başlık, çift dilli altyazı veya dublajla dikey video oluşturma |
+| [Cover](../../skills/vishnuai-cover/SKILL.md) | Eksiksiz bir metin isteminden kapak görseli üretme ve son istemi kaydetme |
+| [Pipeline Plan](../../skills/vishnuai-pipeline/SKILL.md) | Çok aşamalı çıktı planını deneme modunda doğrulama; gerçek işi aşama Skills'leriyle yürütme |
 
 ### Kendi Skills'lerinizi Genişletin
 
-OpenCreator, sabit araçlarla sınırlı kalmadan `SKILL.md` ile tanımlanan yerel Codex Skills'lerini destekler. Kullanılabilirlik etkin Codex home ve yüklü Skills'e bağlıdır; video iş akışı Skills'leri CLI ve ilgili servislerin yapılandırılmasını gerektirir. Bir Skill'in depoda bulunması, otomatik olarak yüklendiği veya tüm harici servislerin pakete dahil olduğu anlamına gelmez.
+Vishnu Creator, sabit araçlarla sınırlı kalmadan `SKILL.md` ile tanımlanan yerel Codex Skills'lerini destekler. Kullanılabilirlik etkin Codex home ve yüklü Skills'e bağlıdır; video iş akışı Skills'leri CLI ve ilgili servislerin yapılandırılmasını gerektirir. Bir Skill'in depoda bulunması, otomatik olarak yüklendiği veya tüm harici servislerin pakete dahil olduğu anlamına gelmez.
 
 ## Görüşme ve Çalışma Alanı Birlikte İlerler
 
 Görevleri doğal dille anlatın, gerektiğinde ayrıntılı kontrol için görsel araçlara geçin.
 
-![OpenCreator görüşmesi ve görsel çalışma alanı birlikte çalışır](../images/examples/opencreator-auto-clips-en.png)
+![Vishnu Creator görüşmesi ve görsel çalışma alanı birlikte çalışır](../images/examples/vishnucreator-auto-clips-en.png)
 
 ### Ayrıntılı çalışma alanı kontrolleri
 
@@ -208,11 +208,11 @@ Yerel transkripsiyon için kullanılabilir olduğunda faster-whisper, WhisperKit
 
 ### Video Çevirisi
 
-Aşağıdaki herkese açık örnekler, OpenCreator hâlâ KrillinAI adıyla bilinirken üretildi. OpenCreator'ın Video Translation çalışma alanının daha geniş Agent iş akışına taşıdığı altyazı hizalama, çeviri, dublaj ve dikey video iş akışını gösterirler.
+Aşağıdaki herkese açık örnekler, Vishnu Creator hâlâ VishnuAI adıyla bilinirken üretildi. Vishnu Creator'ın Video Translation çalışma alanının daha geniş Agent iş akışına taşıdığı altyazı hizalama, çeviri, dublaj ve dikey video iş akışını gösterirler.
 
 Proje, aşağıdaki altyazı dosyasını 46 dakikalık yerel bir videodan tek çalıştırmada, elle altyazı düzeltmesi yapmadan oluşturdu. Yayımlanan sonuç; tam kapsam, üst üste binmeyen satırlar, doğal bölümlendirme ve yüksek kaliteli çeviri sunar.
 
-![OpenCreator altyazı hizalama örneği](../images/examples/krillinai-subtitle-alignment.png)
+![Vishnu Creator altyazı hizalama örneği](../images/examples/vishnuai-subtitle-alignment.png)
 
 <table width="100%">
 <tr>
@@ -240,7 +240,7 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
 </tr>
 </table>
 
-> Bu video örnekleri ve altyazı hizalama görseli, OpenCreator hâlâ KrillinAI adını kullanırken üretildi.
+> Bu video örnekleri ve altyazı hizalama görseli, Vishnu Creator hâlâ VishnuAI adını kullanırken üretildi.
 
 ### Video İndirme
 
@@ -265,35 +265,35 @@ Desteklenen video kaynakları:
 
 Kullanılabilirlik videoya ve bölgeye göre değişir; bazı kaynaklar platform çerezleri gerektirebilir.
 
-![OpenCreator Video Downloader format seçimi](../images/examples/video-downloader-formats-and-subtitles-en.png)
+![Vishnu Creator Video Downloader format seçimi](../images/examples/video-downloader-formats-and-subtitles-en.png)
 
 ### Video Üretimi
 
 Seedance ile metin istemi veya referans görselden video üretin; model, en-boy oranı, çözünürlük ve süreyi ayarlayın, ardından her sürümü önizleyin, yeniden üretin veya indirin.
 
-![Seedance ile OpenCreator video üretimi](../images/examples/video-generation-seedance-en.png)
+![Seedance ile Vishnu Creator video üretimi](../images/examples/video-generation-seedance-en.png)
 
 ### Çöp Adam Animasyonu
 
-OpenCreator, bu özgün karakter koleksiyonunu [Stickman on Behance](https://www.behance.net/gallery/254715463/Stickman) eserinin yaratıcısı [Harbor Hsia](https://www.behance.net/xiaheyuan1) ile birlikte geliştirdi. Yerleşik karakter kadrosu, animasyon iş akışı boyunca karakter kimliklerini tutarlı tutar.
+Vishnu Creator, bu özgün karakter koleksiyonunu [Stickman on Behance](https://www.behance.net/gallery/254715463/Stickman) eserinin yaratıcısı [Harbor Hsia](https://www.behance.net/xiaheyuan1) ile birlikte geliştirdi. Yerleşik karakter kadrosu, animasyon iş akışı boyunca karakter kimliklerini tutarlı tutar.
 
-![Sanatçılarla birlikte geliştirilen OpenCreator çöp adam karakterleri](../images/examples/stick-figure-characters.webp)
+![Sanatçılarla birlikte geliştirilen Vishnu Creator çöp adam karakterleri](../images/examples/stick-figure-characters.webp)
 
 Metin veya YouTube içeriğini; senaryo incelemesi, anlatım, zamanlama, storyboard görselleri, altyazılar, render ve indirilebilir video çıktısı içeren yönlendirmeli bir iş akışıyla eksiksiz animasyona dönüştürün.
 
-![OpenCreator çöp adam animasyonu örnek karesi](../images/examples/stick-figure-animation-frame.jpg)
+![Vishnu Creator çöp adam animasyonu örnek karesi](../images/examples/stick-figure-animation-frame.jpg)
 
 ## Hızlı Başlangıç
 
 ### Desktop Uygulamasını Kurma
 
-[En yeni OpenCreator sürümünden](https://github.com/krillinai/OpenCreator/releases/latest) platformunuza uygun yükleyiciyi indirin (macOS Apple Silicon, macOS Intel veya Windows x64). Kurup uygulamayı açın; Desktop uygulamasını kullanmak için Node.js veya pnpm gerekmez. Desktop paketi Codex CLI içerir; gerçek model görevleri için kullanılabilir bir ChatGPT oturumu veya API anahtarı yapılandırması gerekir.
+[En yeni Vishnu Creator sürümünden](https://github.com/vishnuai/Vishnu Creator/releases/latest) platformunuza uygun yükleyiciyi indirin (macOS Apple Silicon, macOS Intel veya Windows x64). Kurup uygulamayı açın; Desktop uygulamasını kullanmak için Node.js veya pnpm gerekmez. Desktop paketi Codex CLI içerir; gerçek model görevleri için kullanılabilir bir ChatGPT oturumu veya API anahtarı yapılandırması gerekir.
 
 İlk açılışta Desktop yerel Runtime'ı başlatır, varsayılan projeyi hazırlar ve yerel Codex yapılandırmanızı denetler. Kullanılabilir bir oturum veya API anahtarı ve model ayarları bulursa bunları yeniden kullanmak için **Use local Codex and continue** seçeneğini onaylayın. Aynı başlangıç akışında başka bir sağlayıcı da yapılandırabilirsiniz:
 
-![OpenCreator Desktop ilk açılış model sağlayıcısı kurulumu](../images/product/opencreator-codex-setup.png)
+![Vishnu Creator Desktop ilk açılış model sağlayıcısı kurulumu](../images/product/vishnucreator-codex-setup.png)
 
-Kurulumdan sonra görevi başlatmak için giriş alanına isteğinizi yazın. Sorun yaşarsanız [kullanıcı kılavuzu ve sorun giderme](../opencreator-user-guide-and-troubleshooting.md) belgesine bakın.
+Kurulumdan sonra görevi başlatmak için giriş alanına isteğinizi yazın. Sorun yaşarsanız [kullanıcı kılavuzu ve sorun giderme](../vishnucreator-user-guide-and-troubleshooting.md) belgesine bakın.
 
 ### Web'i Kaynaktan Çalıştırma
 
@@ -313,8 +313,8 @@ codex --version
 ~~~
 
 ~~~bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable
 pnpm install
 pnpm web:dev
@@ -347,10 +347,10 @@ pnpm desktop:dev
 | `pnpm desktop:package` | Yerel doğrulama için mevcut platformda çalıştırılabilir bir klasör |
 | `pnpm desktop:dist` | Mevcut platform için bir yükleyici |
 | `pnpm desktop:release` | Resmî sürüm paketleme giriş noktası |
-| `pnpm --filter @opencreator/desktop verify:package` | Mevcut Desktop paketinin doğrulanması |
-| `pnpm krillinai:package` | Seçili platform için ayrı KrillinAI Server ve CLI arşivleri |
+| `pnpm --filter @vishnucreator/desktop verify:package` | Mevcut Desktop paketinin doğrulanması |
+| `pnpm vishnuai:package` | Seçili platform için ayrı VishnuAI Server ve CLI arşivleri |
 
-Desktop paketleme, mevcut çalışma alanından Web'i yeniden derler; commit, dirty durumu, platform, mimari ve Web hash'ini kaydeder; `apps/web/dist` ile uygulamaya gömülen kaynakları karşılaştırır. Fark varsa paketleme başarısız olur. İmzalama, noter onayı, Windows derlemeleri ve yayın gereksinimleri için [Desktop yayın kılavuzuna](../operations/opencreator-desktop-release-runbook.md) bakın.
+Desktop paketleme, mevcut çalışma alanından Web'i yeniden derler; commit, dirty durumu, platform, mimari ve Web hash'ini kaydeder; `apps/web/dist` ile uygulamaya gömülen kaynakları karşılaştırır. Fark varsa paketleme başarısız olur. İmzalama, noter onayı, Windows derlemeleri ve yayın gereksinimleri için [Desktop yayın kılavuzuna](../operations/vishnucreator-desktop-release-runbook.md) bakın.
 
 ## Temel İş Akışları
 
@@ -367,18 +367,18 @@ Desktop paketleme, mevcut çalışma alanından Web'i yeniden derler; commit, di
 - Eklenti merkezinden Skill pazarını, kurulum geçmişini ve yerelde kullanılabilir Skills'i inceleyin.
 - Bir sonraki görevin iş akışını izlemesi için giriş alanından `/` veya ekleme menüsüyle bir Skill seçin.
 - MCP yönetimi, ikinci bir yürütme motoru yerine Codex'in kendi komutları ve yapılandırmasını kullanır.
-- OpenCreator varsayılan olarak etkin `$CODEX_HOME` dizinini kullanır; genel Skills veya MCP yapılandırmasını değiştirmeden önce etkisini doğrulayın.
+- Vishnu Creator varsayılan olarak etkin `$CODEX_HOME` dizinini kullanır; genel Skills veya MCP yapılandırmasını değiştirmeden önce etkisini doğrulayın.
 
 ### Zamanlamalar ve Özel Görev Konuları
 
-- Her zamanlama, kalıcı ve kendisine ayrılmış bir OpenCreator görüşmesine sahiptir.
+- Her zamanlama, kalıcı ve kendisine ayrılmış bir Vishnu Creator görüşmesine sahiptir.
 - Otomatik tetiklemeler, elle çalıştırmalar ve kullanıcı takip görevleri aynı görüşmeyi yeniden kullanır; `queue` veya `skip` politikasıyla sırayla çalışır.
 - Zamanlamanın silinmesi, ayrılmış görüşmeyi arşivler; mevcut Runs, sonuçlar ve temel Codex geçmişini korur.
-- Temel Codex thread'inin yenilenmesi veya kurtarılması, OpenCreator görev girişini veya sayfa yolunu değiştirmez.
+- Temel Codex thread'inin yenilenmesi veya kurtarılması, Vishnu Creator görev girişini veya sayfa yolunu değiştirmez.
 
-## OpenCreator Sistem Mimarisi
+## Vishnu Creator Sistem Mimarisi
 
-OpenCreator, görsel çalışma alanını ve Agent görüşmesini aynı yaratıcı görevin iki arayüzü olarak ele alır. Her içerik üretim iş akışı bir state machine olarak modellenir: kaynak girdisi, yapılandırma, üretim, inceleme, revizyon ve dışa aktarma açık durumlara ve olaylara dönüşür. Çalışma alanı eylemleri ve görüşme komutları aynı state machine'e girer; güncel adım, yapılandırma, ilerleme, sürümler ve sonuçlar iki arayüze de yansıtılır. Böylece ikinci bir doğruluk kaynağı oluşturmadan çalışma alanı ve görüşme senkronize kalır.
+Vishnu Creator, görsel çalışma alanını ve Agent görüşmesini aynı yaratıcı görevin iki arayüzü olarak ele alır. Her içerik üretim iş akışı bir state machine olarak modellenir: kaynak girdisi, yapılandırma, üretim, inceleme, revizyon ve dışa aktarma açık durumlara ve olaylara dönüşür. Çalışma alanı eylemleri ve görüşme komutları aynı state machine'e girer; güncel adım, yapılandırma, ilerleme, sürümler ve sonuçlar iki arayüze de yansıtılır. Böylece ikinci bir doğruluk kaynağı oluşturmadan çalışma alanı ve görüşme senkronize kalır.
 
 Yaratıcı çalışmalar yinelemelidir; revizyonlar mevcut sonucu ezmez. Her düzeltme veya yeniden üretim, mevcut iş akışı durumundan yeni bir sürüm oluşturur ve önceki sürümlerin ayarlarını ve çıktılarını inceleme, karşılaştırma ve geliştirmeye devam etmek için korur.
 
@@ -414,7 +414,7 @@ Yaratıcı çalışmalar yinelemelidir; revizyonlar mevcut sonucu ezmez. Her dü
 +---------------------+  +---------------------+  +-------------------------+
 ~~~
 
-| OpenCreator Bileşeni | Sorumluluk | Uygulama |
+| Vishnu Creator Bileşeni | Sorumluluk | Uygulama |
 | --- | --- | --- |
 | Creator Experience | Dashboard, içerik üretim araçları, Agent görüşmesi, ayarlar ve dosyalar | `apps/web` · React 18 · Vite · TypeScript |
 | Collaboration Core | Çalışma alanı adımlarını, görüşme bağlamını, ilerlemeyi, sonuçları ve revizyonları senkronize tutar | Ortak iş akışı durumu · `CreatorCollaborationPanel` · sürüm geçmişi |
@@ -437,7 +437,7 @@ Temel ilkeler:
 ## Depo Yapısı
 
 ~~~text
-OpenCreator/
+Vishnu Creator/
 ├── apps/
 │   ├── web/          # Tek React frontend uygulaması
 │   ├── daemon/       # Yerel Fastify Runtime ve Codex adaptörü
@@ -457,21 +457,21 @@ OpenCreator/
 
 Kullanılan model, transkripsiyon, ses ve görsel sağlayıcılarını **Settings → AI Services** bölümünden yapılandırın. Seçilen sağlayıcıya göre Base URL, API Key, model, proxy veya sağlayıcıya özel kimlik bilgileri istenir.
 
-![OpenCreator AI Services ayarları](../images/product/opencreator-ai-services-en.png)
+![Vishnu Creator AI Services ayarları](../images/product/vishnucreator-ai-services-en.png)
 
 Kimlik bilgileri yerel Runtime'ın sistem kimlik bilgisi deposunda saklanır ve depoya kesinlikle commit edilmemelidir. Edge TTS gibi bazı yerel veya sistem tabanlı sağlayıcılar API anahtarı gerektirmez.
 
 ### Hesaplar ve Abonelikler
 
-Kişisel merkez; hesabınızı, doğrulanmış aboneliğinizi ve kullanılabilir kredilerinizi gösterir. Oturum açma işlemi tarayıcınızda `https://www.open-creator.ai/device` adresini açar. Web sitesinde oturum açıp cihazı onaylayın; yerel Daemon kendi oturumunu alır. Tarayıcı ve istemci aynı hesabı paylaşır ancak bağımsız oturumlar kullanır.
+Kişisel merkez; hesabınızı, doğrulanmış aboneliğinizi ve kullanılabilir kredilerinizi gösterir. Oturum açma işlemi tarayıcınızda `https://www.vishnu-creator.ai/device` adresini açar. Web sitesinde oturum açıp cihazı onaylayın; yerel Daemon kendi oturumunu alır. Tarayıcı ve istemci aynı hesabı paylaşır ancak bağımsız oturumlar kullanır.
 
-Abonelik planları OpenCreator içinde seçilir. Satın alma Stripe Checkout'u, abonelik yönetimi ise Stripe Billing Portal'ı açar. İstemci ödeme dönüşleri, web sitesi oturumu gerektirmeden sitenin `/billing/return` sayfasını kullanır. OpenCreator, doğrulanmış Stripe bildirimlerinden sonra hakları Gateway üzerinden yeniler. Web sitesinin `/pricing` ve `/account` sayfaları aynı abonelik altyapısına başka bir satın alma girişi sağlar.
+Abonelik planları Vishnu Creator içinde seçilir. Satın alma Stripe Checkout'u, abonelik yönetimi ise Stripe Billing Portal'ı açar. İstemci ödeme dönüşleri, web sitesi oturumu gerektirmeden sitenin `/billing/return` sayfasını kullanır. Vishnu Creator, doğrulanmış Stripe bildirimlerinden sonra hakları Gateway üzerinden yeniler. Web sitesinin `/pricing` ve `/account` sayfaları aynı abonelik altyapısına başka bir satın alma girişi sağlar.
 
 ### Üçüncü Taraf Runtime Bileşenleri
 
-**Settings → Third-party Components** bölümünden kullanılan yt-dlp nightly sürümünü, OpenCreator ile paketlenmiş sürümü, kaynağını ve en yeni sürümü inceleyin. OpenCreator yedi günde bir güncelleme kontrolü yapar ancak otomatik kurulum yapmaz. Güncellemeler açık kullanıcı eylemi gerektirir; indirme, doğrulama veya kurulum başarısız olursa çalışan sürüm korunur.
+**Settings → Third-party Components** bölümünden kullanılan yt-dlp nightly sürümünü, Vishnu Creator ile paketlenmiş sürümü, kaynağını ve en yeni sürümü inceleyin. Vishnu Creator yedi günde bir güncelleme kontrolü yapar ancak otomatik kurulum yapmaz. Güncellemeler açık kullanıcı eylemi gerektirir; indirme, doğrulama veya kurulum başarısız olursa çalışan sürüm korunur.
 
-![OpenCreator üçüncü taraf bileşen ayarları](../images/product/opencreator-third-party-components-en.png)
+![Vishnu Creator üçüncü taraf bileşen ayarları](../images/product/vishnucreator-third-party-components-en.png)
 
 ### Runtime Ortam Değişkenleri
 
@@ -479,18 +479,18 @@ Abonelik planları OpenCreator içinde seçilir. Satın alma Stripe Checkout'u, 
 
 | Değişken | Varsayılan | Amaç |
 | --- | --- | --- |
-| `OPENCREATOR_DATA_DIR` | `.runtime` | OpenCreator veritabanı, Runs, ekler ve yönetilen çalışma alanları |
-| `OPENCREATOR_GATEWAY_ORIGIN` | `https://www.open-creator.ai` | Hesap oturumu, abonelikler, krediler ve resmî model servisleri için Gateway; yerel Gateway kullanmak için değiştirilebilir |
-| `OPENCREATOR_CODEX_BIN` | `codex` | Codex CLI çalıştırılabilir dosyasının yolu |
+| `VISHNUCREATOR_DATA_DIR` | `.runtime` | Vishnu Creator veritabanı, Runs, ekler ve yönetilen çalışma alanları |
+| `VISHNUCREATOR_GATEWAY_ORIGIN` | `https://www.vishnu-creator.ai` | Hesap oturumu, abonelikler, krediler ve resmî model servisleri için Gateway; yerel Gateway kullanmak için değiştirilebilir |
+| `VISHNUCREATOR_CODEX_BIN` | `codex` | Codex CLI çalıştırılabilir dosyasının yolu |
 | `CODEX_HOME` | `~/.codex` | Codex oturumları, yapılandırma, Skills, MCP ve Profiles için doğruluk kaynağı |
-| `OPENCREATOR_DEFAULT_CWD` | Geçerli çalışma dizini | Varsayılan daemon çalışma dizini |
-| `OPENCREATOR_DEFAULT_PROJECT_ROOT` | Runtime'ın varsayılan politikası | Yönetilen proje kökü; ayarlandığında OpenCreator bunun `OpenCreator/` alt dizinini kullanır |
-| `OPENCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | Uzun süreli zamanlamanın Codex thread'ini yenilemek için sonlanmış Run eşiği; `0` ile proaktif yenileme kapatılır |
+| `VISHNUCREATOR_DEFAULT_CWD` | Geçerli çalışma dizini | Varsayılan daemon çalışma dizini |
+| `VISHNUCREATOR_DEFAULT_PROJECT_ROOT` | Runtime'ın varsayılan politikası | Yönetilen proje kökü; ayarlandığında Vishnu Creator bunun `Vishnu Creator/` alt dizinini kullanır |
+| `VISHNUCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | Uzun süreli zamanlamanın Codex thread'ini yenilemek için sonlanmış Run eşiği; `0` ile proaktif yenileme kapatılır |
 
 Örnek:
 
 ~~~bash
-OPENCREATOR_DATA_DIR=/path/to/opencreator-data \
+VISHNUCREATOR_DATA_DIR=/path/to/vishnucreator-data \
 CODEX_HOME=/path/to/codex-home \
 pnpm web:dev
 ~~~
@@ -512,11 +512,11 @@ Güvenlik sınırları:
 
 - Daemon yalnızca 127.0.0.1 üzerinde dinler; sağlık denetimi dışındaki API'ler Bearer token gerektirir.
 - HTML önizleme komut dosyalarını, gezinmeyi ve açılır pencereleri varsayılan olarak devre dışı bırakır; yalnızca aynı çalışma alanındaki kontrollü göreli kaynaklara izin verir.
-- Hassas bellek ikinci bir onay gerektirir; OpenCreator doğrulanmamış önerileri kalıcı olarak otomatik saklamaz.
+- Hassas bellek ikinci bir onay gerektirir; Vishnu Creator doğrulanmamış önerileri kalıcı olarak otomatik saklamaz.
 - Tanılama ve Run günlükleri döndürülmeden veya dışa aktarılmadan önce hassas bilgileri ayıklar.
 - Desktop paketlerinde ASAR bütünlüğü ve çerez şifrelemesi etkinleştirilir; RunAsNode, NODE_OPTIONS ve Node CLI Inspector devre dışıdır.
 
-Yedekleme, geri yükleme, temizleme ve sıfırlama için [kullanıcı kılavuzuna ve sorun giderme referansına](../opencreator-user-guide-and-troubleshooting.md) bakın.
+Yedekleme, geri yükleme, temizleme ve sıfırlama için [kullanıcı kılavuzuna ve sorun giderme referansına](../vishnucreator-user-guide-and-troubleshooting.md) bakın.
 
 ## Geliştirme
 
@@ -541,15 +541,15 @@ Desktop, Host Bridge, Runtime proxy veya ortak frontend iş akışlarındaki de�
 Gerçek Codex smoke testi varsayılan olarak kapalıdır. Açıkça etkinleştirmek için:
 
 ~~~bash
-OPENCREATOR_RUN_REAL_CODEX_SMOKE=1 \
-pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
+VISHNUCREATOR_RUN_REAL_CODEX_SMOKE=1 \
+pnpm --filter @vishnucreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 ~~~
 
 ## Belgeler
 
-- **OpenCreator'ı kullanın:** [Hızlı Başlangıç](#hızlı-başlangıç) · [Kullanıcı kılavuzu ve sorun giderme](../opencreator-user-guide-and-troubleshooting.md)
+- **Vishnu Creator'ı kullanın:** [Hızlı Başlangıç](#hızlı-başlangıç) · [Kullanıcı kılavuzu ve sorun giderme](../vishnucreator-user-guide-and-troubleshooting.md)
 - **Geliştirin ve genişletin:** [Katkı rehberi](../../CONTRIBUTING.md) · [Davranış kuralları](../../CODE_OF_CONDUCT.md) · [Skill katkısı](../contributing/skills-contributing.md) · [Üretim şablonu katkısı](../contributing/templates-contributing.md) · [Runtime API v1](../runtime-api-for-ui-v1.md) · [Görsel bileşen yönergeleri](../visual-component-guidelines.md)
-- **Bakım ve yayın:** [Codex-native Runtime tasarımı](../2026-07-03-codex-native-agent-runtime-design.md) · [Desktop yayın kılavuzu](../operations/opencreator-desktop-release-runbook.md) · [Windows Desktop yayın rehberi](../operations/opencreator-desktop-windows-release.md)
+- **Bakım ve yayın:** [Codex-native Runtime tasarımı](../2026-07-03-codex-native-agent-runtime-design.md) · [Desktop yayın kılavuzu](../operations/vishnucreator-desktop-release-runbook.md) · [Windows Desktop yayın rehberi](../operations/vishnucreator-desktop-windows-release.md)
 
 ## Çeviri İlkesi
 
@@ -557,9 +557,9 @@ Kök `README.md` dosyası kanonik İngilizce belgedir. Bakımı yapılan çeviri
 
 ## Topluluk
 
-<p>GitHub'da OpenCreator'a <strong>en az 105 ülke ve bölgeden</strong> kullanıcı yıldız vermiştir.</p>
+<p>GitHub'da Vishnu Creator'a <strong>en az 105 ülke ve bölgeden</strong> kullanıcı yıldız vermiştir.</p>
 
-<img src="../images/star-coverage-map.svg" alt="OpenCreator GitHub yıldızlarının geldiği ülke ve bölgeleri gösteren dünya haritası" width="760" />
+<img src="../images/star-coverage-map.svg" alt="Vishnu Creator GitHub yıldızlarının geldiği ülke ve bölgeleri gösteren dünya haritası" width="760" />
 
 ### Ekip
 
@@ -570,7 +570,7 @@ Her ekip üyesi kendi alanından, standartlarından, katkı incelemelerinden ve 
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/wulien.svg" width="64" height="64" alt="wulien avatar" /><br /><a href="https://github.com/wulien">wulien</a><br />Kod ve hata düzeltmeleri</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/dle-kb.svg" width="64" height="64" alt="DLe-kb avatar" /><br /><a href="https://github.com/DLe-kb">DLe-kb</a><br />Üretim şablonları</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/xiaheyuan.svg" width="64" height="64" alt="xiaheyuan avatar" /><br /><a href="https://github.com/xiaheyuan">xiaheyuan</a><br />Tasarım ve varlıklar</td>
-    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/krillinai.svg" width="64" height="64" alt="krillinai avatar" /><br /><a href="https://github.com/krillinai">krillinai</a><br />Skills ve belgeler</td>
+    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/vishnuai.svg" width="64" height="64" alt="vishnuai avatar" /><br /><a href="https://github.com/vishnuai">vishnuai</a><br />Skills ve belgeler</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/hbxugang.svg" width="64" height="64" alt="hbxugang avatar" /><br /><a href="https://github.com/hbxugang">hbxugang</a><br />Kurumsal dağıtım</td>
   </tr>
 </table>
@@ -583,7 +583,7 @@ Kod, belge, geri bildirim, issue, Skills, çizimler ve fikirleriyle katkı sağl
   <a href="https://github.com/maranello-o"><img src="../images/contributors/maranello-o.svg" width="48" height="48" alt="maranello-o" /></a>
   <a href="https://github.com/wulien"><img src="../images/contributors/wulien.svg" width="48" height="48" alt="wulien" /></a>
   <a href="https://github.com/puji4810"><img src="../images/contributors/puji4810.svg" width="48" height="48" alt="puji4810" /></a>
-  <a href="https://github.com/krillinai"><img src="../images/contributors/krillinai.svg" width="48" height="48" alt="krillinai" /></a>
+  <a href="https://github.com/vishnuai"><img src="../images/contributors/vishnuai.svg" width="48" height="48" alt="vishnuai" /></a>
   <a href="https://github.com/PairZhu"><img src="../images/contributors/pairzhu.svg" width="48" height="48" alt="PairZhu" /></a>
   <a href="https://github.com/Mijaelx"><img src="../images/contributors/mijaelx.svg" width="48" height="48" alt="Mijaelx" /></a>
   <a href="https://github.com/OutisLi"><img src="../images/contributors/outisli.svg" width="48" height="48" alt="OutisLi" /></a>
@@ -599,7 +599,7 @@ Kod, belge, geri bildirim, issue, Skills, çizimler ve fikirleriyle katkı sağl
   <a href="https://github.com/DLe-kb"><img src="../images/contributors/dle-kb.svg" width="48" height="48" alt="DLe-kb" /></a>
   <a href="https://github.com/liupig"><img src="../images/contributors/liupig.svg" width="48" height="48" alt="liupig" /></a>
   <a href="https://github.com/alextavares" title="alextavares"><img src="../images/contributors/alextavares.svg" width="48" height="48" alt="alextavares" /></a>
-  <a href="https://github.com/krillinai/OpenCreator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
+  <a href="https://github.com/vishnuai/Vishnu Creator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
   <a href="https://github.com/mifan100g" title="mifan100g (米饭二两)"><img src="../images/contributors/mifan100g.svg" width="48" height="48" alt="mifan100g (米饭二两)" /></a>
   <a href="https://github.com/askalf"><img src="../images/contributors/askalf.svg" width="48" height="48" alt="askalf" /></a>
   <a href="https://github.com/Yi-111-a"><img src="../images/contributors/yi-111-a.svg" width="48" height="48" alt="Yi-111-a" /></a>
@@ -622,9 +622,9 @@ Yerel kurulum, inceleme ölçütleri ve sık reddedilme nedenleri için [CONTRIB
 
 ## Star Geçmişi
 
-OpenCreator daha önce KrillinAI olarak adlandırılıyordu. Bu grafik, yeniden adlandırma öncesi ve sonrasındaki depo geçmişini kapsar.
+Vishnu Creator daha önce VishnuAI olarak adlandırılıyordu. Bu grafik, yeniden adlandırma öncesi ve sonrasındaki depo geçmişini kapsar.
 
-[![OpenCreator Star Geçmişi](https://api.star-history.com/svg?repos=krillinai/OpenCreator&type=date)](https://www.star-history.com/?type=date&repos=krillinai%2FOpenCreator)
+[![Vishnu Creator Star Geçmişi](https://api.star-history.com/svg?repos=vishnuai/Vishnu Creator&type=date)](https://www.star-history.com/?type=date&repos=vishnuai%2FVishnu Creator)
 
 ## İlgili Projeler
 
@@ -644,6 +644,6 @@ OpenCreator daha önce KrillinAI olarak adlandırılıyordu. Bu grafik, yeniden 
 
 <div align="center">
 
-**OpenCreator · Yerel üret, kesintisiz çalış.**
+**Vishnu Creator · Yerel üret, kesintisiz çalış.**
 
 </div>

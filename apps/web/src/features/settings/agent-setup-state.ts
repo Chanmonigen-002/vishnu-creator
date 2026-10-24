@@ -1,8 +1,8 @@
-import type { CodexProviderConfig, CodexRuntimeReadiness } from '@opencreator/protocol';
+import type { CodexProviderConfig, CodexRuntimeReadiness } from '@vishnucreator/protocol';
 import { readJsonFromStorage, writeJsonToStorage } from '../../storage/browser-storage.js';
 
 export type AgentSetupSnapshot = { readiness: CodexRuntimeReadiness; provider: CodexProviderConfig };
-const confirmationKey = 'opencreator.agent-setup-confirmed.v1';
+const confirmationKey = 'vishnucreator.agent-setup-confirmed.v1';
 
 export function needsAgentSetup(readiness: CodexRuntimeReadiness): boolean {
   return readiness.account.accountStatus === 'signed_out'

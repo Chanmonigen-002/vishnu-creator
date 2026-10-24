@@ -19,7 +19,7 @@ $ErrorActionPreference = 'Stop'
 Add-Type -TypeDefinition @'
 using System;
 using System.Runtime.InteropServices;
-public static class OpenCreatorBrowserClose {
+public static class VishnuCreatorBrowserClose {
   private delegate bool EnumWindow(IntPtr window, IntPtr parameter);
   [DllImport("user32.dll")] private static extern bool EnumWindows(EnumWindow callback, IntPtr parameter);
   [DllImport("user32.dll")] private static extern uint GetWindowThreadProcessId(IntPtr window, out uint processId);
@@ -45,7 +45,7 @@ function Read-BrowserProcesses {
   })
 }
 $initial = @(Read-BrowserProcesses)
-if ($initial.Count -gt 0) { [OpenCreatorBrowserClose]::RequestClose([int[]]@($initial | ForEach-Object { $_.Id })) }
+if ($initial.Count -gt 0) { [VishnuCreatorBrowserClose]::RequestClose([int[]]@($initial | ForEach-Object { $_.Id })) }
 $deadline = [DateTime]::UtcNow.AddSeconds(5)
 do {
   $remaining = @(Read-BrowserProcesses)
@@ -91,7 +91,7 @@ $ErrorActionPreference = 'Stop'
 Add-Type -TypeDefinition @'
 using System;
 using System.Runtime.InteropServices;
-public static class OpenCreatorBrowserArguments {
+public static class VishnuCreatorBrowserArguments {
   [DllImport("shell32.dll", SetLastError = true)] private static extern IntPtr CommandLineToArgvW([MarshalAs(UnmanagedType.LPWStr)] string commandLine, out int count);
   [DllImport("kernel32.dll")] private static extern IntPtr LocalFree(IntPtr memory);
   public static bool HasProfile(string commandLine, string directory) {
@@ -112,7 +112,7 @@ public static class OpenCreatorBrowserArguments {
 $directory = [Text.Encoding]::UTF8.GetString([Convert]::FromBase64String('${encodedDirectory}'))
 $sessionId = (Get-Process -Id $PID).SessionId
 $pids = @(Get-CimInstance Win32_Process -Filter "Name = '${processName}'" | Where-Object {
-  $_.SessionId -eq $sessionId -and $_.CommandLine -and [OpenCreatorBrowserArguments]::HasProfile($_.CommandLine, $directory)
+  $_.SessionId -eq $sessionId -and $_.CommandLine -and [VishnuCreatorBrowserArguments]::HasProfile($_.CommandLine, $directory)
 } | ForEach-Object { [int]$_.ProcessId })
 @{ pids = $pids } | ConvertTo-Json -Compress
 `, signal);

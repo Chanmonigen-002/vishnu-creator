@@ -13,13 +13,13 @@ import {
 import { homedir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { parse, stringify } from '@iarna/toml';
-import { openCreatorLanguages, type OpenCreatorLanguage } from '@opencreator/protocol';
+import { vishnuCreatorLanguages, type VishnuCreatorLanguage } from '@vishnucreator/protocol';
 import type {
-  OpenCreatorStorageSettings,
-  OpenCreatorUiSettings,
-  UpdateOpenCreatorStorageSettingsRequest,
-  UpdateOpenCreatorUiSettingsRequest
-} from '@opencreator/protocol';
+  VishnuCreatorStorageSettings,
+  VishnuCreatorUiSettings,
+  UpdateVishnuCreatorStorageSettingsRequest,
+  UpdateVishnuCreatorUiSettingsRequest
+} from '@vishnucreator/protocol';
 
 export {
   sha256Text,
@@ -28,7 +28,7 @@ export {
   type IntegrityFile
 } from './file-integrity-cache.js';
 
-export type OpenCreatorPaths = {
+export type VishnuCreatorPaths = {
   root: string;
   configFile: string;
   credentialsFile: string;
@@ -40,9 +40,9 @@ export type OpenCreatorPaths = {
   logsDir: string;
 };
 
-export type OpenCreatorRuntimeChannel = 'production' | 'development';
+export type VishnuCreatorRuntimeChannel = 'production' | 'development';
 
-export type OpenCreatorDesktopConfig = {
+export type VishnuCreatorDesktopConfig = {
   closeBehavior: 'hide' | 'quit';
   notificationsEnabled: boolean;
   telemetryEnabled: boolean;
@@ -58,22 +58,22 @@ export type OpenCreatorDesktopConfig = {
   };
 };
 
-export type OpenCreatorRuntimeConfig = {
+export type VishnuCreatorRuntimeConfig = {
   codexMode: 'bundled' | 'external';
   externalCodexBin?: string;
 };
 
-export type OpenCreatorConfigDocument = {
+export type VishnuCreatorConfigDocument = {
   version: number;
-  ui?: OpenCreatorUiSettings;
-  storage?: OpenCreatorStorageSettings;
-  desktop?: OpenCreatorDesktopConfig;
-  runtime?: OpenCreatorRuntimeConfig;
+  ui?: VishnuCreatorUiSettings;
+  storage?: VishnuCreatorStorageSettings;
+  desktop?: VishnuCreatorDesktopConfig;
+  runtime?: VishnuCreatorRuntimeConfig;
   creatorServices?: Record<string, unknown>;
 };
 
-export type OpenCreatorConfigSnapshot = {
-  document: OpenCreatorConfigDocument;
+export type VishnuCreatorConfigSnapshot = {
+  document: VishnuCreatorConfigDocument;
   configured: {
     ui: boolean;
     storage: boolean;
@@ -83,7 +83,7 @@ export type OpenCreatorConfigSnapshot = {
   };
 };
 
-const defaultUiSettings: OpenCreatorUiSettings = {
+const defaultUiSettings: VishnuCreatorUiSettings = {
   language: 'system',
   colorMode: 'dark',
   accentColor: 'red',
@@ -91,27 +91,27 @@ const defaultUiSettings: OpenCreatorUiSettings = {
   defaultPermission: 'danger-full-access'
 };
 
-const defaultDesktopConfig: OpenCreatorDesktopConfig = {
+const defaultDesktopConfig: VishnuCreatorDesktopConfig = {
   closeBehavior: 'hide',
   notificationsEnabled: true,
   telemetryEnabled: true
 };
 
-const defaultRuntimeConfig: OpenCreatorRuntimeConfig = {
+const defaultRuntimeConfig: VishnuCreatorRuntimeConfig = {
   codexMode: 'bundled'
 };
 
-export function resolveOpenCreatorPaths(input: {
+export function resolveVishnuCreatorPaths(input: {
   env?: NodeJS.ProcessEnv;
   homeDir?: string;
-  runtimeChannel?: OpenCreatorRuntimeChannel;
-} = {}): OpenCreatorPaths {
+  runtimeChannel?: VishnuCreatorRuntimeChannel;
+} = {}): VishnuCreatorPaths {
   const env = input.env ?? process.env;
-  const productRoot = join(input.homeDir ?? homedir(), '.opencreator');
+  const productRoot = join(input.homeDir ?? homedir(), '.vishnucreator');
   const defaultRoot = input.runtimeChannel === 'development'
     ? join(productRoot, 'development')
     : productRoot;
-  const root = resolve(env.OPENCREATOR_HOME?.trim() || defaultRoot);
+  const root = resolve(env.VISHNUCREATOR_HOME?.trim() || defaultRoot);
   const runtimeDir = join(root, 'runtime');
   return {
     root,
@@ -126,51 +126,51 @@ export function resolveOpenCreatorPaths(input: {
   };
 }
 
-export function readOpenCreatorConfig(path: string): OpenCreatorConfigSnapshot {
-  return withConfigLock(path, () => readOpenCreatorConfigUnlocked(path));
+export function readVishnuCreatorConfig(path: string): VishnuCreatorConfigSnapshot {
+  return withConfigLock(path, () => readVishnuCreatorConfigUnlocked(path));
 }
 
-export function updateOpenCreatorConfig(
+export function updateVishnuCreatorConfig(
   path: string,
-  update: (document: OpenCreatorConfigDocument) => OpenCreatorConfigDocument
-): OpenCreatorConfigSnapshot {
+  update: (document: VishnuCreatorConfigDocument) => VishnuCreatorConfigDocument
+): VishnuCreatorConfigSnapshot {
   return withConfigLock(path, () => {
-    const current = readOpenCreatorConfigUnlocked(path);
+    const current = readVishnuCreatorConfigUnlocked(path);
     const next = normalizeDocument(update(structuredClone(current.document)));
     writeConfigFile(path, next);
     return snapshot(next);
   });
 }
 
-export function updateOpenCreatorUiSettings(
+export function updateVishnuCreatorUiSettings(
   path: string,
-  patch: UpdateOpenCreatorUiSettingsRequest
-): OpenCreatorConfigSnapshot {
-  return updateOpenCreatorConfig(path, document => ({
+  patch: UpdateVishnuCreatorUiSettingsRequest
+): VishnuCreatorConfigSnapshot {
+  return updateVishnuCreatorConfig(path, document => ({
     ...document,
     ui: normalizeUiSettings({ ...document.ui, ...patch })
   }));
 }
 
-export function updateOpenCreatorStorageSettings(
+export function updateVishnuCreatorStorageSettings(
   path: string,
-  patch: UpdateOpenCreatorStorageSettingsRequest
-): OpenCreatorConfigSnapshot {
-  return updateOpenCreatorConfig(path, document => ({
+  patch: UpdateVishnuCreatorStorageSettingsRequest
+): VishnuCreatorConfigSnapshot {
+  return updateVishnuCreatorConfig(path, document => ({
     ...document,
     storage: normalizeStorageSettings({ ...document.storage, ...patch })
   }));
 }
 
-function readOpenCreatorConfigUnlocked(path: string): OpenCreatorConfigSnapshot {
+function readVishnuCreatorConfigUnlocked(path: string): VishnuCreatorConfigSnapshot {
   if (!existsSync(path)) return snapshot({ version: 1 });
   const source = readFileSync(path, 'utf8');
   const parsed = parse(source) as unknown;
-  if (!isRecord(parsed)) throw new Error('OPENCREATOR_CONFIG_INVALID');
+  if (!isRecord(parsed)) throw new Error('VISHNUCREATOR_CONFIG_INVALID');
   return snapshot(normalizeDocument(parsed));
 }
 
-function normalizeDocument(value: unknown): OpenCreatorConfigDocument {
+function normalizeDocument(value: unknown): VishnuCreatorConfigDocument {
   const source = isRecord(value) ? value : {};
   return {
     version: typeof source.version === 'number' && Number.isInteger(source.version)
@@ -194,7 +194,7 @@ function normalizeDocument(value: unknown): OpenCreatorConfigDocument {
   };
 }
 
-function snapshot(document: OpenCreatorConfigDocument): OpenCreatorConfigSnapshot {
+function snapshot(document: VishnuCreatorConfigDocument): VishnuCreatorConfigSnapshot {
   return {
     document: {
       version: document.version,
@@ -224,21 +224,21 @@ function snapshot(document: OpenCreatorConfigDocument): OpenCreatorConfigSnapsho
   };
 }
 
-export function resolveUiSettings(snapshot: OpenCreatorConfigSnapshot): OpenCreatorUiSettings {
+export function resolveUiSettings(snapshot: VishnuCreatorConfigSnapshot): VishnuCreatorUiSettings {
   return normalizeUiSettings(snapshot.document.ui ?? defaultUiSettings);
 }
 
 export function resolveStorageSettings(
-  snapshot: OpenCreatorConfigSnapshot,
-  defaults: OpenCreatorStorageSettings
-): OpenCreatorStorageSettings {
+  snapshot: VishnuCreatorConfigSnapshot,
+  defaults: VishnuCreatorStorageSettings
+): VishnuCreatorStorageSettings {
   return normalizeStorageSettings(snapshot.document.storage ?? defaults, defaults);
 }
 
 function normalizeStorageSettings(
   value: unknown,
-  defaults?: OpenCreatorStorageSettings
-): OpenCreatorStorageSettings {
+  defaults?: VishnuCreatorStorageSettings
+): VishnuCreatorStorageSettings {
   const source = isRecord(value) ? value : {};
   const defaultProjectRoot = nonEmptyString(
     source.defaultProjectRoot ?? source.default_project_root
@@ -253,18 +253,18 @@ function normalizeStorageSettings(
 }
 
 export function resolveDesktopConfig(
-  snapshot: OpenCreatorConfigSnapshot
-): OpenCreatorDesktopConfig {
+  snapshot: VishnuCreatorConfigSnapshot
+): VishnuCreatorDesktopConfig {
   return normalizeDesktopConfig(snapshot.document.desktop ?? defaultDesktopConfig);
 }
 
 export function resolveRuntimeConfig(
-  snapshot: OpenCreatorConfigSnapshot
-): OpenCreatorRuntimeConfig {
+  snapshot: VishnuCreatorConfigSnapshot
+): VishnuCreatorRuntimeConfig {
   return normalizeRuntimeConfig(snapshot.document.runtime ?? defaultRuntimeConfig);
 }
 
-function normalizeUiSettings(value: unknown): OpenCreatorUiSettings {
+function normalizeUiSettings(value: unknown): VishnuCreatorUiSettings {
   const source = isRecord(value) ? value : {};
   const customAccentSource = source.customAccentColor ?? source.custom_accent_color;
   const customAccentColor = typeof customAccentSource === 'string'
@@ -275,8 +275,8 @@ function normalizeUiSettings(value: unknown): OpenCreatorUiSettings {
   const accentColor = source.accentColor ?? source.accent_color;
   const defaultPermission = source.defaultPermission ?? source.default_permission;
   return {
-    language: openCreatorLanguages.includes(source.language as OpenCreatorLanguage)
-      ? source.language as OpenCreatorLanguage
+    language: vishnuCreatorLanguages.includes(source.language as VishnuCreatorLanguage)
+      ? source.language as VishnuCreatorLanguage
       : 'system',
     colorMode: colorMode === 'light' ? 'light' : 'dark',
     accentColor:
@@ -298,7 +298,7 @@ function normalizeUiSettings(value: unknown): OpenCreatorUiSettings {
   };
 }
 
-function normalizeDesktopConfig(value: unknown): OpenCreatorDesktopConfig {
+function normalizeDesktopConfig(value: unknown): VishnuCreatorDesktopConfig {
   const source = isRecord(value) ? value : {};
   const window = isRecord(source.window)
     && typeof source.window.width === 'number'
@@ -342,7 +342,7 @@ function normalizeDesktopConfig(value: unknown): OpenCreatorDesktopConfig {
   };
 }
 
-function normalizeRuntimeConfig(value: unknown): OpenCreatorRuntimeConfig {
+function normalizeRuntimeConfig(value: unknown): VishnuCreatorRuntimeConfig {
   const source = isRecord(value) ? value : {};
   const externalCodexSource = source.externalCodexBin ?? source.external_codex_bin;
   const externalCodexBin = typeof externalCodexSource === 'string'
@@ -357,7 +357,7 @@ function normalizeRuntimeConfig(value: unknown): OpenCreatorRuntimeConfig {
   };
 }
 
-function writeConfigFile(path: string, document: OpenCreatorConfigDocument): void {
+function writeConfigFile(path: string, document: VishnuCreatorConfigDocument): void {
   mkdirSync(dirname(path), { recursive: true, mode: 0o700 });
   if (process.platform !== 'win32') chmodSync(dirname(path), 0o700);
   const serializable = {
@@ -381,14 +381,14 @@ function writeConfigFile(path: string, document: OpenCreatorConfigDocument): voi
   renameSync(temporary, path);
 }
 
-function serializeStorage(value: OpenCreatorStorageSettings): Record<string, unknown> {
+function serializeStorage(value: VishnuCreatorStorageSettings): Record<string, unknown> {
   return {
     default_project_root: value.defaultProjectRoot,
     output_root: value.outputRoot
   };
 }
 
-function serializeUi(value: OpenCreatorUiSettings): Record<string, unknown> {
+function serializeUi(value: VishnuCreatorUiSettings): Record<string, unknown> {
   return {
     language: value.language,
     color_mode: value.colorMode,
@@ -398,7 +398,7 @@ function serializeUi(value: OpenCreatorUiSettings): Record<string, unknown> {
   };
 }
 
-function serializeDesktop(value: OpenCreatorDesktopConfig): Record<string, unknown> {
+function serializeDesktop(value: VishnuCreatorDesktopConfig): Record<string, unknown> {
   return {
     close_behavior: value.closeBehavior,
     notifications_enabled: value.notificationsEnabled,
@@ -414,7 +414,7 @@ function serializeDesktop(value: OpenCreatorDesktopConfig): Record<string, unkno
   };
 }
 
-function serializeRuntime(value: OpenCreatorRuntimeConfig): Record<string, unknown> {
+function serializeRuntime(value: VishnuCreatorRuntimeConfig): Record<string, unknown> {
   return {
     codex_mode: value.codexMode,
     ...(value.externalCodexBin === undefined
@@ -441,7 +441,7 @@ function withConfigLock<Result>(path: string, action: () => Result): Result {
       sleep(10);
     }
   }
-  if (descriptor === undefined) throw new Error('OPENCREATOR_CONFIG_LOCKED');
+  if (descriptor === undefined) throw new Error('VISHNUCREATOR_CONFIG_LOCKED');
   try {
     return action();
   } finally {

@@ -1,5 +1,5 @@
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
-import type { ThreadResponse } from '@opencreator/protocol';
+import type { ThreadResponse } from '@vishnucreator/protocol';
 
 export function ThreadList(props: {
   threads: ThreadResponse[];

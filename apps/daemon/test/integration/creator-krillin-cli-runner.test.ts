@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig, gatewayPublicModelId } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, gatewayPublicModelId } from '@vishnucreator/protocol';
 import { parse } from '@iarna/toml';
 import {
   chmodSync,
@@ -14,15 +14,15 @@ import { tmpdir } from 'node:os';
 import { basename, dirname, join, relative } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { CreatorExecutorInput } from '../../src/creator/executor.js';
-import { createKrillinConfigToml } from '../../src/creator/krillin/config-bridge.js';
+import { createVishnuConfigToml } from '../../src/creator/vishnu/config-bridge.js';
 import {
   prepareCliResourceRoot,
   recoverWindowsHorizontalAssRender,
-  runKrillinCli
-} from '../../src/creator/krillin/cli-runner.js';
-import { KrillinCliError } from '../../src/creator/krillin/cli-runner.js';
+  runVishnuCli
+} from '../../src/creator/vishnu/cli-runner.js';
+import { VishnuCliError } from '../../src/creator/vishnu/cli-runner.js';
 import { createGatewayCreatorSource } from '../../src/gateway/creator-service-source.js';
-import type { KrillinRuntimeManifest } from '../../src/creator/krillin/manifest.js';
+import type { VishnuRuntimeManifest } from '../../src/creator/vishnu/manifest.js';
 
 let tempDir = '';
 
@@ -31,9 +31,9 @@ afterEach(() => {
   tempDir = '';
 });
 
-describe('KrillinAI CLI runner', () => {
+describe('VishnuAI CLI runner', () => {
   it.runIf(process.platform === 'win32')('mounts packaged executable files without requiring symlink privileges', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'creator-krillin-windows-file-overlay-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'creator-vishnu-windows-file-overlay-'));
     const resourceRoot = join(tempDir, 'runtime');
     const dependencyRoot = join(tempDir, 'dependencies');
     const launcherRoot = join(tempDir, 'launcher');
@@ -57,12 +57,12 @@ describe('KrillinAI CLI runner', () => {
 
     expect(readFileSync(join(launcherRoot, 'bin', 'ffmpeg.exe'), 'utf8'))
       .toBe('fixture-ffmpeg');
-    writeFileSync(join(launcherRoot, 'bin', 'yt-dlp.exe'), 'updated-by-krillin');
+    writeFileSync(join(launcherRoot, 'bin', 'yt-dlp.exe'), 'updated-by-vishnu');
     expect(readFileSync(ytDlp, 'utf8')).toBe('fixture-yt-dlp');
   });
 
-  it('mounts the on-demand Whisper.cpp directory in the KrillinAI v2 layout', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'creator-krillin-whispercpp-overlay-'));
+  it('mounts the on-demand Whisper.cpp directory in the VishnuAI v2 layout', async () => {
+    tempDir = mkdtempSync(join(tmpdir(), 'creator-vishnu-whispercpp-overlay-'));
     const resourceRoot = join(tempDir, 'runtime');
     const dependencyRoot = join(tempDir, 'dependencies');
     const whisperCpp = join(dependencyRoot, 'bin', 'whispercpp');
@@ -95,7 +95,7 @@ describe('KrillinAI CLI runner', () => {
     const config = createDefaultCreatorServicesConfig();
     config.transcription.aliyun.oss.region = 'ap-southeast-1';
     config.transcription.aliyun.oss.endpoint = 'https://oss-ap-southeast-1.aliyuncs.com';
-    const value = parse(createKrillinConfigToml(config)) as {
+    const value = parse(createVishnuConfigToml(config)) as {
       transcribe: { aliyun: { oss: { region: string; endpoint: string } } };
     };
     expect(value.transcribe.aliyun.oss).toMatchObject({
@@ -103,12 +103,12 @@ describe('KrillinAI CLI runner', () => {
     });
   });
 
-  it('bridges the selected Whisper.cpp weights to the KrillinAI 2.1 model label', () => {
+  it('bridges the selected Whisper.cpp weights to the VishnuAI 2.1 model label', () => {
     const config = createDefaultCreatorServicesConfig();
     config.transcription.provider = 'whisper.cpp';
     config.transcription.whisperCpp.model = 'tiny';
 
-    const value = parse(createKrillinConfigToml(config)) as {
+    const value = parse(createVishnuConfigToml(config)) as {
       transcribe: { provider: string; whispercpp: { model: string } };
     };
 
@@ -118,23 +118,23 @@ describe('KrillinAI CLI runner', () => {
     });
   });
 
-  it('can route Krillin LLM calls through the local Codex gateway', () => {
+  it('can route Vishnu LLM calls through the local Codex gateway', () => {
     const config = createDefaultCreatorServicesConfig();
-    const value = parse(createKrillinConfigToml(config, {
-      baseUrl: 'http://127.0.0.1:4321/internal/krillin-llm/v1',
+    const value = parse(createVishnuConfigToml(config, {
+      baseUrl: 'http://127.0.0.1:4321/internal/vishnu-llm/v1',
       apiKey: 'task-token',
       model: 'codex'
     })) as { llm: Record<string, unknown> };
 
     expect(value.llm).toEqual({
-      base_url: 'http://127.0.0.1:4321/internal/krillin-llm/v1',
+      base_url: 'http://127.0.0.1:4321/internal/vishnu-llm/v1',
       api_key: 'task-token',
       model: 'codex',
       json: false
     });
   });
 
-  it('bridges Volcengine ASR and TTS credentials into KrillinAI config', () => {
+  it('bridges Volcengine ASR and TTS credentials into VishnuAI config', () => {
     const config = createDefaultCreatorServicesConfig();
     config.transcription.provider = 'volcengine';
     config.transcription.volcengine.appId = 'asr-app';
@@ -143,7 +143,7 @@ describe('KrillinAI CLI runner', () => {
     config.tts.volcengine.appId = 'tts-app';
     config.tts.volcengine.accessToken = 'tts-token';
 
-    const value = parse(createKrillinConfigToml(config)) as {
+    const value = parse(createVishnuConfigToml(config)) as {
       transcribe: { provider: string; volcengine: Record<string, string> };
       tts: { provider: string; volcengine: Record<string, string> };
     };
@@ -168,7 +168,7 @@ describe('KrillinAI CLI runner', () => {
   });
 
   it('recovers only the known Windows ASS drive-letter failure with the auto-video relative-path command', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'creator-krillin-windows-ass-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'creator-vishnu-windows-ass-'));
     const resourceRoot = join(tempDir, 'runtime');
     const workdir = join(tempDir, 'jobs', 'job-1', 'render-run');
     const source = join(tempDir, 'jobs', 'job-1', 'clean.mp4');
@@ -178,7 +178,7 @@ describe('KrillinAI CLI runner', () => {
     writeFileSync(ffmpeg, 'fixture-ffmpeg');
     writeFileSync(source, 'fixture-video');
     writeFileSync(join(workdir, 'formatted_horizontal_bilingual.ass'), 'fixture-ass');
-    const manifest: KrillinRuntimeManifest = {
+    const manifest: VishnuRuntimeManifest = {
       version: 1,
       platform: 'win32',
       arch: 'x64',
@@ -192,7 +192,7 @@ describe('KrillinAI CLI runner', () => {
       writeFileSync(input.args.at(-1)!, 'recovered-video');
     });
     const progress: Array<Record<string, unknown>> = [];
-    const knownFailure = new KrillinCliError(
+    const knownFailure = new VishnuCliError(
       'render_video_failed',
       '[Parsed_ass_0] Unable to parse option value "/project/formatted_horizontal_bilingual.ass" as image size\n'
         + "Error applying option 'original_size' to filter 'ass': Invalid argument"
@@ -225,13 +225,13 @@ describe('KrillinAI CLI runner', () => {
       outputs: { horizontal_video: join(workdir, 'horizontal_bilingual.mp4') }
     });
     expect(readFileSync(recovered!.outputs!.horizontal_video!, 'utf8')).toBe('recovered-video');
-    expect(JSON.parse(readFileSync(join(workdir, 'opencreator-windows-ass-recovery.json'), 'utf8')))
+    expect(JSON.parse(readFileSync(join(workdir, 'vishnucreator-windows-ass-recovery.json'), 'utf8')))
       .toMatchObject({
-        reason: 'krillinai-2.1.0-windows-absolute-ass-path',
+        reason: 'vishnuai-2.1.0-windows-absolute-ass-path',
         assFile: 'formatted_horizontal_bilingual.ass',
         outputVideo: join(workdir, 'horizontal_bilingual.mp4')
       });
-    expect(basename(invocation.args.at(-1)!)).toBe('.horizontal_bilingual.opencreator-recovery.mp4');
+    expect(basename(invocation.args.at(-1)!)).toBe('.horizontal_bilingual.vishnucreator-recovery.mp4');
     expect(progress).toEqual([expect.objectContaining({ phase: 'rendering_subtitles', percent: 95 })]);
 
     runProcess.mockClear();
@@ -243,7 +243,7 @@ describe('KrillinAI CLI runner', () => {
       workdir,
       artifacts: [{ id: 'clean', kind: 'source_video', path: source }],
       signal: new AbortController().signal,
-      error: new KrillinCliError('render_video_failed', 'unrelated render failure'),
+      error: new VishnuCliError('render_video_failed', 'unrelated render failure'),
       reportProgress() {},
       runProcess
     })).resolves.toBeUndefined();
@@ -252,13 +252,13 @@ describe('KrillinAI CLI runner', () => {
 
   it.skipIf(process.platform === 'win32').each(['manual', 'official-flash', 'official-other'])('writes private config, invokes the CLI, and enables Flash failover only for another official model (%s)', async mode => {
     const official = mode !== 'manual';
-    tempDir = mkdtempSync(join(tmpdir(), 'creator-krillin-cli-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'creator-vishnu-cli-'));
     const resourceRoot = join(tempDir, 'runtime');
     const jobsRoot = join(tempDir, 'jobs');
     const dependencyRoot = join(tempDir, 'dependencies');
     const workdir = join(jobsRoot, 'job-1', 'stage-run-1');
     const source = join(jobsRoot, 'job-1', 'imports', 'source.mp4');
-    const cli = join(resourceRoot, 'bin', process.platform === 'win32' ? 'krillinai-cli.exe' : 'krillinai-cli');
+    const cli = join(resourceRoot, 'bin', process.platform === 'win32' ? 'vishnuai-cli.exe' : 'vishnuai-cli');
     const ffmpeg = join(resourceRoot, 'bin', process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg');
     const ytDlp = join(tempDir, "managed yt'dlp");
     const cookieFile = join(tempDir, "YouTube cookie's.txt");
@@ -283,7 +283,7 @@ describe('KrillinAI CLI runner', () => {
     writeFileSync(whisperKit, 'fixture-whisperkit');
     if (process.platform !== 'win32') chmodSync(cli, 0o755);
 
-    const manifest: KrillinRuntimeManifest = {
+    const manifest: VishnuRuntimeManifest = {
       version: 1,
       platform: process.platform,
       arch: process.arch,
@@ -334,7 +334,7 @@ describe('KrillinAI CLI runner', () => {
       }
     } as unknown as CreatorExecutorInput;
 
-    const artifacts = await runKrillinCli({
+    const artifacts = await runVishnuCli({
       resourceRoot,
       jobsRoot,
       dependencyRoot,
@@ -352,7 +352,7 @@ describe('KrillinAI CLI runner', () => {
         version: '2026.08.31.120000',
         executable: process.execPath,
         prefixArgs: [ytDlp, '--cookies', cookieFile],
-        env: { SSL_CERT_FILE: '/tmp/opencreator-cacert.pem' },
+        env: { SSL_CERT_FILE: '/tmp/vishnucreator-cacert.pem' },
         script: ytDlp
       }
     });
@@ -385,22 +385,22 @@ describe('KrillinAI CLI runner', () => {
     else expect(observed.llm).not.toHaveProperty('model_name');
     if (mode === 'official-other') expect(observed).toMatchObject({ llm_fallback: {
       model: flashId, model_name: flashName, api_key: expect.stringMatching(/^oclocal_/),
-      base_url: 'http://127.0.0.1:39999/internal/krillin-llm/gateway/v1'
+      base_url: 'http://127.0.0.1:39999/internal/vishnu-llm/gateway/v1'
     } });
     else expect(observed).not.toHaveProperty('llm_fallback');
     expect(JSON.parse(readFileSync(join(workdir, 'observed-dependencies.json'), 'utf8'))).toEqual({
-      resourceRoot: join(workdir, '.krillin-cli'),
+      resourceRoot: join(workdir, '.vishnu-cli'),
       offline: '1',
-      bin: join(realpathSync(workdir), '.krillin-cli', 'bin'),
+      bin: join(realpathSync(workdir), '.vishnu-cli', 'bin'),
       models: realpathSync(join(dependencyRoot, 'models')),
       ffmpeg: realpathSync(ffmpeg),
       whisperKit: realpathSync(whisperKit),
-      ytDlp: join(realpathSync(workdir), '.krillin-cli', 'bin', 'yt-dlp'),
+      ytDlp: join(realpathSync(workdir), '.vishnu-cli', 'bin', 'yt-dlp'),
       ytDlpMode: 0o700,
       ytDlpVersion: '2026.08.31.120000',
       ytDlpPrefixArgs: [ytDlp, '--cookies', cookieFile]
     });
-    expect(existsSync(join(workdir, '.krillin-cli'))).toBe(false);
+    expect(existsSync(join(workdir, '.vishnu-cli'))).toBe(false);
     expect(existsSync(join(dependencyRoot, 'bin', '.yt-dlp-last-check'))).toBe(true);
     expect(existsSync(join(dependencyRoot, 'models'))).toBe(true);
     expect(progress).toContainEqual(expect.objectContaining({
@@ -409,26 +409,26 @@ describe('KrillinAI CLI runner', () => {
       message: 'Platform captions could not be processed. Switching to audio transcription.'
     }));
     expect(progress.at(-1)).toMatchObject({
-      krillinMode: 'cli',
+      vishnuMode: 'cli',
       providerStatus: 'succeeded',
       percent: 100
     });
     for (const completed of [0, 3]) {
       expect(progress).toContainEqual(expect.objectContaining({
         phase: 'translating_subtitles', completed, total: 6,
-        krillinEventPayload: expect.objectContaining({ completed, total: 6 })
+        vishnuEventPayload: expect.objectContaining({ completed, total: 6 })
       }));
     }
   });
 
   it.skipIf(process.platform === 'win32')('overrides the configured TTS provider and model from the job snapshot', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'creator-krillin-cli-tts-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'creator-vishnu-cli-tts-'));
     const resourceRoot = join(tempDir, 'runtime');
     const jobsRoot = join(tempDir, 'jobs');
     const dependencyRoot = join(tempDir, 'dependencies');
     const workdir = join(jobsRoot, 'job-tts', 'stage-run-tts');
     const subtitle = join(jobsRoot, 'job-tts', 'artifacts', 'target.srt');
-    const cli = join(resourceRoot, 'bin', 'krillinai-cli');
+    const cli = join(resourceRoot, 'bin', 'vishnuai-cli');
     mkdirSync(dirname(cli), { recursive: true });
     mkdirSync(dirname(subtitle), { recursive: true });
     mkdirSync(workdir, { recursive: true });
@@ -436,7 +436,7 @@ describe('KrillinAI CLI runner', () => {
     writeFileSync(cli, `#!${process.execPath}\n${FAKE_CLI}`);
     chmodSync(cli, 0o755);
 
-    const manifest: KrillinRuntimeManifest = {
+    const manifest: VishnuRuntimeManifest = {
       version: 1,
       platform: process.platform,
       arch: process.arch,
@@ -469,7 +469,7 @@ describe('KrillinAI CLI runner', () => {
       }
     } as unknown as CreatorExecutorInput;
 
-    const artifacts = await runKrillinCli({
+    const artifacts = await runVishnuCli({
       resourceRoot,
       jobsRoot,
       dependencyRoot,
@@ -516,7 +516,7 @@ describe('KrillinAI CLI runner', () => {
     });
 
     progress.length = 0;
-    await expect(runKrillinCli({
+    await expect(runVishnuCli({
       resourceRoot,
       jobsRoot,
       dependencyRoot,
@@ -535,27 +535,27 @@ describe('KrillinAI CLI runner', () => {
     });
     expect(progress).toEqual([
       {
-        krillinMode: 'cli',
+        vishnuMode: 'cli',
         providerStatus: 'running',
         percent: 5
       },
       {
-        krillinMode: 'cli',
+        vishnuMode: 'cli',
         providerStatus: 'running',
         percent: 64,
         phase: 'generating_voice',
         message: 'generating',
-        krillinEventPayload: {
+        vishnuEventPayload: {
           percent: 64,
           phase: 'generating_voice',
           message: 'generating'
         }
       },
       {
-        krillinMode: 'cli',
+        vishnuMode: 'cli',
         providerStatus: 'failed',
         phase: 'failed',
-        krillinEventPayload: {
+        vishnuEventPayload: {
           phase: 'failed',
           message: 'fixture TTS failed'
         }
@@ -564,11 +564,11 @@ describe('KrillinAI CLI runner', () => {
   });
 
   it.skipIf(process.platform === 'win32').each(['top', 'bottom'])('preserves bilingual document text and subtitle selection with translation on %s', async subtitlePosition => {
-    tempDir = mkdtempSync(join(tmpdir(), 'creator-krillin-cli-render-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'creator-vishnu-cli-render-'));
     const resourceRoot = join(tempDir, 'runtime');
     const jobsRoot = join(tempDir, 'jobs');
     const dependencyRoot = join(tempDir, 'dependencies');
-    const cli = join(resourceRoot, 'bin', 'krillinai-cli');
+    const cli = join(resourceRoot, 'bin', 'vishnuai-cli');
     const source = join(jobsRoot, 'job-render', 'artifacts', 'source.mp4');
     const target = join(jobsRoot, 'job-render', 'artifacts', 'target.srt');
     const original = join(jobsRoot, 'job-render', 'artifacts', 'original.srt');
@@ -584,7 +584,7 @@ describe('KrillinAI CLI runner', () => {
     writeFileSync(vertical, '1\n00:00:00,000 --> 00:00:01,000\n竖屏短字幕\n');
     chmodSync(cli, 0o755);
 
-    const manifest: KrillinRuntimeManifest = {
+    const manifest: VishnuRuntimeManifest = {
       version: 1,
       platform: process.platform,
       arch: process.arch,
@@ -628,7 +628,7 @@ describe('KrillinAI CLI runner', () => {
         signal: new AbortController().signal,
         reportProgress() {}
       } as unknown as CreatorExecutorInput;
-      await runKrillinCli({
+      await runVishnuCli({
         resourceRoot,
         jobsRoot,
         dependencyRoot,
@@ -721,7 +721,7 @@ if (args[0] === 'tts') {
     process.stdout.write(JSON.stringify({ type: 'progress', phase: 'translating_subtitles', percent: 5 + completed * 15, completed, total: 6 }) + '\n');
   }
   const ytDlpPath = join(
-    process.env.KRILLINAI_RESOURCE_ROOT,
+    process.env.VISHNUAI_RESOURCE_ROOT,
     'bin',
     process.platform === 'win32' ? 'yt-dlp.exe' : 'yt-dlp'
   );
@@ -730,16 +730,16 @@ if (args[0] === 'tts') {
     throw ytDlpResult.error || new Error(ytDlpResult.stderr || 'yt-dlp failed');
   }
   writeFileSync(join(workdir, 'observed-dependencies.json'), JSON.stringify({
-    resourceRoot: process.env.KRILLINAI_RESOURCE_ROOT,
-    offline: process.env.KRILLINAI_OFFLINE_DEPENDENCIES,
+    resourceRoot: process.env.VISHNUAI_RESOURCE_ROOT,
+    offline: process.env.VISHNUAI_OFFLINE_DEPENDENCIES,
     bin: realpathSync(join(process.cwd(), 'bin')),
     models: realpathSync(join(process.cwd(), 'models')),
-    ffmpeg: realpathSync(join(process.env.KRILLINAI_RESOURCE_ROOT, 'bin', 'ffmpeg')),
-    whisperKit: realpathSync(join(process.env.KRILLINAI_RESOURCE_ROOT, 'bin', 'whisperkit-cli')),
+    ffmpeg: realpathSync(join(process.env.VISHNUAI_RESOURCE_ROOT, 'bin', 'ffmpeg')),
+    whisperKit: realpathSync(join(process.env.VISHNUAI_RESOURCE_ROOT, 'bin', 'whisperkit-cli')),
     ytDlp: realpathSync(ytDlpPath),
     ytDlpMode: statSync(ytDlpPath).mode & 0o777,
     ytDlpVersion: ytDlpResult.stdout.trim(),
-    ytDlpPrefixArgs: JSON.parse(process.env.KRILLINAI_YT_DLP_PREFIX_ARGS || '[]')
+    ytDlpPrefixArgs: JSON.parse(process.env.VISHNUAI_YT_DLP_PREFIX_ARGS || '[]')
   }));
   outputs = {
     origin_video: join(workdir, 'origin_video.mp4'),

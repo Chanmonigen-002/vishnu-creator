@@ -2,11 +2,11 @@ import {
   wechatArticleImageStyleIds,
   wechatArticleLayoutStyleIds,
   wechatArticleSourceLimit
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   getWritingTemplate,
   normalizeWritingTemplateId
-} from '@opencreator/writing-templates';
+} from '@vishnucreator/writing-templates';
 import { z } from 'zod/v3';
 import type { CreatorTemplateDefinition } from './types.js';
 

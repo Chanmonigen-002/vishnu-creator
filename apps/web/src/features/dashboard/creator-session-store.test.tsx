@@ -1,7 +1,7 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useEffect } from 'react';
 import { describe, expect, it, vi } from 'vitest';
-import type { CreatorEventEnvelope, CreatorJob, CreatorStageRun, OpenCreatorIssue } from '@opencreator/protocol';
+import type { CreatorEventEnvelope, CreatorJob, CreatorStageRun, VishnuCreatorIssue } from '@vishnucreator/protocol';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { LanguageSwitchControls } from '../../test/LanguageSwitchControls.js';
 import {
@@ -167,7 +167,7 @@ describe('CreatorSessionStore', () => {
 
   it('ignores snapshots and replayed events that regress the same stage from failed to running', async () => {
     const failedStage: CreatorStageRun = {
-      id: 'stage_failure', jobId: 'job_1', stageId: 'subtitle', executor: 'krillinai', status: 'failed',
+      id: 'stage_failure', jobId: 'job_1', stageId: 'subtitle', executor: 'vishnuai', status: 'failed',
       dispatchStatus: 'finished', claimOwner: null, claimExpiresAt: null, attempt: 1, idempotencyKey: null,
       scopeKey: null, inputFingerprint: null, progress: { percent: 8, status: 'running' },
       errorCode: 'creator_stage_failed', errorMessage: 'Failed', startedAt: null, finishedAt: '2026-08-21T00:00:01.000Z'
@@ -848,7 +848,7 @@ describe('CreatorSessionStore', () => {
           id: 'stage_1',
           jobId: 'job_1',
           stageId: 'render-horizontal',
-          executor: 'krillinai',
+          executor: 'vishnuai',
           status: 'running',
           dispatchStatus: 'claimed',
           claimOwner: 'scheduler_1',
@@ -1072,11 +1072,11 @@ describe('CreatorSessionStore', () => {
 
   it('reports artifact JSON parsing failures and replaces a focused local issue with its authoritative id', async () => {
     let session: ReturnType<typeof useCreatorSession> | undefined;
-    let finishReport!: (value: { clientIssueId: string; issue: OpenCreatorIssue }) => void;
+    let finishReport!: (value: { clientIssueId: string; issue: VishnuCreatorIssue }) => void;
     const reportClientIssue = vi.fn((
       _jobId: string,
       _request: { clientIssueId: string }
-    ) => new Promise<{ clientIssueId: string; issue: OpenCreatorIssue }>(resolve => {
+    ) => new Promise<{ clientIssueId: string; issue: VishnuCreatorIssue }>(resolve => {
       finishReport = resolve;
     }));
     const openArtifact = vi.fn(async () => new Response('{invalid-json', {
@@ -1380,7 +1380,7 @@ function SessionCaptureHarness(props: {
   return null;
 }
 
-function creatorIssue(overrides: Partial<OpenCreatorIssue> = {}): OpenCreatorIssue {
+function creatorIssue(overrides: Partial<VishnuCreatorIssue> = {}): VishnuCreatorIssue {
   return {
     id: 'issue_1',
     diagnosticId: 'OC-ISSUE001',

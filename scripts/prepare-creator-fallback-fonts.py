@@ -170,6 +170,6 @@ if __name__ == '__main__':
     manifest_path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + '\n')
     families = ', '.join(f'"{font["family"]}"' for font in manifest['fallbackFonts'])
     css = f':root {{ --creator-subtitle-fallback-families: {families}; }}\n'
-    css += '\n'.join(f'@font-face {{ font-family: "{font["family"]}"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/opencreator/{Path(font["webFile"]).name}") format("woff2"); unicode-range: {font["unicodeRange"]}; }}' for font in manifest['fallbackFonts'])
+    css += '\n'.join(f'@font-face {{ font-family: "{font["family"]}"; font-style: normal; font-weight: 400; font-display: swap; src: url("/fonts/vishnucreator/{Path(font["webFile"]).name}") format("woff2"); unicode-range: {font["unicodeRange"]}; }}' for font in manifest['fallbackFonts'])
     (ROOT / 'fallback-fonts.css').write_text(css + '\n')
     print(f'Prepared {len(results)} fallback families')

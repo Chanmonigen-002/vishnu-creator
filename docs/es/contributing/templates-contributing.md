@@ -99,4 +99,4 @@ Si tu plantilla adapta un prompt o estilo publicado por otra persona:
 
 ---
 
-¿Preguntas? [Abre un issue](https://github.com/krillinai/OpenCreator/issues/new) con tu idea de plantilla y una salida de ejemplo, y te ayudaremos a delimitarla.
+¿Preguntas? [Abre un issue](https://github.com/vishnuai/Vishnu Creator/issues/new) con tu idea de plantilla y una salida de ejemplo, y te ayudaremos a delimitarla.

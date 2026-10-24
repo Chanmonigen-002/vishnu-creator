@@ -1,8 +1,8 @@
 # OpenRouter model availability
 
-OpenCreator follows OpenRouter's account catalog and explicit access responses.
+Vishnu Creator follows OpenRouter's account catalog and explicit access responses.
 It does not maintain a country allowlist based on where our adapter tests ran.
-Anthropic text models remain excluded because OpenCreator's current text adapter
+Anthropic text models remain excluded because Vishnu Creator's current text adapter
 does not support them. This compatibility constraint is independent of regional
 access and still applies when OpenRouter includes them in the account catalog.
 
@@ -28,15 +28,15 @@ general list of supported user countries.
   customer's OpenRouter catalog. Expired or unavailable account metadata hides
   the models until refreshed.
 - Text models must have Responses support in the gateway's compatible catalog
-  and pass OpenCreator's compatibility policy, which excludes Anthropic models,
+  and pass Vishnu Creator's compatibility policy, which excludes Anthropic models,
   OpenRouter routing models, and batch variants. Cached catalogs and default
   model selection apply the same policy.
   Login, catalog refresh, model selection, chat startup, and Creator preflight
   validate the catalog and configuration without additional inference. Only
   user-confirmed connection tests send separate paid requests, as described below.
   Startup inference also requires explicit test opt-in using
-  `OPENCREATOR_ENABLE_PAID_STARTUP_PROBE=1` together with
-  `OPENCREATOR_REQUIRE_CODEX_PROBE=1`; normal Desktop startup does not enable it.
+  `VISHNUCREATOR_ENABLE_PAID_STARTUP_PROBE=1` together with
+  `VISHNUCREATOR_REQUIRE_CODEX_PROBE=1`; normal Desktop startup does not enable it.
 - Image, video, speech, and transcription models are admitted without internal
   `verification` metadata. The customer's directory must include the model and
   its declared output modality must match. Published voices, image parameters
@@ -49,7 +49,7 @@ general list of supported user countries.
   are rejected without inventing them or resubmitting a paid request. Speech
   voices are validated against the published catalog regardless of test flags.
   Speech synthesis and previews use the upstream's default audio encoding;
-  OpenCreator consumes the actual MIME and wraps PCM in WAV using the returned
+  Vishnu Creator consumes the actual MIME and wraps PCM in WAV using the returned
   sample-rate and channel metadata. This avoids forcing MP3 on PCM-only models.
 - An explicit model permission, region, or provider terms failure hides the exact
   model. After one hour, a successful account catalog refresh can restore it.

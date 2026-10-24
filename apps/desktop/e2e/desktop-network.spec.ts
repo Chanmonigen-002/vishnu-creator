@@ -14,7 +14,7 @@ const e2eDir = dirname(fileURLToPath(import.meta.url));
 const electronExecutable = createRequire(import.meta.url)('electron') as string;
 
 test('@package-smoke Desktop 网络在 Socket QoS 抛出 EINVAL 时仍可请求、上传和取消', async ({}, testInfo) => {
-  const userData = mkdtempSync(join(tmpdir(), 'opencreator-desktop-network-'));
+  const userData = mkdtempSync(join(tmpdir(), 'vishnucreator-desktop-network-'));
   const server = createServer((request, response) => {
     if (request.url === '/wait') return;
     if (request.url === '/binary') {
@@ -42,11 +42,11 @@ test('@package-smoke Desktop 网络在 Socket QoS 抛出 EINVAL 时仍可请求�
     const electronLogPath = join(userData, 'electron.log');
     const env: NodeJS.ProcessEnv = {
       ...process.env,
-      OPENCREATOR_DESKTOP_NETWORK_TEST_RESULT: resultPath,
-      OPENCREATOR_DESKTOP_NETWORK_TEST_USER_DATA: userData,
-      OPENCREATOR_DESKTOP_NETWORK_TEST_MODULE: pathToFileURL(resolve(e2eDir, '../dist/main/desktop-network.js')).href,
-      OPENCREATOR_DESKTOP_BOOTSTRAP_TEST_MODULE: pathToFileURL(resolve(e2eDir, '../dist/main/bootstrap-controller.js')).href,
-      OPENCREATOR_DESKTOP_NETWORK_TEST_ORIGIN: `http://127.0.0.1:${(server.address() as AddressInfo).port}`,
+      VISHNUCREATOR_DESKTOP_NETWORK_TEST_RESULT: resultPath,
+      VISHNUCREATOR_DESKTOP_NETWORK_TEST_USER_DATA: userData,
+      VISHNUCREATOR_DESKTOP_NETWORK_TEST_MODULE: pathToFileURL(resolve(e2eDir, '../dist/main/desktop-network.js')).href,
+      VISHNUCREATOR_DESKTOP_BOOTSTRAP_TEST_MODULE: pathToFileURL(resolve(e2eDir, '../dist/main/bootstrap-controller.js')).href,
+      VISHNUCREATOR_DESKTOP_NETWORK_TEST_ORIGIN: `http://127.0.0.1:${(server.address() as AddressInfo).port}`,
       ELECTRON_ENABLE_LOGGING: '1',
       ELECTRON_LOG_FILE: electronLogPath
     };

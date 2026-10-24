@@ -16,7 +16,7 @@
 
 ## 生产旧账户迁移
 
-新增运维命令位于 `open-creator-gateway/cmd/credits-migrate`，默认仅列出待迁移账户。执行必须显式提供 `-execute`、`-actor` 和 `-reason`，可限制账户和批次。默认账户间隔两秒，只记录不含密钥的 HTTP 状态诊断。
+新增运维命令位于 `vishnu-creator-gateway/cmd/credits-migrate`，默认仅列出待迁移账户。执行必须显式提供 `-execute`、`-actor` 和 `-reason`，可限制账户和批次。默认账户间隔两秒，只记录不含密钥的 HTTP 状态诊断。
 
 命令复用原有 `MigrateGateway`：锁定账户、持久化迁移标记、撤销并核验旧 Key、读取权威剩余额度、加上尚未同步的已授额度、一次性写入钱包和迁移流水。没有绕过迁移门禁，也没有重新发放历史累计赠送或充值。
 
@@ -38,7 +38,7 @@
 
 操作人记录为 `operator:release-20261015`，原因为 `release-gateway-wallet-migration`。管理流程已在每个账户入账前核验上游停用状态；没有新增或提升普通用户的管理员权限。
 
-生产备份与日志目录为 `/var/backups/open-creator-gateway`，目录权限 0700，文件权限 0600：
+生产备份与日志目录为 `/var/backups/vishnu-creator-gateway`，目录权限 0700，文件权限 0600：
 
 - `before-credit-migration-20261015.dump`：迁移前数据库备份，已通过 `pg_restore --list` 验证。
 - `after-credit-migration-20261015.dump`：迁移后数据库备份。
@@ -53,4 +53,4 @@
 - 新包实际 App 的任务重启恢复、充值回跳、授权回调三项测试全部通过。
 - 本地 Runtime 与正式网关健康检查正常。
 
-本机包仍为版本 3.2.6、未签名，路径为 `apps/desktop/release/mac-arm64/OpenCreator.app`。本轮没有发布版本或创建 Git 提交。
+本机包仍为版本 3.2.6、未签名，路径为 `apps/desktop/release/mac-arm64/Vishnu Creator.app`。本轮没有发布版本或创建 Git 提交。

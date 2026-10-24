@@ -10,7 +10,7 @@ import type {
   CreatorVisualAssetCatalogResponse,
   CreatorVisualAssetRef,
   CreatorVisualAssetSummary
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 
 const localizedTextSchema = z.object({

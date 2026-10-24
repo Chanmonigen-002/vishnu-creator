@@ -10,7 +10,7 @@ for await (const chunk of process.stdin) {
   size += chunk.length; assert(size <= 16_384); chunks.push(Buffer.from(chunk));
 }
 const credential = JSON.parse(Buffer.concat(chunks).toString()) as { key: string; name: string; costBearer: string; accountRemainingUsd: number; productionReserveUsd: number; balanceCheckedAt: string };
-assert(credential.key.startsWith('sk-or-') && credential.costBearer === 'platform' && credential.name.startsWith('OpenCreator platform audio verification'));
+assert(credential.key.startsWith('sk-or-') && credential.costBearer === 'platform' && credential.name.startsWith('VishnuCreator platform audio verification'));
 assert(Date.now() - Date.parse(credential.balanceCheckedAt) < 60_000 && credential.accountRemainingUsd >= 0.6 + credential.productionReserveUsd);
 const upstream = createOfficialFetch();
 const auth = { Authorization: `Bearer ${credential.key}` };

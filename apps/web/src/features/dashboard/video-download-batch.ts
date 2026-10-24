@@ -3,7 +3,7 @@ import {
   supportedVideoSourcePlatform,
   videoSourceIdentity,
   type CreatorJob
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export const DOWNLOAD_BATCH_PARENT = 'downloadBatchId';
 export const DOWNLOAD_BATCH_HIDDEN = 'downloadBatchHiddenJobIds';

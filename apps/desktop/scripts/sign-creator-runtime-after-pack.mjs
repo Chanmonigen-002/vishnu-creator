@@ -34,18 +34,18 @@ const remotionBrowserEntitlements = fileURLToPath(
 
 export async function afterPack(context) {
   await prepareMacAppIcon(context);
-  if (process.env.OPENCREATOR_SIGN_CREATOR_RUNTIME !== '1') return;
+  if (process.env.VISHNUCREATOR_SIGN_CREATOR_RUNTIME !== '1') return;
   await signDaemonRuntimeBundle(context);
   await signCreatorRuntimeBundle(context);
 }
 
 export async function signRemotionComponent(runtimeRoot, env = process.env, options = {}) {
-  if (env.OPENCREATOR_SIGN_CREATOR_RUNTIME !== '1') return;
+  if (env.VISHNUCREATOR_SIGN_CREATOR_RUNTIME !== '1') return;
   if ((options.platform ?? process.platform) !== 'darwin') throw new Error('Remotion Developer ID signing requires macOS');
   await (options.withKeychain ?? withMacSigningKeychain)(env, async signingEnv => {
     const keychainFile = signingEnv.APPLE_KEYCHAIN ?? null;
-    const identity = signingEnv.OPENCREATOR_REMOTION_SIGNING_IDENTITY?.trim()
-      || (options.findIdentity ?? findSigningIdentity)(signingEnv.OPENCREATOR_APPLE_TEAM_ID, keychainFile);
+    const identity = signingEnv.VISHNUCREATOR_REMOTION_SIGNING_IDENTITY?.trim()
+      || (options.findIdentity ?? findSigningIdentity)(signingEnv.VISHNUCREATOR_APPLE_TEAM_ID, keychainFile);
     const binaries = (options.findBinaries ?? findMachOBinaries)(runtimeRoot);
     if (binaries.length === 0) throw new Error('Remotion component has no native binaries');
     const manifest = JSON.parse(readFileSync(join(runtimeRoot, 'manifest.json'), 'utf8'));
@@ -102,7 +102,7 @@ export async function signDaemonRuntimeBundle(context, options = {}) {
 export async function signCreatorRuntimeBundle(context, options = {}) {
   return signPackagedRuntime(context, options, {
     name: 'Creator Runtime',
-    relativeRoot: ['creator-runtime', 'krillinai'],
+    relativeRoot: ['creator-runtime', 'vishnuai'],
     verifyRuntime: options.verifyRuntime ?? verifyCreatorRuntime,
     javascriptEntitlements: remotionBrowserEntitlements
   });
@@ -122,12 +122,12 @@ async function signPackagedRuntime(context, options, runtime) {
     throw new Error('Creator Runtime Developer ID signing requires macOS');
   }
 
-  const teamId = env.OPENCREATOR_APPLE_TEAM_ID?.trim();
-  const arch = env.OPENCREATOR_DESKTOP_TARGET_ARCH?.trim();
+  const teamId = env.VISHNUCREATOR_APPLE_TEAM_ID?.trim();
+  const arch = env.VISHNUCREATOR_DESKTOP_TARGET_ARCH?.trim();
   if (!teamId || !['arm64', 'x64'].includes(arch)) {
     throw new Error(
-      'Creator Runtime signing requires OPENCREATOR_APPLE_TEAM_ID and '
-      + 'OPENCREATOR_DESKTOP_TARGET_ARCH'
+      'Creator Runtime signing requires VISHNUCREATOR_APPLE_TEAM_ID and '
+      + 'VISHNUCREATOR_DESKTOP_TARGET_ARCH'
     );
   }
 

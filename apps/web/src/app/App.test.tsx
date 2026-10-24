@@ -23,7 +23,7 @@ import type {
   ScheduleResponse,
   TaskItem,
   ThreadResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   App as ProductionApp,
   type AppProps
@@ -33,7 +33,7 @@ import {
   formatRelativeTime
 } from './AppController.js';
 import { PROJECTS_STORAGE_KEY } from '../features/projects/project-model.js';
-import type { OpenCreatorProject } from '../features/projects/project-model.js';
+import type { VishnuCreatorProject } from '../features/projects/project-model.js';
 import { confirmAgentSetup } from '../features/settings/agent-setup-state.js';
 import type { HostBridge } from '../host/bridge.js';
 import type { SubscribeRunEventsInput } from '../runtime/sse.js';
@@ -46,8 +46,8 @@ import {
 } from '../services/model-service-2026-08-05.js';
 
 vi.mock('react-virtuoso', async () => import('../test/react-virtuoso-mock.js'));
-vi.mock('@opencreator/skill-market', async importOriginal => {
-  const actual = await importOriginal<typeof import('@opencreator/skill-market')>();
+vi.mock('@vishnucreator/skill-market', async importOriginal => {
+  const actual = await importOriginal<typeof import('@vishnucreator/skill-market')>();
   return {
     ...actual,
     skillMarketCatalog: actual.skillMarketCandidateCatalog
@@ -153,8 +153,8 @@ describe('App', () => {
     };
 
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch} />);
-    expect(await screen.findByRole('heading', { name: 'OpenCreator' })).toBeInTheDocument();
-    expect(screen.queryByLabelText('OpenCreator 导航')).not.toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'VishnuCreator' })).toBeInTheDocument();
+    expect(screen.queryByLabelText('VishnuCreator 导航')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '稍后配置，进入本地模式' }));
     expect(await screen.findByText('Agent 尚未配置，暂时无法发送任务。')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '配置 Agent' }));
@@ -171,7 +171,7 @@ describe('App', () => {
     await user.type(screen.getByLabelText('API Key'), 'secret');
     await user.click(screen.getByRole('button', { name: '保存并开始使用' }));
     await waitFor(() => {
-      expect(screen.queryByRole('heading', { name: 'OpenCreator' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: 'VishnuCreator' })).not.toBeInTheDocument();
       expect(window.location.hash).toBe('#/new');
     });
     expect(screen.queryByText('Agent 尚未配置，暂时无法发送任务。')).not.toBeInTheDocument();
@@ -180,9 +180,9 @@ describe('App', () => {
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch} />);
     await waitFor(() => {
       expect(screen.queryByText('正在检查 Agent 配置…')).not.toBeInTheDocument();
-      expect(screen.getByLabelText('OpenCreator 导航')).toBeInTheDocument();
+      expect(screen.getByLabelText('VishnuCreator 导航')).toBeInTheDocument();
     });
-    expect(screen.queryByRole('heading', { name: 'OpenCreator' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'VishnuCreator' })).not.toBeInTheDocument();
     }
   );
 
@@ -213,11 +213,11 @@ describe('App', () => {
     };
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch}/>);
     await user.click(await screen.findByRole('button', { name: '登录模式' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: '登录 OpenCreator' })).toBeEnabled());
+    await waitFor(() => expect(screen.getByRole('button', { name: '登录 VishnuCreator' })).toBeEnabled());
     expect(screen.queryByLabelText('Base URL')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('API Key')).not.toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: '登录 OpenCreator' }));
-    await waitFor(() => expect(screen.getByLabelText('OpenCreator 导航')).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: '登录 VishnuCreator' }));
+    await waitFor(() => expect(screen.getByLabelText('VishnuCreator 导航')).toBeInTheDocument());
     expect(screen.queryByRole('region', { name: '开始使用 Agent' })).not.toBeInTheDocument();
     expect(screen.queryByText('Agent 尚未配置，暂时无法发送任务。')).not.toBeInTheDocument();
     if (activationState === 'ready') {
@@ -270,19 +270,19 @@ describe('App', () => {
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch} />);
     await user.click(await screen.findByRole('button', { name: '本地模式' }));
     expect(await screen.findByText('已找到本机 Codex')).toBeInTheDocument();
-    expect(screen.queryByLabelText('OpenCreator 导航')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('VishnuCreator 导航')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '使用本机 Codex，继续' }));
-    await waitFor(() => expect(screen.queryByRole('heading', { name: 'OpenCreator' })).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByRole('heading', { name: 'VishnuCreator' })).not.toBeInTheDocument());
 
     cleanup();
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch} />);
-    await waitFor(() => expect(screen.getByLabelText('OpenCreator 导航')).toBeInTheDocument());
-    expect(screen.queryByRole('heading', { name: 'OpenCreator' })).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByLabelText('VishnuCreator 导航')).toBeInTheDocument());
+    expect(screen.queryByRole('heading', { name: 'VishnuCreator' })).not.toBeInTheDocument();
 
     cleanup();
     signedIn = false;
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch} />);
-    expect(await screen.findByRole('heading', { name: 'OpenCreator' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'VishnuCreator' })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '本地模式' }));
     expect(screen.getByRole('combobox', { name: '供应商' })).toBeInTheDocument();
   });
@@ -845,7 +845,7 @@ describe('App', () => {
     const user = userEvent.setup();
     render(<App />);
 
-    const navigation = await screen.findByLabelText('OpenCreator 导航');
+    const navigation = await screen.findByLabelText('VishnuCreator 导航');
     await user.click(screen.getByRole('button', { name: '打开导航' }));
     expect(navigation).toHaveAttribute('data-mobile-open', 'true');
 
@@ -878,14 +878,14 @@ describe('App', () => {
 
     await user.click(await screen.findByRole('button', { name: '打开导航' }));
     expect(pushState).toHaveBeenCalledWith(
-      expect.objectContaining({ opencreatorMobileNavigation: true }),
+      expect.objectContaining({ vishnucreatorMobileNavigation: true }),
       ''
     );
 
     await user.click(screen.getByRole('button', { name: '关闭导航' }));
 
     expect(back).toHaveBeenCalledTimes(1);
-    expect(screen.getByLabelText('OpenCreator 导航')).toHaveAttribute('data-mobile-open', 'false');
+    expect(screen.getByLabelText('VishnuCreator 导航')).toHaveAttribute('data-mobile-open', 'false');
   });
 
   it('replaces the temporary mobile drawer entry when navigating from the drawer', async () => {
@@ -909,8 +909,8 @@ describe('App', () => {
 
     await waitFor(() => expect(window.location.hash).toBe('#/dashboard'));
     expect(back).not.toHaveBeenCalled();
-    expect(window.history.state?.opencreatorMobileNavigation).not.toBe(true);
-    expect(screen.getByLabelText('OpenCreator 导航')).toHaveAttribute('data-mobile-open', 'false');
+    expect(window.history.state?.vishnucreatorMobileNavigation).not.toBe(true);
+    expect(screen.getByLabelText('VishnuCreator 导航')).toHaveAttribute('data-mobile-open', 'false');
   });
 
   afterEach(() => {
@@ -929,7 +929,7 @@ describe('App', () => {
     'opens the template Home without restoring the previous conversation in the %s host',
     async hostKind => {
     window.history.replaceState(null, '', '#/');
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       selectedThreadId: 'thread-from-previous-session'
     }));
     const hostBridge = createHostBridge();
@@ -977,7 +977,7 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: /^视频翻译/ }));
 
     expect(await screen.findByRole('heading', { name: '视频翻译配音' })).toBeInTheDocument();
-    expect(screen.queryByLabelText('OpenCreator 导航')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('VishnuCreator 导航')).not.toBeInTheDocument();
     const agentInput = screen.getByRole('textbox', { name: '告诉 Agent 你的要求' });
     expect(agentInput).toHaveAttribute(
       'placeholder',
@@ -987,7 +987,7 @@ describe('App', () => {
     await user.click(within(
       screen.getByRole('region', { name: '视频翻译操作区' })
     ).getByRole('button', { name: '返回' }));
-    expect(await screen.findByLabelText('OpenCreator 导航')).toBeInTheDocument();
+    expect(await screen.findByLabelText('VishnuCreator 导航')).toBeInTheDocument();
     await waitFor(() => expect(window.location.hash).toBe('#/workbench'));
   });
 
@@ -995,7 +995,7 @@ describe('App', () => {
     const user = userEvent.setup();
     window.history.replaceState(null, '', '#/new');
     const [project] = persistProjects('/Users/test/develop/preset-project');
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: project.id
     }));
     const hostBridge = createHostBridge();
@@ -1079,7 +1079,7 @@ describe('App', () => {
     const user = userEvent.setup();
     window.history.replaceState(null, '', '#/new');
     const [project] = persistProjects('/Users/test/develop/preset-remount');
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: project.id
     }));
     const hostBridge = createHostBridge();
@@ -1155,7 +1155,7 @@ describe('App', () => {
     const user = userEvent.setup();
     window.history.replaceState(null, '', '#/new');
     const [project] = persistProjects('/Users/test/develop/preset-timeout');
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: project.id
     }));
     const hostBridge = createHostBridge();
@@ -1223,7 +1223,7 @@ describe('App', () => {
     const user = userEvent.setup();
     window.history.replaceState(null, '', '#/new');
     const [project] = persistProjects('/Users/test/develop/preset-missing');
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: project.id
     }));
     const hostBridge = createHostBridge();
@@ -1294,11 +1294,11 @@ describe('App', () => {
     await screen.findByRole('button', { name: '工作台' });
     const shell = document.querySelector<HTMLElement>('.app-drop-shell');
     expect(shell).toHaveAttribute('data-integrated-title-bar', 'true');
-    expect(shell?.style.getPropertyValue('--opencreator-titlebar-height')).toBe('38px');
-    expect(shell?.style.getPropertyValue('--opencreator-traffic-light-inset')).toBe('76px');
+    expect(shell?.style.getPropertyValue('--vishnucreator-titlebar-height')).toBe('38px');
+    expect(shell?.style.getPropertyValue('--vishnucreator-traffic-light-inset')).toBe('76px');
     expect(document.querySelector('.desktop-titlebar-drag-region')).toBeInTheDocument();
     expect(screen.queryByRole('group', { name: '窗口控制' })).not.toBeInTheDocument();
-    expect(document.querySelector('.opencreator-main-titlebar')).not.toBeInTheDocument();
+    expect(document.querySelector('.vishnucreator-main-titlebar')).not.toBeInTheDocument();
   });
 
   it('shows functional window controls only with the Desktop capability', async () => {
@@ -1369,7 +1369,7 @@ describe('App', () => {
     expect(await screen.findByRole('status', { name: '本地运行内核正常' })).toBeInTheDocument();
     await user.click(await screen.findByRole('button', { name: /hello/ }));
 
-    const mainTitlebar = document.querySelector<HTMLElement>('.opencreator-main-titlebar');
+    const mainTitlebar = document.querySelector<HTMLElement>('.vishnucreator-main-titlebar');
     expect(mainTitlebar).toBeInTheDocument();
     expect(within(mainTitlebar!).getByRole('heading', { name: 'hello' })).toBeInTheDocument();
     expect(document.querySelector('.conversation-page > .conversation-header')).not.toBeInTheDocument();
@@ -1386,7 +1386,7 @@ describe('App', () => {
     const user = userEvent.setup();
     const [project] = persistProjects('/Users/test/develop/clean');
     window.location.hash = '#/thread/thread-restored-loading';
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: project.id,
       selectedThreadId: 'thread-restored-loading'
     }));
@@ -1480,7 +1480,7 @@ describe('App', () => {
 
   it('uploads a selected local video before starting the translation stage', async () => {
     const user = userEvent.setup();
-    window.localStorage.setItem('opencreator.preferences.language', 'en-US');
+    window.localStorage.setItem('vishnucreator.preferences.language', 'en-US');
     window.location.hash = '#/workbench?tool=video-translation';
     const hostBridge = createHostBridge();
     hostBridge.readConnectionConfig = async () => ({
@@ -1577,7 +1577,7 @@ describe('App', () => {
       name: '浏览器会话标题'
     })).toBeInTheDocument();
     expect(conversationPage?.querySelector(':scope > .conversation-header')).toBeInTheDocument();
-    expect(document.querySelector('.opencreator-main-titlebar')).not.toBeInTheDocument();
+    expect(document.querySelector('.vishnucreator-main-titlebar')).not.toBeInTheDocument();
   });
 
   it('keeps the guest greeting independent from remote account data', async () => {
@@ -1694,7 +1694,7 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: '定时任务' }));
 
     expect(await screen.findByRole('heading', { name: '每日总结' })).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: 'OpenCreator：已安排' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'VishnuCreator：已安排' })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: '查看上次运行' }));
 
@@ -1775,7 +1775,7 @@ describe('App', () => {
     await user.click(await screen.findByRole('button', { name: /^每日总结/ }));
 
     expect(await screen.findByLabelText('任务管理')).toBeInTheDocument();
-    expect(document.querySelector('.opencreator-main-titlebar')).toHaveTextContent('每日总结');
+    expect(document.querySelector('.vishnucreator-main-titlebar')).toHaveTextContent('每日总结');
     expect(document.querySelector('.conversation-task-strip--standalone'))
       .toContainElement(screen.getByLabelText('任务管理'));
     expect(document.querySelector('.conversation-page > .conversation-header')).not.toBeInTheDocument();
@@ -1963,7 +1963,7 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: /^创建$/ }));
     expect(screen.getByRole('dialog', { name: '创建定时任务' })).toBeInTheDocument();
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
-    expect(screen.queryByText('使用 OpenCreator 创建')).not.toBeInTheDocument();
+    expect(screen.queryByText('使用 VishnuCreator 创建')).not.toBeInTheDocument();
     expect(findPostCall(fetchCalls, '/threads')).toBeUndefined();
     expect(findPostCall(fetchCalls, '/runs')).toBeUndefined();
   });
@@ -2082,7 +2082,7 @@ describe('App', () => {
   it('keeps the current project selected while editing a new schedule', async () => {
     const user = userEvent.setup();
     const [customerProject] = persistProjects('/Users/test/project/customer-agent');
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: customerProject.id
     }));
     const hostBridge = createHostBridge();
@@ -3110,7 +3110,7 @@ describe('App', () => {
         />
       );
 
-      expect(await screen.findByLabelText('OpenCreator 导航')).toBeInTheDocument();
+      expect(await screen.findByLabelText('VishnuCreator 导航')).toBeInTheDocument();
       expect(screen.queryByText('登录即可享受云端协作')).not.toBeInTheDocument();
       expect(screen.queryByRole('button', { name: 'Sign in to' })).not.toBeInTheDocument();
     }
@@ -3119,7 +3119,7 @@ describe('App', () => {
   it('connects the plugin market to real install state and creates draft conversations', async () => {
     const user = userEvent.setup();
     window.localStorage.setItem(
-      'opencreator.preferences.defaultPermission',
+      'vishnucreator.preferences.defaultPermission',
       'danger-full-access'
     );
     const hostBridge = createHostBridge();
@@ -3194,7 +3194,7 @@ describe('App', () => {
 
     navigateToTestRoute('#/plugins');
     await waitFor(() => expect(recordRequests).toBe(1));
-    expect(screen.queryByRole('heading', { name: 'OpenCreator：插件' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'VishnuCreator：插件' })).not.toBeInTheDocument();
     expect(await screen.findByRole('region', { name: '技能目录' })).toBeInTheDocument();
     await waitFor(() => expect(screen.getAllByTestId('skill-market-card')).toHaveLength(12));
     await showSkillMarketCard(user, 'frontend-slides');
@@ -3908,7 +3908,7 @@ describe('App', () => {
     expect(screen.queryByText(/当前动态/)).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: '设置' }));
-    await user.click(await screen.findByRole('button', { name: '关于 OpenCreator' }));
+    await user.click(await screen.findByRole('button', { name: '关于 VishnuCreator' }));
 
     expect(await screen.findByText('高级信息')).toBeInTheDocument();
     expect(screen.getAllByText('codex-cli test').length).toBeGreaterThan(0);
@@ -4006,7 +4006,7 @@ describe('App', () => {
     await user.type(screen.getByRole('textbox', { name: '输入任务' }), prompt);
     await user.click(screen.getByRole('button', { name: '发送' }));
 
-    expect(await screen.findByText('允许 OpenCreator 执行这条命令？')).toBeInTheDocument();
+    expect(await screen.findByText('允许 VishnuCreator 执行这条命令？')).toBeInTheDocument();
     expect(document.querySelector('.composer-approval-overlay')).toBeInTheDocument();
     await user.click(screen.getByText('查看操作详情'));
     expect(screen.getByText('rm -rf build')).toBeInTheDocument();
@@ -4276,7 +4276,7 @@ describe('App', () => {
     expect(screen.queryByRole('button', { name: '停止任务' })).not.toBeInTheDocument();
   });
 
-  it('renders Codex process agent messages as folded process text and only the final agent message as OpenCreator reply', async () => {
+  it('renders Codex process agent messages as folded process text and only the final agent message as VishnuCreator reply', async () => {
     const user = userEvent.setup();
     const prompt = '检查当前目录并总结';
     const hostBridge = createHostBridge();
@@ -4498,7 +4498,7 @@ describe('App', () => {
     const prompt = 'hi';
     testRuntimeProjects = [];
     window.localStorage.setItem(
-      'opencreator.preferences.defaultPermission',
+      'vishnucreator.preferences.defaultPermission',
       'danger-full-access'
     );
     const hostBridge = createHostBridge();
@@ -4576,8 +4576,8 @@ describe('App', () => {
             createThreadResponse({
               id: 'thread_playground',
               title: 'Playground 历史会话',
-              cwd: '/Users/test/develop/opencreator/playground',
-              canonicalCwd: '/Users/test/develop/opencreator/playground',
+              cwd: '/Users/test/develop/vishnucreator/playground',
+              canonicalCwd: '/Users/test/develop/vishnucreator/playground',
               updatedAt: new Date('2026-07-09T02:00:00.000Z').toISOString()
             })
           ]
@@ -5014,8 +5014,8 @@ describe('App', () => {
             createThreadResponse({
               id: 'thread_playground',
               title: 'Playground 历史会话',
-              cwd: '/Users/test/develop/opencreator/playground',
-              canonicalCwd: '/Users/test/develop/opencreator/playground',
+              cwd: '/Users/test/develop/vishnucreator/playground',
+              canonicalCwd: '/Users/test/develop/vishnucreator/playground',
               workspaceMode: 'external'
             })
           ]
@@ -5053,7 +5053,7 @@ describe('App', () => {
     );
     const primaryProject = projects[0];
     const secondaryProject = projects[1]!;
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: primaryProject.id
     }));
     const hostBridge = createHostBridge();
@@ -5144,7 +5144,7 @@ describe('App', () => {
     );
     const primaryProject = projects[0];
     const secondaryProject = projects[1]!;
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: primaryProject.id
     }));
     const animationFrames: FrameRequestCallback[] = [];
@@ -5286,7 +5286,7 @@ describe('App', () => {
     const user = userEvent.setup();
     const projects = persistProjects(
       '/Users/test/develop/content-design',
-      '/Users/test/develop/opencreator/bili'
+      '/Users/test/develop/vishnucreator/bili'
     );
     const contentProject = projects[0];
     const biliProject = projects[1]!;
@@ -5314,8 +5314,8 @@ describe('App', () => {
               title: 'bili 历史',
               projectId: biliProject.id,
               codexThreadId: 'codex-bili-history',
-              cwd: '/Users/test/develop/opencreator/bili',
-              canonicalCwd: '/Users/test/develop/opencreator/bili'
+              cwd: '/Users/test/develop/vishnucreator/bili',
+              canonicalCwd: '/Users/test/develop/vishnucreator/bili'
             })
           ]
         });
@@ -5358,9 +5358,9 @@ describe('App', () => {
   });
 
   it('restores a selected historical conversation that is outside the initial thread page', async () => {
-    const [biliProject] = persistProjects('/Users/test/develop/opencreator/bili');
+    const [biliProject] = persistProjects('/Users/test/develop/vishnucreator/bili');
     window.location.hash = '#/thread/thread_older_history';
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: biliProject.id,
       selectedThreadId: 'thread_older_history'
     }));
@@ -5395,8 +5395,8 @@ describe('App', () => {
             id: 'thread_older_history',
             title: '分页外的历史会话',
             codexThreadId: 'codex-older-history',
-            cwd: '/Users/test/develop/opencreator/bili',
-            canonicalCwd: '/Users/test/develop/opencreator/bili'
+            cwd: '/Users/test/develop/vishnucreator/bili',
+            canonicalCwd: '/Users/test/develop/vishnucreator/bili'
           })
         });
       }
@@ -5475,7 +5475,7 @@ describe('App', () => {
 
   it('loads task summaries without preloading task history or listing task threads as conversations', async () => {
     const [contentProject] = persistProjects('/Users/test/develop/content-design');
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: contentProject.id
     }));
     const requestedUrls: string[] = [];
@@ -5774,8 +5774,8 @@ describe('App', () => {
               id: 'thread_paged_history',
               title: '分页历史会话',
               codexThreadId: 'codex-paged-history',
-              cwd: '/Users/test/develop/opencreator/opencreator-agent',
-              canonicalCwd: '/Users/test/develop/opencreator/opencreator-agent'
+              cwd: '/Users/test/develop/vishnucreator/vishnucreator-agent',
+              canonicalCwd: '/Users/test/develop/vishnucreator/vishnucreator-agent'
             })
           ]
         });
@@ -5875,8 +5875,8 @@ describe('App', () => {
               id: 'thread_synthetic_history',
               title: '无 Turn ID 的分页会话',
               codexThreadId: 'codex-synthetic-history',
-              cwd: '/Users/test/develop/opencreator/opencreator-agent',
-              canonicalCwd: '/Users/test/develop/opencreator/opencreator-agent'
+              cwd: '/Users/test/develop/vishnucreator/vishnucreator-agent',
+              canonicalCwd: '/Users/test/develop/vishnucreator/vishnucreator-agent'
             })
           ]
         });
@@ -6223,11 +6223,11 @@ describe('App', () => {
     const user = userEvent.setup();
     const projects = persistProjects(
       '/Users/test/develop/content-design',
-      '/Users/test/develop/opencreator/bili'
+      '/Users/test/develop/vishnucreator/bili'
     );
     const contentProject = projects[0];
     const biliProject = projects[1]!;
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: contentProject.id
     }));
     const hostBridge = createHostBridge();
@@ -6255,8 +6255,8 @@ describe('App', () => {
               title: 'bili 历史',
               projectId: biliProject.id,
               codexThreadId: 'codex-bili-history',
-              cwd: '/Users/test/develop/opencreator/bili',
-              canonicalCwd: '/Users/test/develop/opencreator/bili'
+              cwd: '/Users/test/develop/vishnucreator/bili',
+              canonicalCwd: '/Users/test/develop/vishnucreator/bili'
             })
           ]
         });
@@ -6336,8 +6336,8 @@ describe('App', () => {
             createThreadResponse({
               id: 'thread_files',
               title: '真实文件会话',
-              cwd: '/Users/test/develop/opencreator/opencreator-agent',
-              canonicalCwd: '/Users/test/develop/opencreator/opencreator-agent'
+              cwd: '/Users/test/develop/vishnucreator/vishnucreator-agent',
+              canonicalCwd: '/Users/test/develop/vishnucreator/vishnucreator-agent'
             })
           ]
         });
@@ -6348,8 +6348,8 @@ describe('App', () => {
       if (url.includes('/workspace/files/directory?')) {
         return jsonResponse({
           threadId: 'thread_files',
-          rootName: 'opencreator-agent',
-          rootPathLabel: '/Users/test/develop/opencreator/opencreator-agent',
+          rootName: 'vishnucreator-agent',
+          rootPathLabel: '/Users/test/develop/vishnucreator/vishnucreator-agent',
           path: '',
           suggestedOpenPath: 'README.md',
           truncated: false,
@@ -6439,7 +6439,7 @@ describe('App', () => {
   it('点击聊天回复中的成果卡片会直接打开对应文件', async () => {
     const user = userEvent.setup();
     const hostBridge = createHostBridge();
-    const absoluteChangedPath = '/private/runtime/workspaces/opencreator-agent/xiaodoujia-apple-aso-audit.html';
+    const absoluteChangedPath = '/private/runtime/workspaces/vishnucreator-agent/xiaodoujia-apple-aso-audit.html';
     hostBridge.readConnectionConfig = async () => ({ baseUrl: 'http://127.0.0.1:60764', token: 'runtime-token' });
     const fetchCalls: Array<{ url: string; init?: RequestInit }> = [];
     const runtimeFetch = async (input: RequestInfo | URL, init?: RequestInit) => {
@@ -6456,8 +6456,8 @@ describe('App', () => {
               id: 'thread_files',
               title: '真实文件会话',
               codexThreadId: 'codex-thread-files',
-              cwd: '/Users/test/develop/opencreator/opencreator-agent',
-              canonicalCwd: '/Users/test/develop/opencreator/opencreator-agent'
+              cwd: '/Users/test/develop/vishnucreator/vishnucreator-agent',
+              canonicalCwd: '/Users/test/develop/vishnucreator/vishnucreator-agent'
             })
           ]
         });
@@ -6481,8 +6481,8 @@ describe('App', () => {
       if (url.includes('/workspace/files/directory?')) {
         return jsonResponse({
           threadId: 'thread_files',
-          rootName: 'opencreator-agent',
-          rootPathLabel: '/Users/test/develop/opencreator/opencreator-agent',
+          rootName: 'vishnucreator-agent',
+          rootPathLabel: '/Users/test/develop/vishnucreator/vishnucreator-agent',
           path: '',
           suggestedOpenPath: 'README.md',
           truncated: false,
@@ -6612,8 +6612,8 @@ describe('App', () => {
             createThreadResponse({
               id: 'thread_files',
               title: '真实文件会话',
-              cwd: '/Users/test/develop/opencreator/opencreator-agent',
-              canonicalCwd: '/Users/test/develop/opencreator/opencreator-agent'
+              cwd: '/Users/test/develop/vishnucreator/vishnucreator-agent',
+              canonicalCwd: '/Users/test/develop/vishnucreator/vishnucreator-agent'
             })
           ]
         });
@@ -6624,8 +6624,8 @@ describe('App', () => {
       if (url.includes('/workspace/files/directory?')) {
         return jsonResponse({
           threadId: 'thread_files',
-          rootName: 'opencreator-agent',
-          rootPathLabel: '/Users/test/develop/opencreator/opencreator-agent',
+          rootName: 'vishnucreator-agent',
+          rootPathLabel: '/Users/test/develop/vishnucreator/vishnucreator-agent',
           path: '',
           suggestedOpenPath: 'README.md',
           truncated: false,
@@ -6696,7 +6696,7 @@ describe('App', () => {
     );
 
     expect(await screen.findByRole('status', { name: '本地运行内核正常' })).toBeInTheDocument();
-    const navigation = screen.getByLabelText('OpenCreator 导航');
+    const navigation = screen.getByLabelText('VishnuCreator 导航');
     expect(navigation).toHaveAttribute('data-collapsed', 'false');
     await user.click(await screen.findByRole('button', { name: /真实文件会话/ }));
     await user.click(screen.getByRole('button', { name: '文件' }));
@@ -6881,7 +6881,7 @@ describe('App', () => {
   it('已有只读会话切换为完全访问后会更新 thread 并允许编辑文件', async () => {
     const user = userEvent.setup();
     window.localStorage.setItem(
-      'opencreator.preferences.defaultPermission',
+      'vishnucreator.preferences.defaultPermission',
       'follow-project'
     );
     const hostBridge = createHostBridge();
@@ -6902,8 +6902,8 @@ describe('App', () => {
               id: 'thread_files',
               title: '只读文件会话',
               sandbox: threadSandbox,
-              cwd: '/Users/test/develop/opencreator/opencreator-agent',
-              canonicalCwd: '/Users/test/develop/opencreator/opencreator-agent'
+              cwd: '/Users/test/develop/vishnucreator/vishnucreator-agent',
+              canonicalCwd: '/Users/test/develop/vishnucreator/vishnucreator-agent'
             })
           ]
         });
@@ -6919,16 +6919,16 @@ describe('App', () => {
             id: 'thread_files',
             title: '只读文件会话',
             sandbox: threadSandbox,
-            cwd: '/Users/test/develop/opencreator/opencreator-agent',
-            canonicalCwd: '/Users/test/develop/opencreator/opencreator-agent'
+            cwd: '/Users/test/develop/vishnucreator/vishnucreator-agent',
+            canonicalCwd: '/Users/test/develop/vishnucreator/vishnucreator-agent'
           })
         });
       }
       if (url.includes('/workspace/files/directory?')) {
         return jsonResponse({
           threadId: 'thread_files',
-          rootName: 'opencreator-agent',
-          rootPathLabel: '/Users/test/develop/opencreator/opencreator-agent',
+          rootName: 'vishnucreator-agent',
+          rootPathLabel: '/Users/test/develop/vishnucreator/vishnucreator-agent',
           path: '',
           suggestedOpenPath: 'README.md',
           truncated: false,
@@ -7036,8 +7036,8 @@ describe('App', () => {
             createThreadResponse({
               id: 'thread_files',
               title: '真实文件会话',
-              cwd: '/Users/test/develop/opencreator/opencreator-agent',
-              canonicalCwd: '/Users/test/develop/opencreator/opencreator-agent'
+              cwd: '/Users/test/develop/vishnucreator/vishnucreator-agent',
+              canonicalCwd: '/Users/test/develop/vishnucreator/vishnucreator-agent'
             })
           ]
         });
@@ -7048,8 +7048,8 @@ describe('App', () => {
       if (url.includes('/workspace/files/directory?')) {
         return jsonResponse({
           threadId: 'thread_files',
-          rootName: 'opencreator-agent',
-          rootPathLabel: '/Users/test/develop/opencreator/opencreator-agent',
+          rootName: 'vishnucreator-agent',
+          rootPathLabel: '/Users/test/develop/vishnucreator/vishnucreator-agent',
           path: '',
           suggestedOpenPath: 'README.md',
           truncated: false,
@@ -7159,12 +7159,12 @@ describe('App', () => {
         return jsonResponse({
           threads: [
             createThreadResponse({
-              id: 'thread_codex_opencreator_agent',
+              id: 'thread_codex_vishnucreator_agent',
               title: '真实 Codex 当前项目历史',
               projectId: contentProject.id,
-              codexThreadId: 'codex-history-opencreator-agent',
-              cwd: '/Users/test/develop/opencreator/opencreator-agent',
-              canonicalCwd: '/Users/test/develop/opencreator/opencreator-agent',
+              codexThreadId: 'codex-history-vishnucreator-agent',
+              cwd: '/Users/test/develop/vishnucreator/vishnucreator-agent',
+              canonicalCwd: '/Users/test/develop/vishnucreator/vishnucreator-agent',
               updatedAt: new Date().toISOString()
             }),
             createThreadResponse({
@@ -7194,7 +7194,7 @@ describe('App', () => {
     expect(await screen.findByRole('status', { name: '本地运行内核正常' })).toBeInTheDocument();
     expect(await screen.findByRole('button', { name: 'content-design' })).toHaveAttribute('data-current-project', 'true');
     expect(screen.queryByRole('button', { name: '本机目录' })).not.toBeInTheDocument();
-    expect(screen.queryByRole('button', { name: 'opencreator-agent' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'vishnucreator-agent' })).not.toBeInTheDocument();
     expect(await screen.findByRole('button', { name: /真实 Codex 当前项目历史/ })).toBeInTheDocument();
     expect(await screen.findByRole('button', { name: /content-design 旧历史/ })).toBeInTheDocument();
     expect(window.localStorage.getItem(PROJECTS_STORAGE_KEY)).toBe(legacyProjects);
@@ -7683,7 +7683,7 @@ describe('App', () => {
     const user = userEvent.setup();
     const prompt = '用高强度推理生成方案';
     window.localStorage.setItem(
-      'opencreator.preferences.defaultPermission',
+      'vishnucreator.preferences.defaultPermission',
       'workspace-write'
     );
     const hostBridge = createHostBridge();
@@ -7899,7 +7899,7 @@ describe('App', () => {
 
     render(<App fileService={createFileService()} hostBridge={hostBridge} />);
     await user.click(await screen.findByRole('button', { name: '设置' }));
-    await user.click(screen.getByRole('button', { name: '关于 OpenCreator' }));
+    await user.click(screen.getByRole('button', { name: '关于 VishnuCreator' }));
 
     expect(await screen.findByText('3.2.1')).toBeInTheDocument();
     expect(hostBridge.readAppVersion).toHaveBeenCalledOnce();
@@ -7929,7 +7929,7 @@ describe('App', () => {
     await user.click(await screen.findByRole('button', { name: '浅色' }));
 
     expect(document.documentElement).toHaveAttribute('data-theme', 'light');
-    expect(window.localStorage.getItem('opencreator.preferences.colorMode')).toBe('light');
+    expect(window.localStorage.getItem('vishnucreator.preferences.colorMode')).toBe('light');
   });
 
   it('synchronizes a supported native window when switching color modes', async () => {
@@ -7960,7 +7960,7 @@ describe('App', () => {
     await user.click(await screen.findByRole('radio', { name: '紫色' }));
 
     expect(document.documentElement).toHaveAttribute('data-accent', 'purple');
-    expect(window.localStorage.getItem('opencreator.preferences.accentColor')).toBe('purple');
+    expect(window.localStorage.getItem('vishnucreator.preferences.accentColor')).toBe('purple');
   });
 
   it('applies and persists a custom accent color', async () => {
@@ -7982,8 +7982,8 @@ describe('App', () => {
     expect(screen.getByRole('radio', { name: '自定义' })).toHaveStyle({
       '--settings-accent-swatch': '#12abef'
     });
-    expect(window.localStorage.getItem('opencreator.preferences.accentColor')).toBe('custom');
-    expect(window.localStorage.getItem('opencreator.preferences.customAccentColor')).toBe('#12abef');
+    expect(window.localStorage.getItem('vishnucreator.preferences.accentColor')).toBe('custom');
+    expect(window.localStorage.getItem('vishnucreator.preferences.customAccentColor')).toBe('#12abef');
   });
 
   it('persists the global default permission across refreshes and projects', async () => {
@@ -7994,7 +7994,7 @@ describe('App', () => {
     );
     const primaryProject = projects[0];
     const secondaryProject = projects[1]!;
-    window.localStorage.setItem('opencreator.navigation.v3', JSON.stringify({
+    window.localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({
       currentProjectId: primaryProject.id
     }));
     const hostBridge = createHostBridge();
@@ -8041,7 +8041,7 @@ describe('App', () => {
       'workspace-write'
     );
 
-    expect(window.localStorage.getItem('opencreator.preferences.defaultPermission'))
+    expect(window.localStorage.getItem('vishnucreator.preferences.defaultPermission'))
       .toBe('workspace-write');
 
     await user.click(screen.getByRole('button', { name: '返回应用' }));
@@ -8065,7 +8065,7 @@ describe('App', () => {
     const user = userEvent.setup();
     window.location.hash = '#/settings';
     window.localStorage.setItem(
-      'opencreator.preferences.defaultPermission',
+      'vishnucreator.preferences.defaultPermission',
       'follow-project'
     );
     const hostBridge = createHostBridge();
@@ -8149,14 +8149,14 @@ describe('App', () => {
       .toEqual({ sandbox: 'danger-full-access' });
     expect(findPatchCall(fetchCalls, '/threads/thread-schedule-draft')).toBeUndefined();
     expect(findPatchCall(fetchCalls, '/threads/thread-schedule-task')).toBeUndefined();
-    expect(window.localStorage.getItem('opencreator.preferences.defaultPermission'))
+    expect(window.localStorage.getItem('vishnucreator.preferences.defaultPermission'))
       .toBe('danger-full-access');
   });
 
   it('disables permission changes while the selected thread has an active run', async () => {
     const user = userEvent.setup();
     window.localStorage.setItem(
-      'opencreator.preferences.defaultPermission',
+      'vishnucreator.preferences.defaultPermission',
       'follow-project'
     );
     const hostBridge = createHostBridge();
@@ -8559,11 +8559,11 @@ function handleDefaultProjectApiRequest(
   }
   if (url.endsWith('/projects/default') && init?.method === 'POST') {
     const existing = readTestRuntimeProjects().find(
-      project => project.cwd === '/Users/test/Documents/OpenCreator/Default Project'
+      project => project.cwd === '/Users/test/Documents/VishnuCreator/Default Project'
     );
     if (existing !== undefined) return jsonResponse({ project: existing });
     const project = createTestProject(
-      '/Users/test/Documents/OpenCreator/Default Project',
+      '/Users/test/Documents/VishnuCreator/Default Project',
       { name: '默认项目' }
     );
     testRuntimeProjects = [project, ...readTestRuntimeProjects()];
@@ -8572,7 +8572,7 @@ function handleDefaultProjectApiRequest(
   if (url.endsWith('/projects/managed') && init?.method === 'POST') {
     const body = readRequestBody(init);
     const name = typeof body.name === 'string' ? body.name.trim() : 'project';
-    const project = createTestProject(`/Users/test/Documents/OpenCreator/${name}`, { name });
+    const project = createTestProject(`/Users/test/Documents/VishnuCreator/${name}`, { name });
     testRuntimeProjects = [
       project,
       ...readTestRuntimeProjects().filter(item => item.id !== project.id)
@@ -8857,7 +8857,7 @@ function handleDefaultCreatorApiRequest(
             sourceArtifactIds: [],
             metadata: {
               cues: [
-                { id: 1, start: '00:00:00,000', end: '00:00:03,200', text: 'Welcome to OpenCreator.' }
+                { id: 1, start: '00:00:00,000', end: '00:00:03,200', text: 'Welcome to VishnuCreator.' }
               ],
               settingsSnapshot: { ...previous.state, ...patch }
             },
@@ -8907,7 +8907,7 @@ function readTestRuntimeProjects(): ProjectResponse[] {
       const value = JSON.parse(raw) as unknown;
       if (Array.isArray(value)) {
         testRuntimeProjects = value
-          .filter((item): item is OpenCreatorProject => (
+          .filter((item): item is VishnuCreatorProject => (
             typeof item === 'object'
             && item !== null
             && !Array.isArray(item)
@@ -9140,7 +9140,7 @@ function createThreadResponse(overrides: Partial<ThreadResponse> = {}): ThreadRe
     id: 'thread_from_api',
     title: 'Thread from API',
     projectId: defaultProjectId,
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     codexThreadId: null,
     cwd: '/Users/test/develop/content-design',
     canonicalCwd: '/Users/test/develop/content-design',
@@ -9164,8 +9164,8 @@ function createThreadResponse(overrides: Partial<ThreadResponse> = {}): ThreadRe
   return thread;
 }
 
-function persistProjects(cwd: string, ...additionalCwds: string[]): [OpenCreatorProject, ...OpenCreatorProject[]] {
-  const projects: [OpenCreatorProject, ...OpenCreatorProject[]] = [
+function persistProjects(cwd: string, ...additionalCwds: string[]): [VishnuCreatorProject, ...VishnuCreatorProject[]] {
+  const projects: [VishnuCreatorProject, ...VishnuCreatorProject[]] = [
     createLegacyPersistedProject(cwd),
     ...additionalCwds.map(createLegacyPersistedProject)
   ];
@@ -9178,11 +9178,11 @@ function creatorPresetCreationStorageKeys(): string[] {
     { length: window.sessionStorage.length },
     (_, index) => window.sessionStorage.key(index)
   ).filter((key): key is string => (
-    key?.startsWith('opencreator.creator-preset-creation.v1:') === true
+    key?.startsWith('vishnucreator.creator-preset-creation.v1:') === true
   ));
 }
 
-function createLegacyPersistedProject(cwd: string): OpenCreatorProject {
+function createLegacyPersistedProject(cwd: string): VishnuCreatorProject {
   const normalizedCwd = cwd.replace(/\\/g, '/').replace(/\/+$/, '');
   const name = normalizedCwd.split('/').filter(Boolean).at(-1) ?? 'project';
   let hash = 0x811c9dc5;

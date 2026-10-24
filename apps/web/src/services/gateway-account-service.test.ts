@@ -1,6 +1,6 @@
 import { expect, it, vi } from 'vitest';
 import { RuntimeClient } from '../runtime/client.js';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 import { createGatewayAccountService, type GatewayBillingSummary } from './gateway-account-service.js';
 
 const signedIn: GatewayAccountState = { source: 'gateway', authState: 'signed_in', activationState: 'ready', account: { id: 'a', email: 'a@example.test', verified: true }, bindingVersion: null, models: [], activationError: null };
@@ -19,9 +19,9 @@ it('checks browser authorization through the shared Daemon and adds the host ret
   const grant = { attemptId: 'attempt-1', authorizationUrl: 'https://gateway.example/device?grant=attempt-1', expiresAt: '2026-10-10T12:00:00Z' };
   const client = new RuntimeClient({ baseUrl: 'http://localhost', fetchImpl: vi.fn(async () => Response.json(grant)) });
   const post = vi.spyOn(client, 'post');
-  const service = createGatewayAccountService(client, { authorizationReturnUrl: 'opencreator://auth/complete' });
+  const service = createGatewayAccountService(client, { authorizationReturnUrl: 'vishnucreator://auth/complete' });
   const result = await service.start();
-  expect(new URL(result.authorizationUrl).searchParams.get('returnTo')).toBe('opencreator://auth/complete');
+  expect(new URL(result.authorizationUrl).searchParams.get('returnTo')).toBe('vishnucreator://auth/complete');
   expect(new URL(result.authorizationUrl).searchParams.get('grant')).toBe('attempt-1');
   expect(result.attemptId).toBe(grant.attemptId);
   await service.getState({ checkAuthorization: true });
@@ -128,8 +128,8 @@ it('cannot restore a pending credit response after logout', async () => {
 it('requests a website session with the host billing return address', async () => {
   const client = new RuntimeClient({ baseUrl: 'http://localhost', fetchImpl: vi.fn(async () => Response.json({ url: 'https://gateway.example/auth#handoff=code' })) });
   const post = vi.spyOn(client, 'post');
-  await createGatewayAccountService(client, { billingReturnUrl: 'opencreator://billing/return' }).openWebAccount('recharge', 'zh');
-  expect(post).toHaveBeenLastCalledWith('/gateway/account/web', { destination: 'recharge', locale: 'zh', returnUrl: 'opencreator://billing/return' });
+  await createGatewayAccountService(client, { billingReturnUrl: 'vishnucreator://billing/return' }).openWebAccount('recharge', 'zh');
+  expect(post).toHaveBeenLastCalledWith('/gateway/account/web', { destination: 'recharge', locale: 'zh', returnUrl: 'vishnucreator://billing/return' });
 });
 it('loads private order details and pages credit grants through the shared Daemon', async () => {
   const client = new RuntimeClient({ baseUrl: 'http://localhost', fetchImpl: vi.fn(async () => Response.json({})) });

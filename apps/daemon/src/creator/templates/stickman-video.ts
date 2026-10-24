@@ -3,7 +3,7 @@ import {
   stickmanOutputPresetDefaults,
   stickmanOutputPresets,
   stickmanRatios
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CreatorTemplateAction, CreatorTemplateDefinition, CreatorTemplateStage } from './types.js';
 
 const jsonRecord = z.record(z.string(), z.unknown());
@@ -105,7 +105,7 @@ export function createStickmanVideoTemplate(): CreatorTemplateDefinition {
     inputSchema: stickmanInputSchema as never,
     stages: [
       stage({ id: 'ingest-text', executor: 'stickman-content', inputArtifacts: [], outputArtifacts: [{ kind: 'source_text', status: 'completed' }] }),
-      stage({ id: 'source-transcript', executor: 'krillinai', inputArtifacts: [], outputArtifacts: [{ kind: 'source_subtitle', status: 'completed' }] }),
+      stage({ id: 'source-transcript', executor: 'vishnuai', inputArtifacts: [], outputArtifacts: [{ kind: 'source_subtitle', status: 'completed' }] }),
       stage({ id: 'source-brief', executor: 'stickman-content', inputArtifacts: [{ kind: 'source_text', selector: 'latest-completed', optional: true }, { kind: 'source_subtitle', selector: 'latest-completed', optional: true }], outputArtifacts: [{ kind: 'source_brief', status: 'completed' }] }),
       stage({ id: 'content-plan', executor: 'stickman-content', dependsOn: ['source-brief'], inputArtifacts: [{ kind: 'source_brief', selector: 'latest-completed' }], outputArtifacts: [{ kind: 'content_plan', status: 'completed' }] }),
       stage({ id: 'script', executor: 'stickman-content', dependsOn: ['content-plan'], inputArtifacts: [{ kind: 'content_plan', selector: 'latest-completed' }, { kind: 'source_brief', selector: 'latest-completed' }], outputArtifacts: [{ kind: 'script_manifest', status: 'completed' }] }),

@@ -4,7 +4,7 @@ import type {
   ScheduleDetailResponse,
   ScheduleResponse,
   UpdateScheduleRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply, FastifyRequest } from 'fastify';
 import type {
   ScheduleAgentActor,

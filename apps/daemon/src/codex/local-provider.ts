@@ -1,5 +1,5 @@
 import { parse } from '@iarna/toml';
-import { migrateOpenAiImageModel } from '@opencreator/protocol';
+import { migrateOpenAiImageModel } from '@vishnucreator/protocol';
 import { readFile } from 'node:fs/promises';
 import { join } from 'node:path';
 

@@ -1,6 +1,6 @@
-import { gatewayModelIdMatches } from '@opencreator/protocol';
+import { gatewayModelIdMatches } from '@vishnucreator/protocol';
 import { createContext, useContext, useEffect } from 'react';
-import { gatewayModelReady, gatewayModelSupports, gatewayTranslationFlashModel, type CreatorJson, type GatewayAccountState, type GatewayModel } from '@opencreator/protocol';
+import { gatewayModelReady, gatewayModelSupports, gatewayTranslationFlashModel, type CreatorJson, type GatewayAccountState, type GatewayModel } from '@vishnucreator/protocol';
 import OfficialModelSelect, { officialModelLabel } from '../../components/forms/OfficialModelSelect.js';
 import ModelBrandIcon from '../../components/brand/ModelBrandIcon.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';

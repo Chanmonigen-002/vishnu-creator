@@ -1,5 +1,5 @@
 import { execFile } from 'node:child_process';
-import type { CodexImageStatus } from '@opencreator/protocol';
+import type { CodexImageStatus } from '@vishnucreator/protocol';
 import { readLocalCodexImageConfiguration, type LocalCodexImageConfiguration } from '../codex/local-provider.js';
 import type { CodexNativeImageRuntime } from './provider.js';
 

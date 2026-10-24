@@ -1,4 +1,4 @@
-import type { CreatorArtifact, CreatorJob } from '@opencreator/protocol';
+import type { CreatorArtifact, CreatorJob } from '@vishnucreator/protocol';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { readFile, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';

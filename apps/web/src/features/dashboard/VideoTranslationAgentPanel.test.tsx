@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react';
-import type { CreatorAgentTimelineResponse, CreatorJob } from '@opencreator/protocol';
+import type { CreatorAgentTimelineResponse, CreatorJob } from '@vishnucreator/protocol';
 import { describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { CreatorSessionProvider } from './creator-session-store.js';
@@ -33,7 +33,7 @@ describe('VideoTranslationAgentPanel', () => {
     const current = job();
     current.status = 'running';
     current.stages.push({
-      id: 'component-download', jobId: current.id, stageId: 'subtitle', executor: 'krillinai', status: 'running', dispatchStatus: 'claimed',
+      id: 'component-download', jobId: current.id, stageId: 'subtitle', executor: 'vishnuai', status: 'running', dispatchStatus: 'claimed',
       claimOwner: 'scheduler', claimExpiresAt: null, attempt: 1, idempotencyKey: 'component-download', scopeKey: null, inputFingerprint: null,
       progress: { phase: 'downloading_dependencies', percent: 2, dependencyPercent: 25, downloadedBytes: 512 * 1024 ** 2, totalBytes: 2 * 1024 ** 3,
         message: '未找到可用的原始字幕，正在下载本地模型。模型文件较大，下载并校验完成后将自动继续，无需重新开始。' },
@@ -68,7 +68,7 @@ describe('VideoTranslationAgentPanel', () => {
     expect(screen.getByText('请检查当前设置')).toBeInTheDocument();
     expect(screen.getByText('更新了创作设置')).toBeInTheDocument();
     expect(screen.getByText('工作台')).toBeInTheDocument();
-    expect(screen.queryByText(/OpenCreator Context Projection/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/VishnuCreator Context Projection/)).not.toBeInTheDocument();
     expect(screen.queryByText(/internal prompt/)).not.toBeInTheDocument();
     expect(screen.queryByText('确认项目状态')).not.toBeInTheDocument();
     expect(screen.queryByText('执行记录')).not.toBeInTheDocument();
@@ -76,9 +76,9 @@ describe('VideoTranslationAgentPanel', () => {
     expect(container.querySelector('.tool-agent-composer-icon-button')).toBeNull();
     expect(container.querySelectorAll('.tool-agent-composer-select')).toHaveLength(1);
     expect(container.querySelector('.tool-agent-composer-send')).not.toBeNull();
-    expect(container.querySelector('.creator-collaboration-header .opencreator-mark')).not.toBeNull();
+    expect(container.querySelector('.creator-collaboration-header .vishnucreator-mark')).not.toBeNull();
     expect(container.querySelector(
-      '.creator-collaboration-message[data-role="assistant"] .opencreator-mark'
+      '.creator-collaboration-message[data-role="assistant"] .vishnucreator-mark'
     )).not.toBeNull();
     expect(container.querySelector('.lucide-bot')).toBeNull();
   });
@@ -223,7 +223,7 @@ describe('VideoTranslationAgentPanel', () => {
         id,
         turnId: 'turn_assistant_render',
         runtimeItemId: id,
-        toolName: 'opencreator_tools.creator_apply_action',
+        toolName: 'vishnucreator_tools.creator_apply_action',
         sequence: index + 5
       }))
     );
@@ -392,7 +392,7 @@ describe('VideoTranslationAgentPanel', () => {
         id: 'stage_subtitle_localized',
         jobId: currentJob.id,
         stageId: 'subtitle',
-        executor: 'krillinai',
+        executor: 'vishnuai',
         status: 'running',
         dispatchStatus: 'claimed',
         claimOwner: 'scheduler_1',
@@ -415,7 +415,7 @@ describe('VideoTranslationAgentPanel', () => {
         id: 'stage_tts_localized',
         jobId: currentJob.id,
         stageId: 'tts',
-        executor: 'krillinai',
+        executor: 'vishnuai',
         status: 'failed',
         dispatchStatus: 'finished',
         claimOwner: null,
@@ -493,7 +493,7 @@ describe('VideoTranslationAgentPanel', () => {
       id: 'stage_subtitle',
       jobId: runningJob.id,
       stageId: 'subtitle',
-      executor: 'krillinai',
+      executor: 'vishnuai',
       status: 'running',
       dispatchStatus: 'claimed',
       claimOwner: 'scheduler_1',
@@ -503,8 +503,8 @@ describe('VideoTranslationAgentPanel', () => {
       scopeKey: null,
       inputFingerprint: null,
       progress: {
-        krillinStatus: 'running',
-        krillinEventPayload: {
+        vishnuStatus: 'running',
+        vishnuEventPayload: {
           phase: 'translating_subtitles',
           percent: 52,
           message: '正在翻译字幕'
@@ -540,7 +540,7 @@ describe('VideoTranslationAgentPanel', () => {
       id: 'stage_control',
       jobId: runningJob.id,
       stageId: 'subtitle',
-      executor: 'krillinai',
+      executor: 'vishnuai',
       status: 'running',
       dispatchStatus: 'claimed',
       claimOwner: 'scheduler_1',
@@ -623,7 +623,7 @@ describe('VideoTranslationAgentPanel', () => {
       id: 'stage_subtitle_failed',
       jobId: failedJob.id,
       stageId: 'subtitle',
-      executor: 'krillinai',
+      executor: 'vishnuai',
       status: 'failed',
       dispatchStatus: 'finished',
       claimOwner: null,
@@ -635,7 +635,7 @@ describe('VideoTranslationAgentPanel', () => {
       progress: {
         percent: 67,
         phase: 'translating_subtitles',
-        krillinEventPayload: {
+        vishnuEventPayload: {
           percent: 67,
           phase: 'translating_subtitles',
           message: '正在翻译字幕'
@@ -855,7 +855,7 @@ function timeline(): CreatorAgentTimelineResponse {
         runtimeItemId: 'runtime_reasoning_1',
         kind: 'reasoning' as const,
         status: 'completed' as const,
-        text: 'OpenCreator Context Projection: internal prompt',
+        text: 'VishnuCreator Context Projection: internal prompt',
         data: { private: true },
         sequence: 1,
         createdAt: '2026-08-21T00:00:02.000Z',
@@ -869,7 +869,7 @@ function timeline(): CreatorAgentTimelineResponse {
         runtimeItemId: 'runtime_tool_1',
         kind: 'tool_call' as const,
         status: 'completed' as const,
-        toolName: 'opencreator_tools.creator_get_context',
+        toolName: 'vishnucreator_tools.creator_get_context',
         data: {},
         sequence: 2,
         createdAt: '2026-08-21T00:00:02.000Z',

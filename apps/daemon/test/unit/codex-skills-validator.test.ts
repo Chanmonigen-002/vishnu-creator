@@ -92,7 +92,7 @@ describe('codex skill validator', () => {
   });
 
   it('rejects symlinks anywhere in a skill directory', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-skill-validator-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-skill-validator-'));
     const skillDir = join(tempDir, 'skill');
     const linkedTarget = join(tempDir, 'linked-target');
     mkdirSync(skillDir, { recursive: true });

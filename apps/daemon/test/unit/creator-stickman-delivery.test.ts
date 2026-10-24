@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import sharp from 'sharp';
-import type { CreatorArtifact } from '@opencreator/protocol';
+import type { CreatorArtifact } from '@vishnucreator/protocol';
 import { createStickmanDeliveryExecutor } from '../../src/creator/stickman/delivery-executor.js';
 
 let tempRoot = '';

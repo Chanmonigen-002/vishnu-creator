@@ -8,7 +8,7 @@ import type {
   CreatorAgentTurn,
   CreatorAgentTurnRequest,
   CreatorActionResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type {
   AppServerApprovalDecision,
   AppServerRequest
@@ -312,7 +312,7 @@ export function createCreatorAgentService(input: {
     let thread = threadId === null ? undefined : input.threads.getThread(threadId);
     if (threadId === null || thread === undefined) {
       const thread = input.threads.createThread({
-        title: `OpenCreator ${job.templateId}`,
+        title: `VishnuCreator ${job.templateId}`,
         purpose: 'creator_agent',
         sandbox: requestedSandbox ?? 'workspace-write'
       });
@@ -781,7 +781,7 @@ function isAutoApprovedCreatorReadRequest(request: AppServerRequest): boolean {
 function isCreatorToolRequest(request: AppServerRequest): boolean {
   if (request.method !== 'mcpServer/elicitation/request') return false;
   const params = request.params;
-  if (params.serverName !== 'opencreator_tools') return false;
+  if (params.serverName !== 'vishnucreator_tools') return false;
   const nestedRequest = isRecord(params.request) ? params.request : undefined;
   const meta = [params._meta, params.meta, nestedRequest?._meta, nestedRequest?.meta]
     .find(isRecord);

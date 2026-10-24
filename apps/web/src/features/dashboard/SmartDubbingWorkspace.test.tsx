@@ -1,6 +1,6 @@
 import { act, cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, beforeEach, expect, it, vi } from 'vitest';
-import { createDefaultCreatorServicesConfig, type CreatorActionRequest, type CreatorArtifact, type CreatorJob, type CreatorJson, type GatewayAccountState } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type CreatorActionRequest, type CreatorArtifact, type CreatorJob, type CreatorJson, type GatewayAccountState } from '@vishnucreator/protocol';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { appLanguageOptions, type AppLanguage } from '../../i18n/language.js';
 import { createLocalizedCopy } from '../../i18n/localized-copy.js';
@@ -62,7 +62,7 @@ it.each([0, 1, 2])('restores a legacy step %s draft with every control available
   expect(screen.getByRole('radio', { name: '沉静' })).toHaveAttribute('aria-checked', 'true');
   expect(screen.getByRole('slider', { name: '语速' })).toHaveValue('1.1');
   expect(screen.getByRole('radio', { name: 'WAV' })).toHaveAttribute('aria-checked', 'true');
-  const panel = screen.getByRole('complementary', { name: 'OpenCreator' });
+  const panel = screen.getByRole('complementary', { name: 'VishnuCreator' });
   expect(within(panel).getByRole('complementary', { name: '任务摘要' })).toHaveTextContent('WAV');
   expect(document.querySelector('[aria-current="step"]')).toBeNull();
   expect(screen.queryByRole('button', { name: '继续' })).not.toBeInTheDocument();
@@ -139,7 +139,7 @@ it.each([
   expect(editor).toHaveAttribute('rows', '14');
   fireEvent.click(within(form).getByRole('button', { name: copy.clear }));
   expect(editor).toHaveValue('');
-  expect(within(screen.getByRole('complementary', { name: 'OpenCreator' })).getByRole('complementary', { name: copy.summary })).toBeInTheDocument();
+  expect(within(screen.getByRole('complementary', { name: 'VishnuCreator' })).getByRole('complementary', { name: copy.summary })).toBeInTheDocument();
 });
 
 it('provides the new clear-script action in every supported client language', () => {

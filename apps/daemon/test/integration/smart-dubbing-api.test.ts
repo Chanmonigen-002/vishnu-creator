@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { registerSmartDubbingRoutes } from '../../src/api/routes.smart-dubbing.js';
-import { KrillinTtsServiceError } from '../../src/creator/krillin/tts-service.js';
+import { VishnuTtsServiceError } from '../../src/creator/vishnu/tts-service.js';
 import { createSmartDubbingService } from '../../src/smart-dubbing/service.js';
 
 describe('smart dubbing API', () => {
@@ -13,7 +13,7 @@ describe('smart dubbing API', () => {
 
   beforeEach(async () => {
     server = Fastify({ logger: false });
-    dataDir = await mkdtemp(join(tmpdir(), 'opencreator-smart-dubbing-'));
+    dataDir = await mkdtemp(join(tmpdir(), 'vishnucreator-smart-dubbing-'));
   });
 
   afterEach(async () => {
@@ -21,7 +21,7 @@ describe('smart dubbing API', () => {
     await rm(dataDir, { recursive: true, force: true });
   });
 
-  it('generates, stores, and serves speech synthesized by KrillinAI', async () => {
+  it('generates, stores, and serves speech synthesized by VishnuAI', async () => {
     const synthesize = vi.fn(async () => ({
       content: Buffer.from('test-audio'),
       mime: 'audio/mpeg' as const,
@@ -113,14 +113,14 @@ describe('smart dubbing API', () => {
     expect(await readdir(dataDir)).toEqual([]);
   });
 
-  it('maps Krillin configuration and provider failures to product errors', async () => {
+  it('maps Vishnu configuration and provider failures to product errors', async () => {
     const synthesize = vi.fn()
-      .mockRejectedValueOnce(new KrillinTtsServiceError(
+      .mockRejectedValueOnce(new VishnuTtsServiceError(
         'creator_tts_config_missing',
         'Configure the selected provider API key',
         409
       ))
-      .mockRejectedValueOnce(new KrillinTtsServiceError(
+      .mockRejectedValueOnce(new VishnuTtsServiceError(
         'unsupported_capability',
         'The selected provider is unavailable',
         409
@@ -157,7 +157,7 @@ describe('smart dubbing API', () => {
 
   it('passes safe TTS failure facts to the Agent-facing API response', async () => {
     const synthesize = vi.fn(async () => {
-      throw new KrillinTtsServiceError('creator_tts_upstream_error', 'TTS failed', 502, {
+      throw new VishnuTtsServiceError('creator_tts_upstream_error', 'TTS failed', 502, {
         kind: 'unauthorized', provider: 'aliyun', httpStatus: 403, upstreamCode: 'PERMISSION_DENIED'
       });
     });

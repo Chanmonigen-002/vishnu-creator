@@ -1,4 +1,4 @@
-import type { CreatorArtifact, CreatorJob } from '@opencreator/protocol';
+import type { CreatorArtifact, CreatorJob } from '@vishnucreator/protocol';
 import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { execFileSync } from 'node:child_process';
@@ -6,7 +6,7 @@ import { expect, test } from './fixtures/runtime.js';
 
 test('已有成片时深度编辑仍渲染双语字幕，播放拖动和全屏无需重新编译', async ({ page, runtime }, testInfo) => {
   const sourceVideo = testInfo.outputPath('source.mp4');
-  execFileSync(resolve('apps/desktop/.pack/creator-runtime/krillinai/bin/ffmpeg'), ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'color=c=0x202020:s=640x360:d=2:r=25', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', sourceVideo]);
+  execFileSync(resolve('apps/desktop/.pack/creator-runtime/vishnuai/bin/ffmpeg'), ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'color=c=0x202020:s=640x360:d=2:r=25', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', sourceVideo]);
   const { job } = await runtime.api<{ job: CreatorJob }>('POST', '/creator/jobs', {
     projectId: runtime.projectId, templateId: 'video-translation', templateVersion: 2,
     creationKey: 'subtitle-composition', state: { sourceType: 'url', sourceUrl: 'https://www.youtube.com/watch?v=subtitle-local-test',

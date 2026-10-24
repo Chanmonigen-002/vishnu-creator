@@ -31,7 +31,7 @@ it.runIf(process.platform === 'win32' && chrome)('真实 Chrome 专用目录生�
     response.writeHead(200, { 'Content-Type': 'text/html', 'Set-Cookie': [
       'SID=fixture-SID; Path=/; Max-Age=3600; HttpOnly', 'SAPISID=fixture-SAPISID; Path=/; Max-Age=3600; HttpOnly'
     ] });
-    response.end('<!doctype html><title>OpenCreator login test</title>Local cookie test');
+    response.end('<!doctype html><title>VishnuCreator login test</title>Local cookie test');
     loaded();
   });
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
@@ -56,8 +56,8 @@ it.runIf(process.platform === 'win32' && chrome)('真实 Chrome 专用目录生�
       expect(rows).toHaveLength(2);
       expect(rows.map(row => row.encrypted_value.subarray(0, 3).toString())).toEqual(['v10', 'v10']);
     } finally { db.close(); }
-    if (process.env.OPENCREATOR_TEST_BROWSER_RUNTIME_ROOT) {
-      const resourceRoot = process.env.OPENCREATOR_TEST_BROWSER_RUNTIME_ROOT;
+    if (process.env.VISHNUCREATOR_TEST_BROWSER_RUNTIME_ROOT) {
+      const resourceRoot = process.env.VISHNUCREATOR_TEST_BROWSER_RUNTIME_ROOT;
       const manifest = JSON.parse(await readFile(join(resourceRoot, 'manifest.json'), 'utf8'));
       const runtime = resolveYtDlpRuntime({ resourceRoot, manifest })!;
       // 只验证 localhost 测试 Cookie 的解密，不接触真实账号，也不代表 Google 登录已验证。

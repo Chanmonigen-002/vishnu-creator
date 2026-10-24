@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -98,7 +98,7 @@ describe('creator cover generation', () => {
       url: `/creator/jobs/${first.id}/reference-image?expectedRevision=${first.revision}&fileName=reference.png&mime=image%2Fpng&lastModified=123`,
       headers: {
         authorization: 'Bearer secret',
-        'content-type': 'application/vnd.opencreator.creator-reference-image'
+        'content-type': 'application/vnd.vishnucreator.creator-reference-image'
       },
       payload: reference
     });

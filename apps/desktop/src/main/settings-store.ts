@@ -1,11 +1,11 @@
 import {
-  readOpenCreatorConfig,
+  readVishnuCreatorConfig,
   resolveDesktopConfig,
   resolveRuntimeConfig,
-  updateOpenCreatorConfig,
-  type OpenCreatorConfigDocument,
-  type OpenCreatorConfigSnapshot
-} from '@opencreator/config';
+  updateVishnuCreatorConfig,
+  type VishnuCreatorConfigDocument,
+  type VishnuCreatorConfigSnapshot
+} from '@vishnucreator/config';
 import type { DesktopSettings } from '../shared/types.js';
 
 const defaultSettings: DesktopSettings = {
@@ -21,11 +21,11 @@ export type SettingsStore = {
 };
 
 export type SettingsPersistence = {
-  read(path: string): OpenCreatorConfigSnapshot;
+  read(path: string): VishnuCreatorConfigSnapshot;
   update(
     path: string,
-    update: (document: OpenCreatorConfigDocument) => OpenCreatorConfigDocument
-  ): OpenCreatorConfigSnapshot;
+    update: (document: VishnuCreatorConfigDocument) => VishnuCreatorConfigDocument
+  ): VishnuCreatorConfigSnapshot;
 };
 
 export function createSettingsStore(
@@ -136,8 +136,8 @@ function normalizeSettings(value: unknown): DesktopSettings {
 }
 
 const fileSettingsPersistence: SettingsPersistence = {
-  read: readOpenCreatorConfig,
-  update: updateOpenCreatorConfig
+  read: readVishnuCreatorConfig,
+  update: updateVishnuCreatorConfig
 };
 
 function numberValue(value: unknown, fallback: number): number {

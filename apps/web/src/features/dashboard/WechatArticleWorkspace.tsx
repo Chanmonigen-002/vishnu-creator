@@ -10,13 +10,13 @@ import {
   type WechatArticlePresetCategoryId,
   type WechatArticleSourceLink,
   type WechatArticleTopic
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   localizeWritingTemplate,
   normalizeWritingTemplateId,
   writingTemplates as wechatArticlePresetCatalog,
   type WritingTemplateDomainId
-} from '@opencreator/writing-templates';
+} from '@vishnucreator/writing-templates';
 import {
   Check,
   Clipboard,

@@ -2,8 +2,8 @@ import type {
   DownloadOption,
   DownloadProbe,
   DownloadProbeFormat
-} from '@opencreator/protocol';
-import { supportedVideoSourcePlatform } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { supportedVideoSourcePlatform } from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 
 const formatSchema = z.object({

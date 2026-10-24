@@ -1,4 +1,4 @@
-import type { CodexProviderConfig } from '@opencreator/protocol';
+import type { CodexProviderConfig } from '@vishnucreator/protocol';
 import { readLocalCodexModelConfiguration } from '../codex/local-provider.js';
 import type { CreatorTextModelFallbackProvider, TextModelFallbackConfig } from './config-store.js';
 
@@ -19,7 +19,7 @@ export function createLocalCodexTextModelDefaults(input: {
     },
     async read() {
       const local = await readLocal();
-      // Chat-compatible API keys can be used by Krillin directly. Responses-only
+      // Chat-compatible API keys can be used by Vishnu directly. Responses-only
       // providers need the HTTP adapter; only ChatGPT login needs the Codex runtime.
       if (local.authentication === 'api_key' && local.wireApi !== 'responses') return local.provider;
       const gateway = input.readGatewayConfig();

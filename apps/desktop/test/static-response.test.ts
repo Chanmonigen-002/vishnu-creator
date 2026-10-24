@@ -18,7 +18,7 @@ afterEach(() => {
 
 describe('Desktop static response', () => {
   it('uses index.html for an extensionless workspace route', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-static-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-static-'));
     writeFileSync(join(root, 'index.html'), '<main>workspace</main>');
 
     const response = await staticResponse(root, request('/thread/abc'), true);
@@ -27,7 +27,7 @@ describe('Desktop static response', () => {
   });
 
   it('returns 404 for missing scripts, styles, images, and wasm', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-static-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-static-'));
     writeFileSync(join(root, 'index.html'), '<main>workspace</main>');
 
     for (const path of [
@@ -41,7 +41,7 @@ describe('Desktop static response', () => {
   });
 
   it('serves an existing asset with its real MIME type', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-static-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-static-'));
     mkdirSync(join(root, 'assets'));
     writeFileSync(join(root, 'assets', 'app.js'), 'export {}');
 
@@ -51,7 +51,7 @@ describe('Desktop static response', () => {
   });
 
   it('allows blob reads needed to inline local preview resources', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-static-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-static-'));
     writeFileSync(join(root, 'index.html'), '<main>workspace</main>');
 
     const response = await staticResponse(root, request('/'), true);
@@ -61,7 +61,7 @@ describe('Desktop static response', () => {
   });
 
   it('allows the supported video preview sources', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-static-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-static-'));
     writeFileSync(join(root, 'index.html'), '<main>workspace</main>');
 
     const response = await staticResponse(root, request('/'), true);
@@ -75,7 +75,7 @@ describe('Desktop static response', () => {
   });
 
   it('serves MP4 assets with media headers and byte ranges', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-static-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-static-'));
     mkdirSync(join(root, 'creator-presets'));
     writeFileSync(join(root, 'creator-presets', 'preview.mp4'), '0123456789');
 
@@ -94,7 +94,7 @@ describe('Desktop static response', () => {
   });
 
   it('supports HEAD and suffix ranges without reading the whole media file', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-static-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-static-'));
     writeFileSync(join(root, 'preview.mp4'), '0123456789');
 
     const head = await staticResponse(root, request('/preview.mp4', { method: 'HEAD' }), true);
@@ -113,7 +113,7 @@ describe('Desktop static response', () => {
   });
 
   it('rejects invalid media ranges', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-static-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-static-'));
     writeFileSync(join(root, 'preview.mp4'), '0123456789');
 
     const response = await staticResponse(
@@ -128,5 +128,5 @@ describe('Desktop static response', () => {
 });
 
 function request(path: string, init?: RequestInit): Request {
-  return new Request(`opencreator-app://app${path}`, init);
+  return new Request(`vishnucreator-app://app${path}`, init);
 }

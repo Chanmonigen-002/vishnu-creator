@@ -3,14 +3,14 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
-  buildKrillinStageOptions,
-  resolveKrillinStageContract,
+  buildVishnuStageOptions,
+  resolveVishnuStageContract,
   validateResultArtifacts
-} from '../../src/creator/krillin/adapter.js';
+} from '../../src/creator/vishnu/adapter.js';
 import {
-  buildKrillinCliCommandArguments,
+  buildVishnuCliCommandArguments,
   outputMappings
-} from '../../src/creator/krillin/cli-runner.js';
+} from '../../src/creator/vishnu/cli-runner.js';
 
 let tempDir = '';
 
@@ -27,21 +27,21 @@ function stage(stageId: string) {
   } as never;
 }
 
-describe('stickman KrillinAI mapping', () => {
-  it('maps semantic stages onto the existing Krillin stage enum', () => {
-    expect(resolveKrillinStageContract(stage('source-transcript'))).toMatchObject({
+describe('stickman VishnuAI mapping', () => {
+  it('maps semantic stages onto the existing Vishnu stage enum', () => {
+    expect(resolveVishnuStageContract(stage('source-transcript'))).toMatchObject({
       stageType: 'subtitle',
       requiredOutputKinds: ['source_subtitle']
     });
-    expect(resolveKrillinStageContract(stage('narration'))).toMatchObject({
+    expect(resolveVishnuStageContract(stage('narration'))).toMatchObject({
       stageType: 'tts',
       outputAliases: { dubbed_audio: 'narration_audio' }
     });
-    expect(resolveKrillinStageContract(stage('subtitles'))).toMatchObject({
+    expect(resolveVishnuStageContract(stage('subtitles'))).toMatchObject({
       stageType: 'subtitle',
       requiredOutputKinds: ['bilingual_subtitle']
     });
-    expect(resolveKrillinStageContract(stage('bilingual-render'))).toMatchObject({
+    expect(resolveVishnuStageContract(stage('bilingual-render'))).toMatchObject({
       stageType: 'render-horizontal',
       outputAliases: { horizontal_video: 'bilingual_video' }
     });
@@ -66,9 +66,9 @@ describe('stickman KrillinAI mapping', () => {
       signal: new AbortController().signal,
       reportProgress() {}
     };
-    const stickmanOptions = buildKrillinStageOptions(sourceTranscript as never);
+    const stickmanOptions = buildVishnuStageOptions(sourceTranscript as never);
     expect(stickmanOptions.sourceOnly).toBe(true);
-    const stickmanArgs = buildKrillinCliCommandArguments(
+    const stickmanArgs = buildVishnuCliCommandArguments(
       sourceTranscript as never,
       [],
       stickmanOptions,
@@ -82,9 +82,9 @@ describe('stickman KrillinAI mapping', () => {
       job: { ...sourceTranscript.job, templateId: 'video-translation' },
       stageRun: { ...sourceTranscript.stageRun, stageId: 'subtitle' }
     };
-    const translationOptions = buildKrillinStageOptions(translationStage as never);
+    const translationOptions = buildVishnuStageOptions(translationStage as never);
     expect(translationOptions.sourceOnly).toBe(false);
-    const translationArgs = buildKrillinCliCommandArguments(
+    const translationArgs = buildVishnuCliCommandArguments(
       translationStage as never,
       [],
       translationOptions,
@@ -95,7 +95,7 @@ describe('stickman KrillinAI mapping', () => {
   });
 
   it('rejects undeclared or missing stickman outputs and aliases valid subtitles', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'creator-stickman-krillin-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'creator-stickman-vishnu-'));
     const jobRoot = join(tempDir, 'job-1');
     mkdirSync(jobRoot, { recursive: true });
 
@@ -104,7 +104,7 @@ describe('stickman KrillinAI mapping', () => {
       jobsRoot: tempDir,
       artifacts: [],
       ffprobe: 'unused'
-    })).rejects.toMatchObject({ code: 'krillin_output_missing' });
+    })).rejects.toMatchObject({ code: 'vishnu_output_missing' });
     await expect(validateResultArtifacts({
       stage: stage('source-transcript'),
       jobsRoot: tempDir,
@@ -114,7 +114,7 @@ describe('stickman KrillinAI mapping', () => {
         relativePath: 'job-1/bad.mp4'
       }],
       ffprobe: 'unused'
-    })).rejects.toMatchObject({ code: 'krillin_output_mismatch' });
+    })).rejects.toMatchObject({ code: 'vishnu_output_mismatch' });
 
     const subtitlePath = join(jobRoot, 'source.srt');
     writeFileSync(subtitlePath, '1\n00:00:00,000 --> 00:00:01,000\n测试\n');

@@ -4,7 +4,7 @@ import type {
   CreatorPresetRequirements,
   CreatorPresetSummary,
   CreatorRuntimeWorkspace
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { ZodType } from 'zod/v3';
 
 export type CreatorPresetLocale = 'zh-CN' | 'en-US';

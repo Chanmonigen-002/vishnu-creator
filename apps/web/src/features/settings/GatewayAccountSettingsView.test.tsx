@@ -6,13 +6,13 @@ import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { GatewayAccountSettingsView } from './GatewayAccountSettingsView.js';
 import { GatewaySubscriptionSettingsView } from './GatewaySubscriptionSettingsView.js';
 import type { GatewayAccountSettingsService } from '../../services/gateway-account-service.js';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 afterEach(() => { cleanup(); sessionStorage.clear(); });
 const state: GatewayAccountState = { source: 'gateway', authState: 'signed_in', activationState: 'ready', account: { id: 'a', email: 'a@example.test', verified: true }, bindingVersion: 'a:1', models: [], activationError: null };
 function service(): GatewayAccountSettingsService {
   return { getState: vi.fn(async () => state), start: vi.fn(), cancel: vi.fn(), logout: vi.fn(), activate: vi.fn(), setSource: vi.fn(), selectModel: vi.fn(),
     getBalance: vi.fn(),
-    getSummary: vi.fn(async () => ({ balance: { availableUnits: '123000000', reservedUnits: '0', periodEnd: null, asOf: '2026-10-05T01:00:00Z' }, subscription: null, billingAvailable: true, purchaseMode: 'credits' as const, plansUrl: 'https://www.open-creator.ai/pricing' })),
+    getSummary: vi.fn(async () => ({ balance: { availableUnits: '123000000', reservedUnits: '0', periodEnd: null, asOf: '2026-10-05T01:00:00Z' }, subscription: null, billingAvailable: true, purchaseMode: 'credits' as const, plansUrl: 'https://www.vishnu-creator.ai/pricing' })),
     getPlans: vi.fn(async () => ({ plans: [{ id: 'starter', name: 'Starter', amountUnits: '500', creditUnits: '2500000000', currency: 'usd' }], billingAvailable: true })), getOrders: vi.fn(async () => ({ items: [] })), getOrder: vi.fn(), getCreditGrants: vi.fn(async () => ({ items: [] })), checkout: vi.fn(), portal: vi.fn() };
 }
 it('changes the ChatAnywhere region without offering supplier self-selection', async () => {
@@ -45,7 +45,7 @@ it('shows an expired session explicitly and keeps reauthorization available', as
   vi.mocked(value.getState).mockResolvedValue({ ...state, authState: 'expired', activationState: 'inactive' });
   render(<LanguageProvider initialPreference="zh-CN"><GatewayAccountSettingsView service={value}/></LanguageProvider>);
   expect(await screen.findByText('登录已过期，请重新登录')).toBeInTheDocument();
-  expect(screen.getByRole('button', { name: '登录 OpenCreator' })).toBeEnabled();
+  expect(screen.getByRole('button', { name: '登录 VishnuCreator' })).toBeEnabled();
 });
 it('checks authorization on return and displays sign-in before model services are ready', async () => {
   const value = service();
@@ -76,7 +76,7 @@ it('shows credits and opens the existing website for recharge', async () => {
   expect(await screen.findByText('123')).toBeInTheDocument();
   expect(screen.queryByText('未订阅')).not.toBeInTheDocument();
   await userEvent.setup().click(screen.getByRole('button', { name: '充值积分' }));
-  expect(open).toHaveBeenCalledWith(expect.stringContaining('https://www.open-creator.ai/pricing'));
+  expect(open).toHaveBeenCalledWith(expect.stringContaining('https://www.vishnu-creator.ai/pricing'));
   expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   expect(value.checkout).not.toHaveBeenCalled();
   expect(value.portal).not.toHaveBeenCalled();

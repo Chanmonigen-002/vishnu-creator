@@ -3,9 +3,9 @@ import {
   createSettingsStore,
   type SettingsPersistence
 } from '../src/main/settings-store.js';
-import type { OpenCreatorConfigSnapshot } from '@opencreator/config';
+import type { VishnuCreatorConfigSnapshot } from '@vishnucreator/config';
 
-const emptySnapshot = (): OpenCreatorConfigSnapshot => ({
+const emptySnapshot = (): VishnuCreatorConfigSnapshot => ({
   document: { version: 1 },
   configured: {
     ui: false,

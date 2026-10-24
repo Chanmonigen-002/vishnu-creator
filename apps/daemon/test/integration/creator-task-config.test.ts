@@ -45,7 +45,7 @@ it.each([false, true])('starts a task-selected text model with no global text de
     server = await buildServer({ token: 'local-token', appHome: root, dataDir,
       codexHome: join(root, 'codex'), localCodexHome: join(root, 'codex'),
       defaultCwd: root, defaultProjectRoot: join(root, 'projects'), gatewayOrigin: origin,
-      creatorExecutors: [{ id: 'krillinai', run }], schedulerAutostart: false });
+      creatorExecutors: [{ id: 'vishnuai', run }], schedulerAutostart: false });
     await server.listen({ host: '127.0.0.1', port: 0 });
     const request = (method: 'GET' | 'POST', url: string, payload?: object) => server!.inject({
       method, url, headers: { authorization: 'Bearer local-token' }, ...(payload ? { payload } : {})

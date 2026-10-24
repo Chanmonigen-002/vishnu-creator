@@ -441,7 +441,7 @@ function createFixture(options: {
   hasActiveRunForThread?(threadId: string): boolean;
   onSchedulesChanged?(database: Database.Database): void;
 } = {}) {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-schedule-coordinator-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-schedule-coordinator-'));
   db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
   let operationId = 0;
   const repository = new ScheduleRepository(db, {

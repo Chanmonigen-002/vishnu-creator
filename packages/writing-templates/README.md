@@ -1,4 +1,4 @@
-# OpenCreator writing templates
+# Vishnu Creator writing templates
 
 This package is the registry shared by the Web template library and the Daemon writing pipeline.
 

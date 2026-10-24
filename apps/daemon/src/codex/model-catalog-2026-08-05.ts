@@ -4,7 +4,7 @@ import type {
   CodexModelReasoningEffortOption,
   CodexModelResponse,
   ReasoningEffort
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CodexAppServerRequestClient } from './app-server-client.js';
 
 export type CodexModelCatalog = {

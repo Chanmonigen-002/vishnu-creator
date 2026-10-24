@@ -1,7 +1,7 @@
 import {
   creatorRuntimeWorkspaces as creatorPresetWorkspaces,
   type CreatorRuntimeWorkspace as CreatorPresetWorkspace
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export { creatorPresetWorkspaces };
 export type { CreatorPresetWorkspace };

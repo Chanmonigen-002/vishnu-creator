@@ -1,4 +1,4 @@
-import type { CodexModelResponse } from '@opencreator/protocol';
+import type { CodexModelResponse } from '@vishnucreator/protocol';
 import { describe, expect, it, vi } from 'vitest';
 import type { CodexAppServerRequestClient } from '../../src/codex/app-server-client.js';
 import {

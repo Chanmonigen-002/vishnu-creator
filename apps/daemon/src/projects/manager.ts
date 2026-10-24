@@ -8,7 +8,7 @@ import type {
   ProjectStatus,
   ReplaceProjectDirectoryRequest,
   UpdateProjectRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type Database from 'better-sqlite3';
 import { createHash } from 'node:crypto';
 import { existsSync, mkdirSync, realpathSync, rmdirSync, statSync } from 'node:fs';
@@ -44,7 +44,7 @@ export function createProjectManager(input: CreateProjectManagerInput): ProjectM
   const threads = createThreadRepository(input.db);
   const homeDir = input.homeDir ?? homedir();
   const defaultManagedProjectRoot = input.managedProjectRoot === undefined
-    ? join(homeDir, 'Documents', 'OpenCreator')
+    ? join(homeDir, 'Documents', 'VishnuCreator')
     : resolve(expandHome(input.managedProjectRoot, homeDir));
   const managedProjectRoot = () => resolve(expandHome(
     input.resolveManagedProjectRoot?.() ?? defaultManagedProjectRoot,
@@ -80,7 +80,7 @@ export function createProjectManager(input: CreateProjectManagerInput): ProjectM
       } catch {
         throw new ProjectManagerError(
           'PROJECT_DIRECTORY_UNAVAILABLE',
-          'The OpenCreator default project directory is unavailable'
+          'The VishnuCreator default project directory is unavailable'
         );
       }
 
@@ -127,7 +127,7 @@ export function createProjectManager(input: CreateProjectManagerInput): ProjectM
       } catch {
         throw new ProjectManagerError(
           'PROJECT_DIRECTORY_UNAVAILABLE',
-          'The OpenCreator default project directory is unavailable'
+          'The VishnuCreator default project directory is unavailable'
         );
       }
 
@@ -177,7 +177,7 @@ export function createProjectManager(input: CreateProjectManagerInput): ProjectM
 
         const assignedThreadIds: string[] = [];
         const unassignedThreadIds: string[] = [];
-        for (const thread of threads.listUnassignedOpenCreatorConversationThreads()) {
+        for (const thread of threads.listUnassignedVishnuCreatorConversationThreads()) {
           const projectId = projectIdsByCanonicalCwd.get(thread.canonical_cwd);
           if (projectId === undefined) {
             unassignedThreadIds.push(thread.id);

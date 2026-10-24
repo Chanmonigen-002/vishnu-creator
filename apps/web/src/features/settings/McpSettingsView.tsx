@@ -9,7 +9,7 @@ import type {
   CodexMcpRemoveResponse,
   CodexMcpServerDetailResponse,
   CodexMcpServerResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   KeyRound,
   LoaderCircle,

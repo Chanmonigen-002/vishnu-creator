@@ -21,15 +21,15 @@ Skill とは、[`skills/`](../../../skills/) 配下のフォルダで、ルー�
 ## クイックスタート
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable && pnpm install
-cp -r skills/krillinai-tts skills/<your-skill>   # 最も近い既存 Skill から始める
+cp -r skills/vishnuai-tts skills/<your-skill>   # 最も近い既存 Skill から始める
 # skills/<your-skill>/SKILL.md を編集
 pnpm web:dev                                     # 会話でエージェントが認識するか確認
 ```
 
-最速の方法は、アイデアに最も近い Skill をコピーして書き直すことです。既存の `krillinai-*` Skill が期待される構造とトーンを示しています。
+最速の方法は、アイデアに最も近い Skill をコピーして書き直すことです。既存の `vishnuai-*` Skill が期待される構造とトーンを示しています。
 
 ## Skill の構造
 
@@ -93,4 +93,4 @@ description: Use when <発動条件>, including <主な機能>.
 
 ---
 
-質問がありますか？ `skill` のトピックで [Issue を作成](https://github.com/krillinai/OpenCreator/issues/new)してください。範囲の調整をお手伝いします。
+質問がありますか？ `skill` のトピックで [Issue を作成](https://github.com/vishnuai/Vishnu Creator/issues/new)してください。範囲の調整をお手伝いします。

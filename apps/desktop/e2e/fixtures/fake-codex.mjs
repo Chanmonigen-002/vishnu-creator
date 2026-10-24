@@ -14,12 +14,12 @@ let args = process.argv.slice(2);
 if (args[0] === '--fixture-config') {
   const environment = JSON.parse(readFileSync(args[1], 'utf8'));
   for (const [name, value] of Object.entries(environment)) {
-    if (name.startsWith('OPENCREATOR_E2E_') && !process.env[name]) process.env[name] = value;
+    if (name.startsWith('VISHNUCREATOR_E2E_') && !process.env[name]) process.env[name] = value;
   }
   args = args.slice(2);
 }
-const stateDir = process.env.OPENCREATOR_E2E_FAKE_CODEX_STATE_DIR;
-const mode = process.env.OPENCREATOR_E2E_FAKE_CODEX_MODE ?? 'success';
+const stateDir = process.env.VISHNUCREATOR_E2E_FAKE_CODEX_STATE_DIR;
+const mode = process.env.VISHNUCREATOR_E2E_FAKE_CODEX_MODE ?? 'success';
 
 if (stateDir !== undefined) {
   mkdirSync(stateDir, { recursive: true });
@@ -107,7 +107,7 @@ if (isProbe) {
     await new Promise(() => undefined);
   }
 
-  const marker = prompt.match(/OPENCREATOR_READY_[a-f0-9]+/)?.[0];
+  const marker = prompt.match(/VISHNUCREATOR_READY_[a-f0-9]+/)?.[0];
   const response = marker === undefined
     ? 'hello from fake Codex'
     : `hello from fake Codex ${marker}`;
@@ -130,7 +130,7 @@ process.stdout.write(`${JSON.stringify({ type: 'turn.completed' })}\n`);
 
 function requireStateDir() {
   if (stateDir === undefined || stateDir.length === 0) {
-    throw new Error('OPENCREATOR_E2E_FAKE_CODEX_STATE_DIR is required');
+    throw new Error('VISHNUCREATOR_E2E_FAKE_CODEX_STATE_DIR is required');
   }
   return stateDir;
 }
@@ -162,7 +162,7 @@ async function handleAppServer() {
       send({
         id: message.id,
         result: {
-          userAgent: 'opencreator-desktop-e2e',
+          userAgent: 'vishnucreator-desktop-e2e',
           codexHome: process.env.CODEX_HOME,
           platformFamily: process.platform === 'win32' ? 'windows' : 'unix',
           platformOs: process.platform
@@ -188,8 +188,8 @@ async function handleAppServer() {
           data: [{
             cwd: process.cwd(),
             skills: [{
-              name: 'opencreator-runtime',
-              path: join(process.cwd(), 'opencreator-runtime', 'SKILL.md')
+              name: 'vishnucreator-runtime',
+              path: join(process.cwd(), 'vishnucreator-runtime', 'SKILL.md')
             }]
           }]
         }
@@ -200,9 +200,9 @@ async function handleAppServer() {
     if (message.method === 'account/read') {
       send({
         id: message.id,
-        result: process.env.OPENCREATOR_E2E_FAKE_CODEX_SIGNED_OUT === '1'
-          || process.env.OPENCREATOR_E2E_FAKE_CODEX_CUSTOM_PROVIDER === '1'
-          ? { account: null, requiresOpenaiAuth: process.env.OPENCREATOR_E2E_FAKE_CODEX_CUSTOM_PROVIDER !== '1' }
+        result: process.env.VISHNUCREATOR_E2E_FAKE_CODEX_SIGNED_OUT === '1'
+          || process.env.VISHNUCREATOR_E2E_FAKE_CODEX_CUSTOM_PROVIDER === '1'
+          ? { account: null, requiresOpenaiAuth: process.env.VISHNUCREATOR_E2E_FAKE_CODEX_CUSTOM_PROVIDER !== '1' }
           : { account: { type: 'apiKey' }, requiresOpenaiAuth: false }
       });
       continue;
@@ -212,7 +212,7 @@ async function handleAppServer() {
       send({
         id: message.id,
         result: {
-          config: process.env.OPENCREATOR_E2E_FAKE_CODEX_CUSTOM_PROVIDER === '1'
+          config: process.env.VISHNUCREATOR_E2E_FAKE_CODEX_CUSTOM_PROVIDER === '1'
             ? {
                 model: 'custom-model',
                 model_provider: 'gateway',

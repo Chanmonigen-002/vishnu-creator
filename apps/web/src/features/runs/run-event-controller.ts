@@ -1,4 +1,4 @@
-import type { AgentEventEnvelope } from '@opencreator/protocol';
+import type { AgentEventEnvelope } from '@vishnucreator/protocol';
 import {
   subscribeRunEvents as defaultSubscribeRunEvents,
   type SubscribeRunEventsInput

@@ -1,4 +1,4 @@
-import { creatorProviderCatalogById } from '@opencreator/protocol';
+import { creatorProviderCatalogById } from '@vishnucreator/protocol';
 
 export const llmProviderOptions = Object.values(creatorProviderCatalogById.llm);
 

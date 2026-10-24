@@ -6,7 +6,7 @@ import type {
   WorkspaceFileRevealResponse,
   WorkspaceFileSaveRequest,
   WorkspaceFileSaveResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 type WorkspaceFileClient = Pick<RuntimeClient, 'get' | 'post' | 'rawGet'>;

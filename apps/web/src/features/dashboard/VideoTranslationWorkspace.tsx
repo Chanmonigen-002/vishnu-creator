@@ -1,5 +1,5 @@
 import AppSelect from '../../components/forms/Select.js';
-import { gatewayModelIdMatches, normalizeSubtitleRenderCues } from '@opencreator/protocol';
+import { gatewayModelIdMatches, normalizeSubtitleRenderCues } from '@vishnucreator/protocol';
 import {
   useCallback,
   useEffect,
@@ -79,7 +79,7 @@ import {
   type CreatorSubtitlePreviewRequest,
   type CreatorTtsProvider,
   type VideoMetadataResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 type SourceType = 'url' | 'file' | 'subtitle';
 type SubtitlePosition = 'top' | 'bottom';
@@ -320,7 +320,7 @@ function subtitleStyleThumbnailCss(style: SubtitleStyleSettings): CSSProperties 
 }
 
 type SavedSubtitleStyle = { id: string; name: string; style: SubtitleStyleSettings };
-const savedSubtitleStylesKey = 'opencreator.videoTranslation.savedSubtitleStyles';
+const savedSubtitleStylesKey = 'vishnucreator.videoTranslation.savedSubtitleStyles';
 const savedSubtitleStylesLimit = 12;
 
 function readSavedSubtitleStyles(): SavedSubtitleStyle[] {
@@ -4562,7 +4562,7 @@ function translationStageLabel(stageId: string, l: LocalizeCopy): string {
 }
 
 function stageCancelDescription(
-  stage: import('@opencreator/protocol').CreatorStageRun,
+  stage: import('@vishnucreator/protocol').CreatorStageRun,
   l: LocalizeCopy
 ): string {
   const percent = creatorStageProgressPercent(stage);
@@ -4582,7 +4582,7 @@ function stageCancelDescription(
 }
 
 function stageResumeDescription(
-  stage: import('@opencreator/protocol').CreatorStageRun,
+  stage: import('@vishnucreator/protocol').CreatorStageRun,
   l: LocalizeCopy
 ): string {
   const label = translationStageLabel(stage.stageId, l);
@@ -4609,7 +4609,7 @@ function stageResumeDescription(
 }
 
 function creatorStageProgressPercent(
-  stage: import('@opencreator/protocol').CreatorStageRun
+  stage: import('@vishnucreator/protocol').CreatorStageRun
 ): number | null {
   const value = typeof stage.progress.percent === 'number'
     ? stage.progress.percent

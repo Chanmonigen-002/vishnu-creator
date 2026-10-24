@@ -5,7 +5,7 @@ import { afterEach, expect, it, vi } from 'vitest';
 import { createDirectTransport } from '../../src/gateway/direct-transport.js';
 import { GatewayError } from '../../src/gateway/client.js';
 import Fastify from 'fastify';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { createGatewayCreatorSource } from '../../src/gateway/creator-service-source.js';
 import type { GatewayAccountService } from '../../src/gateway/account-service.js';
 
@@ -100,11 +100,11 @@ it.each(['updated', 'account-changed'] as const)('异步图片在返回 202 后�
   const config = await source.store.read();
   const headers = { authorization: `Bearer ${config.llm.apiKey}`, prefer: 'respond-async', 'idempotency-key': 'same-image' };
   try {
-    const accepted = await server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/images/generations', headers, payload: { model: 'test/image', prompt: 'test' } });
+    const accepted = await server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/images/generations', headers, payload: { model: 'test/image', prompt: 'test' } });
     expect(accepted.statusCode).toBe(202);
     await vi.waitFor(() => expect(release).toHaveBeenCalledOnce());
     resume();
-    const url = `/internal/krillin-llm/gateway/v1/requests/${accepted.json().requestId}`;
+    const url = `/internal/vishnu-llm/gateway/v1/requests/${accepted.json().requestId}`;
     await vi.waitFor(async () => expect((await server.inject({ url, headers })).json()).toMatchObject({ state: outcome === 'updated' ? 'succeeded' : 'failed' }));
     expect(recover).toHaveBeenCalledExactlyOnceWith('1');
     expect(fetcher).toHaveBeenCalledTimes(outcome === 'updated' ? 2 : 1);

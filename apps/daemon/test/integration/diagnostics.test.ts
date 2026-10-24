@@ -43,7 +43,7 @@ describe('diagnostics', () => {
   });
 
   it('returns enhanced diagnostics with a codex status snapshot and redacted default files', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-diagnostics-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-diagnostics-'));
     const database = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     db = database;
     insertFinishedRun(database, 'run_1');
@@ -83,7 +83,7 @@ describe('diagnostics', () => {
   });
 
   it('exports a safe schedule trigger trace without prompt, token, or result content', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-diagnostics-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-diagnostics-'));
     const database = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     db = database;
     insertScheduleRunTrace(database);
@@ -148,7 +148,7 @@ describe('diagnostics', () => {
   });
 
   it('includes raw.redacted.ndjson only when includeRawRedacted is true', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-diagnostics-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-diagnostics-'));
     const database = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     db = database;
     insertFinishedRun(database, 'run_1');
@@ -186,7 +186,7 @@ describe('diagnostics', () => {
   });
 
   it('returns validation and not found errors for invalid or missing runs', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-diagnostics-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-diagnostics-'));
     const database = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     db = database;
     server = await buildServer({
@@ -214,7 +214,7 @@ describe('diagnostics', () => {
   });
 
   it('returns empty files with a warning when the DB run exists but the run directory is missing', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-diagnostics-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-diagnostics-'));
     const database = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     db = database;
     insertFinishedRun(database, 'run_1');
@@ -240,7 +240,7 @@ describe('diagnostics', () => {
   });
 
   it('includes thread and resume diagnostics for failed resume runs', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-diagnostics-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-diagnostics-'));
     const database = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     db = database;
     const fake = createFakeCodex(tempDir, {
@@ -275,7 +275,7 @@ describe('diagnostics', () => {
   });
 
   it('includes thread diagnostics when canceling queued thread runs', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-diagnostics-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-diagnostics-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [{ type: 'turn.started' }],
       hang: true

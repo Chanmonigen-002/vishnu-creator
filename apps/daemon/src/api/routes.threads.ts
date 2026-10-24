@@ -7,7 +7,7 @@ import type {
   ThreadResponse,
   ThreadRunsResponse,
   UpdateThreadRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { CodexAppServerResponseError } from '../codex/app-server-client.js';
 import {

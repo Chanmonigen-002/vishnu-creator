@@ -4,14 +4,14 @@ import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { promisify } from 'node:util';
 import { expect, it } from 'vitest';
-import type { KrillinRuntimeManifest } from '../../src/creator/krillin/manifest.js';
+import type { VishnuRuntimeManifest } from '../../src/creator/vishnu/manifest.js';
 import { resolveYtDlpRuntime } from '../../src/creator/yt-dlp/runtime.js';
 
-const resourceRoot = process.env.OPENCREATOR_CREATOR_RUNTIME_ROOT
-  ?? fileURLToPath(new URL('../../../desktop/.pack/creator-runtime/krillinai', import.meta.url));
+const resourceRoot = process.env.VISHNUCREATOR_CREATOR_RUNTIME_ROOT
+  ?? fileURLToPath(new URL('../../../desktop/.pack/creator-runtime/vishnuai', import.meta.url));
 const manifestPath = resolve(resourceRoot, 'manifest.json');
 const manifest = existsSync(manifestPath)
-  ? JSON.parse(readFileSync(manifestPath, 'utf8')) as KrillinRuntimeManifest : undefined;
+  ? JSON.parse(readFileSync(manifestPath, 'utf8')) as VishnuRuntimeManifest : undefined;
 const runtime = manifest?.ytDlp?.mode === 'python'
   ? resolveYtDlpRuntime({ resourceRoot, manifest }) : undefined;
 

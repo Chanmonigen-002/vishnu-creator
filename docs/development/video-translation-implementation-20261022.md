@@ -87,7 +87,7 @@ Daemon 为相同音频/VTT 任务匹配最近失败、中断或取消阶段，�
 
 旧对照与本轮入口和运行阶段不同，因此不将两组耗时/token 直接换算成严格同条件的节省比例，也不据此宣称质量超过 VideoLingo。首批正文前约 88 秒的等待和剩余 7 个排版降级仍是后续可改进项。
 
-后续[既有成品质量对照](../../../benchmarks/os0V5ADLVjM-quality-20261022/REPORT.md)核对到：上述 7 个是翻译单元的排版失败标记，并非最终超出某个宽度的 cue 数量。新版最终中文字幕有 61 条超过 50 显示单位、5 条超过 75，英文有 81 条超过 75；超长软目标与排版降级需要分别统计。该质量对照复用 VideoLingo、旧版 KrillinAI 和本次新版产物，没有重新翻译。
+后续[既有成品质量对照](../../../benchmarks/os0V5ADLVjM-quality-20261022/REPORT.md)核对到：上述 7 个是翻译单元的排版失败标记，并非最终超出某个宽度的 cue 数量。新版最终中文字幕有 61 条超过 50 显示单位、5 条超过 75，英文有 81 条超过 75；超长软目标与排版降级需要分别统计。该质量对照复用 VideoLingo、旧版 VishnuAI 和本次新版产物，没有重新翻译。
 
 ## 4. 自动化验证
 
@@ -101,7 +101,7 @@ Daemon 为相同音频/VTT 任务匹配最近失败、中断或取消阶段，�
 | Web 产物与控制测试 | 78 例通过，覆盖持久结果提示及已有工作台控制 |
 | 类型与构建 | Runtime CLI 构建、Daemon 生产构建与测试类型检查、Web 类型检查通过 |
 
-最终测试日志位于本机 `/tmp/opencreator-media-service-20261022.jsonl`、`/tmp/opencreator-media-final-go-20261022.jsonl` 以及 `/tmp/opencreator-media-final-{daemon,web}-*.log`。外部条件跳过的 service 用例为 `TestTranslationNLPRealSpacy`、`TestProcessYouTubeSubtitleProductionVttRegression`；本轮另有上述实际原生 VTT 入口运行。
+最终测试日志位于本机 `/tmp/vishnucreator-media-service-20261022.jsonl`、`/tmp/vishnucreator-media-final-go-20261022.jsonl` 以及 `/tmp/vishnucreator-media-final-{daemon,web}-*.log`。外部条件跳过的 service 用例为 `TestTranslationNLPRealSpacy`、`TestProcessYouTubeSubtitleProductionVttRegression`；本轮另有上述实际原生 VTT 入口运行。
 
 ## 5. 交付边界
 
@@ -109,4 +109,4 @@ Daemon 为相同音频/VTT 任务匹配最近失败、中断或取消阶段，�
 
 “无可靠时间时交付译文文本”的设计底线没有在本轮增加独立文本产物和工作台下载流程。当前有效音频/VTT 使用可验证的来源时间，坏来源可能在字幕生成阶段失败；已有正文检查点会保留，但不能宣称该文本交付界面已经完成。
 
-相关实现入口：[音频翻译与转录](../../runtime/krillinai/internal/service/audio2subtitle.go)、[VTT 解析与翻译](../../runtime/krillinai/internal/service/youtube_subtitle.go)、[内容引擎](../../runtime/krillinai/internal/service/translation_content.go)、[转录检查点](../../runtime/krillinai/internal/service/transcription_checkpoint.go)、[工作台恢复目录](../../apps/daemon/src/creator/krillin/translation-resume.ts)、[持久结果读取](../../apps/daemon/src/creator/krillin/cli-runner.ts)、[工作台提示](../../apps/web/src/features/dashboard/VideoTranslationWorkspace.tsx)。本次专用媒体策略 `translation_media.go` 已删除，音频/VTT 已恢复旧版共用翻译链路。
+相关实现入口：[音频翻译与转录](../../runtime/vishnuai/internal/service/audio2subtitle.go)、[VTT 解析与翻译](../../runtime/vishnuai/internal/service/youtube_subtitle.go)、[内容引擎](../../runtime/vishnuai/internal/service/translation_content.go)、[转录检查点](../../runtime/vishnuai/internal/service/transcription_checkpoint.go)、[工作台恢复目录](../../apps/daemon/src/creator/vishnu/translation-resume.ts)、[持久结果读取](../../apps/daemon/src/creator/vishnu/cli-runner.ts)、[工作台提示](../../apps/web/src/features/dashboard/VideoTranslationWorkspace.tsx)。本次专用媒体策略 `translation_media.go` 已删除，音频/VTT 已恢复旧版共用翻译链路。

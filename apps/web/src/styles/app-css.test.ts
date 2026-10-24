@@ -62,15 +62,15 @@ describe('app CSS visual contracts', () => {
   });
 
   it('uses one content frame for the workbench and projects pages', () => {
-    expect(cssBlock('.opencreator-page-content')).toContain('width: min(1160px, calc(100% - 48px));');
-    expect(cssBlock('.opencreator-page-content')).toContain('margin: 0 auto;');
-    expect(cssBlock('.opencreator-page-content')).toContain('padding: var(--page-title-inset) 0 56px;');
-    expect(cssBlock('.opencreator-scroll-page')).toContain('scrollbar-gutter: stable;');
-    expect(appCss).toMatch(/@media \(max-width: 760px\)\s*\{\s*\.opencreator-page-content\s*\{\s*width: calc\(100% - 28px\);\s*padding: 24px 0 40px;/);
-    expect(dashboardPageTsx).toContain('className="opencreator-scroll-page creator-tools-page"');
-    expect(projectsPageTsx).toContain('className="opencreator-scroll-page projects-page"');
-    expect(dashboardPageTsx).toContain('className="opencreator-page-content creator-tools-page-inner"');
-    expect(projectsPageTsx).toContain('className="opencreator-page-content projects-page-inner"');
+    expect(cssBlock('.vishnucreator-page-content')).toContain('width: min(1160px, calc(100% - 48px));');
+    expect(cssBlock('.vishnucreator-page-content')).toContain('margin: 0 auto;');
+    expect(cssBlock('.vishnucreator-page-content')).toContain('padding: var(--page-title-inset) 0 56px;');
+    expect(cssBlock('.vishnucreator-scroll-page')).toContain('scrollbar-gutter: stable;');
+    expect(appCss).toMatch(/@media \(max-width: 760px\)\s*\{\s*\.vishnucreator-page-content\s*\{\s*width: calc\(100% - 28px\);\s*padding: 24px 0 40px;/);
+    expect(dashboardPageTsx).toContain('className="vishnucreator-scroll-page creator-tools-page"');
+    expect(projectsPageTsx).toContain('className="vishnucreator-scroll-page projects-page"');
+    expect(dashboardPageTsx).toContain('className="vishnucreator-page-content creator-tools-page-inner"');
+    expect(projectsPageTsx).toContain('className="vishnucreator-page-content projects-page-inner"');
   });
 
   it('spaces primary navigation rows without changing the project tree spacing', () => {
@@ -167,11 +167,11 @@ describe('app CSS visual contracts', () => {
     expect(tokensCss).toContain('--page-title-inset: 13px;');
     expect(tokensCss).toContain('--page-title-row-height: 42px;');
     expect(tokensCss).toContain('--page-title-band-height: 68px;');
-    expect(cssBlock('.opencreator-page-content')).toContain('padding: var(--page-title-inset) 0 56px;');
+    expect(cssBlock('.vishnucreator-page-content')).toContain('padding: var(--page-title-inset) 0 56px;');
     expect(dashboardCss).toMatch(/\.creator-tools-page-header\s*\{[^}]*min-height: var\(--page-title-row-height\);/);
-    expect(appCss).toMatch(/(?:^|\n)\.opencreator-sidebar\s*\{[^}]*padding: var\(--page-title-inset\) 12px 8px;/);
+    expect(appCss).toMatch(/(?:^|\n)\.vishnucreator-sidebar\s*\{[^}]*padding: var\(--page-title-inset\) 12px 8px;/);
     expect(cssBlock('.sidebar-brand')).toContain('min-height: var(--page-title-row-height);');
-    expect(cssBlock('.opencreator-sidebar[data-collapsed="true"]')).toContain('padding: var(--page-title-inset) 8px 12px;');
+    expect(cssBlock('.vishnucreator-sidebar[data-collapsed="true"]')).toContain('padding: var(--page-title-inset) 8px 12px;');
     expect(cssBlock('.settings-back')).toContain('min-height: var(--page-title-row-height);');
     expect(cssBlock('.settings-section h1')).toContain('min-height: var(--page-title-row-height);');
   });
@@ -199,28 +199,28 @@ describe('app CSS visual contracts', () => {
     expect(tokensCss).toContain('--bg: var(--surface-page);');
     expect(tokensCss).toContain('--conversation-bg: var(--surface-page);');
     expect(tokensCss).toContain('--popover: var(--surface-popover);');
-    expect(cssBlock('.opencreator-sidebar-pane')).toContain('background: var(--sidebar);');
-    expect(cssBlock('.opencreator-composer::after')).toContain('background: var(--composer-input-background);');
+    expect(cssBlock('.vishnucreator-sidebar-pane')).toContain('background: var(--sidebar);');
+    expect(cssBlock('.vishnucreator-composer::after')).toContain('background: var(--composer-input-background);');
     expect(cssBlock('.composer-popover')).toContain('background: var(--popover);');
   });
 
   it('extends the desktop settings sidebar behind the title bar without moving its controls', () => {
-    expect(cssBlock('.app-drop-shell[data-integrated-title-bar="true"] .opencreator-main-pane:has(.settings-page)'))
+    expect(cssBlock('.app-drop-shell[data-integrated-title-bar="true"] .vishnucreator-main-pane:has(.settings-page)'))
       .toContain('padding-top: 0;');
     expect(cssBlock('.app-drop-shell[data-integrated-title-bar="true"] .settings-sidebar'))
-      .toContain('padding-top: calc(var(--page-title-inset) + var(--opencreator-titlebar-height, 38px));');
+      .toContain('padding-top: calc(var(--page-title-inset) + var(--vishnucreator-titlebar-height, 38px));');
     expect(cssBlock('.app-drop-shell[data-integrated-title-bar="true"] .settings-content'))
-      .toContain('padding-top: calc(var(--page-title-inset) + var(--opencreator-titlebar-height, 38px));');
+      .toContain('padding-top: calc(var(--page-title-inset) + var(--vishnucreator-titlebar-height, 38px));');
     expect(appCss).toMatch(/(?:^|\n)\.settings-content\s*\{[^}]*padding: var\(--page-title-inset\) 24px 48px;/);
     expect(appCss).toMatch(/@media \(max-width: 720px\)\s*\{[\s\S]*?\.app-drop-shell\[data-integrated-title-bar="true"\] \.settings-content\s*\{\s*padding-top: 24px;/);
     expect(cssBlock('.desktop-titlebar-drag-region')).toContain('display: none;');
   });
 
   it('uses the shared page gutter and content width for every settings tab', () => {
-    const settingsView = readSource('src/features/settings/OpenCreatorSettingsView.tsx');
+    const settingsView = readSource('src/features/settings/VishnuCreatorSettingsView.tsx');
     const managementCss = readSource('src/features/settings/settings-management.css');
     const servicesCss = readSource('src/features/settings/creator-services-settings.css');
-    expect(settingsView).toContain('className="opencreator-scroll-page settings-content"');
+    expect(settingsView).toContain('className="vishnucreator-scroll-page settings-content"');
     expect(cssBlock('.settings-section')).toContain('width: min(1160px, 100%);');
     expect(cssBlock('.settings-section')).toContain('margin: 0 auto;');
     expect(managementCss).not.toMatch(/\.settings-management\s*\{[^}]*width:/);
@@ -463,7 +463,7 @@ describe('app CSS visual contracts', () => {
   });
 
   it('keeps the app shell dark during layout changes', () => {
-    const mainPane = cssBlock('.opencreator-main-pane');
+    const mainPane = cssBlock('.vishnucreator-main-pane');
 
     expect(appCss).toMatch(/html,\nbody,\n#root\s*\{[^}]*height:\s*100%;[^}]*min-height:\s*0;[^}]*overflow:\s*hidden;[^}]*background:\s*var\(--bg\);/);
     expect(tokensCss).toContain('--surface-page: #0a0a0a;');
@@ -476,7 +476,7 @@ describe('app CSS visual contracts', () => {
   it('uses local fonts and opaque primary surfaces during viewport changes', () => {
     const body = cssBlock('body');
     const conversationHeader = cssBlock('.conversation-header');
-    const composer = cssBlock('.opencreator-composer');
+    const composer = cssBlock('.vishnucreator-composer');
 
     expect(appCss).not.toContain('@import url(');
     expect(tokensCss).toContain('--font: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;');
@@ -488,11 +488,11 @@ describe('app CSS visual contracts', () => {
     expect(appCss).not.toContain('.conversation-project');
     expect(composer).toContain('background: var(--composer-project-background);');
     expect(composer).not.toMatch(/background:\s*(?:linear-gradient|color-mix)/);
-    expect(appCss).toMatch(/\.opencreator-sidebar-pane\s*\{[^}]*background:\s*var\(--sidebar\);[^}]*border-inline-end:\s*1px solid var\(--border-hairline\);/);
+    expect(appCss).toMatch(/\.vishnucreator-sidebar-pane\s*\{[^}]*background:\s*var\(--sidebar\);[^}]*border-inline-end:\s*1px solid var\(--border-hairline\);/);
   });
 
   it('keeps the desktop shell inside short viewports', () => {
-    const shell = cssBlock('.opencreator-shell');
+    const shell = cssBlock('.vishnucreator-shell');
 
     expect(shell).toContain('width: 100%;');
     expect(shell).toContain('height: 100%;');
@@ -718,8 +718,8 @@ describe('app CSS visual contracts', () => {
   it('keeps the composer compact over one continuous conversation background', () => {
     const composerWrap = cssBlock('.composer-wrap');
     const composerStack = cssBlock('.composer-stack');
-    const composer = cssBlock('.opencreator-composer');
-    const composerTextarea = cssBlock('.opencreator-composer textarea');
+    const composer = cssBlock('.vishnucreator-composer');
+    const composerTextarea = cssBlock('.vishnucreator-composer textarea');
     const composerQueue = cssBlock('.composer-queue');
     const composerQueueItem = cssBlock('.composer-queue-item');
 
@@ -741,7 +741,7 @@ describe('app CSS visual contracts', () => {
     expect(composer).toContain('--composer-border: rgba(229, 229, 229, 0.12);');
     expect(composer).toContain('--composer-separator: rgba(229, 229, 229, 0.06);');
     expect(composer).toContain('border: 1px solid var(--composer-border);');
-    expect(cssBlock('.opencreator-composer::after')).toContain(
+    expect(cssBlock('.vishnucreator-composer::after')).toContain(
       'background: var(--composer-input-background);'
     );
     expect(composerQueue).toContain('margin: 0 14px -1px;');
@@ -798,7 +798,7 @@ describe('app CSS visual contracts', () => {
     const subtitle = cssBlock('.conversation-empty-greeting p');
     const emptyComposer = cssBlock('.conversation-page.is-empty .composer-wrap');
     const titledEmptyPage = cssBlock('.conversation-page.is-empty.has-header');
-    const lightComposer = cssBlock(':root[data-theme="light"] .opencreator-composer');
+    const lightComposer = cssBlock(':root[data-theme="light"] .vishnucreator-composer');
 
     expect(appCss).not.toContain('.conversation-empty-logo-bg');
     expect(appCss).not.toContain('日常办公');
@@ -830,24 +830,24 @@ describe('app CSS visual contracts', () => {
     expect(cssBlock('.creator-template-grid')).toContain('gap: 10px;');
     expect(cssBlock('.creator-template-copy')).toContain('min-height: 40px;');
     expect(cssBlock('.creator-template-copy')).toContain('padding: 9px 10px;');
-    expect(appCss).toMatch(/\.conversation-page\.is-empty \.opencreator-composer textarea\s*\{[^}]*min-height:\s*72px;/);
+    expect(appCss).toMatch(/\.conversation-page\.is-empty \.vishnucreator-composer textarea\s*\{[^}]*min-height:\s*72px;/);
     expect(appCss).not.toContain('translateY(clamp(-150px, -14vh, -108px))');
     expect(tokensCss).toContain('--border-hairline: rgba(229, 229, 229, 0.08);');
     expect(tokensCss).toContain('--border-hairline: rgba(10, 10, 10, 0.07);');
-    expect(cssBlock('.opencreator-composer')).toContain('border: 1px solid var(--composer-border);');
-    expect(cssBlock('.opencreator-composer.without-project-selector')).toContain(
+    expect(cssBlock('.vishnucreator-composer')).toContain('border: 1px solid var(--composer-border);');
+    expect(cssBlock('.vishnucreator-composer.without-project-selector')).toContain(
       'background: var(--composer-input-background);'
     );
-    expect(cssBlock('.opencreator-composer.without-project-selector::after')).toContain('inset: 0;');
-    expect(cssBlock('.opencreator-composer::before')).toContain('border: 0;');
-    expect(cssBlock('.opencreator-composer::before')).toContain('z-index: 0;');
+    expect(cssBlock('.vishnucreator-composer.without-project-selector::after')).toContain('inset: 0;');
+    expect(cssBlock('.vishnucreator-composer::before')).toContain('border: 0;');
+    expect(cssBlock('.vishnucreator-composer::before')).toContain('z-index: 0;');
     expect(lightComposer).toContain('--composer-project-background: var(--surface);');
     expect(lightComposer).toContain('background: var(--composer-project-background);');
-    expect(cssBlock(':root[data-theme="light"] .opencreator-composer::after')).toContain('background: var(--surface-input);');
+    expect(cssBlock(':root[data-theme="light"] .vishnucreator-composer::after')).toContain('background: var(--surface-input);');
     expect(lightComposer).toContain('backdrop-filter: none;');
     expect(lightComposer).not.toContain('linear-gradient');
     expect(lightComposer).not.toContain('inset');
-    expect(appCss).toMatch(/:root\[data-theme="light"\] \.opencreator-composer \.composer-icon-button,[\s\S]*?\.composer-submit-menu-button\s*\{[^}]*box-shadow:\s*none;/);
+    expect(appCss).toMatch(/:root\[data-theme="light"\] \.vishnucreator-composer \.composer-icon-button,[\s\S]*?\.composer-submit-menu-button\s*\{[^}]*box-shadow:\s*none;/);
     expect(appCss).toMatch(/\.conversation-empty-greeting h2\s*\{[^}]*font-size:\s*26px;/);
     expect(appCss).toMatch(/\.conversation-empty-greeting h2\s*\{[^}]*font-size:\s*23px;/);
     expect(appCss).toMatch(/\.conversation-empty-greeting p\s*\{[^}]*font-size:\s*26px;/);
@@ -921,13 +921,13 @@ describe('app CSS visual contracts', () => {
 
   it('uses an overlay drawer and stable scroll container for mobile navigation', () => {
     expect(appCss).toMatch(
-      /@media \(max-width: 920px\)\s*\{[\s\S]*?\.opencreator-sidebar-pane\s*\{[^}]*position:\s*fixed;[^}]*transform:\s*translateX\(-100%\);/
+      /@media \(max-width: 920px\)\s*\{[\s\S]*?\.vishnucreator-sidebar-pane\s*\{[^}]*position:\s*fixed;[^}]*transform:\s*translateX\(-100%\);/
     );
     expect(appCss).toMatch(
-      /@media \(max-width: 920px\)\s*\{[\s\S]*?\.opencreator-sidebar-pane\[data-mobile-open="true"\]\s*\{[^}]*transform:\s*translateX\(0\);/
+      /@media \(max-width: 920px\)\s*\{[\s\S]*?\.vishnucreator-sidebar-pane\[data-mobile-open="true"\]\s*\{[^}]*transform:\s*translateX\(0\);/
     );
     expect(appCss).toMatch(
-      /@media \(max-width: 920px\)\s*\{[\s\S]*?\.opencreator-main-content\s*\{[^}]*min-height:\s*0;[^}]*overflow:\s*auto;/
+      /@media \(max-width: 920px\)\s*\{[\s\S]*?\.vishnucreator-main-content\s*\{[^}]*min-height:\s*0;[^}]*overflow:\s*auto;/
     );
     expect(appCss).toMatch(
       /@media \(max-width: 920px\)\s*\{[\s\S]*?\.mobile-navigation-trigger\s*\{[^}]*display:\s*inline-grid;/
@@ -1027,8 +1027,8 @@ describe('app CSS visual contracts', () => {
   });
 
   it('aligns Composer input, add icon, and project folder to one left baseline', () => {
-    const composer = cssBlock('.opencreator-composer');
-    const textarea = cssBlock('.opencreator-composer textarea');
+    const composer = cssBlock('.vishnucreator-composer');
+    const textarea = cssBlock('.vishnucreator-composer textarea');
     const firstLeftControl = cssBlock(
       '.composer-left-actions > .composer-control-wrap:first-child'
     );
@@ -1083,8 +1083,8 @@ describe('app CSS visual contracts', () => {
   });
 
   it('separates the dark Composer input, project bar, and outer border', () => {
-    const composer = cssBlock('.opencreator-composer');
-    const composerAfter = cssBlock('.opencreator-composer::after');
+    const composer = cssBlock('.vishnucreator-composer');
+    const composerAfter = cssBlock('.vishnucreator-composer::after');
     const projectContext = Array.from(
       appCss.matchAll(/\.composer-project-context\s*\{(?<body>[^}]*)\}/g),
       match => match.groups?.body ?? ''
@@ -1141,7 +1141,7 @@ describe('app CSS visual contracts', () => {
     const tray = cssBlock('.composer-attachment-tray');
     const attachment = cssBlock('.composer-attachment');
     const trigger = cssBlock(
-      '.opencreator-composer button.composer-attachment-preview-trigger:not(:disabled)'
+      '.vishnucreator-composer button.composer-attachment-preview-trigger:not(:disabled)'
     );
     const thumbnail = cssBlock('.composer-attachment-preview-trigger img');
     const preview = cssBlock('.attachment-image-preview');
@@ -1264,8 +1264,8 @@ describe('app CSS visual contracts', () => {
     );
     expect(tokensCss).toContain('--shadow-popover:');
     expect(tokensCss).toContain('--shadow-dialog:');
-    expect(appCss).toMatch(/\.opencreator-composer\s*\{[^}]*box-shadow:\s*none !important;/);
-    expect(appCss).not.toMatch(/\.opencreator-composer::before\s*\{[^}]*box-shadow:[^}]*!important;/);
+    expect(appCss).toMatch(/\.vishnucreator-composer\s*\{[^}]*box-shadow:\s*none !important;/);
+    expect(appCss).not.toMatch(/\.vishnucreator-composer::before\s*\{[^}]*box-shadow:[^}]*!important;/);
     expect(appCss).toMatch(/\.composer-popover,[\s\S]*?\.timeline-approval \.timeline-bubble\s*\{[^}]*box-shadow:\s*var\(--shadow-popover\) !important;/);
     expect(appCss).toMatch(/\.project-drop-overlay,[\s\S]*?\.file-workspace-toast\s*\{[^}]*box-shadow:\s*var\(--shadow-dialog\) !important;/);
     expect(appCss).not.toMatch(/\.composer-project-context\s*\{[^}]*box-shadow:[^}]*!important;/);

@@ -27,14 +27,14 @@ const scriptDir = dirname(fileURLToPath(import.meta.url));
 const desktopDir = resolve(scriptDir, '..');
 const rootDir = resolve(desktopDir, '../..');
 const targetPlatform = normalizePlatform(
-  process.env.OPENCREATOR_DESKTOP_TARGET_PLATFORM ?? process.platform
+  process.env.VISHNUCREATOR_DESKTOP_TARGET_PLATFORM ?? process.platform
 );
-const targetArch = process.env.OPENCREATOR_DESKTOP_TARGET_ARCH ?? process.arch;
+const targetArch = process.env.VISHNUCREATOR_DESKTOP_TARGET_ARCH ?? process.arch;
 if (targetPlatform !== process.platform || targetArch !== process.arch) {
   throw new Error('Stickman Runtime preparation must run on its target platform and architecture');
 }
 const outputRoot = resolve(
-  process.env.OPENCREATOR_STICKMAN_RUNTIME_OUTPUT
+  process.env.VISHNUCREATOR_STICKMAN_RUNTIME_OUTPUT
     ?? join(desktopDir, '.pack', 'stickman-runtime')
 );
 const bundleRoot = join(outputRoot, 'bundle');
@@ -163,7 +163,7 @@ function normalizeRelative(path) {
 }
 
 async function resolveBrowserSource() {
-  const configured = process.env.OPENCREATOR_STICKMAN_BROWSER_PATH?.trim();
+  const configured = process.env.VISHNUCREATOR_STICKMAN_BROWSER_PATH?.trim();
   if (configured) {
     const path = resolve(configured);
     if (!existsSync(path)) throw new Error(`Configured Stickman browser is missing: ${path}`);
@@ -172,7 +172,7 @@ async function resolveBrowserSource() {
   const platformKey = browserPlatformKey(targetPlatform, targetArch);
   const executableName = targetPlatform === 'win32' ? 'chrome-headless-shell.exe' : 'chrome-headless-shell';
   const vendorRoot = resolve(
-    process.env.OPENCREATOR_STICKMAN_RUNTIME_VENDOR
+    process.env.VISHNUCREATOR_STICKMAN_RUNTIME_VENDOR
       ?? join(rootDir, '.runtime', 'vendor', 'stickman-runtime', `${targetPlatform}-${targetArch}`)
   );
   const extractedRoot = join(vendorRoot, `chrome-headless-shell-${platformKey}`);
@@ -182,7 +182,7 @@ async function resolveBrowserSource() {
   rmSync(vendorRoot, { recursive: true, force: true });
   mkdirSync(vendorRoot, { recursive: true });
   const archivePath = join(vendorRoot, `chrome-headless-shell-${platformKey}.zip`);
-  const url = process.env.OPENCREATOR_STICKMAN_BROWSER_URL?.trim()
+  const url = process.env.VISHNUCREATOR_STICKMAN_BROWSER_URL?.trim()
     || `https://cdn.npmmirror.com/binaries/chrome-for-testing/${chromiumVersion}/${platformKey}/chrome-headless-shell-${platformKey}.zip`;
   await downloadFile(url, archivePath);
   await extractZip(archivePath, vendorRoot);

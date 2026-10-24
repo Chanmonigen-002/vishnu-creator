@@ -1,5 +1,5 @@
-import type { IssueCategory, IssueSource, OpenCreatorIssue, PublicErrorFacts } from '@opencreator/protocol';
-import { isOpenCreatorIssue, isPublicErrorFacts, publicErrorKindForCode, safePublicErrorCode } from '@opencreator/protocol';
+import type { IssueCategory, IssueSource, VishnuCreatorIssue, PublicErrorFacts } from '@vishnucreator/protocol';
+import { isVishnuCreatorIssue, isPublicErrorFacts, publicErrorKindForCode, safePublicErrorCode } from '@vishnucreator/protocol';
 import { ApiClientError } from './errors.js';
 import type { ApiErrorPayload, ConnectionConfig } from './types.js';
 import { isRecord } from './validators.js';
@@ -194,7 +194,7 @@ function parseApiError(payload: unknown, path: string, status: number): ApiError
     ? payload.error.publicFacts
     : undefined;
   const publicFacts = suppliedPublicFacts ?? publicFactsForApiError(code, status);
-  const issue = isOpenCreatorIssue(payload.error.issue)
+  const issue = isVishnuCreatorIssue(payload.error.issue)
     ? payload.error.issue.publicFacts === undefined && suppliedPublicFacts !== undefined
       ? { ...payload.error.issue, publicFacts: suppliedPublicFacts }
       : payload.error.issue
@@ -241,7 +241,7 @@ function createPageIssue(input: {
   category: IssueCategory;
   fallbackMessage: string;
   publicFacts?: PublicErrorFacts;
-}): OpenCreatorIssue {
+}): VishnuCreatorIssue {
   const now = new Date().toISOString();
   const operation = sanitizeOperation(input.path);
   const fingerprint = stableFingerprint(`${input.source}:${input.code}:${operation}`);

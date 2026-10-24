@@ -55,7 +55,7 @@ function createVideoTranslationTemplateDefinition(version: 1 | 2): CreatorTempla
     stages: [
       {
         id: 'subtitle',
-        executor: 'krillinai',
+        executor: 'vishnuai',
         allowedJobStatuses: ['draft', 'running', 'needs_input', 'failed'],
         inputArtifacts: [{
           kind: 'source_video',
@@ -75,7 +75,7 @@ function createVideoTranslationTemplateDefinition(version: 1 | 2): CreatorTempla
       },
       {
         id: 'tts',
-        executor: 'krillinai',
+        executor: 'vishnuai',
         dependsOn: ['subtitle'],
         optional: true,
         allowedJobStatuses: ['draft', 'running', 'needs_input', 'failed'],
@@ -95,7 +95,7 @@ function createVideoTranslationTemplateDefinition(version: 1 | 2): CreatorTempla
       },
       {
         id: 'render-horizontal',
-        executor: 'krillinai',
+        executor: 'vishnuai',
         dependsOn: ['subtitle'],
         optional: true,
         allowedJobStatuses: ['draft', 'running', 'needs_input', 'failed'],
@@ -111,7 +111,7 @@ function createVideoTranslationTemplateDefinition(version: 1 | 2): CreatorTempla
       },
       {
         id: 'render-vertical',
-        executor: 'krillinai',
+        executor: 'vishnuai',
         dependsOn: ['subtitle'],
         optional: true,
         allowedJobStatuses: ['draft', 'running', 'needs_input', 'failed'],

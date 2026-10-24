@@ -50,8 +50,8 @@ const argvs = fs.existsSync(${JSON.stringify(argvsPath)})
 argvs.push(process.argv.slice(2));
 fs.writeFileSync(${JSON.stringify(argvsPath)}, JSON.stringify(argvs));
 fs.writeFileSync(${JSON.stringify(agentToolEnvPath)}, JSON.stringify({
-  OPENCREATOR_AGENT_TOOL_URL: process.env.OPENCREATOR_AGENT_TOOL_URL,
-  OPENCREATOR_AGENT_CAPABILITY_TOKEN: process.env.OPENCREATOR_AGENT_CAPABILITY_TOKEN,
+  VISHNUCREATOR_AGENT_TOOL_URL: process.env.VISHNUCREATOR_AGENT_TOOL_URL,
+  VISHNUCREATOR_AGENT_CAPABILITY_TOKEN: process.env.VISHNUCREATOR_AGENT_CAPABILITY_TOKEN,
   NO_PROXY: process.env.NO_PROXY,
   no_proxy: process.env.no_proxy
 }));
@@ -114,14 +114,14 @@ main().catch(error => {
       return Number(readFileSync(invocationCountPath, 'utf8'));
     },
     readAgentToolEnv(): {
-      OPENCREATOR_AGENT_TOOL_URL?: string;
-      OPENCREATOR_AGENT_CAPABILITY_TOKEN?: string;
+      VISHNUCREATOR_AGENT_TOOL_URL?: string;
+      VISHNUCREATOR_AGENT_CAPABILITY_TOKEN?: string;
       NO_PROXY?: string;
       no_proxy?: string;
     } {
       return JSON.parse(readFileSync(agentToolEnvPath, 'utf8')) as {
-        OPENCREATOR_AGENT_TOOL_URL?: string;
-        OPENCREATOR_AGENT_CAPABILITY_TOKEN?: string;
+        VISHNUCREATOR_AGENT_TOOL_URL?: string;
+        VISHNUCREATOR_AGENT_CAPABILITY_TOKEN?: string;
         NO_PROXY?: string;
         no_proxy?: string;
       };

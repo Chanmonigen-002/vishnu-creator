@@ -9,7 +9,7 @@ import type {
   CodexProfileResponse,
   CreateCodexProfileRequest,
   UpdateCodexProfileRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   FileSliders,
   LoaderCircle,

@@ -7,9 +7,9 @@ describe('browser storage', () => {
   });
 
   it('returns null and removes corrupt JSON values', () => {
-    window.localStorage.setItem('opencreator.web.connection.v1', '{bad json');
+    window.localStorage.setItem('vishnucreator.web.connection.v1', '{bad json');
 
-    expect(readJsonFromStorage('opencreator.web.connection.v1')).toBeNull();
-    expect(window.localStorage.getItem('opencreator.web.connection.v1')).toBeNull();
+    expect(readJsonFromStorage('vishnucreator.web.connection.v1')).toBeNull();
+    expect(window.localStorage.getItem('vishnucreator.web.connection.v1')).toBeNull();
   });
 });

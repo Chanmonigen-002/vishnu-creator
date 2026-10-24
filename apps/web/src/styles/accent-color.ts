@@ -10,8 +10,8 @@ export const accentColors = [
 
 export type AccentColor = typeof accentColors[number];
 
-export const accentColorStorageKey = 'opencreator.preferences.accentColor';
-export const customAccentColorStorageKey = 'opencreator.preferences.customAccentColor';
+export const accentColorStorageKey = 'vishnucreator.preferences.accentColor';
+export const customAccentColorStorageKey = 'vishnucreator.preferences.customAccentColor';
 export const defaultAccentColor: AccentColor = 'red';
 export const defaultCustomAccentColor = '#3b82f6';
 

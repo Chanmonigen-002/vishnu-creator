@@ -16,7 +16,7 @@
   },
   "description": {
     "zh-CN": "上传真人贴纸海报，固定镜头与背景，只让真实人物自然活动。默认 4 秒，具体支持跟随所选服务。预览取自原教程，非本工具生成结果。",
-    "en-US": "Animate only the real person; freeze the camera and sticker background. 4 seconds if supported. Preview: source tutorial excerpt, not an OpenCreator result."
+    "en-US": "Animate only the real person; freeze the camera and sticker background. 4 seconds if supported. Preview: source tutorial excerpt, not an VishnuCreator result."
   },
   "cover": "cover.jpg",
   "preview": "preview.jpg",

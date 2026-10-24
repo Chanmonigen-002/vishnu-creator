@@ -1,4 +1,4 @@
-import type { TaskItem } from '@opencreator/protocol';
+import type { TaskItem } from '@vishnucreator/protocol';
 import { describe, expect, it } from 'vitest';
 import {
   collectTaskTransitions,

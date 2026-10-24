@@ -1,10 +1,10 @@
-import type { ApiError, OpenCreatorIssue, PublicErrorFacts, RuntimeErrorCode } from '@opencreator/protocol';
+import type { ApiError, VishnuCreatorIssue, PublicErrorFacts, RuntimeErrorCode } from '@vishnucreator/protocol';
 
 export function apiError(
   code: RuntimeErrorCode,
   message: string,
   details?: Record<string, unknown>,
-  issue?: OpenCreatorIssue,
+  issue?: VishnuCreatorIssue,
   publicFacts?: PublicErrorFacts
 ): ApiError {
   return {

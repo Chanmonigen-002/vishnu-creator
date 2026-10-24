@@ -1,4 +1,4 @@
-import type { CreatorJob } from '@opencreator/protocol';
+import type { CreatorJob } from '@vishnucreator/protocol';
 import { expect, test } from './fixtures/runtime.js';
 
 test('available subtitles appear beside video and audio with language and caption source', async ({ page, runtime }, testInfo) => {
@@ -11,7 +11,7 @@ test('available subtitles appear beside video and audio with language and captio
     path: null, scopeKey: null, inputFingerprint: null, sha256: null, sourceArtifactIds: [], createdAt: new Date().toISOString(),
     metadata: {
       id: 'subtitle-demo', title: 'YouTube subtitle demo', requestedUrl: sourceUrl, url: sourceUrl, platform: 'youtube',
-      uploader: 'OpenCreator', thumbnailUrl: null, duration: 90, width: 1920, height: 1080, formats: [],
+      uploader: 'VishnuCreator', thumbnailUrl: null, duration: 90, width: 1920, height: 1080, formats: [],
       options: [
         { id: 'video-1080', mediaType: 'video', container: 'mp4', height: 1080 },
         { id: 'audio-mp3', mediaType: 'audio', container: 'mp3', bitrateKbps: 192 },
@@ -25,9 +25,9 @@ test('available subtitles appear beside video and audio with language and captio
     else await route.continue();
   });
   await page.addInitScript(({ projectId, threadId }) => {
-    localStorage.setItem('opencreator.preferences.dynamicBackground', 'false');
-    localStorage.setItem('opencreator.preferences.language', 'zh-CN');
-    localStorage.setItem('opencreator.navigation.v3', JSON.stringify({ currentProjectId: projectId, selectedThreadId: threadId }));
+    localStorage.setItem('vishnucreator.preferences.dynamicBackground', 'false');
+    localStorage.setItem('vishnucreator.preferences.language', 'zh-CN');
+    localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({ currentProjectId: projectId, selectedThreadId: threadId }));
   }, { projectId: runtime.projectId, threadId: runtime.ordinaryThreadId });
   await page.goto(`${runtime.origin}/#/workbench?tool=video-download&jobId=${encodeURIComponent(job.id)}`);
   await page.getByRole('button', { name: '稍后配置，进入本地模式' }).click();

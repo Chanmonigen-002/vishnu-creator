@@ -46,7 +46,7 @@ export function createCodexProbeHome(
   sourceHome: string,
   temporaryRoot = tmpdir()
 ): CodexProbeHome {
-  const path = mkdtempSync(join(temporaryRoot, 'opencreator-codex-probe-'));
+  const path = mkdtempSync(join(temporaryRoot, 'vishnucreator-codex-probe-'));
   chmodSync(path, 0o700);
 
   try {

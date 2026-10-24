@@ -1,7 +1,7 @@
 import type {
   AttachmentAccessRequest,
   AttachmentUploadRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import type { AttachmentService } from '../attachments/service.js';
 import {

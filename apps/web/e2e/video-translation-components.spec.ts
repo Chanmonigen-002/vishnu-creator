@@ -1,4 +1,4 @@
-import type { CreatorJob, CreatorRuntimeComponentsResponse } from '@opencreator/protocol';
+import type { CreatorJob, CreatorRuntimeComponentsResponse } from '@vishnucreator/protocol';
 import { expect, test } from './fixtures/runtime.js';
 
 test('本地转录提示可跳转下载、显示真实进度并返回原视频翻译草稿', async ({ page, runtime }) => {

@@ -36,7 +36,7 @@ let runtimeProcess: RuntimeProcess | undefined;
 const MAX_RUNTIME_OUTPUT_BUFFER = 1024 * 1024;
 const webDir = dirname(fileURLToPath(import.meta.url));
 const creatorPresetCatalogRoot = resolve(
-  process.env.OPENCREATOR_PRESET_CATALOG_ROOT
+  process.env.VISHNUCREATOR_PRESET_CATALOG_ROOT
     ?? join(webDir, '../../.runtime/generated/creator-presets')
 );
 const creatorSubtitleFontRoot = join(
@@ -48,8 +48,8 @@ export default defineConfig({
   worker: { format: 'es' },
   plugins: [
     react(),
-    opencreatorStaticResourcesPlugin(),
-    opencreatorRuntimeDevPlugin()
+    vishnucreatorStaticResourcesPlugin(),
+    vishnucreatorRuntimeDevPlugin()
   ],
   build: {
     rollupOptions: {
@@ -71,18 +71,18 @@ export default defineConfig({
   }
 });
 
-function opencreatorStaticResourcesPlugin(): Plugin {
+function vishnucreatorStaticResourcesPlugin(): Plugin {
   const presetAssetsRoot = join(creatorPresetCatalogRoot, 'assets');
   const presetBuildRoot = join(webDir, 'dist', 'creator-presets');
-  const fontBuildRoot = join(webDir, 'dist', 'fonts', 'opencreator');
+  const fontBuildRoot = join(webDir, 'dist', 'fonts', 'vishnucreator');
 
   return {
-    name: 'opencreator-static-resources',
+    name: 'vishnucreator-static-resources',
     configureServer(server) {
       server.middlewares.use((request, response, next) => {
         const pathname = new URL(
           request.url ?? '/',
-          'http://opencreator.local'
+          'http://vishnucreator.local'
         ).pathname;
         const presetMatch = pathname.match(
           /^\/creator-presets\/([a-f0-9]{64}\.(?:png|jpe?g|webp|mp4))$/
@@ -97,7 +97,7 @@ function opencreatorStaticResourcesPlugin(): Plugin {
           return;
         }
         const fontMatch = pathname.match(
-          /^\/fonts\/opencreator\/([A-Za-z0-9-]+\.woff2)$/
+          /^\/fonts\/vishnucreator\/([A-Za-z0-9-]+\.woff2)$/
         );
         if (fontMatch !== null) {
           sendStaticFile(
@@ -198,7 +198,7 @@ function parseByteRange(
 function assertStaticBuildInput(path: string): void {
   if (!existsSync(path) || !statSync(path).isFile()) {
     throw new Error(
-      `OpenCreator static build input is missing: ${path}. `
+      `VishnuCreator static build input is missing: ${path}. `
       + 'Run pnpm templates:compile before building Web.'
     );
   }
@@ -206,11 +206,11 @@ function assertStaticBuildInput(path: string): void {
 
 function replaceDirectory(source: string, destination: string): void {
   if (!existsSync(source) || !statSync(source).isDirectory()) {
-    throw new Error(`OpenCreator static resource directory is missing: ${source}`);
+    throw new Error(`VishnuCreator static resource directory is missing: ${source}`);
   }
   const entries = readdirSync(source, { withFileTypes: true });
   if (entries.some(entry => !entry.isFile())) {
-    throw new Error(`OpenCreator static resource directory must contain files only: ${source}`);
+    throw new Error(`VishnuCreator static resource directory must contain files only: ${source}`);
   }
   rmSync(destination, { recursive: true, force: true });
   mkdirSync(destination, { recursive: true });
@@ -224,9 +224,9 @@ function contentTypeForStaticResource(file: string): string {
   return 'image/jpeg';
 }
 
-function opencreatorRuntimeDevPlugin(): Plugin {
+function vishnucreatorRuntimeDevPlugin(): Plugin {
   return {
-    name: 'opencreator-runtime-dev',
+    name: 'vishnucreator-runtime-dev',
     configureServer(server) {
       const daemonSourceDir = resolve(webDir, '../daemon/src');
       server.watcher.add(daemonSourceDir);
@@ -234,11 +234,11 @@ function opencreatorRuntimeDevPlugin(): Plugin {
         const relativePath = relative(daemonSourceDir, resolve(changedPath));
         if (relativePath.startsWith('..') || isAbsolute(relativePath)) return;
         if (runtimeProcess === undefined) return;
-        console.warn(`[opencreator-runtime-dev] Daemon source changed (${relativePath}); restarting on the next request.`);
+        console.warn(`[vishnucreator-runtime-dev] Daemon source changed (${relativePath}); restarting on the next request.`);
         stopRuntimeProcess();
       });
 
-      server.middlewares.use('/.opencreator/runtime-config', async (_request, response) => {
+      server.middlewares.use('/.vishnucreator/runtime-config', async (_request, response) => {
         try {
           const config = await getRuntimeConfig();
           response.statusCode = 200;
@@ -305,17 +305,17 @@ function startRuntimeProcess(): RuntimeProcess {
     cwd: daemonDir,
     env: {
       ...process.env,
-      OPENCREATOR_RUNTIME_CHANNEL: 'development',
-      OPENCREATOR_MANAGED_PARENT_PID: String(process.pid),
+      VISHNUCREATOR_RUNTIME_CHANNEL: 'development',
+      VISHNUCREATOR_MANAGED_PARENT_PID: String(process.pid),
       ...(codexBin === undefined
         ? {}
-        : { OPENCREATOR_CODEX_BIN: codexBin }),
+        : { VISHNUCREATOR_CODEX_BIN: codexBin }),
       ...(creatorRuntimeRoot === undefined
         ? {}
-        : { OPENCREATOR_CREATOR_RUNTIME_ROOT: creatorRuntimeRoot }),
+        : { VISHNUCREATOR_CREATOR_RUNTIME_ROOT: creatorRuntimeRoot }),
       ...(ytDlpPath === undefined
         ? {}
-        : { OPENCREATOR_YT_DLP_PATH: ytDlpPath })
+        : { VISHNUCREATOR_YT_DLP_PATH: ytDlpPath })
     },
     detached: process.platform !== 'win32',
     stdio: ['ignore', 'pipe', 'pipe']
@@ -374,7 +374,7 @@ function startRuntimeProcess(): RuntimeProcess {
       }
       if (wasActiveRuntime) {
         console.warn(
-          `[opencreator-runtime-dev] Runtime exited (${code === null ? signal ?? 'unknown' : `code ${code}`}); it will restart on the next request.`
+          `[vishnucreator-runtime-dev] Runtime exited (${code === null ? signal ?? 'unknown' : `code ${code}`}); it will restart on the next request.`
         );
       }
     });
@@ -384,7 +384,7 @@ function startRuntimeProcess(): RuntimeProcess {
 }
 
 function resolveDevCodexBin(): string | undefined {
-  const configured = process.env.OPENCREATOR_CODEX_BIN?.trim();
+  const configured = process.env.VISHNUCREATOR_CODEX_BIN?.trim();
   if (configured) return resolve(configured);
   const executableSuffix = process.platform === 'win32' ? '.exe' : '';
   const candidate = resolve(
@@ -395,23 +395,23 @@ function resolveDevCodexBin(): string | undefined {
 }
 
 function resolveDevCreatorRuntimeRoot(): string | undefined {
-  const configured = process.env.OPENCREATOR_CREATOR_RUNTIME_ROOT?.trim();
+  const configured = process.env.VISHNUCREATOR_CREATOR_RUNTIME_ROOT?.trim();
   if (configured) return resolve(configured);
 
   const candidate = resolve(
     webDir,
-    '../desktop/.pack/creator-runtime/krillinai'
+    '../desktop/.pack/creator-runtime/vishnuai'
   );
   const executableSuffix = process.platform === 'win32' ? '.exe' : '';
   const requiredAssets = [
     join(candidate, 'manifest.json'),
-    join(candidate, 'bin', `krillinai-cli${executableSuffix}`)
+    join(candidate, 'bin', `vishnuai-cli${executableSuffix}`)
   ];
   return requiredAssets.every(path => existsSync(path)) ? candidate : undefined;
 }
 
 function resolveDevYtDlpPath(): string | undefined {
-  const configured = process.env.OPENCREATOR_YT_DLP_PATH?.trim();
+  const configured = process.env.VISHNUCREATOR_YT_DLP_PATH?.trim();
   return configured ? resolve(configured) : undefined;
 }
 

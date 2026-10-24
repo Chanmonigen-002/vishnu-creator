@@ -1,4 +1,4 @@
-import { creatorLanguage } from '@opencreator/protocol';
+import { creatorLanguage } from '@vishnucreator/protocol';
 import { francAll } from 'franc-all';
 import { Converter, type ConverterFunction } from 'opencc-js/t2cn';
 

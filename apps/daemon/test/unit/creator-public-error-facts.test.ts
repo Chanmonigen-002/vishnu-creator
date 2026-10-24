@@ -27,7 +27,7 @@ describe('public error facts', () => {
     expect(publicFactsFromFailure(new Error('wrapped', { cause }))).toEqual(cause.publicFacts);
     expect(publicFactsFromFailure(Object.assign(new Error('secret'), { code: 'PRIVATE_TOKEN' })))
       .toEqual({ kind: 'unknown' });
-    expect(publicFactsFromFailure(Object.assign(new Error('private'), { code: 'krillin_auth_failed' })))
+    expect(publicFactsFromFailure(Object.assign(new Error('private'), { code: 'vishnu_auth_failed' })))
       .toEqual({ kind: 'unauthorized' });
   });
 

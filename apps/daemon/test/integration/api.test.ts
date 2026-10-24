@@ -18,7 +18,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
 import type Database from 'better-sqlite3';
-import type { CodexModelListResponse } from '@opencreator/protocol';
+import type { CodexModelListResponse } from '@vishnucreator/protocol';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   buildServer as buildRuntimeServer,
@@ -60,7 +60,7 @@ afterEach(async () => {
 
 describe('runtime api', () => {
   it('starts and stops an injected scheduler when autostart is enabled', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const steps: string[] = [];
     const scheduler = createFakeScheduler({
       start: vi.fn(() => {
@@ -100,7 +100,7 @@ describe('runtime api', () => {
   });
 
   it('repairs legacy schedules before exposing them through the API', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const repository = new ScheduleRepository(db, {
       idFactory: () => 'sch_legacy',
@@ -188,7 +188,7 @@ describe('runtime api', () => {
   });
 
   it('closes the run manager before server shutdown completes', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const runManager = createRunManager({
       db,
@@ -281,7 +281,7 @@ describe('runtime api', () => {
   });
 
   it('workspace files routes expose external thread files and enforce auth and path validation', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-workspace-files-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-workspace-files-'));
     writeFileSync(join(tempDir, 'README.md'), '# Hello\n');
     writeFileSync(join(tempDir, 'note.txt'), 'before');
     writeFileSync(
@@ -365,7 +365,7 @@ describe('runtime api', () => {
   });
 
   it('workspace file save honors overwriteConflict only when explicitly true', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-workspace-conflict-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-workspace-conflict-'));
     writeFileSync(join(tempDir, 'note.txt'), 'before');
     server = await buildServer({ token: 'secret', dataDir: tempDir });
 
@@ -406,7 +406,7 @@ describe('runtime api', () => {
   });
 
   it('attachment routes enforce binary limits, content verification, scoped access, and persistence', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-attachment-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-attachment-api-'));
     const png = Buffer.from(
       'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAusB9Wn6zkAAAAAASUVORK5CYII=',
       'base64'
@@ -514,7 +514,7 @@ describe('runtime api', () => {
   });
 
   it('runs accept attachment ids, pass controlled image paths to codex, and expose attachment metadata', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-run-images-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-run-images-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'thread.started', thread_id: 'codex-thread-images' },
@@ -590,7 +590,7 @@ describe('runtime api', () => {
   });
 
   it('rejects run images when codex image input is unsupported and keeps the draft reusable', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-run-images-unsupported-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-run-images-unsupported-'));
     server = await buildServer({
       token: 'secret',
       dataDir: tempDir,
@@ -637,7 +637,7 @@ describe('runtime api', () => {
   });
 
   it('creates, lists, gets, updates, deletes, and runs schedules', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'thread.started', thread_id: 'codex-thread-schedule' },
@@ -804,7 +804,7 @@ describe('runtime api', () => {
   });
 
   it('allows metadata updates but blocks schedule task configuration and deletion during active runs', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, { stdoutLines: [{ type: 'turn.started' }], hang: true });
     server = await buildServer({
       token: 'secret',
@@ -849,7 +849,7 @@ describe('runtime api', () => {
   });
 
   it('returns stable conflicts for missing and unexpectedly archived schedule threads', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     server = await buildServer({
       token: 'secret',
@@ -895,7 +895,7 @@ describe('runtime api', () => {
   });
 
   it('maps invalid and missing schedule requests', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({
       token: 'secret',
       dataDir: tempDir,
@@ -933,7 +933,7 @@ describe('runtime api', () => {
   });
 
   it('maps scheduler internal errors without leaking details', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const scheduler = createFakeScheduler({
       runNow() {
         throw new SchedulerError('INTERNAL_ERROR', 'secret path /tmp/foo');
@@ -955,7 +955,7 @@ describe('runtime api', () => {
   });
 
   it('maps scheduler internal errors from list without leaking details', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const scheduler = createFakeScheduler({
       listSchedules() {
         throw new SchedulerError('INTERNAL_ERROR', 'secret list /tmp/list');
@@ -977,7 +977,7 @@ describe('runtime api', () => {
   });
 
   it('maps scheduler internal errors from get without leaking details', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const scheduler = createFakeScheduler({
       getSchedule() {
         throw new SchedulerError('INTERNAL_ERROR', 'secret get /tmp/get');
@@ -999,7 +999,7 @@ describe('runtime api', () => {
   });
 
   it('keeps injected scheduler stopped by default and stops it on close', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     let startCount = 0;
     let stopCount = 0;
     const scheduler = createFakeScheduler({
@@ -1027,7 +1027,7 @@ describe('runtime api', () => {
   });
 
   it('previews and confirms runtime cleanup without deleting database rows', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     server = await buildServer({ token: 'secret', dataDir: tempDir, db });
     const oldRunDir = writeOldApiDir(join(tempDir, 'runs', 'run_cleanup_old'), 'events.ndjson', 'done');
@@ -1101,7 +1101,7 @@ describe('runtime api', () => {
   });
 
   it('keeps run database records after cleanup so diagnostics reports missing files', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     server = await buildServer({ token: 'secret', dataDir: tempDir, db });
     const oldRunDir = writeOldApiDir(join(tempDir, 'runs', 'run_old'), 'events.ndjson', 'done');
@@ -1122,7 +1122,7 @@ describe('runtime api', () => {
   });
 
   it('validates runtime cleanup query and body parameters', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({ token: 'secret', dataDir: tempDir });
 
     for (const url of [
@@ -1176,7 +1176,7 @@ describe('runtime api', () => {
   });
 
   it('returns codex status with auth', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const capabilities = makeResumeCapableMatrix();
     const codexHome = join(tempDir, 'codex-home');
     server = await buildServer({ token: 'secret', codexHome, capabilities });
@@ -1273,7 +1273,7 @@ describe('runtime api', () => {
   });
 
   it('lists profiles from an isolated codex home', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     mkdirSync(codexHome, { recursive: true });
     writeFileSync(
@@ -1305,7 +1305,7 @@ describe('runtime api', () => {
   });
 
   it('returns invalid profile diagnostics instead of crashing for invalid profile config', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     mkdirSync(codexHome, { recursive: true });
     writeFileSync(join(codexHome, 'review.config.toml'), 'model = "broken');
@@ -1328,7 +1328,7 @@ describe('runtime api', () => {
   });
 
   it('redacts sensitive profile values from list and detail responses', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     mkdirSync(codexHome, { recursive: true });
     writeFileSync(
@@ -1358,7 +1358,7 @@ describe('runtime api', () => {
   });
 
   it('returns diagnostics instead of crashing when base config is invalid', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     mkdirSync(codexHome, { recursive: true });
     writeFileSync(join(codexHome, 'config.toml'), 'model = "broken');
@@ -1380,7 +1380,7 @@ describe('runtime api', () => {
   });
 
   it('returns config invalid when getting a profile by name with invalid base config', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     mkdirSync(codexHome, { recursive: true });
     writeFileSync(join(codexHome, 'config.toml'), 'model = "broken');
@@ -1398,7 +1398,7 @@ describe('runtime api', () => {
   });
 
   it('returns diagnostics instead of crashing when codex home is not a directory', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     writeFileSync(codexHome, 'not a directory');
     server = await buildServer({ token: 'secret', dataDir: tempDir, codexHome });
@@ -1415,7 +1415,7 @@ describe('runtime api', () => {
   });
 
   it('gets a profile by name from an isolated codex home', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     mkdirSync(codexHome, { recursive: true });
     writeFileSync(join(codexHome, 'review.config.toml'), 'model = "gpt-5.3-codex"\n');
@@ -1438,7 +1438,7 @@ describe('runtime api', () => {
   });
 
   it('returns not found when getting a missing profile by name', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     mkdirSync(codexHome, { recursive: true });
     server = await buildServer({ token: 'secret', dataDir: tempDir, codexHome });
@@ -1454,7 +1454,7 @@ describe('runtime api', () => {
   });
 
   it('creates, updates, and deletes profiles in an isolated codex home', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     server = await buildServer({ token: 'secret', dataDir: tempDir, codexHome });
 
@@ -1530,7 +1530,7 @@ describe('runtime api', () => {
   });
 
   it('returns CODEX_PROFILE_EXISTS when creating a duplicate profile', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     server = await buildServer({ token: 'secret', dataDir: tempDir, codexHome });
 
@@ -1547,7 +1547,7 @@ describe('runtime api', () => {
   });
 
   it('returns CODEX_PROFILE_NOT_FOUND when updating or deleting a missing profile', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     server = await buildServer({ token: 'secret', dataDir: tempDir, codexHome });
 
@@ -1563,7 +1563,7 @@ describe('runtime api', () => {
   });
 
   it('rejects deleting a profile referenced by threads or schedules', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     server = await buildServer({ token: 'secret', dataDir: tempDir, codexHome });
 
@@ -1620,7 +1620,7 @@ describe('runtime api', () => {
   });
 
   it('lists, installs, overwrites, deletes, and logs codex skills', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const source = join(tempDir, 'source-skill');
     mkdirSync(source, { recursive: true });
@@ -1699,7 +1699,7 @@ describe('runtime api', () => {
   });
 
   it('scans global codex skills non-destructively and requires write confirmation', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({ token: 'secret', dataDir: tempDir });
 
     const response = await authGet('/codex/skills');
@@ -1715,7 +1715,7 @@ describe('runtime api', () => {
   });
 
   it('returns invalid skill diagnostics instead of crashing', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const invalidDir = join(codexHome, 'skills', 'broken');
     mkdirSync(invalidDir, { recursive: true });
@@ -1735,7 +1735,7 @@ describe('runtime api', () => {
   });
 
   it('requires explicit confirmation for global codex skill writes', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const source = join(tempDir, 'source-skill');
     mkdirSync(source, { recursive: true });
     writeFileSync(join(source, 'SKILL.md'), '---\nname: writer\ndescription: writer\n---\n');
@@ -1751,7 +1751,7 @@ describe('runtime api', () => {
   });
 
   it('maps invalid codex skill API requests to validation failures', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     server = await buildServer({ token: 'secret', dataDir: tempDir, codexHome });
 
@@ -1792,7 +1792,7 @@ describe('runtime api', () => {
   });
 
   it('maps missing and invalid codex skill writes to skill API errors', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const invalidSource = join(tempDir, 'invalid-source');
     const missingSource = join(tempDir, 'does-not-exist');
@@ -1818,7 +1818,7 @@ describe('runtime api', () => {
   });
 
   it('keeps unpublished candidate skills out of the production market', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({
       token: 'secret',
       dataDir: tempDir,
@@ -1838,7 +1838,7 @@ describe('runtime api', () => {
   });
 
   it('does not invoke the installer for unpublished market entries', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const install = vi.fn();
     server = await buildServer({
       token: 'secret',
@@ -1862,7 +1862,7 @@ describe('runtime api', () => {
   });
 
   it('lists, adds, gets, removes, and logs codex mcp servers', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const fake = createFakeMcpCodex(tempDir);
     server = await buildServer({
@@ -1926,7 +1926,7 @@ describe('runtime api', () => {
   });
 
   it('requires explicit confirmation for global codex mcp writes', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeMcpCodex(tempDir);
     server = await buildServer({
       token: 'secret',
@@ -1947,7 +1947,7 @@ describe('runtime api', () => {
   });
 
   it('maps invalid and missing mcp API requests', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const fake = createFakeMcpCodex(tempDir);
     server = await buildServer({
@@ -1973,7 +1973,7 @@ describe('runtime api', () => {
   });
 
   it('accepts body confirmation for global codex mcp login and logout', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeMcpCodex(tempDir);
     server = await buildServer({
       token: 'secret',
@@ -2002,7 +2002,7 @@ describe('runtime api', () => {
   });
 
   it('maps unsupported mcp add capabilities to safe API errors', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const fake = createFakeMcpCodex(tempDir);
     server = await buildServer({
@@ -2033,7 +2033,7 @@ describe('runtime api', () => {
   });
 
   it('maps unsupported mcp add URL transport to safe API errors without running codex', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const fake = createFakeMcpCodex(tempDir);
     server = await buildServer({
@@ -2061,7 +2061,7 @@ describe('runtime api', () => {
   });
 
   it('maps failed codex mcp add commands to MCP_COMMAND_FAILED', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const fake = createFakeMcpCodex(tempDir);
     server = await buildServer({
@@ -2090,7 +2090,7 @@ describe('runtime api', () => {
   });
 
   it('redacts raw codex mcp get output from add responses and operations', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const fake = createFakeMcpCodex(tempDir);
     server = await buildServer({
@@ -2140,7 +2140,7 @@ describe('runtime api', () => {
   });
 
   it('rejects invalid profile write bodies without server errors', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     server = await buildServer({ token: 'secret', dataDir: tempDir, codexHome });
 
@@ -2218,7 +2218,7 @@ describe('runtime api', () => {
   });
 
   it('rejects explicit missing profiles for new runs and threads', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [{ type: 'turn.completed' }]
     });
@@ -2246,7 +2246,7 @@ describe('runtime api', () => {
   });
 
   it('allows runs and threads with profiles created in isolated codex home', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'thread.started', thread_id: 'codex-thread-1' },
@@ -2285,7 +2285,7 @@ describe('runtime api', () => {
   });
 
   it('does not require default profile to exist', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [{ type: 'turn.completed' }]
     });
@@ -2306,7 +2306,7 @@ describe('runtime api', () => {
   });
 
   it('rejects explicit profiles when base config.toml is invalid', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     mkdirSync(codexHome, { recursive: true });
     writeFileSync(join(codexHome, 'config.toml'), 'model = "broken');
@@ -2331,7 +2331,7 @@ describe('runtime api', () => {
   });
 
   it('rejects explicit profiles when profile overlay is invalid', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     mkdirSync(codexHome, { recursive: true });
     writeFileSync(join(codexHome, 'review.config.toml'), 'model = "broken');
@@ -2355,7 +2355,7 @@ describe('runtime api', () => {
   });
 
   it('rejects thread runs when the stored profile is externally deleted before run start', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
@@ -2396,7 +2396,7 @@ describe('runtime api', () => {
   });
 
   it('fails queued thread runs when the stored profile is externally deleted before dequeue', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
@@ -2457,7 +2457,7 @@ describe('runtime api', () => {
   });
 
   it('rejects thread runs when the stored profile overlay becomes invalid', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
@@ -2498,7 +2498,7 @@ describe('runtime api', () => {
   });
 
   it('rejects thread runs when base config.toml becomes invalid', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
@@ -2539,7 +2539,7 @@ describe('runtime api', () => {
   });
 
   it('creates, lists, gets, and archives threads through the api', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({
       token: 'secret',
       dataDir: tempDir,
@@ -2577,7 +2577,7 @@ describe('runtime api', () => {
   });
 
   it('updates an active thread sandbox explicitly', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({ token: 'secret', dataDir: tempDir });
     const thread = (await createConversationResponseViaApi({
       profile: 'default',
@@ -2596,7 +2596,7 @@ describe('runtime api', () => {
   });
 
   it('pins, renames, and permanently deletes an ordinary conversation', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-thread-actions-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-thread-actions-'));
     server = await buildServer({ token: 'secret', dataDir: tempDir });
     const thread = (await createConversationResponseViaApi({
       title: 'Original',
@@ -2619,7 +2619,7 @@ describe('runtime api', () => {
   });
 
   it('creates schedule drafts but rejects direct public schedule task creation', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({ token: 'secret', dataDir: tempDir });
 
     const draft = await authPost('/threads', {
@@ -2642,7 +2642,7 @@ describe('runtime api', () => {
   });
 
   it('returns schedule bindings and blocks public mutation of schedule task threads', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const projectManager = createProjectManager({ db, homeDir: tempDir });
     const project = projectManager.createProject({
@@ -2724,7 +2724,7 @@ describe('runtime api', () => {
   });
 
   it.skip('legacy JSONL integration: imports global Codex sessions into the thread list', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const sessionDir = join(codexHome, 'sessions', '2026', '07', '07');
     mkdirSync(sessionDir, { recursive: true });
@@ -2787,7 +2787,7 @@ describe('runtime api', () => {
   });
 
   it.skip('legacy JSONL integration: hides subagent Codex sessions within the list limit', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const sessionDir = join(codexHome, 'sessions', '2026', '07', '09');
     mkdirSync(sessionDir, { recursive: true });
@@ -2846,7 +2846,7 @@ describe('runtime api', () => {
   });
 
   it.skip('legacy JSONL integration: classifies scheduled sessions during indexing', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const cwd = join(tempDir, 'playground');
     const sessionDir = join(codexHome, 'sessions', '2026', '07', '14');
@@ -3008,7 +3008,7 @@ describe('runtime api', () => {
   });
 
   it.skip('legacy JSONL integration: reads indexed Codex session chat history', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const codexHome = join(tempDir, 'codex-home');
     const sessionDir = join(codexHome, 'sessions', '2026', '07', '07');
     mkdirSync(sessionDir, { recursive: true });
@@ -3097,7 +3097,7 @@ describe('runtime api', () => {
   });
 
   it.skip('legacy JSONL integration: paginates indexed thread history', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-history-pagination-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-history-pagination-'));
     const codexHome = join(tempDir, 'codex-home');
     const sessionDir = join(codexHome, 'sessions', '2026', '07', '12');
     mkdirSync(sessionDir, { recursive: true });
@@ -3184,7 +3184,7 @@ describe('runtime api', () => {
   });
 
   it('rejects invalid thread list query parameters', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({ token: 'secret', dataDir: tempDir });
 
     for (const url of [
@@ -3206,7 +3206,7 @@ describe('runtime api', () => {
   });
 
   it('rejects invalid thread run history limits', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({ token: 'secret', dataDir: tempDir });
 
     const thread = await createThreadViaApi();
@@ -3221,7 +3221,7 @@ describe('runtime api', () => {
   });
 
   it('requires a project for conversation creation and rejects cwd overrides', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-project-thread-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-project-thread-'));
     const projectDir = join(tempDir, 'project');
     mkdirSync(projectDir, { recursive: true });
     server = await buildServer({ token: 'secret', dataDir: tempDir });
@@ -3240,7 +3240,7 @@ describe('runtime api', () => {
     expect(created.statusCode).toBe(201);
     expect(created.json().thread).toMatchObject({
       projectId: project.id,
-      origin: 'opencreator_created',
+      origin: 'vishnucreator_created',
       cwd: projectDir,
       canonicalCwd: realpathSync(projectDir),
       workspaceMode: 'external',
@@ -3290,7 +3290,7 @@ describe('runtime api', () => {
   });
 
   it('rejects invalid thread creation bodies', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({ token: 'secret', dataDir: tempDir });
 
     const invalidPayloads: Array<{
@@ -3326,7 +3326,7 @@ describe('runtime api', () => {
   });
 
   it('creates a run, lists history, and replays events over SSE', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'turn.started' },
@@ -3375,7 +3375,7 @@ describe('runtime api', () => {
   });
 
   it('accepts queued and interrupting follow-up modes and exposes queue positions', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-run-queue-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-run-queue-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'thread.started', thread_id: 'codex-thread-queue' },
@@ -3471,7 +3471,7 @@ describe('runtime api', () => {
   });
 
   it('includes web app CORS headers on SSE event responses', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'turn.started' },
@@ -3513,7 +3513,7 @@ describe('runtime api', () => {
   });
 
   it('rejects invalid run request bodies without server errors', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [{ type: 'turn.completed' }]
     });
@@ -3565,7 +3565,7 @@ describe('runtime api', () => {
   });
 
   it('creates a thread run using immutable thread config and binds codex thread id', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'thread.started', thread_id: 'codex-thread-1' },
@@ -3611,7 +3611,7 @@ describe('runtime api', () => {
   });
 
   it('lists runs for a thread in newest-first order', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'thread.started', thread_id: 'codex-thread-1' },
@@ -3649,7 +3649,7 @@ describe('runtime api', () => {
   });
 
   it('allows equivalent cwd paths when checking immutable thread config', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'thread.started', thread_id: 'codex-thread-1' },
@@ -3683,7 +3683,7 @@ describe('runtime api', () => {
   });
 
   it('rejects run requests that override thread config', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({ token: 'secret', dataDir: tempDir });
     const thread = (await createConversationResponseViaApi({
       profile: 'default',
@@ -3701,7 +3701,7 @@ describe('runtime api', () => {
   });
 
   it('rejects run requests that override non-sandbox thread config', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({ token: 'secret', dataDir: tempDir });
     const thread = (await createConversationResponseViaApi({
       profile: 'default',
@@ -3719,7 +3719,7 @@ describe('runtime api', () => {
   });
 
   it('rejects missing and archived thread run targets', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     server = await buildServer({ token: 'secret', dataDir: tempDir });
 
     const missing = await authPost('/runs', {
@@ -3744,7 +3744,7 @@ describe('runtime api', () => {
   });
 
   it('rejects archiving a thread with a running run', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, { stdoutLines: [{ type: 'turn.started' }], hang: true });
     server = await buildServer({
       token: 'secret',
@@ -3764,7 +3764,7 @@ describe('runtime api', () => {
   });
 
   it('rejects archiving a thread with a queued run', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     server = await buildServer({ token: 'secret', dataDir: tempDir, db });
     const thread = await createThreadViaApi();
@@ -3788,7 +3788,7 @@ describe('runtime api', () => {
   });
 
   it('rejects archiving a thread with a canceling run', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [{ type: 'turn.started' }],
@@ -3815,7 +3815,7 @@ describe('runtime api', () => {
   });
 
   it('replays events after fromSeq and Last-Event-ID', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'turn.started' },
@@ -3901,7 +3901,7 @@ describe('runtime api', () => {
   it.each(['-1', '1.5', 'NaN', 'invalid', ''])(
     'rejects invalid fromSeq value %j',
     async fromSeq => {
-      tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+      tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
       db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
       server = await buildServer({ token: 'secret', dataDir: tempDir, db });
       db.prepare(`
@@ -3932,7 +3932,7 @@ describe('runtime api', () => {
   );
 
   it('replays events after the legacy afterSeq query parameter', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'turn.started' },
@@ -3970,7 +3970,7 @@ describe('runtime api', () => {
   });
 
   it('replays many SSE events in sequence order', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'turn.started' },
@@ -4015,7 +4015,7 @@ describe('runtime api', () => {
   });
 
   it('tails a running run and closes after done', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [
         { type: 'turn.started' },
@@ -4052,7 +4052,7 @@ describe('runtime api', () => {
   });
 
   it('sends SSE heartbeats while a run is still active', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [{ type: 'turn.started' }],
       hang: true
@@ -4098,7 +4098,7 @@ describe('runtime api', () => {
   });
 
   it('cancels a running run through the api', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [],
       hang: true
@@ -4129,7 +4129,7 @@ describe('runtime api', () => {
   });
 
   it('returns RUN_ALREADY_TERMINAL when canceling a completed run', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-api-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
     const fake = createFakeCodex(tempDir, {
       stdoutLines: [{ type: 'turn.completed' }]
     });

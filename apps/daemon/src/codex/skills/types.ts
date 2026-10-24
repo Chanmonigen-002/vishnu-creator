@@ -5,7 +5,7 @@ import type {
   CodexSkillOperationType,
   CodexSkillResponse,
   CodexSkillStatus
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export type {
   CodexSkillOperationResponse,

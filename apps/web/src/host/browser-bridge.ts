@@ -3,14 +3,14 @@ import type { ConnectionConfig } from '../runtime/types.js';
 import { readJsonFromStorage } from '../storage/browser-storage.js';
 import type { HostBridge, HostBridgeResult, HostNotification } from './bridge.js';
 
-const CONNECTION_KEY = 'opencreator.web.connection.v1';
-const DEV_RUNTIME_CONFIG_PATH = '/.opencreator/runtime-config';
+const CONNECTION_KEY = 'vishnucreator.web.connection.v1';
+const DEV_RUNTIME_CONFIG_PATH = '/.vishnucreator/runtime-config';
 let billingTabId: string | undefined;
 function getBillingTabId() {
   if (!billingTabId) {
-    try { billingTabId = sessionStorage.getItem('opencreator:billing-tab') ?? undefined; } catch { /* Tab memory is sufficient for the current return. */ }
+    try { billingTabId = sessionStorage.getItem('vishnucreator:billing-tab') ?? undefined; } catch { /* Tab memory is sufficient for the current return. */ }
     billingTabId ||= crypto.randomUUID();
-    try { sessionStorage.setItem('opencreator:billing-tab', billingTabId); } catch { /* Optional reload recovery. */ }
+    try { sessionStorage.setItem('vishnucreator:billing-tab', billingTabId); } catch { /* Optional reload recovery. */ }
   }
   return billingTabId;
 }
@@ -23,7 +23,7 @@ export const browserBridge: HostBridge = {
     const tab = window.open('about:blank', '_blank');
     if (!tab) throw new Error('Browser blocked the new tab');
     tab.opener = null;
-    tab.name = 'opencreator-billing';
+    tab.name = 'vishnucreator-billing';
     return {
       navigate(url: string) { if (tab.closed) throw new Error('The new tab was closed'); tab.location.replace(url); },
       close() { tab.close(); }
@@ -31,7 +31,7 @@ export const browserBridge: HostBridge = {
   },
   subscribeBillingReturn(listener) {
     if (typeof BroadcastChannel === 'undefined') return () => {};
-    const channel = new BroadcastChannel('opencreator.billing-return.v1');
+    const channel = new BroadcastChannel('vishnucreator.billing-return.v1');
     const params = new URLSearchParams(window.location.hash.split('?')[1] ?? '');
     const returnTabId = params.get('tabId');
     const returning = params.get('billing') === 'return' && !!returnTabId;
@@ -107,7 +107,7 @@ async function readSameOriginRuntimeConfig(): Promise<ConnectionConfig | null> {
 function parseSameOriginConnectionConfig(value: unknown): ConnectionConfig | null {
   if (typeof value !== 'object' || value === null || Array.isArray(value)) return null;
   const record = value as Record<string, unknown>;
-  if (record.baseUrl !== '/.opencreator/runtime') return null;
+  if (record.baseUrl !== '/.vishnucreator/runtime') return null;
   return { baseUrl: record.baseUrl };
 }
 

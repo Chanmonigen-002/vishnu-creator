@@ -1,4 +1,4 @@
-import type { ThreadHistoryItem } from '@opencreator/protocol';
+import type { ThreadHistoryItem } from '@vishnucreator/protocol';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -165,7 +165,7 @@ describe('conversation search service', () => {
 });
 
 function createSetup() {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-search-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-search-'));
   const dbPath = join(tempDir, 'app.sqlite');
   const cwd = join(tempDir, 'workspace');
   db = openRuntimeDatabase(dbPath);

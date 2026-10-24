@@ -21,15 +21,15 @@ Skill adalah folder di bawah [`skills/`](../../../skills/) dengan `SKILL.md` di 
 ## Mulai cepat
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable && pnpm install
-cp -r skills/krillinai-tts skills/<skill-anda>   # mulai dari Skill yang paling mirip
+cp -r skills/vishnuai-tts skills/<skill-anda>   # mulai dari Skill yang paling mirip
 # edit skills/<skill-anda>/SKILL.md
 pnpm web:dev                                     # verifikasi Agen mengenalinya dalam percakapan
 ```
 
-Cara tercepat adalah menyalin Skill yang paling dekat dengan ide Anda lalu menuliskannya ulang — Skill `krillinai-*` yang ada menunjukkan struktur dan nada yang diharapkan.
+Cara tercepat adalah menyalin Skill yang paling dekat dengan ide Anda lalu menuliskannya ulang — Skill `vishnuai-*` yang ada menunjukkan struktur dan nada yang diharapkan.
 
 ## Anatomi Skill
 
@@ -93,4 +93,4 @@ Reviewer akan memeriksa setiap item berikut — tempelkan ke PR Anda dan centang
 
 ---
 
-Ada pertanyaan? [Buka issue](https://github.com/krillinai/OpenCreator/issues/new) dengan topik `skill` dan kami akan membantu Anda menentukan cakupannya.
+Ada pertanyaan? [Buka issue](https://github.com/vishnuai/Vishnu Creator/issues/new) dengan topik `skill` dan kami akan membantu Anda menentukan cakupannya.

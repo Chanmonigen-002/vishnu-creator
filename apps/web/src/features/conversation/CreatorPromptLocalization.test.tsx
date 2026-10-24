@@ -1,5 +1,5 @@
 import { act, fireEvent, render, screen } from '@testing-library/react';
-import { creatorPromptMaxLength, type CreatorPresetSummary } from '@opencreator/protocol';
+import { creatorPromptMaxLength, type CreatorPresetSummary } from '@vishnucreator/protocol';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider, useAppLanguage } from '../../i18n/LanguageProvider.js';
 import CoverGeneratorWorkspace from '../dashboard/CoverGeneratorWorkspace.js';

@@ -1,6 +1,6 @@
 import { changeControl } from '../../test/select-option.js';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import type { CreatorActionRequest, CreatorArtifact, CreatorJob, CreatorJson } from '@opencreator/protocol';
+import type { CreatorActionRequest, CreatorArtifact, CreatorJob, CreatorJson } from '@vishnucreator/protocol';
 import { beforeEach, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { CreatorSessionProvider } from './creator-session-store.js';
@@ -80,7 +80,7 @@ it('keeps the adopted version unchanged when the command fails', async () => {
   const details = within(await openDetails());
   changeControl(details.getByLabelText('浏览产物（不改变项目选择）'), { target: { value: 'artifact-1' } });
   fireEvent.click(details.getByRole('button', { name: '采用项目版本' }));
-  await waitFor(() => expect(screen.getByRole('complementary', { name: 'OpenCreator' }).querySelector('.creator-collaboration-issue')).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByRole('complementary', { name: 'VishnuCreator' }).querySelector('.creator-collaboration-issue')).toBeInTheDocument());
   expect(details.queryByRole('alert')).not.toBeInTheDocument();
   expect(screen.queryByText('Revision conflict')).not.toBeInTheDocument();
   expect(f.job.state.resultVersion).toBe(2);

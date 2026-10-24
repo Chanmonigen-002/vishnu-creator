@@ -24,15 +24,15 @@ import { installCreatorNlpDependencies } from './creator-nlp-runtime.mjs';
 
 const scriptDir = dirname(fileURLToPath(import.meta.url));
 const rootDir = resolve(scriptDir, '../../..');
-const platform = process.env.OPENCREATOR_CREATOR_RUNTIME_PLATFORM ?? process.platform;
-const arch = process.env.OPENCREATOR_CREATOR_RUNTIME_ARCH ?? process.arch;
+const platform = process.env.VISHNUCREATOR_CREATOR_RUNTIME_PLATFORM ?? process.platform;
+const arch = process.env.VISHNUCREATOR_CREATOR_RUNTIME_ARCH ?? process.arch;
 const target = `${platform}-${arch}`;
 const outputRoot = resolve(
-  process.env.OPENCREATOR_CREATOR_RUNTIME_VENDOR
+  process.env.VISHNUCREATOR_CREATOR_RUNTIME_VENDOR
     ?? join(rootDir, '.runtime', 'vendor', 'creator-runtime', target)
 );
-const proxy = process.env.OPENCREATOR_DOWNLOAD_PROXY?.trim();
-const offline = process.env.OPENCREATOR_DESKTOP_OFFLINE === '1';
+const proxy = process.env.VISHNUCREATOR_DOWNLOAD_PROXY?.trim();
+const offline = process.env.VISHNUCREATOR_DESKTOP_OFFLINE === '1';
 
 const releases = creatorRuntimeReleases();
 
@@ -40,8 +40,8 @@ const release = releases[target];
 if (release === undefined) {
   throw new Error(
     `Automatic Creator Runtime dependency installation is not available for ${target}. `
-    + 'Set OPENCREATOR_FFMPEG_PATH, OPENCREATOR_FFPROBE_PATH, '
-    + 'and OPENCREATOR_YT_DLP_PATH explicitly.'
+    + 'Set VISHNUCREATOR_FFMPEG_PATH, VISHNUCREATOR_FFPROBE_PATH, '
+    + 'and VISHNUCREATOR_YT_DLP_PATH explicitly.'
   );
 }
 
@@ -187,7 +187,7 @@ function verifyAssetHash(name, asset, path) {
 
 function verifyPortableYtDlpRuntime(input) {
   if (platform !== process.platform || arch !== process.arch) return;
-  const verificationRoot = mkdtempSync(join(tmpdir(), 'opencreator-yt-dlp-runtime-'));
+  const verificationRoot = mkdtempSync(join(tmpdir(), 'vishnucreator-yt-dlp-runtime-'));
   try {
     extractPythonRuntime(input.pythonArchive, verificationRoot);
     const executable = portablePythonExecutable(

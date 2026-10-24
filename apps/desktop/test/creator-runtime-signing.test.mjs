@@ -66,7 +66,7 @@ describe('Creator Runtime Developer ID signing', () => {
     ])));
     const withKeychain = vi.fn(async (env, action) => action({ ...env, APPLE_KEYCHAIN: '/tmp/component-test.keychain' }));
     await signRemotionComponent(fixture.runtimeRoot, {
-      ...signingEnv(), OPENCREATOR_SIGN_CREATOR_RUNTIME: '1', CSC_LINK: 'test-p12', CSC_KEY_PASSWORD: 'test-password'
+      ...signingEnv(), VISHNUCREATOR_SIGN_CREATOR_RUNTIME: '1', CSC_LINK: 'test-p12', CSC_KEY_PASSWORD: 'test-password'
     }, { platform: 'darwin', withKeychain, findIdentity, findBinaries: () => fixture.binaryPaths, signBinary });
     expect(withKeychain).toHaveBeenCalledTimes(1);
     expect(findIdentity).toHaveBeenCalledWith('NVRH5R5DJ5', '/tmp/component-test.keychain');
@@ -90,7 +90,7 @@ describe('Creator Runtime Developer ID signing', () => {
     writeFileSync(manifestPath, JSON.stringify(manifest));
     const signBinary = vi.fn();
     await signRemotionComponent(fixture.runtimeRoot, {
-      ...signingEnv(), OPENCREATOR_SIGN_CREATOR_RUNTIME: '1', APPLE_KEYCHAIN: '/tmp/component-test.keychain'
+      ...signingEnv(), VISHNUCREATOR_SIGN_CREATOR_RUNTIME: '1', APPLE_KEYCHAIN: '/tmp/component-test.keychain'
     }, { platform: 'darwin', findIdentity: () => 'test-identity', findBinaries: () => [...fixture.binaryPaths, compositor], signBinary });
     expect(signBinary).toHaveBeenCalledWith(compositor, 'test-identity', '/tmp/component-test.keychain');
     expect(() => verifyStickmanRuntime(fixture.runtimeRoot, 'darwin', 'arm64')).not.toThrow();
@@ -110,15 +110,15 @@ describe('Creator Runtime Developer ID signing', () => {
       electronPlatformName: 'darwin',
       appOutDir: fixture.appOutDir,
       packager: {
-        appInfo: { productFilename: 'OpenCreator' },
+        appInfo: { productFilename: 'VishnuCreator' },
         codeSigningInfo: {
           value: Promise.resolve({ keychainFile: '/tmp/release.keychain' })
         }
       }
     }, {
       env: {
-        OPENCREATOR_APPLE_TEAM_ID: 'NVRH5R5DJ5',
-        OPENCREATOR_DESKTOP_TARGET_ARCH: 'arm64'
+        VISHNUCREATOR_APPLE_TEAM_ID: 'NVRH5R5DJ5',
+        VISHNUCREATOR_DESKTOP_TARGET_ARCH: 'arm64'
       },
       findIdentity: () => (
         'Developer ID Application: Junxi YIN (NVRH5R5DJ5)'
@@ -206,12 +206,12 @@ describe('Creator Runtime Developer ID signing', () => {
   });
 
   it('signs native dependencies in the packaged Daemon', async () => {
-    const root = mkdtempSync(join(tmpdir(), 'opencreator-daemon-signing-'));
+    const root = mkdtempSync(join(tmpdir(), 'vishnucreator-daemon-signing-'));
     temporaryDirectories.push(root);
     const appOutDir = join(root, 'mac-arm64');
     const daemonRoot = join(
       appOutDir,
-      'OpenCreator.app',
+      'VishnuCreator.app',
       'Contents',
       'Resources',
       'daemon'
@@ -247,7 +247,7 @@ function createContext(appOutDir) {
     electronPlatformName: 'darwin',
     appOutDir,
     packager: {
-      appInfo: { productFilename: 'OpenCreator' },
+      appInfo: { productFilename: 'VishnuCreator' },
       codeSigningInfo: {
         value: Promise.resolve({ keychainFile: '/tmp/release.keychain' })
       }
@@ -257,25 +257,25 @@ function createContext(appOutDir) {
 
 function signingEnv() {
   return {
-    OPENCREATOR_APPLE_TEAM_ID: 'NVRH5R5DJ5',
-    OPENCREATOR_DESKTOP_TARGET_ARCH: 'arm64'
+    VISHNUCREATOR_APPLE_TEAM_ID: 'NVRH5R5DJ5',
+    VISHNUCREATOR_DESKTOP_TARGET_ARCH: 'arm64'
   };
 }
 
 function createFixture(options = {}) {
-  const root = mkdtempSync(join(tmpdir(), 'opencreator-runtime-signing-'));
+  const root = mkdtempSync(join(tmpdir(), 'vishnucreator-runtime-signing-'));
   temporaryDirectories.push(root);
   const appOutDir = join(root, 'mac-arm64');
   const runtimeRoot = join(
     appOutDir,
-    'OpenCreator.app',
+    'VishnuCreator.app',
     'Contents',
     'Resources',
     'creator-runtime',
-    'krillinai'
+    'vishnuai'
   );
   const files = {
-    'bin/krillinai-cli': 'krillin',
+    'bin/vishnuai-cli': 'vishnu',
     'bin/ffmpeg': 'ffmpeg',
     'bin/ffprobe': 'ffprobe',
     'bin/yt-dlp': 'yt-dlp',
@@ -320,7 +320,7 @@ function createFixture(options = {}) {
     appOutDir,
     runtimeRoot,
     binaryPaths: [
-      join(runtimeRoot, 'bin', 'krillinai-cli'),
+      join(runtimeRoot, 'bin', 'vishnuai-cli'),
       join(runtimeRoot, 'bin', 'ffmpeg'),
       join(runtimeRoot, 'bin', 'ffprobe'),
       join(runtimeRoot, 'bin', 'yt-dlp'),
@@ -330,12 +330,12 @@ function createFixture(options = {}) {
 }
 
 function createStickmanFixture() {
-  const root = mkdtempSync(join(tmpdir(), 'opencreator-stickman-signing-'));
+  const root = mkdtempSync(join(tmpdir(), 'vishnucreator-stickman-signing-'));
   temporaryDirectories.push(root);
   const appOutDir = join(root, 'mac-arm64');
   const runtimeRoot = join(
     appOutDir,
-    'OpenCreator.app',
+    'VishnuCreator.app',
     'Contents',
     'Resources',
     'stickman-runtime'

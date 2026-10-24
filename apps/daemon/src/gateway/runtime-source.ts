@@ -1,4 +1,4 @@
-import { gatewayModelCompatible, gatewayModelReady, type GatewayAccountState } from '@opencreator/protocol';
+import { gatewayModelCompatible, gatewayModelReady, type GatewayAccountState } from '@vishnucreator/protocol';
 import type { AppServerRuntimeExecution, AppServerRuntimeManager, AppServerRuntimeTurnInput } from '../codex/app-server-runtime-manager.js';
 import { GatewayError } from './client.js';
 

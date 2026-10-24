@@ -17,28 +17,28 @@ import { fileURLToPath } from 'node:url';
 
 const scriptPath = fileURLToPath(import.meta.url);
 const rootDir = resolve(dirname(scriptPath), '..');
-const sourceRoot = join(rootDir, 'runtime', 'krillinai');
+const sourceRoot = join(rootDir, 'runtime', 'vishnuai');
 const targetPlatform = normalizePlatform(
-  process.env.OPENCREATOR_KRILLINAI_TARGET_PLATFORM
-    ?? process.env.OPENCREATOR_DESKTOP_TARGET_PLATFORM
-    ?? process.env.OPENCREATOR_CREATOR_RUNTIME_PLATFORM
+  process.env.VISHNUCREATOR_VISHNUAI_TARGET_PLATFORM
+    ?? process.env.VISHNUCREATOR_DESKTOP_TARGET_PLATFORM
+    ?? process.env.VISHNUCREATOR_CREATOR_RUNTIME_PLATFORM
     ?? process.platform
 );
 const targetArch = normalizeArch(
-  process.env.OPENCREATOR_KRILLINAI_TARGET_ARCH
-    ?? process.env.OPENCREATOR_DESKTOP_TARGET_ARCH
-    ?? process.env.OPENCREATOR_CREATOR_RUNTIME_ARCH
+  process.env.VISHNUCREATOR_VISHNUAI_TARGET_ARCH
+    ?? process.env.VISHNUCREATOR_DESKTOP_TARGET_ARCH
+    ?? process.env.VISHNUCREATOR_CREATOR_RUNTIME_ARCH
     ?? process.arch
 );
 const target = `${targetPlatform}-${targetArch}`;
 const outputRoot = resolve(
-  process.env.OPENCREATOR_KRILLINAI_BUILD_OUTPUT
-    ?? join(rootDir, '.runtime', 'build', 'krillinai', target)
+  process.env.VISHNUCREATOR_VISHNUAI_BUILD_OUTPUT
+    ?? join(rootDir, '.runtime', 'build', 'vishnuai', target)
 );
 const binDir = join(outputRoot, 'bin');
 const artifactDir = join(outputRoot, 'artifacts');
 const executableSuffix = targetPlatform === 'win32' ? '.exe' : '';
-const version = process.env.OPENCREATOR_VERSION?.trim()
+const version = process.env.VISHNUCREATOR_VERSION?.trim()
   || JSON.parse(readFileSync(join(rootDir, 'apps', 'desktop', 'package.json'), 'utf8')).version;
 const sourceCommit = gitOutput(['rev-parse', 'HEAD']) || 'unknown';
 const sourceSha256 = hashSourceTree(sourceRoot);
@@ -46,12 +46,12 @@ const buildRecipeSha256 = hashFile(scriptPath);
 const testOnly = process.argv.includes('--test-only');
 const runTests = testOnly || process.argv.includes('--test');
 const targets = [
-  { name: 'krillinai-cli', package: './cmd/cli', versionPackage: 'krillin-ai/internal/cli.Version' },
-  { name: 'krillinai-server', package: './cmd/server' }
+  { name: 'vishnuai-cli', package: './cmd/cli', versionPackage: 'vishnu-ai/internal/cli.Version' },
+  { name: 'vishnuai-server', package: './cmd/server' }
 ];
 
 if (!existsSync(join(sourceRoot, 'go.mod'))) {
-  throw new Error(`KrillinAI source is missing: ${sourceRoot}`);
+  throw new Error(`VishnuAI source is missing: ${sourceRoot}`);
 }
 
 if (runTests) {
@@ -64,7 +64,7 @@ if (testOnly) {
 
 const manifestPath = join(outputRoot, 'manifest.json');
 if (
-  process.env.OPENCREATOR_FORCE_KRILLINAI_BUILD !== '1'
+  process.env.VISHNUCREATOR_FORCE_VISHNUAI_BUILD !== '1'
   && canReuseBuild(manifestPath)
 ) {
   console.log(JSON.stringify({ ok: true, reused: true, outputRoot }));
@@ -101,7 +101,7 @@ for (const targetBinary of targets) {
   renameSync(temporaryPath, outputPath);
   if (targetPlatform !== 'win32') chmodSync(outputPath, 0o755);
   verifyNoVcsMetadata(outputPath);
-  if (targetBinary.name === 'krillinai-cli' && isNativeTarget()) {
+  if (targetBinary.name === 'vishnuai-cli' && isNativeTarget()) {
     verifyCli(outputPath);
   }
   const artifactPath = join(
@@ -119,7 +119,7 @@ for (const targetBinary of targets) {
 
 const manifest = {
   version: 1,
-  component: 'opencreator-krillinai',
+  component: 'vishnucreator-vishnuai',
   componentVersion: version,
   sourceCommit,
   sourceSha256,
@@ -139,7 +139,7 @@ function canReuseBuild(path) {
     const manifest = JSON.parse(readFileSync(path, 'utf8'));
     if (
       manifest.version !== 1
-      || manifest.component !== 'opencreator-krillinai'
+      || manifest.component !== 'vishnucreator-vishnuai'
       || manifest.componentVersion !== version
       || manifest.sourceCommit !== sourceCommit
       || manifest.sourceSha256 !== sourceSha256
@@ -195,15 +195,15 @@ function verifyCli(path) {
     timeout: 15_000,
     windowsHide: true
   });
-  if (!/krillinai-cli <command>/i.test(output)) {
-    throw new Error('KrillinAI CLI emitted an unexpected help response');
+  if (!/vishnuai-cli <command>/i.test(output)) {
+    throw new Error('VishnuAI CLI emitted an unexpected help response');
   }
 }
 
 function verifyNoVcsMetadata(path) {
   const metadata = commandOutput('go', ['version', '-m', path]);
   if (/\bbuild\s+vcs(?:\.modified|\.revision|\.time)?=/m.test(metadata)) {
-    throw new Error(`KrillinAI binary contains VCS metadata: ${path}`);
+    throw new Error(`VishnuAI binary contains VCS metadata: ${path}`);
   }
 }
 
@@ -283,11 +283,11 @@ function normalizePlatform(value) {
   if (value === 'mac') return 'darwin';
   if (value === 'win') return 'win32';
   if (['darwin', 'win32', 'linux'].includes(value)) return value;
-  throw new Error(`Unsupported KrillinAI target platform: ${value}`);
+  throw new Error(`Unsupported VishnuAI target platform: ${value}`);
 }
 
 function normalizeArch(value) {
   if (value === 'amd64') return 'x64';
   if (['x64', 'arm64'].includes(value)) return value;
-  throw new Error(`Unsupported KrillinAI target architecture: ${value}`);
+  throw new Error(`Unsupported VishnuAI target architecture: ${value}`);
 }

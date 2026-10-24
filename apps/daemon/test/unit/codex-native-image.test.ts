@@ -1,4 +1,4 @@
-import type { CreateImageGenerationRequest } from '@opencreator/protocol';
+import type { CreateImageGenerationRequest } from '@vishnucreator/protocol';
 import { mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -8,7 +8,7 @@ import { CodexExecError, startCodexExec, type RunCodexExecInput } from '../../sr
 import { generateCodexNativeImage } from '../../src/image-generation/codex-native.js';
 import { generateImageContents } from '../../src/image-generation/provider.js';
 import { inspectCodexImageRuntime } from '../../src/image-generation/codex-runtime.js';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 
 const fixture = fileURLToPath(new URL('../fixtures/fake-codex-image.mjs', import.meta.url));
 const request: CreateImageGenerationRequest = { provider: 'codex-native', prompt: 'one orange cat', count: 1, size: '1024x1024', quality: 'medium' };

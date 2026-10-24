@@ -3905,7 +3905,7 @@
     "name": "biliup",
     "titleZh": "B站命令行发布",
     "tagline": "B站命令行投稿、自动直播录制和视频搬运工具，支持多种登录方式、多 P 投稿，是本机 B站发布流程的底层工具。",
-    "summary": "biliup 是面向 Bilibili 的命令行投稿和自动录制工具。对 Creator Skills Hub 来说，它属于发布分发层的关键基础工具：可以把已经渲染好的视频、标题、简介、标签、分区和封面提交到 B站。本机的 content-studio-bilibili-publish skill 是围绕 krillinaiHub 和 biliup 做的安全封装，不是替代 biliup。",
+    "summary": "biliup 是面向 Bilibili 的命令行投稿和自动录制工具。对 Creator Skills Hub 来说，它属于发布分发层的关键基础工具：可以把已经渲染好的视频、标题、简介、标签、分区和封面提交到 B站。本机的 content-studio-bilibili-publish skill 是围绕 vishnuaiHub 和 biliup 做的安全封装，不是替代 biliup。",
     "category": "publish-distribute",
     "subcategory": "B站投稿自动化",
     "platforms": [

@@ -21,15 +21,15 @@ Skill은 [`skills/`](../../../skills/) 아래의 폴터로, 루트에 `SKILL.md`
 ## 빠른 시작
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable && pnpm install
-cp -r skills/krillinai-tts skills/<your-skill>   # 가장 비슷한 기존 Skill에서 시작
+cp -r skills/vishnuai-tts skills/<your-skill>   # 가장 비슷한 기존 Skill에서 시작
 # skills/<your-skill>/SKILL.md 편집
 pnpm web:dev                                     # 대화에서 에이전트가 인식하는지 확인
 ```
 
-가장 빠른 방법은 아이디어와 가장 비슷한 Skill을 복사해 다시 작성하는 것입니다. 기존 `krillinai-*` Skill들이 기대되는 구조와 어조를 보여줍니다.
+가장 빠른 방법은 아이디어와 가장 비슷한 Skill을 복사해 다시 작성하는 것입니다. 기존 `vishnuai-*` Skill들이 기대되는 구조와 어조를 보여줍니다.
 
 ## Skill 구조
 
@@ -93,4 +93,4 @@ description: Use when <트리거 조건>, including <주요 기능>.
 
 ---
 
-질문이 있으신가요? `skill` 주제로 [이슈를 열어](https://github.com/krillinai/OpenCreator/issues/new) 주시면 범위 조정을 도와드리겠습니다.
+질문이 있으신가요? `skill` 주제로 [이슈를 열어](https://github.com/vishnuai/Vishnu Creator/issues/new) 주시면 범위 조정을 도와드리겠습니다.

@@ -9,11 +9,11 @@ describe('browserBridge', () => {
 
   it('loads the same-origin dev runtime config before local storage', async () => {
     window.localStorage.setItem(
-      'opencreator.web.connection.v1',
+      'vishnucreator.web.connection.v1',
       JSON.stringify({ baseUrl: 'http://127.0.0.1:1', token: 'storage-token' })
     );
     const fetch = vi.fn(async () =>
-      new Response(JSON.stringify({ baseUrl: '/.opencreator/runtime' }), {
+      new Response(JSON.stringify({ baseUrl: '/.vishnucreator/runtime' }), {
         status: 200,
         headers: { 'Content-Type': 'application/json' }
       })
@@ -21,9 +21,9 @@ describe('browserBridge', () => {
     vi.stubGlobal('fetch', fetch);
 
     await expect(browserBridge.readConnectionConfig()).resolves.toEqual({
-      baseUrl: '/.opencreator/runtime'
+      baseUrl: '/.vishnucreator/runtime'
     });
-    expect(fetch).toHaveBeenCalledWith('/.opencreator/runtime-config', expect.objectContaining({ method: 'GET' }));
+    expect(fetch).toHaveBeenCalledWith('/.vishnucreator/runtime-config', expect.objectContaining({ method: 'GET' }));
   });
   it('opens a tab synchronously and removes its opener before an account request', () => {
     const replace = vi.fn(); const close = vi.fn();
@@ -32,8 +32,8 @@ describe('browserBridge', () => {
     const navigation = browserBridge.prepareExternalNavigation!();
     expect(open).toHaveBeenCalledWith('about:blank', '_blank');
     expect(tab.opener).toBeNull();
-    navigation.navigate('https://www.open-creator.ai/pricing');
-    expect(replace).toHaveBeenCalledWith('https://www.open-creator.ai/pricing');
+    navigation.navigate('https://www.vishnu-creator.ai/pricing');
+    expect(replace).toHaveBeenCalledWith('https://www.vishnu-creator.ai/pricing');
     navigation.close(); expect(close).toHaveBeenCalledOnce();
     open.mockRestore();
   });
@@ -61,7 +61,7 @@ describe('browserBridge', () => {
 
   it('falls back to local storage when same-origin runtime config is unavailable', async () => {
     window.localStorage.setItem(
-      'opencreator.web.connection.v1',
+      'vishnucreator.web.connection.v1',
       JSON.stringify({ baseUrl: 'http://127.0.0.1:60765', token: 'storage-token' })
     );
     vi.stubGlobal('fetch', vi.fn(async () => new Response('', { status: 404 })));
@@ -76,7 +76,7 @@ describe('browserBridge', () => {
     vi.stubGlobal(
       'fetch',
       vi.fn(async () =>
-        new Response(JSON.stringify({ baseUrl: '/.opencreator/runtime' }), {
+        new Response(JSON.stringify({ baseUrl: '/.vishnucreator/runtime' }), {
           status: 200,
           headers: { 'Content-Type': 'application/json' }
         })
@@ -84,7 +84,7 @@ describe('browserBridge', () => {
     );
 
     await expect(browserBridge.readConnectionConfig()).resolves.toEqual({
-      baseUrl: '/.opencreator/runtime'
+      baseUrl: '/.vishnucreator/runtime'
     });
   });
 
@@ -96,7 +96,7 @@ describe('browserBridge', () => {
 
   it('requires a token for direct daemon configs stored locally', async () => {
     window.localStorage.setItem(
-      'opencreator.web.connection.v1',
+      'vishnucreator.web.connection.v1',
       JSON.stringify({ baseUrl: 'http://127.0.0.1:60765' })
     );
     vi.stubGlobal('fetch', vi.fn(async () => new Response('', { status: 404 })));

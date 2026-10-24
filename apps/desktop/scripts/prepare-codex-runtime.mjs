@@ -28,15 +28,15 @@ const rootDir = resolve(desktopDir, '../..');
 export function stageCodexRuntime(input = {}) {
   const platform = normalizePlatform(
     input.platform
-      ?? process.env.OPENCREATOR_DESKTOP_TARGET_PLATFORM
+      ?? process.env.VISHNUCREATOR_DESKTOP_TARGET_PLATFORM
       ?? process.platform
   );
   const arch = input.arch
-    ?? process.env.OPENCREATOR_DESKTOP_TARGET_ARCH
+    ?? process.env.VISHNUCREATOR_DESKTOP_TARGET_ARCH
     ?? process.arch;
   const manifestPath = resolve(
     input.manifestPath
-      ?? process.env.OPENCREATOR_CODEX_MANIFEST
+      ?? process.env.VISHNUCREATOR_CODEX_MANIFEST
       ?? join(rootDir, 'resources', 'codex-runtime', `${platform}-${arch}`, 'manifest.json')
   );
   const protocolRoot = resolve(
@@ -45,7 +45,7 @@ export function stageCodexRuntime(input = {}) {
   );
   const outputRoot = resolve(
     input.outputRoot
-      ?? process.env.OPENCREATOR_CODEX_RUNTIME_OUTPUT
+      ?? process.env.VISHNUCREATOR_CODEX_RUNTIME_OUTPUT
       ?? join(desktopDir, '.pack', 'codex-runtime')
   );
   const manifest = readCodexRuntimeManifest(manifestPath);
@@ -57,18 +57,18 @@ export function stageCodexRuntime(input = {}) {
   }
 
   const configuredSourceRoot = input.sourceRoot
-    ?? process.env.OPENCREATOR_CODEX_RUNTIME_ROOT;
+    ?? process.env.VISHNUCREATOR_CODEX_RUNTIME_ROOT;
   const preparedSource = configuredSourceRoot === undefined
     ? prepareSourceArchive(manifest, input)
     : { sourceRoot: resolve(configuredSourceRoot), cleanupRoot: undefined };
   const sourceRoot = preparedSource.sourceRoot;
-  const binaryOverride = input.binaryPath ?? process.env.OPENCREATOR_CODEX_BINARY;
+  const binaryOverride = input.binaryPath ?? process.env.VISHNUCREATOR_CODEX_BINARY;
 
   try {
     if (!existsSync(sourceRoot) && binaryOverride === undefined) {
       throw new Error(
         `Codex ${manifest.version} source is unavailable: ${sourceRoot}. `
-        + 'Set OPENCREATOR_CODEX_RUNTIME_ROOT or OPENCREATOR_CODEX_BINARY.'
+        + 'Set VISHNUCREATOR_CODEX_RUNTIME_ROOT or VISHNUCREATOR_CODEX_BINARY.'
       );
     }
     if (!existsSync(protocolRoot)) {
@@ -108,32 +108,32 @@ export function stageCodexRuntime(input = {}) {
 function prepareSourceArchive(manifest, input) {
   const cacheRoot = resolve(
     input.cacheRoot
-      ?? process.env.OPENCREATOR_CODEX_RUNTIME_CACHE
+      ?? process.env.VISHNUCREATOR_CODEX_RUNTIME_CACHE
       ?? join(
-        process.env.OPENCREATOR_DESKTOP_CACHE_DIR ?? join(desktopDir, '.cache'),
+        process.env.VISHNUCREATOR_DESKTOP_CACHE_DIR ?? join(desktopDir, '.cache'),
         'codex-runtime'
       )
   );
   mkdirSync(cacheRoot, { recursive: true });
   const archivePath = resolve(
     input.archivePath
-      ?? process.env.OPENCREATOR_CODEX_ARCHIVE
+      ?? process.env.VISHNUCREATOR_CODEX_ARCHIVE
       ?? join(
         cacheRoot,
         `codex-${manifest.version}-${manifest.platform}-${manifest.arch}.tgz`
       )
   );
-  if (input.archivePath !== undefined || process.env.OPENCREATOR_CODEX_ARCHIVE) {
+  if (input.archivePath !== undefined || process.env.VISHNUCREATOR_CODEX_ARCHIVE) {
     assertArchiveIntegrity(archivePath, manifest.sourceArchive.integrity);
   } else {
     installArchive(
       manifest,
       archivePath,
-      input.offline ?? process.env.OPENCREATOR_DESKTOP_OFFLINE === '1'
+      input.offline ?? process.env.VISHNUCREATOR_DESKTOP_OFFLINE === '1'
     );
   }
 
-  const extractionRoot = mkdtempSync(join(tmpdir(), 'opencreator-codex-runtime-'));
+  const extractionRoot = mkdtempSync(join(tmpdir(), 'vishnucreator-codex-runtime-'));
   try {
     execFileSync('tar', ['-xzf', archivePath, '-C', extractionRoot], {
       cwd: rootDir,
@@ -188,7 +188,7 @@ function installArchive(manifest, archivePath, offline) {
     '--connect-timeout', '20',
     '--output', temporary
   ];
-  const proxy = process.env.OPENCREATOR_DOWNLOAD_PROXY?.trim();
+  const proxy = process.env.VISHNUCREATOR_DOWNLOAD_PROXY?.trim();
   if (proxy) args.push('--proxy', proxy);
   args.push(manifest.sourceArchive.url);
   try {

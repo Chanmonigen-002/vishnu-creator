@@ -1,4 +1,4 @@
-import type { CreatorJson } from '@opencreator/protocol';
+import type { CreatorJson } from '@vishnucreator/protocol';
 import { open } from 'node:fs/promises';
 import { validateSrtFile } from './validators/srt.js';
 import type {

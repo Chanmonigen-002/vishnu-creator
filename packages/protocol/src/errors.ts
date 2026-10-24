@@ -1,5 +1,5 @@
 import { gatewayRelayIdentity } from './gateway-account.js';
-import type { OpenCreatorIssue, PublicErrorFacts } from './issues.js';
+import type { VishnuCreatorIssue, PublicErrorFacts } from './issues.js';
 
 export type RuntimeErrorCode =
   | 'GATEWAY_AUTH_REQUIRED'
@@ -170,10 +170,10 @@ export type RuntimeErrorCode =
   | 'creator_preset_requirement_missing'
   | 'creator_subtitle_style_unsupported'
   | 'creator_data_corrupt'
-  | 'krillin_auth_failed'
-  | 'krillin_path_invalid'
-  | 'krillin_config_missing'
-  | 'krillin_capability_unavailable'
+  | 'vishnu_auth_failed'
+  | 'vishnu_path_invalid'
+  | 'vishnu_config_missing'
+  | 'vishnu_capability_unavailable'
   | 'INTERNAL_ERROR';
 
 export function publicErrorKindForCode(code: string): PublicErrorFacts['kind'] | undefined {
@@ -272,6 +272,6 @@ export type ApiError = {
     message: string;
     details?: Record<string, unknown>;
     publicFacts?: PublicErrorFacts;
-    issue?: OpenCreatorIssue;
+    issue?: VishnuCreatorIssue;
   };
 };

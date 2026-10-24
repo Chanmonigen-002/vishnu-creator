@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import { mkdtemp, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -132,7 +132,7 @@ describe('creator xiaohongshu post', () => {
     expect(artifact).toMatchObject({
       status: 'completed',
       metadata: {
-        fileName: 'OpenCreator-xiaohongshu-post.md',
+        fileName: 'VishnuCreator-xiaohongshu-post.md',
         mimeType: 'text/markdown',
         title: '第一次参加开源项目，我学到了什么',
         hashtags: ['开源', '程序员'],

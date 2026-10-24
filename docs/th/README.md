@@ -2,8 +2,8 @@
 
 <h1>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="../images/OpenCreator_logo_vector_dark.svg" />
-    <img src="../images/OpenCreator_logo_vector.svg" alt="OpenCreator" width="380" />
+    <source media="(prefers-color-scheme: dark)" srcset="../images/Vishnu Creator_logo_vector_dark.svg" />
+    <img src="../images/Vishnu Creator_logo_vector.svg" alt="Vishnu Creator" width="380" />
   </picture>
   <br />
   พื้นที่ทำงาน AI แบบโอเพนซอร์สและ Skills สำหรับครีเอเตอร์
@@ -11,16 +11,16 @@
 
 <p>รวมเครื่องมือสร้างสรรค์แบบภาพ Skills ที่ใช้ซ้ำได้ และ Agents สำหรับงานเขียนสคริปต์ วิดีโอ รูปภาพ เสียง อวตาร การแปล และการตัดต่อไว้ในพื้นที่ทำงานเดียว</p>
 
-<p><strong>OpenCreator เดิมใช้ชื่อ KrillinAI</strong></p>
+<p><strong>Vishnu Creator เดิมใช้ชื่อ VishnuAI</strong></p>
 
-<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="OpenCreator (เดิมชื่อ KrillinAI): อันดับหนึ่ง Repository of the Day บน Trendshift" width="250" height="55" /></a>
+<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="Vishnu Creator (เดิมชื่อ VishnuAI): อันดับหนึ่ง Repository of the Day บน Trendshift" width="250" height="55" /></a>
 
 [English](../../README.md) | [简体中文](../zh/README.md) | [日本語](../ja/README.md) | [한국어](../ko/README.md) | [Bahasa Indonesia](../id/README.md) | [Español](../es/README.md) | [Français](../fr/README.md) | [Deutsch](../de/README.md) | [Português](../pt/README.md) | [Русский](../ru/README.md) | [العربية](../ar/README.md) | **ภาษาไทย** | [Türkçe](../tr/README.md) | [हिन्दी](../hi/README.md) | [বাংলা](../bn/README.md) | [اردو](../ur/README.md) | [Tiếng Việt](../vi/README.md) | [Filipino](../fil/README.md)
 
-[![GitHub Stars](https://badgen.net/github/stars/krillinai/OpenCreator?icon=github&label=Stars&color=EAB308)](https://github.com/krillinai/OpenCreator/stargazers)
+[![GitHub Stars](https://badgen.net/github/stars/vishnuai/Vishnu Creator?icon=github&label=Stars&color=EAB308)](https://github.com/vishnuai/Vishnu Creator/stargazers)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Bilibili](https://img.shields.io/badge/dynamic/json?label=Bilibili&query=%24.data.follower&suffix=%E7%B2%89%E4%B8%9D&url=https%3A%2F%2Fapi.bilibili.com%2Fx%2Frelation%2Fstat%3Fvmid%3D242124650&logo=bilibili&color=00A1D6&labelColor=FE7398&logoColor=FFFFFF)](https://space.bilibili.com/242124650)
-[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/krillinai/OpenCreator)
+[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/vishnuai/Vishnu Creator)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/fUNvbqDaw)
 [![QQ 群](https://img.shields.io/badge/QQ%20群-754069680-green?logo=tencent-qq)](https://qm.qq.com/q/W4YC0PLMeA)
 
@@ -28,13 +28,13 @@
 
 </div>
 
-![พื้นที่ทำงาน OpenCreator Agent](../images/opencreator-home-en.png)
+![พื้นที่ทำงาน Vishnu Creator Agent](../images/vishnucreator-home-en.png)
 
 ## ภาพรวมโครงการ
 
-OpenCreator สร้างขึ้นสำหรับบุคคลและทีมที่ต้องการทำงานสร้างสรรค์และพัฒนาซอฟต์แวร์บนเครื่องของตนอย่างต่อเนื่อง โดยใช้ Codex CLI เป็นกลไกประมวลผล Agent แทนการสร้าง Agent loop ขึ้นใหม่ พร้อมเพิ่ม Runtime ภายในเครื่องที่เสถียร พื้นที่ทำงานแบบภาพ และแอป Desktop
+Vishnu Creator สร้างขึ้นสำหรับบุคคลและทีมที่ต้องการทำงานสร้างสรรค์และพัฒนาซอฟต์แวร์บนเครื่องของตนอย่างต่อเนื่อง โดยใช้ Codex CLI เป็นกลไกประมวลผล Agent แทนการสร้าง Agent loop ขึ้นใหม่ พร้อมเพิ่ม Runtime ภายในเครื่องที่เสถียร พื้นที่ทำงานแบบภาพ และแอป Desktop
 
-OpenCreator มีรูปแบบการทำงานที่เชื่อมต่อกันสองแบบ:
+Vishnu Creator มีรูปแบบการทำงานที่เชื่อมต่อกันสองแบบ:
 
 - **พื้นที่ทำงานเนื้อหา**: ใช้เครื่องมือแบบภาพและเทมเพลตเพื่อแปลและดาวน์โหลดวิดีโอ สร้างภาพและวิดีโอ พากย์เสียง เขียนบทความและโพสต์โซเชียล เขียนสคริปต์วิดีโอสั้น และสร้างแอนิเมชันตัวละครเส้น
 - **การสนทนากับ Agent**: เริ่มและกำกับงานสร้างสรรค์หรืองานพัฒนาด้วยภาษาธรรมชาติ จัดการบทสนทนาตามโครงการ ให้ Runs ทำงานเบื้องหลัง และจัดการการอนุมัติ ไฟล์แนบ ไฟล์ Skills, MCP, งานตามกำหนดการ การแจ้งเตือน ความจำ และข้อมูลวินิจฉัยในที่เดียว
@@ -44,7 +44,7 @@ Web เป็นการพัฒนาส่วนหน้าเพียง�
 ## จุดเด่นของโครงการ
 
 - 🤖 **ใช้ Codex โดยตรง**: ใช้ Agent loop โมเดล การให้เหตุผล การเรียกใช้เครื่องมือ บทสนทนา Skills และ MCP ของ Codex โดยไม่ต้องดูแลกลไกประมวลผลอีกชุด
-- 🚀 **แอป Desktop พร้อมใช้**: เปิด OpenCreator จากแอป Desktop ที่มี Codex CLI รวมอยู่แล้ว Runtime ภายในเครื่องเริ่มตามต้องการและเตรียมโครงการเริ่มต้นให้อัตโนมัติ
+- 🚀 **แอป Desktop พร้อมใช้**: เปิด Vishnu Creator จากแอป Desktop ที่มี Codex CLI รวมอยู่แล้ว Runtime ภายในเครื่องเริ่มตามต้องการและเตรียมโครงการเริ่มต้นให้อัตโนมัติ
 - ⚙️ **ตรวจพบการตั้งค่า Codex ในเครื่อง**: เมื่อเปิด Desktop ครั้งแรก แอปจะตรวจการตั้งค่า Codex ที่มีอยู่และเสนอให้ใช้การเข้าสู่ระบบ ChatGPT หรือ API key ที่พร้อมใช้งานต่อได้ รวมทั้งตั้งค่าผู้ให้บริการโมเดลรายอื่นผ่านขั้นตอนเริ่มต้นได้
 - 🔄 **จัดการคอมโพเนนต์ Runtime**: ตรวจสอบเวอร์ชัน yt-dlp ที่รวมมา ที่ใช้งานอยู่ และล่าสุด ตรวจอัปเดตเป็นระยะ และอัปเดตด้วยตนเอง โดยเก็บเวอร์ชันที่ใช้งานได้ไว้หากอัปเดตล้มเหลว
 - 🎨 **สร้างสรรค์หลายสื่อ**: สร้างและจัดการวิดีโอ รูปภาพ เสียง คำบรรยาย และเอกสารผ่านเวิร์กโฟลว์ที่เชื่อมต่อกัน
@@ -62,7 +62,7 @@ Web เป็นการพัฒนาส่วนหน้าเพียง�
 
 เปิด Dashboard เพื่อเขียนบทความ โพสต์ Xiaohongshu หรือสคริปต์วิดีโอสั้น สร้างแอนิเมชันตัวละครเส้น แปลหรือดาวน์โหลดวิดีโอ สร้างภาพปก รูปภาพ หรือวิดีโอ และพากย์เสียงด้วย Text to Speech
 
-![OpenCreator Creator Dashboard](../images/product/opencreator-dashboard-en.png)
+![Vishnu Creator Creator Dashboard](../images/product/vishnucreator-dashboard-en.png)
 
 > มีการเพิ่มเครื่องมือสร้างสรรค์อย่างต่อเนื่อง
 
@@ -100,7 +100,7 @@ Web เป็นการพัฒนาส่วนหน้าเพียง�
 
 เริ่มจากเทมเพลตแทนการสร้างพรอมป์และตั้งค่าทุกอย่างเอง เลือกเทมเพลตเด่นตามหมวดหมู่ เช่น การสร้างวิดีโอและการออกแบบภาพ เพื่อหาแนวทางเริ่มต้น
 
-คอลเลกชันนี้มีเทมเพลตจาก OpenCreator และครีเอเตอร์อิสระ เทมเพลตจากบุคคลภายนอกจะแสดงเครดิตผู้สร้างและลิงก์ต้นฉบับในหน้ารายละเอียด
+คอลเลกชันนี้มีเทมเพลตจาก Vishnu Creator และครีเอเตอร์อิสระ เทมเพลตจากบุคคลภายนอกจะแสดงเครดิตผู้สร้างและลิงก์ต้นฉบับในหน้ารายละเอียด
 
 เปิดเทมเพลตเพื่อดูผลลัพธ์ตัวอย่าง พรอมป์ การตั้งค่า แท็ก ผู้สร้าง และแหล่งที่มา เลือก **ใช้เทมเพลตนี้** เพื่อเริ่มสร้าง แล้วปรับอินพุตให้เหมาะกับงาน
 
@@ -108,29 +108,29 @@ Web เป็นการพัฒนาส่วนหน้าเพียง�
 
 ## Skills
 
-เครื่องมือสร้างสรรค์มีตัวควบคุมแบบภาพ ส่วน Skills ให้คำสั่งและเวิร์กโฟลว์ที่ Agent ใช้ซ้ำได้ OpenCreator มี Skills สำหรับผลิตวิดีโอใน repository และรองรับการจัดการ Codex Skills ในเครื่อง
+เครื่องมือสร้างสรรค์มีตัวควบคุมแบบภาพ ส่วน Skills ให้คำสั่งและเวิร์กโฟลว์ที่ Agent ใช้ซ้ำได้ Vishnu Creator มี Skills สำหรับผลิตวิดีโอใน repository และรองรับการจัดการ Codex Skills ในเครื่อง
 
-ไดเรกทอรี [`skills/`](../../skills/) มีคำสั่งที่ใช้ซ้ำได้สำหรับ Agents ที่ทำงานกับ KrillinAI CLI ที่รวมมา
+ไดเรกทอรี [`skills/`](../../skills/) มีคำสั่งที่ใช้ซ้ำได้สำหรับ Agents ที่ทำงานกับ VishnuAI CLI ที่รวมมา
 
 | Skill | ความสามารถ |
 | --- | --- |
-| [KrillinAI CLI](../../skills/krillinai-cli/SKILL.md) | เลือกคำสั่ง ตรวจการตั้งค่า และอ่านความคืบหน้า manifests ผลลัพธ์ และข้อผิดพลาด |
-| [Subtitle](../../skills/krillinai-subtitle/SKILL.md) | ดาวน์โหลดคำบรรยายจากแพลตฟอร์มหรือถอดเสียง แปลคำบรรยาย และสร้างคำบรรยายสองภาษาหรือแบบสั้นแนวตั้ง |
-| [TTS](../../skills/krillinai-tts/SKILL.md) | สร้างเสียงพากย์ภาษาเป้าหมายจากคำบรรยาย และสร้างวิดีโอพากย์ได้ตามต้องการ |
-| [Landscape Render](../../skills/krillinai-render-horizontal/SKILL.md) | เรนเดอร์วิดีโอแนวนอนพร้อมคำบรรยายสองภาษา หรือเสียงพากย์และคำบรรยายภาษาเป้าหมาย |
-| [Portrait Render](../../skills/krillinai-render-vertical/SKILL.md) | จัดองค์ประกอบวิดีโอแนวตั้งพร้อมชื่อเรื่อง คำบรรยายสองภาษา หรือเสียงพากย์ |
-| [Cover](../../skills/krillinai-cover/SKILL.md) | สร้างภาพปกจากพรอมป์ข้อความที่สมบูรณ์ และบันทึกภาพกับพรอมป์สุดท้าย |
-| [Pipeline Plan](../../skills/krillinai-pipeline/SKILL.md) | ตรวจแผนผลลัพธ์หลายขั้นด้วย dry run แล้วทำงานจริงผ่าน Skills ของแต่ละขั้น |
+| [VishnuAI CLI](../../skills/vishnuai-cli/SKILL.md) | เลือกคำสั่ง ตรวจการตั้งค่า และอ่านความคืบหน้า manifests ผลลัพธ์ และข้อผิดพลาด |
+| [Subtitle](../../skills/vishnuai-subtitle/SKILL.md) | ดาวน์โหลดคำบรรยายจากแพลตฟอร์มหรือถอดเสียง แปลคำบรรยาย และสร้างคำบรรยายสองภาษาหรือแบบสั้นแนวตั้ง |
+| [TTS](../../skills/vishnuai-tts/SKILL.md) | สร้างเสียงพากย์ภาษาเป้าหมายจากคำบรรยาย และสร้างวิดีโอพากย์ได้ตามต้องการ |
+| [Landscape Render](../../skills/vishnuai-render-horizontal/SKILL.md) | เรนเดอร์วิดีโอแนวนอนพร้อมคำบรรยายสองภาษา หรือเสียงพากย์และคำบรรยายภาษาเป้าหมาย |
+| [Portrait Render](../../skills/vishnuai-render-vertical/SKILL.md) | จัดองค์ประกอบวิดีโอแนวตั้งพร้อมชื่อเรื่อง คำบรรยายสองภาษา หรือเสียงพากย์ |
+| [Cover](../../skills/vishnuai-cover/SKILL.md) | สร้างภาพปกจากพรอมป์ข้อความที่สมบูรณ์ และบันทึกภาพกับพรอมป์สุดท้าย |
+| [Pipeline Plan](../../skills/vishnuai-pipeline/SKILL.md) | ตรวจแผนผลลัพธ์หลายขั้นด้วย dry run แล้วทำงานจริงผ่าน Skills ของแต่ละขั้น |
 
 ### เพิ่ม Skills ของคุณเอง
 
-OpenCreator รองรับ Codex Skills ภายในเครื่องที่กำหนดด้วย `SKILL.md` คุณจึงเพิ่มวิธีทำงานของตนเองได้ นอกเหนือจากเครื่องมือสร้างสรรค์ที่มีให้ Skills ที่ใช้ได้ขึ้นอยู่กับ Codex home ที่กำลังใช้งานและ Skills ที่ติดตั้ง ส่วน Skills สำหรับวิดีโอต้องตั้งค่า CLI และบริการที่เกี่ยวข้อง การมี Skill อยู่ใน repository ไม่ได้หมายความว่าติดตั้งอัตโนมัติหรือรวมบริการภายนอกไว้ด้วย
+Vishnu Creator รองรับ Codex Skills ภายในเครื่องที่กำหนดด้วย `SKILL.md` คุณจึงเพิ่มวิธีทำงานของตนเองได้ นอกเหนือจากเครื่องมือสร้างสรรค์ที่มีให้ Skills ที่ใช้ได้ขึ้นอยู่กับ Codex home ที่กำลังใช้งานและ Skills ที่ติดตั้ง ส่วน Skills สำหรับวิดีโอต้องตั้งค่า CLI และบริการที่เกี่ยวข้อง การมี Skill อยู่ใน repository ไม่ได้หมายความว่าติดตั้งอัตโนมัติหรือรวมบริการภายนอกไว้ด้วย
 
 ## การสนทนาและพื้นที่ทำงานที่ทำงานร่วมกัน
 
 อธิบายงานด้วยภาษาธรรมชาติ แล้วใช้เครื่องมือแบบภาพเมื่อจำเป็นต้องควบคุมรายละเอียด
 
-![การสนทนาและพื้นที่ทำงานของ OpenCreator](../images/examples/opencreator-auto-clips-en.png)
+![การสนทนาและพื้นที่ทำงานของ Vishnu Creator](../images/examples/vishnucreator-auto-clips-en.png)
 
 ### ควบคุมรายละเอียดในพื้นที่ทำงาน
 
@@ -207,11 +207,11 @@ OpenCreator รองรับ Codex Skills ภายในเครื่อง
 
 ### แปลวิดีโอ
 
-ตัวอย่างสาธารณะต่อไปนี้สร้างขึ้นเมื่อ OpenCreator ยังใช้ชื่อ KrillinAI แสดงเวิร์กโฟลว์การจัดแนวคำบรรยาย การแปล การพากย์ และวิดีโอแนวตั้ง ซึ่งพื้นที่ทำงาน Video Translation ของ OpenCreator นำไปเชื่อมกับ Agent workflow ที่กว้างขึ้น
+ตัวอย่างสาธารณะต่อไปนี้สร้างขึ้นเมื่อ Vishnu Creator ยังใช้ชื่อ VishnuAI แสดงเวิร์กโฟลว์การจัดแนวคำบรรยาย การแปล การพากย์ และวิดีโอแนวตั้ง ซึ่งพื้นที่ทำงาน Video Translation ของ Vishnu Creator นำไปเชื่อมกับ Agent workflow ที่กว้างขึ้น
 
 โครงการสร้างไฟล์คำบรรยายด้านล่างจากวิดีโอในเครื่องความยาว 46 นาทีด้วยการรันครั้งเดียว โดยไม่ต้องปรับคำบรรยายเอง ผลลัพธ์ที่เผยแพร่ครอบคลุมทั้งวิดีโอ ไม่มีบรรทัดซ้อนกัน แบ่งข้อความอย่างเป็นธรรมชาติ และแปลได้คุณภาพสูง
 
-![ตัวอย่างการจัดแนวคำบรรยาย OpenCreator](../images/examples/krillinai-subtitle-alignment.png)
+![ตัวอย่างการจัดแนวคำบรรยาย Vishnu Creator](../images/examples/vishnuai-subtitle-alignment.png)
 
 <table width="100%"><tr>
 <td width="33%">
@@ -234,7 +234,7 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
 
 </td></tr></table>
 
-> ตัวอย่างวิดีโอและภาพการจัดแนวคำบรรยายเหล่านี้สร้างขึ้นเมื่อ OpenCreator ยังใช้ชื่อ KrillinAI
+> ตัวอย่างวิดีโอและภาพการจัดแนวคำบรรยายเหล่านี้สร้างขึ้นเมื่อ Vishnu Creator ยังใช้ชื่อ VishnuAI
 
 ### ดาวน์โหลดวิดีโอ
 
@@ -257,35 +257,35 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
 
 การใช้งานขึ้นอยู่กับวิดีโอและภูมิภาค บางแหล่งอาจต้องใช้คุกกี้ของแพลตฟอร์ม
 
-![การเลือกรูปแบบดาวน์โหลดวิดีโอ OpenCreator](../images/examples/video-downloader-formats-and-subtitles-en.png)
+![การเลือกรูปแบบดาวน์โหลดวิดีโอ Vishnu Creator](../images/examples/video-downloader-formats-and-subtitles-en.png)
 
 ### สร้างวิดีโอ
 
 สร้างวิดีโอ AI จากพรอมป์ข้อความหรือภาพอ้างอิงด้วย Seedance ตั้งค่าโมเดล อัตราส่วนภาพ ความละเอียด และระยะเวลา แล้วดูตัวอย่าง สร้างใหม่ หรือดาวน์โหลดแต่ละเวอร์ชันจากพื้นที่ทำงานของโครงการ
 
-![การสร้างวิดีโอ OpenCreator ด้วย Seedance](../images/examples/video-generation-seedance-en.png)
+![การสร้างวิดีโอ Vishnu Creator ด้วย Seedance](../images/examples/video-generation-seedance-en.png)
 
 ### แอนิเมชันตัวละครเส้น
 
-OpenCreator พัฒนาชุดตัวละครต้นฉบับนี้ร่วมกับศิลปิน [Harbor Hsia](https://www.behance.net/xiaheyuan1) ผู้สร้าง [Stickman บน Behance](https://www.behance.net/gallery/254715463/Stickman) ตัวละครที่รวมมาช่วยให้รูปลักษณ์ของแต่ละตัวสอดคล้องกันตลอดเวิร์กโฟลว์แอนิเมชัน
+Vishnu Creator พัฒนาชุดตัวละครต้นฉบับนี้ร่วมกับศิลปิน [Harbor Hsia](https://www.behance.net/xiaheyuan1) ผู้สร้าง [Stickman บน Behance](https://www.behance.net/gallery/254715463/Stickman) ตัวละครที่รวมมาช่วยให้รูปลักษณ์ของแต่ละตัวสอดคล้องกันตลอดเวิร์กโฟลว์แอนิเมชัน
 
-![ตัวละครเส้น OpenCreator ที่พัฒนาร่วมกับศิลปิน](../images/examples/stick-figure-characters.webp)
+![ตัวละครเส้น Vishnu Creator ที่พัฒนาร่วมกับศิลปิน](../images/examples/stick-figure-characters.webp)
 
 แปลงข้อความหรือเนื้อหา YouTube เป็นแอนิเมชันสมบูรณ์ผ่านเวิร์กโฟลว์ที่แนะนำการตรวจสคริปต์ การบรรยายเสียง การกำหนดเวลา ภาพสตอรีบอร์ด คำบรรยาย การเรนเดอร์ และวิดีโอที่ดาวน์โหลดได้
 
-![เฟรมตัวอย่างแอนิเมชันตัวละครเส้น OpenCreator](../images/examples/stick-figure-animation-frame.jpg)
+![เฟรมตัวอย่างแอนิเมชันตัวละครเส้น Vishnu Creator](../images/examples/stick-figure-animation-frame.jpg)
 
 ## เริ่มต้นใช้งาน
 
 ### ติดตั้งแอป Desktop
 
-ดาวน์โหลดตัวติดตั้งสำหรับแพลตฟอร์มของคุณจาก [OpenCreator รุ่นล่าสุด](https://github.com/krillinai/OpenCreator/releases/latest) (macOS Apple Silicon, macOS Intel หรือ Windows x64) ติดตั้งและเปิดแอป โดยไม่ต้องใช้ Node.js หรือ pnpm แอป Desktop มี Codex CLI รวมอยู่ การทำงานกับโมเดลจริงต้องมีการเข้าสู่ระบบ ChatGPT หรือการตั้งค่า API key ที่ใช้ได้
+ดาวน์โหลดตัวติดตั้งสำหรับแพลตฟอร์มของคุณจาก [Vishnu Creator รุ่นล่าสุด](https://github.com/vishnuai/Vishnu Creator/releases/latest) (macOS Apple Silicon, macOS Intel หรือ Windows x64) ติดตั้งและเปิดแอป โดยไม่ต้องใช้ Node.js หรือ pnpm แอป Desktop มี Codex CLI รวมอยู่ การทำงานกับโมเดลจริงต้องมีการเข้าสู่ระบบ ChatGPT หรือการตั้งค่า API key ที่ใช้ได้
 
 เมื่อเปิดครั้งแรก Desktop จะเริ่ม Runtime ภายในเครื่อง เตรียมโครงการเริ่มต้น และตรวจการตั้งค่า Codex ในเครื่อง หากพบการเข้าสู่ระบบหรือ API key พร้อมการตั้งค่าโมเดลที่ใช้ได้ ให้เลือก **ใช้ Codex ในเครื่องและดำเนินการต่อ** เพื่อนำกลับมาใช้ หรือกำหนดผู้ให้บริการโมเดลรายอื่นในขั้นตอนเริ่มต้นเดียวกัน
 
-![การตั้งค่าผู้ให้บริการโมเดลเมื่อเปิด OpenCreator Desktop ครั้งแรก](../images/product/opencreator-codex-setup.png)
+![การตั้งค่าผู้ให้บริการโมเดลเมื่อเปิด Vishnu Creator Desktop ครั้งแรก](../images/product/vishnucreator-codex-setup.png)
 
-หลังตั้งค่าแล้ว ให้พิมพ์คำขอในช่องสนทนาเพื่อเริ่มงาน หากพบปัญหา โปรดดู [คู่มือผู้ใช้และการแก้ปัญหา](../opencreator-user-guide-and-troubleshooting.md)
+หลังตั้งค่าแล้ว ให้พิมพ์คำขอในช่องสนทนาเพื่อเริ่มงาน หากพบปัญหา โปรดดู [คู่มือผู้ใช้และการแก้ปัญหา](../vishnucreator-user-guide-and-troubleshooting.md)
 
 ### รัน Web จากซอร์สโค้ด
 
@@ -305,8 +305,8 @@ codex --version
 ```
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable
 pnpm install
 pnpm web:dev
@@ -339,10 +339,10 @@ pnpm desktop:dev
 | `pnpm desktop:package` | ไดเรกทอรีที่รันได้บนแพลตฟอร์มปัจจุบัน สำหรับตรวจสอบในเครื่อง |
 | `pnpm desktop:dist` | ตัวติดตั้งสำหรับแพลตฟอร์มปัจจุบัน |
 | `pnpm desktop:release` | คำสั่งแพ็กเกจสำหรับการเผยแพร่อย่างเป็นทางการ |
-| `pnpm --filter @opencreator/desktop verify:package` | ตรวจสอบแพ็กเกจ Desktop ที่มีอยู่ |
-| `pnpm krillinai:package` | อาร์ไคฟ์ KrillinAI Server และ CLI แยกสำหรับแพลตฟอร์มที่เลือก |
+| `pnpm --filter @vishnucreator/desktop verify:package` | ตรวจสอบแพ็กเกจ Desktop ที่มีอยู่ |
+| `pnpm vishnuai:package` | อาร์ไคฟ์ VishnuAI Server และ CLI แยกสำหรับแพลตฟอร์มที่เลือก |
 
-การแพ็กเกจ Desktop จะสร้าง Web ใหม่จากพื้นที่ทำงานปัจจุบัน บันทึก commit, dirty state, แพลตฟอร์ม สถาปัตยกรรม และ Web hash แล้วเปรียบเทียบ `apps/web/dist` กับทรัพยากรในแอป หากไม่ตรงกัน การแพ็กเกจจะล้มเหลว ดูข้อกำหนดการเซ็น การ notarize การสร้างบน Windows และการเผยแพร่ใน [คู่มือการเผยแพร่ Desktop](../operations/opencreator-desktop-release-runbook.md)
+การแพ็กเกจ Desktop จะสร้าง Web ใหม่จากพื้นที่ทำงานปัจจุบัน บันทึก commit, dirty state, แพลตฟอร์ม สถาปัตยกรรม และ Web hash แล้วเปรียบเทียบ `apps/web/dist` กับทรัพยากรในแอป หากไม่ตรงกัน การแพ็กเกจจะล้มเหลว ดูข้อกำหนดการเซ็น การ notarize การสร้างบน Windows และการเผยแพร่ใน [คู่มือการเผยแพร่ Desktop](../operations/vishnucreator-desktop-release-runbook.md)
 
 ## เวิร์กโฟลว์หลัก
 
@@ -359,18 +359,18 @@ pnpm desktop:dev
 - ดูตลาด Skill ประวัติการติดตั้ง และ Skills ที่มีในเครื่องจากศูนย์ปลั๊กอิน
 - เลือก Skill จากช่องสนทนาด้วย `/` หรือเมนูเพิ่ม เพื่อให้งานถัดไปทำตามเวิร์กโฟลว์นั้น
 - การจัดการ MCP ใช้คำสั่งและการตั้งค่าของ Codex โดยตรง ไม่สร้างกลไกประมวลผลอีกชุด
-- OpenCreator ใช้ `$CODEX_HOME` ที่กำลังใช้งานเป็นค่าเริ่มต้น โปรดตรวจผลกระทบก่อนเปลี่ยน Skills หรือการตั้งค่า MCP ส่วนกลาง
+- Vishnu Creator ใช้ `$CODEX_HOME` ที่กำลังใช้งานเป็นค่าเริ่มต้น โปรดตรวจผลกระทบก่อนเปลี่ยน Skills หรือการตั้งค่า MCP ส่วนกลาง
 
 ### งานตามกำหนดการและเธรดงานเฉพาะ
 
-- งานตามกำหนดการแต่ละรายการมีบทสนทนา OpenCreator เฉพาะที่คงอยู่
+- งานตามกำหนดการแต่ละรายการมีบทสนทนา Vishnu Creator เฉพาะที่คงอยู่
 - การเรียกอัตโนมัติ การรันด้วยตนเอง และงานติดตามจากผู้ใช้ใช้บทสนทนาเดียวกัน และทำงานตามลำดับด้วยนโยบาย `queue` หรือ `skip`
 - การลบกำหนดการจะเก็บบทสนทนาเฉพาะไว้ในคลัง โดยคง Runs ผลลัพธ์ และประวัติ Codex เดิม
-- การหมุนเวียนหรือกู้คืนเธรด Codex ภายในไม่เปลี่ยนทางเข้างานหรือเส้นทางหน้าของ OpenCreator
+- การหมุนเวียนหรือกู้คืนเธรด Codex ภายในไม่เปลี่ยนทางเข้างานหรือเส้นทางหน้าของ Vishnu Creator
 
-## สถาปัตยกรรมระบบ OpenCreator
+## สถาปัตยกรรมระบบ Vishnu Creator
 
-OpenCreator มองพื้นที่ทำงานแบบภาพและการสนทนากับ Agent เป็นสองอินเทอร์เฟซของงานสร้างสรรค์เดียวกัน เวิร์กโฟลว์แต่ละประเภทจำลองเป็น state machine โดยอินพุตต้นทาง การตั้งค่า การสร้าง การตรวจทาน การแก้ไข และการส่งออกเป็นสถานะและเหตุการณ์ที่ชัดเจน การกระทำในพื้นที่ทำงานและคำสั่งสนทนาเข้าสู่ state machine เดียวกัน แล้วส่งขั้นตอนปัจจุบัน การตั้งค่า ความคืบหน้า เวอร์ชัน และผลลัพธ์กลับไปยังทั้งสองอินเทอร์เฟซ จึงซิงก์กันโดยไม่สร้างแหล่งข้อมูลสถานะอีกชุด
+Vishnu Creator มองพื้นที่ทำงานแบบภาพและการสนทนากับ Agent เป็นสองอินเทอร์เฟซของงานสร้างสรรค์เดียวกัน เวิร์กโฟลว์แต่ละประเภทจำลองเป็น state machine โดยอินพุตต้นทาง การตั้งค่า การสร้าง การตรวจทาน การแก้ไข และการส่งออกเป็นสถานะและเหตุการณ์ที่ชัดเจน การกระทำในพื้นที่ทำงานและคำสั่งสนทนาเข้าสู่ state machine เดียวกัน แล้วส่งขั้นตอนปัจจุบัน การตั้งค่า ความคืบหน้า เวอร์ชัน และผลลัพธ์กลับไปยังทั้งสองอินเทอร์เฟซ จึงซิงก์กันโดยไม่สร้างแหล่งข้อมูลสถานะอีกชุด
 
 งานสร้างสรรค์ต้องแก้ไขซ้ำ การแก้ไขจึงไม่เขียนทับผลลัพธ์ปัจจุบัน ทุกการแก้ไขหรือสร้างใหม่จะสร้างเวอร์ชันจากสถานะเวิร์กโฟลว์เดิม พร้อมเก็บการตั้งค่าและผลลัพธ์ก่อนหน้าไว้ตรวจสอบ เปรียบเทียบ และทำงานต่อ
 
@@ -406,7 +406,7 @@ OpenCreator มองพื้นที่ทำงานแบบภาพแ�
 +---------------------+  +---------------------+  +-------------------------+
 ```
 
-| คอมโพเนนต์ OpenCreator | หน้าที่ | การนำไปใช้ |
+| คอมโพเนนต์ Vishnu Creator | หน้าที่ | การนำไปใช้ |
 | --- | --- | --- |
 | Creator Experience | Dashboard เครื่องมือสร้างสรรค์ การสนทนากับ Agent การตั้งค่า และไฟล์ | `apps/web` · React 18 · Vite · TypeScript |
 | Collaboration Core | ซิงก์ขั้นตอนพื้นที่ทำงาน บริบทสนทนา ความคืบหน้า ผลลัพธ์ และการแก้ไข | สถานะเวิร์กโฟลว์ร่วม · `CreatorCollaborationPanel` · ประวัติเวอร์ชัน |
@@ -429,7 +429,7 @@ OpenCreator มองพื้นที่ทำงานแบบภาพแ�
 ## โครงสร้าง Repository
 
 ```text
-OpenCreator/
+Vishnu Creator/
 ├── apps/
 │   ├── web/          # ส่วนหน้า React เพียงชุดเดียว
 │   ├── daemon/       # Runtime ภายในเครื่องบน Fastify และ Codex adapter
@@ -449,15 +449,15 @@ OpenCreator/
 
 เปิด **Settings → AI Services** เพื่อตั้งค่าผู้ให้บริการโมเดล การถอดเสียง เสียง และรูปภาพสำหรับพื้นที่ทำงานปัจจุบัน อาจมีหมวดบริการเพิ่มเติมเพื่อเตรียมเครื่องมือที่จะตามมา แต่ละหมวดแสดงเฉพาะฟิลด์ที่ผู้ให้บริการที่เลือกต้องใช้ เช่น Base URL, API Key, โมเดล พร็อกซี หรือข้อมูลรับรองเฉพาะ
 
-![การตั้งค่า API Key บริการ AI ของ OpenCreator](../images/product/opencreator-ai-services-en.png)
+![การตั้งค่า API Key บริการ AI ของ Vishnu Creator](../images/product/vishnucreator-ai-services-en.png)
 
 ข้อมูลรับรองบันทึกผ่านที่เก็บข้อมูลรับรองของระบบใน Runtime ภายในเครื่อง และไม่ควร commit ลง repository ผู้ให้บริการบางรายที่ทำงานในเครื่องหรือใช้ระบบ เช่น Edge TTS ไม่ต้องใช้ API Key
 
 ### คอมโพเนนต์ Runtime จากภายนอก
 
-เปิด **Settings → Third-party Components** เพื่อตรวจเวอร์ชัน yt-dlp nightly ที่ใช้งานอยู่ เวอร์ชันที่รวมมากับ OpenCreator แหล่งที่มา และรุ่นล่าสุด OpenCreator ตรวจอัปเดตทุกเจ็ดวันแต่ไม่ติดตั้งอัตโนมัติ การอัปเดตต้องให้ผู้ใช้สั่ง และเวอร์ชันที่ใช้งานได้จะยังอยู่หากการดาวน์โหลด ตรวจสอบ หรือติดตั้งล้มเหลว
+เปิด **Settings → Third-party Components** เพื่อตรวจเวอร์ชัน yt-dlp nightly ที่ใช้งานอยู่ เวอร์ชันที่รวมมากับ Vishnu Creator แหล่งที่มา และรุ่นล่าสุด Vishnu Creator ตรวจอัปเดตทุกเจ็ดวันแต่ไม่ติดตั้งอัตโนมัติ การอัปเดตต้องให้ผู้ใช้สั่ง และเวอร์ชันที่ใช้งานได้จะยังอยู่หากการดาวน์โหลด ตรวจสอบ หรือติดตั้งล้มเหลว
 
-![การตั้งค่าคอมโพเนนต์ภายนอกของ OpenCreator](../images/product/opencreator-third-party-components-en.png)
+![การตั้งค่าคอมโพเนนต์ภายนอกของ Vishnu Creator](../images/product/vishnucreator-third-party-components-en.png)
 
 ### ตัวแปรสภาพแวดล้อมของ Runtime
 
@@ -465,17 +465,17 @@ OpenCreator/
 
 | ตัวแปรสภาพแวดล้อม | ค่าเริ่มต้น | วัตถุประสงค์ |
 | --- | --- | --- |
-| `OPENCREATOR_DATA_DIR` | `.runtime` | ฐานข้อมูล OpenCreator, Runs, ไฟล์แนบ และพื้นที่ทำงานที่จัดการ |
-| `OPENCREATOR_CODEX_BIN` | `codex` | พาธของโปรแกรม Codex CLI |
+| `VISHNUCREATOR_DATA_DIR` | `.runtime` | ฐานข้อมูล Vishnu Creator, Runs, ไฟล์แนบ และพื้นที่ทำงานที่จัดการ |
+| `VISHNUCREATOR_CODEX_BIN` | `codex` | พาธของโปรแกรม Codex CLI |
 | `CODEX_HOME` | `~/.codex` | แหล่งข้อมูลหลักสำหรับบทสนทนา การตั้งค่า Skills, MCP และ Profiles ของ Codex |
-| `OPENCREATOR_DEFAULT_CWD` | ไดเรกทอรีทำงานปัจจุบัน | ไดเรกทอรีทำงานเริ่มต้นของ daemon |
-| `OPENCREATOR_DEFAULT_PROJECT_ROOT` | นโยบายเริ่มต้นของ Runtime | รากของโครงการที่จัดการ เมื่อกำหนดค่า OpenCreator จะใช้ไดเรกทอรีย่อย `OpenCreator/` |
-| `OPENCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | เกณฑ์จำนวน Run ที่สิ้นสุดสำหรับหมุนเวียนเธรด Codex ของงานตามกำหนดการที่ทำงานนาน ใช้ `0` เพื่อปิด |
+| `VISHNUCREATOR_DEFAULT_CWD` | ไดเรกทอรีทำงานปัจจุบัน | ไดเรกทอรีทำงานเริ่มต้นของ daemon |
+| `VISHNUCREATOR_DEFAULT_PROJECT_ROOT` | นโยบายเริ่มต้นของ Runtime | รากของโครงการที่จัดการ เมื่อกำหนดค่า Vishnu Creator จะใช้ไดเรกทอรีย่อย `Vishnu Creator/` |
+| `VISHNUCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | เกณฑ์จำนวน Run ที่สิ้นสุดสำหรับหมุนเวียนเธรด Codex ของงานตามกำหนดการที่ทำงานนาน ใช้ `0` เพื่อปิด |
 
 ตัวอย่างการแยกข้อมูล Runtime และสภาพแวดล้อม Codex:
 
 ```bash
-OPENCREATOR_DATA_DIR=/path/to/opencreator-data \
+VISHNUCREATOR_DATA_DIR=/path/to/vishnucreator-data \
 CODEX_HOME=/path/to/codex-home \
 pnpm web:dev
 ```
@@ -497,11 +497,11 @@ pnpm web:dev
 
 - daemon รับการเชื่อมต่อเฉพาะ `127.0.0.1` และทุก API ยกเว้น health check ต้องใช้ Bearer token
 - ตัวอย่าง HTML ปิดสคริปต์ การนำทาง และป๊อปอัปเป็นค่าเริ่มต้น โดยอนุญาตเฉพาะทรัพยากรสัมพัทธ์ที่ควบคุมไว้ในพื้นที่ทำงานเดียวกัน
-- ความจำที่มีข้อมูลอ่อนไหวต้องยืนยันอีกครั้ง OpenCreator ไม่บันทึกข้อเสนอแนะที่ยังไม่ยืนยันอย่างถาวรโดยอัตโนมัติ
+- ความจำที่มีข้อมูลอ่อนไหวต้องยืนยันอีกครั้ง Vishnu Creator ไม่บันทึกข้อเสนอแนะที่ยังไม่ยืนยันอย่างถาวรโดยอัตโนมัติ
 - ข้อมูลวินิจฉัยและบันทึก Run จะปกปิดข้อมูลสำคัญก่อนส่งกลับหรือส่งออก
 - แพ็กเกจ Desktop เปิดใช้ ASAR integrity และการเข้ารหัสคุกกี้ พร้อมปิด RunAsNode, `NODE_OPTIONS` และ Node CLI Inspector
 
-ดูขั้นตอนสำรอง กู้คืน ล้างข้อมูล และรีเซ็ตใน [คู่มือผู้ใช้และการแก้ปัญหา](../opencreator-user-guide-and-troubleshooting.md)
+ดูขั้นตอนสำรอง กู้คืน ล้างข้อมูล และรีเซ็ตใน [คู่มือผู้ใช้และการแก้ปัญหา](../vishnucreator-user-guide-and-troubleshooting.md)
 
 ## การพัฒนา
 
@@ -526,15 +526,15 @@ pnpm web:dev
 real Codex smoke test ปิดเป็นค่าเริ่มต้น เปิดด้วยคำสั่ง:
 
 ```bash
-OPENCREATOR_RUN_REAL_CODEX_SMOKE=1 \
-pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
+VISHNUCREATOR_RUN_REAL_CODEX_SMOKE=1 \
+pnpm --filter @vishnucreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 ```
 
 ## เอกสาร
 
-- **ใช้ OpenCreator:** [เริ่มต้นใช้งาน](#เริ่มต้นใช้งาน) · [คู่มือผู้ใช้และการแก้ปัญหา](../opencreator-user-guide-and-troubleshooting.md)
+- **ใช้ Vishnu Creator:** [เริ่มต้นใช้งาน](#เริ่มต้นใช้งาน) · [คู่มือผู้ใช้และการแก้ปัญหา](../vishnucreator-user-guide-and-troubleshooting.md)
 - **พัฒนาและขยายความสามารถ:** [คู่มือการมีส่วนร่วม](../../CONTRIBUTING.md) · [จรรยาบรรณ](../../CODE_OF_CONDUCT.md) · [ร่วมพัฒนา Skill](../contributing/skills-contributing.md) · [ร่วมพัฒนาเทมเพลต](../contributing/templates-contributing.md) · [Runtime API v1](../runtime-api-for-ui-v1.md) · [แนวทางคอมโพเนนต์ภาพ](../visual-component-guidelines.md)
-- **ดูแลและเผยแพร่:** [การออกแบบ Runtime ที่ใช้ Codex](../2026-07-03-codex-native-agent-runtime-design.md) · [คู่มือการเผยแพร่ Desktop](../operations/opencreator-desktop-release-runbook.md) · [คู่มือเผยแพร่ Windows Desktop](../operations/opencreator-desktop-windows-release.md)
+- **ดูแลและเผยแพร่:** [การออกแบบ Runtime ที่ใช้ Codex](../2026-07-03-codex-native-agent-runtime-design.md) · [คู่มือการเผยแพร่ Desktop](../operations/vishnucreator-desktop-release-runbook.md) · [คู่มือเผยแพร่ Windows Desktop](../operations/vishnucreator-desktop-windows-release.md)
 
 ## แนวทางการแปล
 
@@ -542,9 +542,9 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 ## ชุมชน
 
-<p>ผู้ใช้ GitHub จาก<strong>อย่างน้อย 105 ประเทศและภูมิภาค</strong>ได้ให้ Star กับ OpenCreator</p>
+<p>ผู้ใช้ GitHub จาก<strong>อย่างน้อย 105 ประเทศและภูมิภาค</strong>ได้ให้ Star กับ Vishnu Creator</p>
 
-<img src="../images/star-coverage-map.svg" alt="แผนที่โลกแสดงประเทศและภูมิภาคที่มีผู้ให้ GitHub Star แก่ OpenCreator" width="760" />
+<img src="../images/star-coverage-map.svg" alt="แผนที่โลกแสดงประเทศและภูมิภาคที่มีผู้ให้ GitHub Star แก่ Vishnu Creator" width="760" />
 
 ### ทีมงาน
 
@@ -554,7 +554,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/wulien.svg" width="64" height="64" alt="wulien" /><br /><a href="https://github.com/wulien">wulien</a><br />โค้ดและแก้บั๊ก</td>
 <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/dle-kb.svg" width="64" height="64" alt="DLe-kb" /><br /><a href="https://github.com/DLe-kb">DLe-kb</a><br />เทมเพลตสร้างสรรค์</td>
 <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/xiaheyuan.svg" width="64" height="64" alt="xiaheyuan" /><br /><a href="https://github.com/xiaheyuan">xiaheyuan</a><br />ออกแบบและทรัพยากรภาพ</td>
-<td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/krillinai.svg" width="64" height="64" alt="krillinai" /><br /><a href="https://github.com/krillinai">krillinai</a><br />Skills และเอกสาร</td>
+<td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/vishnuai.svg" width="64" height="64" alt="vishnuai" /><br /><a href="https://github.com/vishnuai">vishnuai</a><br />Skills และเอกสาร</td>
 <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/hbxugang.svg" width="64" height="64" alt="hbxugang" /><br /><a href="https://github.com/hbxugang">hbxugang</a><br />การปรับใช้ระดับองค์กร</td>
 </tr></table>
 
@@ -566,7 +566,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
   <a href="https://github.com/maranello-o"><img src="../images/contributors/maranello-o.svg" width="48" height="48" alt="maranello-o" /></a>
   <a href="https://github.com/wulien"><img src="../images/contributors/wulien.svg" width="48" height="48" alt="wulien" /></a>
   <a href="https://github.com/puji4810"><img src="../images/contributors/puji4810.svg" width="48" height="48" alt="puji4810" /></a>
-  <a href="https://github.com/krillinai"><img src="../images/contributors/krillinai.svg" width="48" height="48" alt="krillinai" /></a>
+  <a href="https://github.com/vishnuai"><img src="../images/contributors/vishnuai.svg" width="48" height="48" alt="vishnuai" /></a>
   <a href="https://github.com/PairZhu"><img src="../images/contributors/pairzhu.svg" width="48" height="48" alt="PairZhu" /></a>
   <a href="https://github.com/Mijaelx"><img src="../images/contributors/mijaelx.svg" width="48" height="48" alt="Mijaelx" /></a>
   <a href="https://github.com/OutisLi"><img src="../images/contributors/outisli.svg" width="48" height="48" alt="OutisLi" /></a>
@@ -582,7 +582,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
   <a href="https://github.com/DLe-kb"><img src="../images/contributors/dle-kb.svg" width="48" height="48" alt="DLe-kb" /></a>
   <a href="https://github.com/liupig"><img src="../images/contributors/liupig.svg" width="48" height="48" alt="liupig" /></a>
   <a href="https://github.com/alextavares" title="alextavares"><img src="../images/contributors/alextavares.svg" width="48" height="48" alt="alextavares" /></a>
-  <a href="https://github.com/krillinai/OpenCreator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
+  <a href="https://github.com/vishnuai/Vishnu Creator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
   <a href="https://github.com/mifan100g" title="mifan100g (米饭二两)"><img src="../images/contributors/mifan100g.svg" width="48" height="48" alt="mifan100g (米饭二两)" /></a>
   <a href="https://github.com/askalf"><img src="../images/contributors/askalf.svg" width="48" height="48" alt="askalf" /></a>
   <a href="https://github.com/Yi-111-a"><img src="../images/contributors/yi-111-a.svg" width="48" height="48" alt="Yi-111-a" /></a>
@@ -605,9 +605,9 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 ## ประวัติ Star
 
-OpenCreator เดิมชื่อ KrillinAI กราฟนี้แสดงประวัติทั้งหมดของ repository ตลอดช่วงที่เปลี่ยนชื่อ
+Vishnu Creator เดิมชื่อ VishnuAI กราฟนี้แสดงประวัติทั้งหมดของ repository ตลอดช่วงที่เปลี่ยนชื่อ
 
-[![ประวัติ Star ของ OpenCreator](https://api.star-history.com/svg?repos=krillinai/OpenCreator&type=date)](https://www.star-history.com/?type=date&repos=krillinai%2FOpenCreator)
+[![ประวัติ Star ของ Vishnu Creator](https://api.star-history.com/svg?repos=vishnuai/Vishnu Creator&type=date)](https://www.star-history.com/?type=date&repos=vishnuai%2FVishnu Creator)
 
 ## โครงการที่เกี่ยวข้อง
 
@@ -627,6 +627,6 @@ OpenCreator เดิมชื่อ KrillinAI กราฟนี้แสดง
 
 <div align="center">
 
-**OpenCreator · สร้างสรรค์ในเครื่อง ทำงานได้ต่อเนื่อง**
+**Vishnu Creator · สร้างสรรค์ในเครื่อง ทำงานได้ต่อเนื่อง**
 
 </div>

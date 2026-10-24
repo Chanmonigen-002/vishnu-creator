@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { createCreatorAgentRepository } from '../../src/creator/agent/repository.js';
 import { createCreatorCommandDispatcher } from '../../src/creator/command-dispatcher.js';
 import type { CreatorExecutor } from '../../src/creator/executor.js';
@@ -177,7 +177,7 @@ function setup(options: {
 }
 
 describe('stickman video workflow', () => {
-  it('queues KrillinAI directly for a YouTube source without a download stage', async () => {
+  it('queues VishnuAI directly for a YouTube source without a download stage', async () => {
     const { db, service, repository, workflow } = setup();
     try {
       const job = service.createJob({
@@ -199,7 +199,7 @@ describe('stickman video workflow', () => {
 
       expect(service.getJob(job.id)!.stages).toMatchObject([{
         stageId: 'source-transcript',
-        executor: 'krillinai',
+        executor: 'vishnuai',
         status: 'queued'
       }]);
       expect(service.getJob(job.id)!.stages.some(stage => stage.stageId === 'acquire-source'))

@@ -1,8 +1,8 @@
-# KrillinAI 当前翻译流程：逐步实现说明
+# VishnuAI 当前翻译流程：逐步实现说明
 
 > 本文保留本轮源文拆句改造之前的流程快照。2026-10-22 已将音频和平台 VTT 的 NLP 结果改为实际翻译单元，最新拆句顺序、降级及验收结果见 [源文意群拆分实现](video-translation-source-units-20261022.md)。本文下述“当前”“完整父句”“NLP 仅作提示”均指改造前状态；后续翻译与校准步骤仍可作为实现参考。
 
-整理日期：2026-10-22。范围为 OpenCreator 当前工作区的 `runtime/krillinai`，包括已有的未提交修改；基准 HEAD 为 `8b4bd9db4ecb87b20ba5dbf14b71dce7612c085e`。本文描述源码中的实际行为，不代表线上或已打包客户端已经运行这些代码。
+整理日期：2026-10-22。范围为 Vishnu Creator 当前工作区的 `runtime/vishnuai`，包括已有的未提交修改；基准 HEAD 为 `8b4bd9db4ecb87b20ba5dbf14b71dce7612c085e`。本文描述源码中的实际行为，不代表线上或已打包客户端已经运行这些代码。
 
 本次只梳理音频与 YouTube VTT 两个入口及其共同翻译核心，不修改业务代码，不重新调用模型测试。原始 SRT 导入、视频下载调度、配音和视频合成不在展开范围内。
 
@@ -32,7 +32,7 @@ flowchart TD
     N --> O[导出字幕文件]
 ```
 
-默认值位置：[流程开关](../../runtime/krillinai/internal/service/translation_segmented.go#L18)、[修订开关](../../runtime/krillinai/internal/service/translation_revision.go#L14)、[Translator 初始化](../../runtime/krillinai/internal/service/translate.go#L38)。共同调度入口是 [translatePairedSentences](../../runtime/krillinai/internal/service/paired_translation.go#L237)。
+默认值位置：[流程开关](../../runtime/vishnuai/internal/service/translation_segmented.go#L18)、[修订开关](../../runtime/vishnuai/internal/service/translation_revision.go#L14)、[Translator 初始化](../../runtime/vishnuai/internal/service/translate.go#L38)。共同调度入口是 [translatePairedSentences](../../runtime/vishnuai/internal/service/paired_translation.go#L237)。
 
 ## 二、五个容易混淆的单位
 
@@ -48,18 +48,18 @@ flowchart TD
 
 ## 三、步骤 1：决定源文从哪里来
 
-入口是 [GenerateSubtitles](../../runtime/krillinai/internal/pipeline/subtitle.go#L41)。
+入口是 [GenerateSubtitles](../../runtime/vishnuai/internal/pipeline/subtitle.go#L41)。
 
-- YouTube 且选择自动来源时，OpenCreator 外层先尝试平台字幕；只有 `platform_caption_failed`、`platform_caption_invalid` 这类字幕获取或有效性错误，才切换到音频识别。
+- YouTube 且选择自动来源时，Vishnu Creator 外层先尝试平台字幕；只有 `platform_caption_failed`、`platform_caption_invalid` 这类字幕获取或有效性错误，才切换到音频识别。
 - 明确选平台字幕，就不自动改用音频；明确选音频识别，则直接进入音频路径。
 - 访问、鉴权或模型翻译错误，不会统一解释为“平台字幕不行”，继而盲目重做 ASR。
 - `source-only` 模式取得原字幕后跳过翻译。
 
-外层来源计划见 [execution-plan.ts](../../apps/daemon/src/creator/krillin/execution-plan.ts)。视频文件下载属于媒体准备，不能计作翻译模型的一环；配音与合成发生在字幕生成之后。
+外层来源计划见 [execution-plan.ts](../../apps/daemon/src/creator/vishnu/execution-plan.ts)。视频文件下载属于媒体准备，不能计作翻译模型的一环；配音与合成发生在字幕生成之后。
 
 ## 四、步骤 2A：VTT 转成可翻译文本和时间坐标
 
-实现入口：[processYouTubeSubtitle](../../runtime/krillinai/internal/service/youtube_subtitle.go#L515)。
+实现入口：[processYouTubeSubtitle](../../runtime/vishnuai/internal/service/youtube_subtitle.go#L515)。
 
 **有词级行内时间戳时：**
 
@@ -71,7 +71,7 @@ flowchart TD
 
 **只有 cue 块级时间时：**先转临时 SRT，清理正文，然后走同一个批量入口。
 
-[BatchTranslateSrtBlocks](../../runtime/krillinai/internal/service/paired_translation.go#L674) 会验证每条时间，并建立“源文字符位置 → 原时间区间”的对应表，随后把各 cue 文本重新连接为全文，再统一分句。原 cue 被当作时间证据，不被直接当作完整语义句。
+[BatchTranslateSrtBlocks](../../runtime/vishnuai/internal/service/paired_translation.go#L674) 会验证每条时间，并建立“源文字符位置 → 原时间区间”的对应表，随后把各 cue 文本重新连接为全文，再统一分句。原 cue 被当作时间证据，不被直接当作完整语义句。
 
 若词级文本能与全文完整匹配，则使用词时间；匹配失败会保留全部正文，退回原 cue 时间区间，而不是丢弃匹配不上的文字。
 
@@ -79,14 +79,14 @@ flowchart TD
 
 ## 五、步骤 2B：音频转成可翻译文本和词时间
 
-主要实现：[audio2subtitle.go](../../runtime/krillinai/internal/service/audio2subtitle.go)、[split_audio.go](../../runtime/krillinai/internal/service/split_audio.go)、[transcription_checkpoint.go](../../runtime/krillinai/internal/service/transcription_checkpoint.go)。
+主要实现：[audio2subtitle.go](../../runtime/vishnuai/internal/service/audio2subtitle.go)、[split_audio.go](../../runtime/vishnuai/internal/service/split_audio.go)、[transcription_checkpoint.go](../../runtime/vishnuai/internal/service/transcription_checkpoint.go)。
 
 1. 按配置切音频，代码默认每段约 5 分钟，在预计切点前后约 8 秒内寻找较安静的位置；很短的尾段可并入前段。
 2. FFmpeg 输出音频段，调用配置的 ASR 服务，取得 `Text` 及带起止时间的 `Words`。
 3. 转录并发默认 1，单段识别最多尝试默认 3 次；明确不可重试的错误会提前结束。
 4. 按音频内容哈希、语言与识别配置指纹保存转录检查点，续跑可复用已有识别结果。
 
-这里的执行顺序很关键：[startTranslateWorker](../../runtime/krillinai/internal/service/audio2subtitle.go#L863) 会**等待全部音频段转录完成**，按段排序后才开始正文翻译。多段音频会先统一准备全片的分句、NLP 和语境术语计划，再映射回各段。
+这里的执行顺序很关键：[startTranslateWorker](../../runtime/vishnuai/internal/service/audio2subtitle.go#L863) 会**等待全部音频段转录完成**，按段排序后才开始正文翻译。多段音频会先统一准备全片的分句、NLP 和语境术语计划，再映射回各段。
 
 音频段之间顺序翻译；一个音频段内部可以并发多个翻译批次。跨音频段共享全片语境与术语，但相邻两句的正文上下文来自当前段，并不自动跨段携带。
 
@@ -94,7 +94,7 @@ flowchart TD
 
 ## 六、步骤 3：先形成父句，并保护请求预算
 
-实现：[prepareTranslationSentences](../../runtime/krillinai/internal/service/subtitle_sentence_semantic.go#L25)、[subtitle_sentences.go](../../runtime/krillinai/internal/service/subtitle_sentences.go)。
+实现：[prepareTranslationSentences](../../runtime/vishnuai/internal/service/subtitle_sentence_semantic.go#L25)、[subtitle_sentences.go](../../runtime/vishnuai/internal/service/subtitle_sentences.go)。
 
 输入是整理后的源文，输出是拥有稳定 ID 的父句列表。
 
@@ -106,11 +106,11 @@ flowchart TD
 
 **模型调用：**多数父句为 0 次；上述特殊预算切口最多追加 1 次逻辑调用，可命中缓存。
 
-Prompt：[subtitle_sentence_split_prompt.txt](../../runtime/krillinai/internal/service/subtitle_sentence_split_prompt.txt)。
+Prompt：[subtitle_sentence_split_prompt.txt](../../runtime/vishnuai/internal/service/subtitle_sentence_split_prompt.txt)。
 
 ## 七、步骤 4：NLP 给父句内部提供边界建议
 
-实现：[prepareTranslationNLPHints](../../runtime/krillinai/internal/service/subtitle_nlp.go#L102)、[subtitle_nlp.py](../../runtime/krillinai/internal/service/subtitle_nlp.py)。
+实现：[prepareTranslationNLPHints](../../runtime/vishnuai/internal/service/subtitle_nlp.go#L102)、[subtitle_nlp.py](../../runtime/vishnuai/internal/service/subtitle_nlp.py)。
 
 本地 Python + spaCy 大致依次使用句法模型句界、逗号两侧从句和连接词寻找切口，返回连续源文片段。它借鉴了 VideoLingo 的句法拆分思路。
 
@@ -122,11 +122,11 @@ Prompt：[subtitle_sentence_split_prompt.txt](../../runtime/krillinai/internal/s
 
 **模型调用：**NLP 本身为 0；较长的 NLP 片段可能各追加 1 次细化调用。
 
-Prompt：[subtitle_nlp_split_prompt.txt](../../runtime/krillinai/internal/service/subtitle_nlp_split_prompt.txt)。
+Prompt：[subtitle_nlp_split_prompt.txt](../../runtime/vishnuai/internal/service/subtitle_nlp_split_prompt.txt)。
 
 ## 八、步骤 5：整理章节语境、术语和全片摘要
 
-实现：[prepareTranslationSemanticPlan](../../runtime/krillinai/internal/service/translation_semantic_context.go#L266)。
+实现：[prepareTranslationSemanticPlan](../../runtime/vishnuai/internal/service/translation_semantic_context.go#L266)。
 
 这一步发生在父句和 NLP 准备之后，不是先于所有分句的全片术语扫描。
 
@@ -140,11 +140,11 @@ Prompt：[subtitle_nlp_split_prompt.txt](../../runtime/krillinai/internal/servic
 
 **模型调用：**每章通常 1 次；多章另有分层摘要调用，均可复用缓存。
 
-Prompt：[translation_semantic_context_prompt.txt](../../runtime/krillinai/internal/service/translation_semantic_context_prompt.txt)；摘要汇总 Prompt 在 `translation_semantic_context.go` 内。
+Prompt：[translation_semantic_context_prompt.txt](../../runtime/vishnuai/internal/service/translation_semantic_context_prompt.txt)；摘要汇总 Prompt 在 `translation_semantic_context.go` 内。
 
 ## 九、步骤 6：组批、加邻句上下文、读取恢复状态
 
-实现：[buildPairedTranslationBatchesWithNLP](../../runtime/krillinai/internal/service/paired_translation.go#L143)、[translationBatchContext](../../runtime/krillinai/internal/service/translation_content.go#L30)、[openTranslationCheckpoint](../../runtime/krillinai/internal/service/translation_checkpoint.go#L36)。
+实现：[buildPairedTranslationBatchesWithNLP](../../runtime/vishnuai/internal/service/paired_translation.go#L143)、[translationBatchContext](../../runtime/vishnuai/internal/service/translation_content.go#L30)、[openTranslationCheckpoint](../../runtime/vishnuai/internal/service/translation_checkpoint.go#L36)。
 
 每批最多 VTT 10 个父句、音频 12 个父句，同时受约 16000 请求字节和 6500 输出 token 预算约束。组批时输出量使用文本字节数经验估算，不是模型 tokenizer 的精确计数。
 
@@ -165,7 +165,7 @@ Prompt：[translation_semantic_context_prompt.txt](../../runtime/krillinai/inter
 
 ## 十、步骤 7：初译只生成完整译文
 
-实现：[translateContentBatch](../../runtime/krillinai/internal/service/translation_content.go#L86)。
+实现：[translateContentBatch](../../runtime/vishnuai/internal/service/translation_content.go#L86)。
 
 输入包含源语言、目标语言、当前父句 ID 和全文、邻句上下文及相关语境术语。主要返回结构为：
 
@@ -181,11 +181,11 @@ Prompt 要求自然口语、保留事实、专名、数字、否定、条件与�
 
 仍失败的父句会保留原文作为目标文本，写入 `TranslationFallbackReason`，其他句子继续。回退项不再进入术语和排版审校，不会被标成已经翻译成功。最后如果全片正文均失败，则任务报错；部分失败则允许带警告导出。
 
-Prompt：[translation_content_prompt.txt](../../runtime/krillinai/internal/service/translation_content_prompt.txt)。硬检查：[translation_validation.go](../../runtime/krillinai/internal/service/translation_validation.go)。回退：[translation_semantic_review.go](../../runtime/krillinai/internal/service/translation_semantic_review.go#L19)。
+Prompt：[translation_content_prompt.txt](../../runtime/vishnuai/internal/service/translation_content_prompt.txt)。硬检查：[translation_validation.go](../../runtime/vishnuai/internal/service/translation_validation.go)。回退：[translation_semantic_review.go](../../runtime/vishnuai/internal/service/translation_semantic_review.go#L19)。
 
 ## 十一、步骤 8：默认对正文做内容修订，有改动再核验
 
-实现：[reviseContentBatch](../../runtime/krillinai/internal/service/translation_revision.go#L33)。
+实现：[reviseContentBatch](../../runtime/vishnuai/internal/service/translation_revision.go#L33)。
 
 所有没有完成当前版本修订的有效父句都会进入本步骤，不只处理长句或程序发现明显错误的句子。
 
@@ -201,11 +201,11 @@ Prompt：[translation_content_prompt.txt](../../runtime/krillinai/internal/servi
 
 成功或无需修改的父句写入 `RevisionVersion` 与 `SemanticReviewed=true`。
 
-Prompt：[translation_revision_prompt.txt](../../runtime/krillinai/internal/service/translation_revision_prompt.txt)；核验 Prompt 在 `translation_revision.go` 内。
+Prompt：[translation_revision_prompt.txt](../../runtime/vishnuai/internal/service/translation_revision_prompt.txt)；核验 Prompt 在 `translation_revision.go` 内。
 
 ## 十二、步骤 9：条件术语检查，通常不再重复执行
 
-实现：[completeSemanticBatch](../../runtime/krillinai/internal/service/translation_semantic_review.go#L52)。
+实现：[completeSemanticBatch](../../runtime/vishnuai/internal/service/translation_semantic_review.go#L52)。
 
 只有同时满足以下条件的父句才请求 `translation_term_review`：尚未 `SemanticReviewed`，并且存在有源文证据的适用术语。
 
@@ -213,11 +213,11 @@ Prompt：[translation_revision_prompt.txt](../../runtime/krillinai/internal/serv
 
 模型可返回完整修正译文。程序检查 ID、术语作用域、结构、合理长度等，然后应用修正、重置排版。**此分支没有再走内容修订那种独立原文语义核验。**普通失败保留已有译文，永久服务错误仍可能传播。
 
-Prompt：[translation_semantic_review_prompt.txt](../../runtime/krillinai/internal/service/translation_semantic_review_prompt.txt)。
+Prompt：[translation_semantic_review_prompt.txt](../../runtime/vishnuai/internal/service/translation_semantic_review_prompt.txt)。
 
 ## 十三、步骤 10：冻结译文，做双语配对排版
 
-实现：[completeSemanticBatch 后半段](../../runtime/krillinai/internal/service/translation_semantic_review.go#L150)、[translatePairedBatch](../../runtime/krillinai/internal/service/translation_recovery.go#L197)、[parsePairedTranslation](../../runtime/krillinai/internal/service/paired_translation.go#L459)。
+实现：[completeSemanticBatch 后半段](../../runtime/vishnuai/internal/service/translation_semantic_review.go#L150)、[translatePairedBatch](../../runtime/vishnuai/internal/service/translation_recovery.go#L197)、[parsePairedTranslation](../../runtime/vishnuai/internal/service/paired_translation.go#L459)。
 
 先尝试本地复用现有配对。短的单段句、没有多段 NLP 建议且通过布局检查时，可以不请求排版模型；需要拆分时才合批请求。
 
@@ -238,11 +238,11 @@ Prompt：[translation_semantic_review_prompt.txt](../../runtime/krillinai/intern
 
 排版最多 3 轮，但已经有完整可用候选时可能提前降级；只处理未通过父句。失败时保留完整译文或已有布局，后续尝试局部切分，仍可带排版警告继续。
 
-Prompt：[paired_translation_prompt.txt](../../runtime/krillinai/internal/service/paired_translation_prompt.txt)。本地合并策略：[subtitle_paired_layout.go](../../runtime/krillinai/internal/service/subtitle_paired_layout.go)。
+Prompt：[paired_translation_prompt.txt](../../runtime/vishnuai/internal/service/paired_translation_prompt.txt)。本地合并策略：[subtitle_paired_layout.go](../../runtime/vishnuai/internal/service/subtitle_paired_layout.go)。
 
 ## 十四、步骤 11：审查多段边界，特定情况下仍可改正文
 
-实现：[reviewPairedLayouts](../../runtime/krillinai/internal/service/subtitle_layout_review.go#L14)。
+实现：[reviewPairedLayouts](../../runtime/vishnuai/internal/service/subtitle_layout_review.go#L14)。
 
 只处理存在多个子配对且尚未 `LayoutReviewed` 的父句。输入完整父源文、全文译文、全部配对、NLP 建议和目标长度，要求逐句返回是否对齐、边界是否自然及原因。只返回空 `corrections` 不能证明完成审校。
 
@@ -254,11 +254,11 @@ Prompt：[paired_translation_prompt.txt](../../runtime/krillinai/internal/servic
 
 普通单段无需模型边界审校，可在本地记为已审。程序的局部中文补语规则只明确拦截“当作／视为／看作／称为”这类尾标记，没有覆盖所有中文动宾、补语或修饰结构。
 
-Prompt：[subtitle_layout_review_prompt.txt](../../runtime/krillinai/internal/service/subtitle_layout_review_prompt.txt)。改写与边界核验实现位于 [subtitle_length_split.go](../../runtime/krillinai/internal/service/subtitle_length_split.go) 中，当前边界审校仍调用这些函数。
+Prompt：[subtitle_layout_review_prompt.txt](../../runtime/vishnuai/internal/service/subtitle_layout_review_prompt.txt)。改写与边界核验实现位于 [subtitle_length_split.go](../../runtime/vishnuai/internal/service/subtitle_length_split.go) 中，当前边界审校仍调用这些函数。
 
 ## 十五、步骤 12：最终超长项使用局部英文 Prompt 纯切分
 
-实现：[splitLongPairedSubtitles](../../runtime/krillinai/internal/service/subtitle_length_split.go#L93)。这是最近调整的步骤。
+实现：[splitLongPairedSubtitles](../../runtime/vishnuai/internal/service/subtitle_length_split.go#L93)。这是最近调整的步骤。
 
 逐个检查子配对，**原文或译文任一侧超过固定 75 显示单位**才处理。输入仅包含：
 
@@ -281,7 +281,7 @@ Prompt：[subtitle_layout_review_prompt.txt](../../runtime/krillinai/internal/se
 
 还有一个实际顺序问题：此步骤在边界审校**之后**，新切口会设为 `LayoutReviewed=false`，但本轮不会回头再跑一次边界审校。因此，“发挥出／Notion 的全部潜力”这种不自然切口，可能满足文字覆盖检查却仍被保留。这能解释程序为何没有拦住这类边界，不能代替对某次模型原始响应的复盘。
 
-Prompt 全文：[subtitle_length_split_prompt.txt](../../runtime/krillinai/internal/service/subtitle_length_split_prompt.txt)。
+Prompt 全文：[subtitle_length_split_prompt.txt](../../runtime/vishnuai/internal/service/subtitle_length_split_prompt.txt)。
 
 ## 十六、步骤 13：恢复时间轴，导出各类字幕
 
@@ -289,13 +289,13 @@ Prompt 全文：[subtitle_length_split_prompt.txt](../../runtime/krillinai/inter
 
 如果某个父句切出的内部子条没有正时长，VTT 路径允许合回完整父句导出。这个时间轴降级发生在超长切分之后，可能重新产生长字幕；源码允许这种情况，但不代表此前具体案例一定触发了这个分支。
 
-**音频：**[pairedAudioTiming](../../runtime/krillinai/internal/service/subtitle_timing.go#L11) 先匹配 ASR 词时间。全文和词列表标点等不一致时退回现有 `TimestampGenerator`，再做时间规范化。若仍无法生成有效时间，则会报错，不能统一假定有文本就一定能导出。
+**音频：**[pairedAudioTiming](../../runtime/vishnuai/internal/service/subtitle_timing.go#L11) 先匹配 ASR 词时间。全文和词列表标点等不一致时退回现有 `TimestampGenerator`，再做时间规范化。若仍无法生成有效时间，则会报错，不能统一假定有文本就一定能导出。
 
 时间规范化避免不允许的重叠；非正时长可延至 300ms，这不等于每条字幕都强制至少 300ms。词内部插值也不是重新进行声学强制对齐。
 
 之后生成原文、目标语言、双语等字幕文件。短原文、竖屏等派生产物可另做程序切分，属于展示产物处理，不是再次翻译正文。音频路径最后合并各音频段结果。
 
-实现：[VTT 时间映射和回并](../../runtime/krillinai/internal/service/paired_translation.go#L616)、[generateSrtWithTimestamps](../../runtime/krillinai/internal/service/audio2subtitle.go#L1587)、[srt_timeline.go](../../runtime/krillinai/internal/service/srt_timeline.go)。
+实现：[VTT 时间映射和回并](../../runtime/vishnuai/internal/service/paired_translation.go#L616)、[generateSrtWithTimestamps](../../runtime/vishnuai/internal/service/audio2subtitle.go#L1587)、[srt_timeline.go](../../runtime/vishnuai/internal/service/srt_timeline.go)。
 
 ## 十七、长度与预算参数汇总
 
@@ -316,7 +316,7 @@ Prompt 全文：[subtitle_length_split_prompt.txt](../../runtime/krillinai/inter
 | 语境章节 | 约 6500 JSON 字节／最多 64 父句 | 每章摘要最多 600 字节、术语最多 12 条。 |
 | ASR 音频段 | 默认约 5 分钟 | 独立于父句和翻译批次。 |
 
-显示长度由 [subtitleTargetLength](../../runtime/krillinai/internal/service/subtitle_text.go#L24) 按字素簇计算：宽字符、全角字符通常计 2，普通字母、空格通常计 1。因此 50 显示单位大致只相当于 25 个汉字；75 显示单位大致相当于 37 个汉字加少量半角字符，不能直接理解为 75 个汉字。
+显示长度由 [subtitleTargetLength](../../runtime/vishnuai/internal/service/subtitle_text.go#L24) 按字素簇计算：宽字符、全角字符通常计 2，普通字母、空格通常计 1。因此 50 显示单位大致只相当于 25 个汉字；75 显示单位大致相当于 37 个汉字加少量半角字符，不能直接理解为 75 个汉字。
 
 ## 十八、为什么“最多三次”不是整个流程只请求三次
 
@@ -338,7 +338,7 @@ Prompt 全文：[subtitle_length_split_prompt.txt](../../runtime/krillinai/inter
 
 除此以外还有服务重试：
 
-- [requestTranslation](../../runtime/krillinai/internal/service/translation_recovery.go#L139) 对网络错误、5xx 和普通 429 做有限重试，默认最多 3 次，退避约 1 秒、2 秒；401、403、402 和额度耗尽等不作为普通临时错误反复请求。
+- [requestTranslation](../../runtime/vishnuai/internal/service/translation_recovery.go#L139) 对网络错误、5xx 和普通 429 做有限重试，默认最多 3 次，退避约 1 秒、2 秒；401、403、402 和额度耗尽等不作为普通临时错误反复请求。
 - 默认流程的语境、修订、部分审校走 `semanticJSON`，通常直接调用客户端，不套用上述同一层网络重试；不能把所有阶段说成同一套重试策略。
 - OpenAI 兼容客户端主模型服务失败时，还可能尝试备用模型，使用同一任务载荷。备用是服务故障回退，不是分别生成后择优。
 
@@ -350,7 +350,7 @@ Prompt 全文：[subtitle_length_split_prompt.txt](../../runtime/krillinai/inter
 
 软排版目标和批次大小不进入正文内容指纹，所以修改它们可以复用已有译文再排版。修订、NLP、排版各有版本或缓存状态。读取正文检查点之前仍需准备或读取分句、NLP 和语境计划缓存，并不是点继续就完全跳过前处理。
 
-翻译状态由 [finishTranslationResult](../../runtime/krillinai/internal/service/translation_fallback.go#L50) 在共同核心返回配对前汇总，时间轴处理和字幕文件输出仍在其后；音频调用方还会汇总各段状态。因此，翻译核心完成不等于文件导出已经成功。
+翻译状态由 [finishTranslationResult](../../runtime/vishnuai/internal/service/translation_fallback.go#L50) 在共同核心返回配对前汇总，时间轴处理和字幕文件输出仍在其后；音频调用方还会汇总各段状态。因此，翻译核心完成不等于文件导出已经成功。
 
 具体规则是：
 

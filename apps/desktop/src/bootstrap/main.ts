@@ -20,12 +20,12 @@ type BootstrapApi = {
 
 declare global {
   interface Window {
-    opencreatorDesktop?: BootstrapApi;
+    vishnucreatorDesktop?: BootstrapApi;
   }
 }
 
-const api = window.opencreatorDesktop;
-if (api === undefined) throw new Error('OpenCreator Desktop bridge is unavailable');
+const api = window.vishnucreatorDesktop;
+if (api === undefined) throw new Error('VishnuCreator Desktop bridge is unavailable');
 if (
   api.windowChrome?.integratedTitleBar === true
   && typeof api.windowChrome.titleBarHeight === 'number'
@@ -33,11 +33,11 @@ if (
 ) {
   document.documentElement.dataset.integratedTitleBar = 'true';
   document.documentElement.style.setProperty(
-    '--opencreator-titlebar-height',
+    '--vishnucreator-titlebar-height',
     `${api.windowChrome.titleBarHeight}px`
   );
   document.documentElement.style.setProperty(
-    '--opencreator-traffic-light-inset',
+    '--vishnucreator-traffic-light-inset',
     `${api.windowChrome.trafficLightInset}px`
   );
   if (api.controlWindow !== undefined) {
@@ -68,14 +68,14 @@ const selectCodex = element('select-codex');
 let currentState: BootstrapState | undefined;
 
 const labels: Record<BootstrapState['phase'], [string, string]> = {
-  idle: ['Preparing OpenCreator', 'Initializing the desktop environment'],
+  idle: ['Preparing VishnuCreator', 'Initializing the desktop environment'],
   resolving_codex: ['Locating Codex', 'Reading the shell environment and saved paths'],
-  starting_daemon: ['Starting the local Runtime', 'Creating an isolated OpenCreator Runtime'],
+  starting_daemon: ['Starting the local Runtime', 'Creating an isolated VishnuCreator Runtime'],
   probing_codex: ['Checking Codex availability', 'Checking the local Codex process'],
-  starting_runtime: ['Opening OpenCreator', 'Loading local data and Codex capabilities'],
-  ready: ['Opening OpenCreator', 'The local Runtime is ready'],
+  starting_runtime: ['Opening VishnuCreator', 'Loading local data and Codex capabilities'],
+  ready: ['Opening VishnuCreator', 'The local Runtime is ready'],
   workspace_failed: ['Dashboard failed to load', 'The local Runtime is still running. Reload the Dashboard or restart the Runtime.'],
-  failed: ['Codex CLI is unavailable', 'OpenCreator did not receive a valid response. Check diagnostics and try again.']
+  failed: ['Codex CLI is unavailable', 'VishnuCreator did not receive a valid response. Check diagnostics and try again.']
 };
 
 api.subscribeBootstrapState(render);
@@ -138,7 +138,7 @@ function failureLabel(state: BootstrapState): [string, string] {
   }
   if (state.error?.code === 'RUNTIME_DATA_IN_USE') {
     return [
-      'OpenCreator Runtime is already running',
+      'VishnuCreator Runtime is already running',
       'Another instance is using the same data directory. Close the other window for this version and try again.'
     ];
   }

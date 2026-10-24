@@ -1,4 +1,4 @@
-import type { CreatorJob, CreatorStageRun } from '@opencreator/protocol';
+import type { CreatorJob, CreatorStageRun } from '@vishnucreator/protocol';
 import type { CreatorCommandDispatcher } from '../command-dispatcher.js';
 import type { CreatorService } from '../service.js';
 

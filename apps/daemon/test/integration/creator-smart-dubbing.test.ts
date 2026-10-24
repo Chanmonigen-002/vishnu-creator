@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -124,7 +124,7 @@ describe('creator smart dubbing', () => {
     expect(artifact).toMatchObject({
       status: 'completed',
       metadata: {
-        fileName: 'OpenCreator-dubbing.mp3',
+        fileName: 'VishnuCreator-dubbing.mp3',
         provider: 'openai',
         model: 'gpt-4o-mini-tts',
         voiceCode: 'nova',

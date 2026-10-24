@@ -12,7 +12,7 @@ describe('creator agent event normalizer', () => {
           clientId: 'client-1',
           content: [{
             type: 'inputText',
-            text: '用户请求：检查任务\nOpenCreator Context Projection：{"secret":"internal"}'
+            text: '用户请求：检查任务\nVishnuCreator Context Projection：{"secret":"internal"}'
           }]
         }
       }
@@ -38,7 +38,7 @@ describe('creator agent event normalizer', () => {
         item: {
           id: 'runtime-tool-1',
           type: 'mcpToolCall',
-          server: 'opencreator_tools',
+          server: 'vishnucreator_tools',
           tool: 'creator_get_context',
           status: 'completed',
           durationMs: 12,
@@ -51,11 +51,11 @@ describe('creator agent event normalizer', () => {
     expect(normalized.item).toMatchObject({
       kind: 'tool_result',
       status: 'completed',
-      toolName: 'opencreator_tools.creator_get_context',
+      toolName: 'vishnucreator_tools.creator_get_context',
       data: {
         type: 'mcpToolCall',
         id: 'runtime-tool-1',
-        server: 'opencreator_tools',
+        server: 'vishnucreator_tools',
         tool: 'creator_get_context',
         status: 'completed',
         durationMs: 12

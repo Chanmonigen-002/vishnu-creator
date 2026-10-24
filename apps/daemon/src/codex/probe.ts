@@ -56,11 +56,11 @@ export type CodexProbeTimings = {
 
 export async function probeCodex(input: CodexProbeInput): Promise<CodexProbeResult> {
   mkdirSync(input.cwd, { recursive: true });
-  const marker = `OPENCREATOR_READY_${randomBytes(12).toString('hex')}`;
+  const marker = `VISHNUCREATOR_READY_${randomBytes(12).toString('hex')}`;
   const outputPath = join(input.cwd, `probe-${process.pid}-${Date.now()}.txt`);
   rmSync(outputPath, { force: true });
   const prompt = [
-    'This is a OpenCreator startup availability probe.',
+    'This is a VishnuCreator startup availability probe.',
     'Do not call tools and do not modify files.',
     'Reply briefly to this hello message.',
     `If possible, include this marker: ${marker}`

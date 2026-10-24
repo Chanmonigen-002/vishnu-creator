@@ -2,7 +2,7 @@ import { mkdtemp, readdir, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, expect, it, vi } from 'vitest';
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 import { createDirectTransport } from '../../src/gateway/direct-transport.js';
 import { readPrivateJsonFile } from '../../src/config/private-json-file.js';
 

@@ -1,4 +1,4 @@
-name: OpenCreator Release
+name: VishnuCreator Release
 
 on:
   workflow_dispatch:
@@ -100,16 +100,16 @@ jobs:
         run: |
           case "$TARGET" in
             all|publish)
-              matrix='{"include":[{"name":"macos-x64","os":"macos-15-intel","platform":"darwin","arch":"x64","artifact":"opencreator-desktop-macos-x64"},{"name":"macos-arm64","os":"macos-15","platform":"darwin","arch":"arm64","artifact":"opencreator-desktop-macos-arm64"},{"name":"windows-x64","os":"windows-latest","platform":"win32","arch":"x64","artifact":"opencreator-desktop-windows-x64-unsigned"}]}'
+              matrix='{"include":[{"name":"macos-x64","os":"macos-15-intel","platform":"darwin","arch":"x64","artifact":"vishnucreator-desktop-macos-x64"},{"name":"macos-arm64","os":"macos-15","platform":"darwin","arch":"arm64","artifact":"vishnucreator-desktop-macos-arm64"},{"name":"windows-x64","os":"windows-latest","platform":"win32","arch":"x64","artifact":"vishnucreator-desktop-windows-x64-unsigned"}]}'
               ;;
             macos-x64)
-              matrix='{"include":[{"name":"macos-x64","os":"macos-15-intel","platform":"darwin","arch":"x64","artifact":"opencreator-desktop-macos-x64"}]}'
+              matrix='{"include":[{"name":"macos-x64","os":"macos-15-intel","platform":"darwin","arch":"x64","artifact":"vishnucreator-desktop-macos-x64"}]}'
               ;;
             macos-arm64)
-              matrix='{"include":[{"name":"macos-arm64","os":"macos-15","platform":"darwin","arch":"arm64","artifact":"opencreator-desktop-macos-arm64"}]}'
+              matrix='{"include":[{"name":"macos-arm64","os":"macos-15","platform":"darwin","arch":"arm64","artifact":"vishnucreator-desktop-macos-arm64"}]}'
               ;;
             windows-x64)
-              matrix='{"include":[{"name":"windows-x64","os":"windows-latest","platform":"win32","arch":"x64","artifact":"opencreator-desktop-windows-x64-unsigned"}]}'
+              matrix='{"include":[{"name":"windows-x64","os":"windows-latest","platform":"win32","arch":"x64","artifact":"vishnucreator-desktop-windows-x64-unsigned"}]}'
               ;;
             *)
               echo "::error::不支持的 Desktop 构建目标：$TARGET"
@@ -128,10 +128,10 @@ jobs:
     runs-on: ${{ matrix.os }}
     environment: release
     env:
-      OPENCREATOR_DESKTOP_CACHE_DIR: ${{ github.workspace }}/apps/desktop/.cache
+      VISHNUCREATOR_DESKTOP_CACHE_DIR: ${{ github.workspace }}/apps/desktop/.cache
       ELECTRON_CACHE: ${{ github.workspace }}/apps/desktop/.cache/electron
-      OPENCREATOR_DESKTOP_BUILD_MANIFEST: ${{ github.workspace }}/apps/desktop/release/opencreator-desktop-build-manifest-${{ matrix.platform }}-${{ matrix.arch }}.json
-      OPENCREATOR_DESKTOP_OFFICIAL_BUILD: '1'
+      VISHNUCREATOR_DESKTOP_BUILD_MANIFEST: ${{ github.workspace }}/apps/desktop/release/vishnucreator-desktop-build-manifest-${{ matrix.platform }}-${{ matrix.arch }}.json
+      VISHNUCREATOR_DESKTOP_OFFICIAL_BUILD: '1'
     steps:
       - name: 验证 macOS 正式签名凭据
         if: matrix.platform == 'darwin'
@@ -183,8 +183,8 @@ jobs:
           cache: pnpm
       - uses: actions/setup-go@v5
         with:
-          go-version-file: runtime/krillinai/go.mod
-          cache-dependency-path: runtime/krillinai/go.sum
+          go-version-file: runtime/vishnuai/go.mod
+          cache-dependency-path: runtime/vishnuai/go.sum
       - uses: actions/cache@v4
         with:
           path: |
@@ -213,8 +213,8 @@ jobs:
       - uses: actions/cache@v4
         with:
           path: |
-            .runtime/build/krillinai/${{ matrix.platform }}-${{ matrix.arch }}
-          key: krillinai-build-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('scripts/build-krillinai.mjs', 'runtime/krillinai/**') }}
+            .runtime/build/vishnuai/${{ matrix.platform }}-${{ matrix.arch }}
+          key: vishnuai-build-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('scripts/build-vishnuai.mjs', 'runtime/vishnuai/**') }}
       - run: pnpm install --frozen-lockfile
       - name: 生成 macOS 正式签名安装包
         if: matrix.platform == 'darwin'
@@ -239,40 +239,40 @@ jobs:
           exit "$release_status"
         env:
           GH_TOKEN: ${{ github.token }}
-          OPENCREATOR_DESKTOP_TARGET_PLATFORM: ${{ matrix.platform }}
-          OPENCREATOR_DESKTOP_TARGET_ARCH: ${{ matrix.arch }}
+          VISHNUCREATOR_DESKTOP_TARGET_PLATFORM: ${{ matrix.platform }}
+          VISHNUCREATOR_DESKTOP_TARGET_ARCH: ${{ matrix.arch }}
           CSC_LINK: ${{ secrets.MACOS_CERTIFICATE }}
           CSC_KEY_PASSWORD: ${{ secrets.MACOS_CERTIFICATE_PASSWORD }}
           APPLE_ID: ${{ secrets.APPLE_ID }}
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-          OPENCREATOR_APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
+          VISHNUCREATOR_APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
       - name: 生成 Windows 未签名安装包
         if: matrix.platform == 'win32'
         run: pnpm desktop:dist
         env:
           GH_TOKEN: ${{ github.token }}
-          OPENCREATOR_DESKTOP_TARGET_PLATFORM: ${{ matrix.platform }}
-          OPENCREATOR_DESKTOP_TARGET_ARCH: ${{ matrix.arch }}
+          VISHNUCREATOR_DESKTOP_TARGET_PLATFORM: ${{ matrix.platform }}
+          VISHNUCREATOR_DESKTOP_TARGET_ARCH: ${{ matrix.arch }}
       - name: 验证实际打包应用
-        run: pnpm --filter @opencreator/desktop e2e:package:smoke
-      - name: 生成 KrillinAI Server 与 CLI 独立发布包
-        run: pnpm krillinai:package
+        run: pnpm --filter @vishnucreator/desktop e2e:package:smoke
+      - name: 生成 VishnuAI Server 与 CLI 独立发布包
+        run: pnpm vishnuai:package
         env:
-          OPENCREATOR_KRILLINAI_TARGET_PLATFORM: ${{ matrix.platform }}
-          OPENCREATOR_KRILLINAI_TARGET_ARCH: ${{ matrix.arch }}
+          VISHNUCREATOR_VISHNUAI_TARGET_PLATFORM: ${{ matrix.platform }}
+          VISHNUCREATOR_VISHNUAI_TARGET_ARCH: ${{ matrix.arch }}
       - name: 上传用户发布附件
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
-          path: ${{ env.OPENCREATOR_DESKTOP_RELEASE_ASSETS }}/*
+          path: ${{ env.VISHNUCREATOR_DESKTOP_RELEASE_ASSETS }}/*
           if-no-files-found: error
           compression-level: 0
-      - name: 上传 KrillinAI Server 与 CLI 发布附件
+      - name: 上传 VishnuAI Server 与 CLI 发布附件
         uses: actions/upload-artifact@v4
         with:
-          name: krillinai-release-${{ matrix.name }}
-          path: ${{ env.OPENCREATOR_KRILLINAI_RELEASE_ASSETS }}/*
+          name: vishnuai-release-${{ matrix.name }}
+          path: ${{ env.VISHNUCREATOR_VISHNUAI_RELEASE_ASSETS }}/*
           if-no-files-found: error
           compression-level: 0
       - name: 保留内部构建诊断
@@ -281,7 +281,7 @@ jobs:
         with:
           name: desktop-build-diagnostics-${{ matrix.name }}
           path: |
-            apps/desktop/release/opencreator-desktop-build-manifest-*.json
+            apps/desktop/release/vishnucreator-desktop-build-manifest-*.json
             apps/desktop/release/builder-debug.yml
             apps/desktop/release/builder-effective-config.yaml
             desktop-release.log
@@ -289,7 +289,7 @@ jobs:
           if-no-files-found: ignore
           retention-days: 14
 
-  krillinai-linux-package:
+  vishnuai-linux-package:
     if: github.event_name == 'workflow_dispatch' && inputs.target == 'all'
     needs: verify
     runs-on: ubuntu-latest
@@ -303,23 +303,23 @@ jobs:
           cache: pnpm
       - uses: actions/setup-go@v5
         with:
-          go-version-file: runtime/krillinai/go.mod
-          cache-dependency-path: runtime/krillinai/go.sum
+          go-version-file: runtime/vishnuai/go.mod
+          cache-dependency-path: runtime/vishnuai/go.sum
       - name: Install release metadata dependencies
-        run: pnpm install --filter @opencreator/daemon --frozen-lockfile --ignore-scripts
-      - name: 生成 Linux KrillinAI Server 与 CLI 发布包
+        run: pnpm install --filter @vishnucreator/daemon --frozen-lockfile --ignore-scripts
+      - name: 生成 Linux VishnuAI Server 与 CLI 发布包
         shell: bash
         run: |
           for arch in x64 arm64; do
-            OPENCREATOR_KRILLINAI_TARGET_PLATFORM=linux \
-            OPENCREATOR_KRILLINAI_TARGET_ARCH="$arch" \
-              node scripts/package-krillinai-release.mjs
+            VISHNUCREATOR_VISHNUAI_TARGET_PLATFORM=linux \
+            VISHNUCREATOR_VISHNUAI_TARGET_ARCH="$arch" \
+              node scripts/package-vishnuai-release.mjs
           done
-      - name: 上传 Linux KrillinAI Server 与 CLI 发布附件
+      - name: 上传 Linux VishnuAI Server 与 CLI 发布附件
         uses: actions/upload-artifact@v4
         with:
-          name: krillinai-release-linux
-          path: .runtime/release/krillinai/*
+          name: vishnuai-release-linux
+          path: .runtime/release/vishnuai/*
           if-no-files-found: error
           compression-level: 0
 
@@ -327,7 +327,7 @@ jobs:
     if: github.event_name == 'workflow_dispatch' && inputs.target == 'all'
     needs:
       - package
-      - krillinai-linux-package
+      - vishnuai-linux-package
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
@@ -358,7 +358,7 @@ jobs:
       - name: 上传候选包身份凭据
         uses: actions/upload-artifact@v4
         with:
-          name: opencreator-release-candidate-${{ steps.build-input.outputs.digest }}
+          name: vishnucreator-release-candidate-${{ steps.build-input.outputs.digest }}
           path: release-candidate.json
           if-no-files-found: error
           retention-days: 90
@@ -382,7 +382,7 @@ jobs:
           node-version: 22
           cache: pnpm
       - name: 安装发布元数据解析依赖
-        run: pnpm install --filter @opencreator/daemon --frozen-lockfile --ignore-scripts
+        run: pnpm install --filter @vishnucreator/daemon --frozen-lockfile --ignore-scripts
       - name: 计算应用构建输入指纹
         id: build-input
         run: echo "digest=$(node apps/desktop/scripts/release-build-input.mjs digest)" >> "$GITHUB_OUTPUT"
@@ -391,7 +391,7 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
-          CANDIDATE_NAME: opencreator-release-candidate-${{ steps.build-input.outputs.digest }}
+          CANDIDATE_NAME: vishnucreator-release-candidate-${{ steps.build-input.outputs.digest }}
         shell: bash
         run: |
           candidate_run_id="$(
@@ -428,14 +428,14 @@ jobs:
           github-token: ${{ github.token }}
           run-id: ${{ steps.candidate.outputs.run-id }}
           path: artifacts
-          pattern: opencreator-desktop-*
+          pattern: vishnucreator-desktop-*
           merge-multiple: true
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
           run-id: ${{ steps.candidate.outputs.run-id }}
           path: artifacts
-          pattern: krillinai-release-*
+          pattern: vishnuai-release-*
           merge-multiple: true
       - uses: actions/download-artifact@v4
         with:
@@ -482,7 +482,7 @@ jobs:
           NODE
             gh release upload "$TAG" artifacts/latest*.yml artifacts/SHA256SUMS.txt --clobber
           else
-            gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --verify-tag --draft --title "OpenCreator $TAG" --notes-file release-notes.md
+            gh release view "$TAG" >/dev/null 2>&1 || gh release create "$TAG" --verify-tag --draft --title "VishnuCreator $TAG" --notes-file release-notes.md
             find artifacts -maxdepth 1 -type f -print0 | xargs -0 gh release upload "$TAG" --clobber
           fi
-          gh release edit "$TAG" --draft=false --latest --title "OpenCreator $TAG" --notes-file release-notes.md
+          gh release edit "$TAG" --draft=false --latest --title "VishnuCreator $TAG" --notes-file release-notes.md

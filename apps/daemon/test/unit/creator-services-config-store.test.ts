@@ -2,12 +2,12 @@ import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import {
   createCreatorServicesConfigStoreWithTextModelFallback,
   createCreatorServicesConfigStore,
   createFileCreatorServicesConfigStore,
-  createOpenCreatorCreatorServicesConfigStore,
+  createVishnuCreatorCreatorServicesConfigStore,
   CreatorServicesConfigStoreError,
   parseCreatorServicesConfig,
   presentCreatorServicesConfig,
@@ -71,7 +71,7 @@ describe('CreatorServicesConfigStore', () => {
     vi.unstubAllEnvs();
   });
 
-  it('returns KrillinAI-compatible defaults when no credential is saved', async () => {
+  it('returns VishnuAI-compatible defaults when no credential is saved', async () => {
     const store = createCreatorServicesConfigStore({
       getPassword: vi.fn(async () => null),
       setPassword: vi.fn(async () => undefined),
@@ -104,7 +104,7 @@ describe('CreatorServicesConfigStore', () => {
   });
 
   it('persists all provider settings in a local JSON configuration file', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-creator-services-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-creator-services-'));
     const path = join(root, 'config', 'creator-services.json');
     const store = createFileCreatorServicesConfigStore(path);
     const config = createDefaultCreatorServicesConfig();
@@ -152,7 +152,7 @@ describe('CreatorServicesConfigStore', () => {
   it('stores public settings in config.toml and credentials in credentials.json', async () => {
     vi.stubEnv('VOLCENGINE_APP_ID', '');
     vi.stubEnv('VOLCENGINE_ACCESS_TOKEN', '');
-    root = mkdtempSync(join(tmpdir(), 'opencreator-creator-services-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-creator-services-'));
     const configFile = join(root, 'config.toml');
     const credentialsFile = join(root, 'credentials.json');
     const config = createDefaultCreatorServicesConfig();
@@ -160,7 +160,7 @@ describe('CreatorServicesConfigStore', () => {
     config.image.provider = 'gemini';
     config.image.gemini.apiKey = 'gemini-private-key';
 
-    const store = createOpenCreatorCreatorServicesConfigStore({
+    const store = createVishnuCreatorCreatorServicesConfigStore({
       configFile,
       credentialsFile
     });
@@ -179,10 +179,10 @@ describe('CreatorServicesConfigStore', () => {
   it('fills volcengine speech credentials from environment without persisting them', async () => {
     vi.stubEnv('VOLCENGINE_APP_ID', 'env-app-id');
     vi.stubEnv('VOLCENGINE_ACCESS_TOKEN', 'env-access-token');
-    root = mkdtempSync(join(tmpdir(), 'opencreator-creator-services-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-creator-services-'));
     const configFile = join(root, 'config.toml');
     const credentialsFile = join(root, 'credentials.json');
-    const store = createOpenCreatorCreatorServicesConfigStore({
+    const store = createVishnuCreatorCreatorServicesConfigStore({
       configFile,
       credentialsFile
     });

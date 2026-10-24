@@ -5,12 +5,12 @@ import { Socket } from 'node:net';
 import { app } from 'electron';
 
 let phase = 'initialization';
-const report = result => writeFileSync(process.env.OPENCREATOR_DESKTOP_NETWORK_TEST_RESULT, `${JSON.stringify({ phase, ...result }, null, 2)}\n`);
+const report = result => writeFileSync(process.env.VISHNUCREATOR_DESKTOP_NETWORK_TEST_RESULT, `${JSON.stringify({ phase, ...result }, null, 2)}\n`);
 
 report({ ok: false, pending: true });
 
 void (async () => {
-  app.setPath('userData', process.env.OPENCREATOR_DESKTOP_NETWORK_TEST_USER_DATA);
+  app.setPath('userData', process.env.VISHNUCREATOR_DESKTOP_NETWORK_TEST_USER_DATA);
   Socket.prototype.setTypeOfService = () => {
     throw Object.assign(new Error('setTypeOfService EINVAL'), { code: 'EINVAL' });
   };
@@ -19,10 +19,10 @@ void (async () => {
   };
   await app.whenReady();
   phase = 'load network module';
-  const { fetchDesktopRequest } = await import(process.env.OPENCREATOR_DESKTOP_NETWORK_TEST_MODULE);
-  const origin = process.env.OPENCREATOR_DESKTOP_NETWORK_TEST_ORIGIN;
+  const { fetchDesktopRequest } = await import(process.env.VISHNUCREATOR_DESKTOP_NETWORK_TEST_MODULE);
+  const origin = process.env.VISHNUCREATOR_DESKTOP_NETWORK_TEST_ORIGIN;
   phase = 'daemon health probe';
-  const { BootstrapController } = await import(process.env.OPENCREATOR_DESKTOP_BOOTSTRAP_TEST_MODULE);
+  const { BootstrapController } = await import(process.env.VISHNUCREATOR_DESKTOP_BOOTSTRAP_TEST_MODULE);
   const daemon = new EventEmitter();
   daemon.currentConnection = { address: origin, token: 'test' };
   let stopCount = 0;

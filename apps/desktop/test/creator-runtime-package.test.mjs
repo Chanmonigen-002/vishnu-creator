@@ -53,10 +53,10 @@ describe('Creator Runtime package contract', () => {
     expect(() => verifyCreatorRuntime(root, process.platform, process.arch)).toThrow(/Node executable is not a manifest-pinned executable/);
   });
 
-  it('rejects the legacy source-built OpenCreator service runtime', () => {
+  it('rejects the legacy source-built VishnuCreator service runtime', () => {
     createFixture({ legacyService: true });
     expect(() => verifyCreatorRuntime(root, process.platform, process.arch)).toThrow(
-      /manifest is invalid|precompiled KrillinAI CLI/i
+      /manifest is invalid|precompiled VishnuAI CLI/i
     );
   });
 
@@ -141,7 +141,7 @@ function createFixture(options = {}) {
   mkdirSync(bin, { recursive: true });
   const suffix = process.platform === 'win32' ? '.exe' : '';
   const paths = {
-    primary: join(bin, `krillinai-cli${suffix}`),
+    primary: join(bin, `vishnuai-cli${suffix}`),
     ffmpeg: join(bin, `ffmpeg${suffix}`),
     ffprobe: join(bin, `ffprobe${suffix}`),
     ...(options.nlp ? {

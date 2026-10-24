@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "$id": "https://opencreator.ai/schemas/writing-template.schema.json",
-  "title": "OpenCreator Writing Template",
+  "$id": "https://vishnucreator.ai/schemas/writing-template.schema.json",
+  "title": "VishnuCreator Writing Template",
   "type": "object",
   "additionalProperties": false,
   "required": [

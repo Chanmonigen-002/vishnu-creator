@@ -3,7 +3,7 @@ import type {
   CreatorJob,
   CreatorJson,
   CreatorStageRun
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { LocalizeCopy } from '../../i18n/localized-copy.js';
 import { localComponentPreparationMessage } from '../settings/local-component-copy.js';
 
@@ -225,7 +225,7 @@ export const videoTranslationPanelAdapter: CreatorPanelAdapter = {
         detailsHref: `#/settings?tab=local-components&from=video-translation&returnPath=${encodeURIComponent(`#/workbench?tool=video-translation&jobId=${encodeURIComponent(stage.jobId)}`)}`
       };
     }
-    const legacy = readRecord(stage.progress.krillinEventPayload);
+    const legacy = readRecord(stage.progress.vishnuEventPayload);
     const phase = standard.phase ?? readString(legacy?.phase);
     const phaseLabel = phase === null ? null : videoTranslationPanelAdapter.phaseLabel(phase, localize);
     const translating = phase === 'translating_subtitles';

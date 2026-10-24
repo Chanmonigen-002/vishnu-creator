@@ -1,4 +1,4 @@
-import type { CreatorJob } from '@opencreator/protocol';
+import type { CreatorJob } from '@vishnucreator/protocol';
 import { CheckCircle2, FileVideo, LoaderCircle, Plus, RefreshCw, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';

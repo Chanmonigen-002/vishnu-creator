@@ -1,19 +1,19 @@
 import {
-  openCreatorLanguagePreferences,
-  type OpenCreatorStorageSettingsResponse,
-  type UpdateOpenCreatorStorageSettingsRequest,
-  type OpenCreatorUiSettingsResponse,
-  type UpdateOpenCreatorUiSettingsRequest
-} from '@opencreator/protocol';
+  vishnuCreatorLanguagePreferences,
+  type VishnuCreatorStorageSettingsResponse,
+  type UpdateVishnuCreatorStorageSettingsRequest,
+  type VishnuCreatorUiSettingsResponse,
+  type UpdateVishnuCreatorUiSettingsRequest
+} from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import { accessSync, constants, mkdirSync, statSync } from 'node:fs';
 import { isAbsolute } from 'node:path';
 import { z, ZodError } from 'zod/v3';
-import type { OpenCreatorSettingsStore } from '../settings/store.js';
+import type { VishnuCreatorSettingsStore } from '../settings/store.js';
 import { apiError } from './errors.js';
 
 const updateSchema = z.object({
-  language: z.enum(openCreatorLanguagePreferences).optional(),
+  language: z.enum(vishnuCreatorLanguagePreferences).optional(),
   colorMode: z.enum(['light', 'dark']).optional(),
   accentColor: z.enum([
     'neutral',
@@ -44,11 +44,11 @@ type StorageRouteOptions = {
 
 export async function registerSettingsRoutes(
   server: FastifyInstance,
-  store: OpenCreatorSettingsStore,
+  store: VishnuCreatorSettingsStore,
   options: StorageRouteOptions = {}
 ): Promise<void> {
   const validateStoragePath = options.validateStoragePath ?? ensureWritableDirectory;
-  server.get('/settings/ui', async (): Promise<OpenCreatorUiSettingsResponse> => (
+  server.get('/settings/ui', async (): Promise<VishnuCreatorUiSettingsResponse> => (
     store.readUi()
   ));
 
@@ -57,13 +57,13 @@ export async function registerSettingsRoutes(
     async (request, reply) => {
       try {
         return store.updateUi(
-          updateSchema.parse(request.body) as UpdateOpenCreatorUiSettingsRequest
+          updateSchema.parse(request.body) as UpdateVishnuCreatorUiSettingsRequest
         );
       } catch (error) {
         if (error instanceof ZodError) {
           return reply.code(400).send(apiError(
             'VALIDATION_FAILED',
-            'OpenCreator UI settings are invalid'
+            'VishnuCreator UI settings are invalid'
           ));
         }
         throw error;
@@ -71,7 +71,7 @@ export async function registerSettingsRoutes(
     }
   );
 
-  server.get('/settings/storage', async (): Promise<OpenCreatorStorageSettingsResponse> => (
+  server.get('/settings/storage', async (): Promise<VishnuCreatorStorageSettingsResponse> => (
     store.readStorage()
   ));
 
@@ -81,7 +81,7 @@ export async function registerSettingsRoutes(
       try {
         const update = storageUpdateSchema.parse(
           request.body
-        ) as UpdateOpenCreatorStorageSettingsRequest;
+        ) as UpdateVishnuCreatorStorageSettingsRequest;
         for (const path of Object.values(update)) {
           if (!validateStoragePath(path)) {
             throw new StorageDirectoryError('Storage directory is not writable');
@@ -92,7 +92,7 @@ export async function registerSettingsRoutes(
         if (error instanceof ZodError || error instanceof StorageDirectoryError) {
           return reply.code(400).send(apiError(
             'VALIDATION_FAILED',
-            'OpenCreator storage settings are invalid'
+            'VishnuCreator storage settings are invalid'
           ));
         }
         throw error;

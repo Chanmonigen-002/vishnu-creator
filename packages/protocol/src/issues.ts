@@ -112,7 +112,7 @@ export type CreatorRepairAction =
   | { kind: 'select-input'; inputField: string }
   | { kind: 'focus-agent' };
 
-export type OpenCreatorIssue = {
+export type VishnuCreatorIssue = {
   id: string;
   diagnosticId: string;
   code: string;
@@ -160,7 +160,7 @@ export type CreatorIssueEvent = {
 };
 
 export type CreatorIssueListResponse = {
-  issues: OpenCreatorIssue[];
+  issues: VishnuCreatorIssue[];
   events: CreatorIssueEvent[];
   nextCursor?: string;
 };
@@ -188,7 +188,7 @@ export type CreatorIssueStatsResponse = {
   }>;
 };
 
-export function isOpenCreatorIssue(value: unknown): value is OpenCreatorIssue {
+export function isVishnuCreatorIssue(value: unknown): value is VishnuCreatorIssue {
   if (!isRecord(value)) return false;
   if (
     !isBoundedString(value.id, 1, 160)

@@ -1,4 +1,4 @@
-import type { TaskItem } from '@opencreator/protocol';
+import type { TaskItem } from '@vishnucreator/protocol';
 import type { ActiveView } from '../../app/app-state.js';
 import type { HostNotification } from '../../host/bridge.js';
 

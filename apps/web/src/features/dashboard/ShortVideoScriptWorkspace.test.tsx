@@ -1,5 +1,5 @@
 import { changeControl } from '../../test/select-option.js';
-import type { CreatorActionRequest, CreatorArtifact, CreatorJob } from '@opencreator/protocol';
+import type { CreatorActionRequest, CreatorArtifact, CreatorJob } from '@vishnucreator/protocol';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
@@ -166,13 +166,13 @@ function completedJob(job: CreatorJob): CreatorJob {
     kind: 'short_video_script',
     version: 1,
     status: 'completed',
-    path: '/tmp/OpenCreator-short-video-script.md',
+    path: '/tmp/VishnuCreator-short-video-script.md',
     scopeKey: null,
     inputFingerprint: null,
     sha256: null,
     sourceArtifactIds: [],
     metadata: {
-      fileName: 'OpenCreator-short-video-script.md',
+      fileName: 'VishnuCreator-short-video-script.md',
       title: '第一次参与开源',
       resultVersion: 1
     },

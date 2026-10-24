@@ -277,7 +277,7 @@ Codex exec 当前由 CLI 决定 sandbox 和工具行为；Runtime 没有“暂�
 
 1. 当前 `body min-height: 720px` 和 `.app` 四列在小屏会较重；桌面 App 可以接受，但 Web 版需要更强响应式。
 2. UI 使用了较多字符图标，例如 `▸`、`◷`、`▣`、`↑`。实现阶段建议用 lucide 图标，提升一致性和可访问性。
-3. “企业 Agent Dashboard”命名偏大。当前产品是本地 Codex Runtime UI，建议标题收敛为“OpenCreator Agent”或“Agent Runtime”。
+3. “企业 Agent Dashboard”命名偏大。当前产品是本地 Codex Runtime UI，建议标题收敛为“Vishnu Creator Agent”或“Agent Runtime”。
 4. 右侧文件编辑器现在视觉占比过大，但后端第一版无法保存文件。建议先改为 Run Detail。
 5. 顶部“本地工作区已连接”需要绑定 `/codex/status` 和 daemon health，不应静态显示。
 6. 发送按钮缺少 running disabled/loading 状态。

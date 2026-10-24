@@ -4,9 +4,9 @@ import type {
   CreatorAgentItem,
   CreatorAgentTurn,
   CreatorJob,
-  OpenCreatorIssue,
+  VishnuCreatorIssue,
   CreatorStageRun
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   CheckCircle2,
   ChevronRight,
@@ -23,7 +23,7 @@ import {
   XCircle
 } from 'lucide-react';
 import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import OpenCreatorMark from '../../components/brand/OpenCreatorMark.js';
+import VishnuCreatorMark from '../../components/brand/VishnuCreatorMark.js';
 import { MarkdownRenderer } from '../../components/markdown/MarkdownRenderer.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import { useAppLanguage } from '../../i18n/LanguageProvider.js';
@@ -95,7 +95,7 @@ type CollaborationTimelineItem =
       id: string;
       kind: 'issue';
       createdAt: string;
-      issue: OpenCreatorIssue;
+      issue: VishnuCreatorIssue;
     };
 
 export default function CreatorCollaborationPanel(props: {
@@ -226,7 +226,7 @@ export default function CreatorCollaborationPanel(props: {
       tabIndex={-1}
     >
       <header className="creator-collaboration-header">
-        <span aria-hidden="true"><OpenCreatorMark size={18} /></span>
+        <span aria-hidden="true"><VishnuCreatorMark size={18} /></span>
         <div>
           <h2>Vishnu Creator</h2>
           <p>{l('正在协助：', 'Helping with: ')}{props.stepLabel}</p>
@@ -346,7 +346,7 @@ export default function CreatorCollaborationPanel(props: {
                 role="status"
                 aria-label={l('Agent 正在工作', 'Agent is working')}
               >
-                <span aria-hidden="true"><OpenCreatorMark size={14} /></span>
+                <span aria-hidden="true"><VishnuCreatorMark size={14} /></span>
                 <LoaderCircle
                   className="creator-collaboration-spin"
                   size={16}
@@ -415,7 +415,7 @@ export default function CreatorCollaborationPanel(props: {
 }
 
 function CollaborationIssueView(props: {
-  issue: OpenCreatorIssue;
+  issue: VishnuCreatorIssue;
   onRetry(): Promise<void>;
   onFocus(): void;
 }) {
@@ -430,7 +430,7 @@ function CollaborationIssueView(props: {
   return (
     <article className="creator-collaboration-message creator-collaboration-issue" data-role="system" data-source="diagnostic" data-status={props.issue.status} data-issue-id={props.issue.id}>
       <header>
-        <span aria-hidden="true"><OpenCreatorMark size={14} /></span>
+        <span aria-hidden="true"><VishnuCreatorMark size={14} /></span>
         <strong>Vishnu Creator</strong>
         <small>{l('系统诊断', 'System diagnosis')}</small>
       </header>
@@ -464,7 +464,7 @@ function CollaborationMessageView(props: { message: CollaborationMessage }) {
     >
       {message.role !== 'user' ? (
         <header>
-          <span aria-hidden="true"><OpenCreatorMark size={14} /></span>
+          <span aria-hidden="true"><VishnuCreatorMark size={14} /></span>
           <strong>Vishnu Creator</strong>
           <small>{message.role === 'system' ? l('系统诊断', 'System diagnosis') : l('Agent 回复', 'Agent reply')}</small>
         </header>
@@ -856,7 +856,7 @@ function buildCollaborationMessages(
 
 function buildCollaborationTimeline(
   job: CreatorJob | undefined,
-  issues: OpenCreatorIssue[],
+  issues: VishnuCreatorIssue[],
   messages: CollaborationMessage[],
   events: SyncEvent[],
   adapter: CreatorPanelAdapter

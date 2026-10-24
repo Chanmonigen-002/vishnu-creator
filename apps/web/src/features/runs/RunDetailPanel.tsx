@@ -5,7 +5,7 @@ import type {
   RunContextItem,
   RunContextResponse,
   RunDiagnosticsResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { AlertTriangle, Download, Image, ShieldCheck } from 'lucide-react';
 import { useState } from 'react';
 import { downloadRunDiagnosticsBundle } from './run-diagnostics-export.js';

@@ -5,11 +5,11 @@ import { promisify } from 'node:util';
 import { createHash } from 'node:crypto';
 import { access, mkdir, readFile, readdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { createDefaultCreatorServicesConfig, type GatewayModel } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type GatewayModel } from '@vishnucreator/protocol';
 import { createGatewayCreatorSource } from '../src/gateway/creator-service-source.js';
 import { createDirectTransport } from '../src/gateway/direct-transport.js';
 import { createOfficialFetch } from '../src/gateway/official-fetch.js';
-import { createKrillinTtsService } from '../src/creator/krillin/tts-service.js';
+import { createVishnuTtsService } from '../src/creator/vishnu/tts-service.js';
 import { readVerificationNetwork, verifiedCountries } from './openrouter-verification-network.js';
 import { verifiedAudioProfiles } from './openrouter-audio-profiles.js';
 import { stringify } from '@iarna/toml';
@@ -117,7 +117,7 @@ for await (const chunk of process.stdin) {
 const credential = JSON.parse(Buffer.concat(chunks).toString('utf8')) as { key?: string; costBearer?: string; name?: string; accountRemainingUsd?: number; productionReserveUsd?: number; balanceCheckedAt?: string };
 const key = credential.key;
 const checkedAt = Date.parse(credential.balanceCheckedAt ?? '');
-if (!key?.startsWith('sk-or-') || credential.costBearer !== 'platform' || !/^OpenCreator platform (?:media|audio) verification/.test(credential.name ?? '')
+if (!key?.startsWith('sk-or-') || credential.costBearer !== 'platform' || !/^VishnuCreator platform (?:media|audio) verification/.test(credential.name ?? '')
   || !Number.isFinite(checkedAt) || Date.now() - checkedAt > 60_000 || checkedAt > Date.now() + 5_000
   || !(credential.productionReserveUsd! >= 4) || !(credential.accountRemainingUsd! >= keyLimitUsd + credential.productionReserveUsd!)) throw new Error('Expected a limited platform test key and fresh owner-balance preflight');
 async function keyInfo() {
@@ -181,7 +181,7 @@ try {
       let requestId: string | undefined;
       let outputPath: string;
       if (model.modality === 'speech') {
-        const service = createKrillinTtsService({ resourceRoot: root, workRoot: root, configStore: source.store });
+        const service = createVishnuTtsService({ resourceRoot: root, workRoot: root, configStore: source.store });
         const synthesized = await service.synthesize({ text, model: model.id, format: 'wav', logicalId: `verify-audio:${model.id}`, onGatewayRequest: id => { requestId = id; } });
         content = synthesized.content;
         outputPath = join(root, `speech.${synthesized.format}`);
@@ -207,7 +207,7 @@ try {
         form.set('model', model.id); form.set('file', new Blob([new Uint8Array(await readFile(reference))], { type: 'audio/wav' }), 'fixture.wav');
         form.set('language', language); form.set('response_format', responseFormat);
         if (responseFormat === 'verbose_json') form.set('timestamp_granularities[]', 'segment');
-        const response = await fetch(`${origin}/internal/krillin-llm/gateway/v1/audio/transcriptions`, { method: 'POST', headers: { Authorization: `Bearer ${config.transcription.openai.apiKey}`, 'Idempotency-Key': `verify-audio:${model.id}` }, body: form, signal: AbortSignal.timeout(120_000) });
+        const response = await fetch(`${origin}/internal/vishnu-llm/gateway/v1/audio/transcriptions`, { method: 'POST', headers: { Authorization: `Bearer ${config.transcription.openai.apiKey}`, 'Idempotency-Key': `verify-audio:${model.id}` }, body: form, signal: AbortSignal.timeout(120_000) });
         const payload = await response.json();
         if (!response.ok) throw new Error(`Official ASR route failed: HTTP ${response.status}`);
         content = Buffer.from(JSON.stringify(payload));

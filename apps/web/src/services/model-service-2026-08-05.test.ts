@@ -1,4 +1,4 @@
-import type { CodexModelListResponse } from '@opencreator/protocol';
+import type { CodexModelListResponse } from '@vishnucreator/protocol';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { RuntimeClient } from '../runtime/client.js';
 import {

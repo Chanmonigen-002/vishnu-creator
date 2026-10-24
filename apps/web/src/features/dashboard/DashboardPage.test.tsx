@@ -8,7 +8,7 @@ import {
   type CreatorJob,
   type CreatorJson,
   type CreatorResultSnapshot
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { ComponentProps } from 'react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
@@ -237,7 +237,7 @@ function dashboardVisualAssetCatalog() {
 function completeSmartDubbingStage(current: CreatorJob): CreatorJob {
   const now = new Date().toISOString();
   const version = current.artifacts.filter(artifact => artifact.kind === 'dubbed_audio').length + 1;
-  const fileName = `OpenCreator-dubbing-V${version}.mp3`;
+  const fileName = `VishnuCreator-dubbing-V${version}.mp3`;
   const artifact: CreatorArtifact = {
     id: `smart_dubbing_audio_v${version}`,
     jobId: current.id,
@@ -351,7 +351,7 @@ function createTtsServices(options?: {
 }
 
 const defaultTranslationCues: CreatorJson[] = [
-  { id: 1, start: '00:00:00,000', end: '00:00:02,000', text: 'Welcome to OpenCreator.' },
+  { id: 1, start: '00:00:00,000', end: '00:00:02,000', text: 'Welcome to VishnuCreator.' },
   { id: 2, start: '00:00:02,000', end: '00:00:04,000', text: 'Create once, publish everywhere.' },
   { id: 3, start: '00:00:04,000', end: '00:00:06,000', text: 'Your translated video is ready.' }
 ];
@@ -525,7 +525,7 @@ function completeTranslationStage(
         id: `translation_stage_${current.stages.length + 1}`,
         jobId: current.id,
         stageId,
-        executor: 'krillinai',
+        executor: 'vishnuai',
         status: 'succeeded',
         dispatchStatus: 'finished',
         claimOwner: null,
@@ -1036,7 +1036,7 @@ describe('DashboardPage', () => {
     openBlankWorkspace('视频翻译', '空白视频翻译');
 
     expect(screen.getByRole('heading', { name: '视频翻译配音' })).toBeInTheDocument();
-    expect(screen.getByRole('complementary', { name: 'OpenCreator' })).toBeInTheDocument();
+    expect(screen.getByRole('complementary', { name: 'VishnuCreator' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '拖放视频到这里' })).toBeInTheDocument();
     expect(screen.getByRole('list', { name: '支持的平台' }).querySelectorAll('li')).toHaveLength(10);
     fireEvent.change(screen.getByRole('textbox', { name: '视频链接' }), {
@@ -1328,7 +1328,7 @@ describe('DashboardPage', () => {
     const applyAction = vi.spyOn(service, 'applyAction');
     render(<DashboardPage onSelectPrompt={vi.fn()} creatorService={service} />);
     await translateTestVideo();
-    fireEvent.change(screen.getByRole('textbox', { name: '横屏字幕 2' }), { target: { value: 'Welcome back to OpenCreator.' } });
+    fireEvent.change(screen.getByRole('textbox', { name: '横屏字幕 2' }), { target: { value: 'Welcome back to VishnuCreator.' } });
     await waitForSubtitleAutosave();
     openTranslationPanel('任务设置');
     changeControl(screen.getByRole('combobox', { name: '翻译为' }), { target: { value: 'ja' } });
@@ -1341,7 +1341,7 @@ describe('DashboardPage', () => {
     expect(versionTrigger).toHaveAttribute('aria-haspopup', 'menu');
     fireEvent.click(versionTrigger);
     fireEvent.click(within(screen.getByRole('menu')).getByText('项目 V1').closest('button')!);
-    expect(await screen.findByRole('textbox', { name: '横屏字幕 2' })).toHaveValue('Welcome back to OpenCreator.');
+    expect(await screen.findByRole('textbox', { name: '横屏字幕 2' })).toHaveValue('Welcome back to VishnuCreator.');
   });
 
   it('saves manual subtitle edits before composing a new version', async () => {
@@ -1430,7 +1430,7 @@ describe('DashboardPage', () => {
     expect(screen.queryByText('正在查看 V1')).not.toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '视频翻译项目' }).parentElement).toHaveTextContent('https://www.youtube.com/watch?v=test');
     openSubtitleEditor();
-    expect(screen.getByRole('textbox', { name: '横屏字幕 1' })).toHaveValue('Welcome to OpenCreator.');
+    expect(screen.getByRole('textbox', { name: '横屏字幕 1' })).toHaveValue('Welcome to VishnuCreator.');
   });
 
   it('reuses completed subtitles when video composition is enabled for a new version', async () => {
@@ -1812,7 +1812,7 @@ describe('DashboardPage', () => {
     fireEvent.click(screen.getByRole('button', { name: '开始生成' }));
 
     expect(await screen.findByLabelText('文本转语音试听')).toHaveAttribute('src', 'blob:smart-dubbing');
-    expect(screen.getByText('OpenCreator-dubbing-V1.mp3')).toBeInTheDocument();
+    expect(screen.getByText('VishnuCreator-dubbing-V1.mp3')).toBeInTheDocument();
     expect(screen.queryByText('Creator Runtime 未连接，Agent 不会生成替代回复。')).not.toBeInTheDocument();
     expect(applyAction).toHaveBeenCalledWith(
       expect.stringMatching(/^creator_test_job_/),
@@ -1857,7 +1857,7 @@ describe('DashboardPage', () => {
 
     expect(await screen.findAllByText('请先在设置的配音服务中配置当前服务商的 API Key'))
       .not.toHaveLength(0);
-    expect(screen.getByRole('complementary', { name: 'OpenCreator' })).toHaveTextContent('请先在设置的配音服务中配置当前服务商的 API Key');
+    expect(screen.getByRole('complementary', { name: 'VishnuCreator' })).toHaveTextContent('请先在设置的配音服务中配置当前服务商的 API Key');
   });
 
   it('generates image assets through the Creator Runtime', async () => {
@@ -2112,7 +2112,7 @@ describe('DashboardPage', () => {
             videoSize: '720x1280',
             requestedDuration: 8,
             duration: 8,
-            fileName: 'OpenCreator-video.mp4',
+            fileName: 'VishnuCreator-video.mp4',
             mimeType: 'video/mp4',
             bytes: 4096,
             resultVersion: version

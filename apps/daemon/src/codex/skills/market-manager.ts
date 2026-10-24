@@ -1,8 +1,8 @@
 import type {
   CodexSkillMarketInstallRecordResponse,
   CodexSkillMarketMutationResponse
-} from '@opencreator/protocol';
-import { getSkillMarketEntry } from '@opencreator/skill-market';
+} from '@vishnucreator/protocol';
+import { getSkillMarketEntry } from '@vishnucreator/skill-market';
 import { mkdirSync, mkdtempSync, rmSync } from 'node:fs';
 import { join } from 'node:path';
 import type { SkillManager, SkillWriteTransaction } from './manager.js';

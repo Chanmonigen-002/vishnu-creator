@@ -3,10 +3,10 @@ import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import Fastify from 'fastify';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { createFileCreatorServicesConfigStore, createCreatorServicesConfigStoreWithTextModelFallback } from '../../src/creator-services/config-store.js';
 import { createLocalCodexTextModelDefaults } from '../../src/creator-services/local-codex-defaults.js';
-import { createKrillinCodexLlmGateway } from '../../src/creator/krillin/codex-llm-gateway.js';
+import { createVishnuCodexLlmGateway } from '../../src/creator/vishnu/codex-llm-gateway.js';
 import { registerCreatorServicesRoutes } from '../../src/api/routes.creator-services.js';
 import { createWechatArticleModel } from '../../src/creator/article/model.js';
 import { readLocalCodexModelConfiguration } from '../../src/codex/local-provider.js';
@@ -24,7 +24,7 @@ describe('local Codex defaults', () => {
     const raw = createFileCreatorServicesConfigStore(join(root, 'creator-services.json'));
     const write = vi.spyOn(raw, 'write');
     const defaults = createLocalCodexTextModelDefaults({ codexHome: root,
-      readGatewayConfig: () => ({ baseUrl: 'http://127.0.0.1:1234/internal/krillin-llm/v1', apiKey: 'bridge-key', model: 'codex' }) });
+      readGatewayConfig: () => ({ baseUrl: 'http://127.0.0.1:1234/internal/vishnu-llm/v1', apiKey: 'bridge-key', model: 'codex' }) });
     let store = createCreatorServicesConfigStoreWithTextModelFallback(raw, defaults);
     let server = Fastify();
     await registerCreatorServicesRoutes(server, store, undefined, undefined, undefined, undefined, defaults.readStatus);
@@ -67,7 +67,7 @@ describe('local Codex defaults', () => {
         stderr: '', terminationReason: 'completed' as const, outputTruncation: { stderr: { truncated: false, droppedBytes: 0, droppedItems: 0 }, frames: { truncated: false, droppedBytes: 0, droppedItems: 0 } } }) };
     });
     const createHost = vi.fn(() => ({ pid: 1, started: Promise.resolve(1), run, isReusable: () => true, close: vi.fn(async () => undefined) }));
-    const gateway = createKrillinCodexLlmGateway({ codexBin: '/fake/codex', codexHome: root, cwd: root, createHost });
+    const gateway = createVishnuCodexLlmGateway({ codexBin: '/fake/codex', codexHome: root, cwd: root, createHost });
     const server = Fastify();
     const upstream = vi.fn(async () => ({ choices: [{ message: { content: '# Outline' } }] }));
     server.post('/provider/v1/chat/completions', upstream);
@@ -102,7 +102,7 @@ describe('local Codex defaults', () => {
     expect(await defaults.read()).toEqual({ baseUrl: 'https://second.example/v1', apiKey: 'second-key', model: 'second-model' });
   });
 
-  it('uses HTTP for a Responses provider with no Codex host, and uses low reasoning for Krillin subtitles', async () => {
+  it('uses HTTP for a Responses provider with no Codex host, and uses low reasoning for Vishnu subtitles', async () => {
     root = await mkdtemp(join(tmpdir(), 'creator-local-responses-'));
     await writeFile(join(root, 'config.toml'), 'model = "local-model"\nmodel_provider = "local"\n[model_providers.local]\nbase_url = "https://local.example/v1"\nwire_api = "responses"\n');
     await writeFile(join(root, 'auth.json'), JSON.stringify({ auth_mode: 'apikey', OPENAI_API_KEY: 'local-api-secret' }));
@@ -110,7 +110,7 @@ describe('local Codex defaults', () => {
     const fetcher = vi.fn<typeof fetch>(async () => Response.json({ id: 'response-1', model: 'local-model', status: 'completed',
       output: [{ type: 'message', content: [{ type: 'output_text', text: '你好' }] }],
       usage: { input_tokens: 18, output_tokens: 2, total_tokens: 20, output_tokens_details: { reasoning_tokens: 0 } } }));
-    const gateway = createKrillinCodexLlmGateway({ codexBin: '/fake/codex', codexHome: root, cwd: root, createHost, fetcher,
+    const gateway = createVishnuCodexLlmGateway({ codexBin: '/fake/codex', codexHome: root, cwd: root, createHost, fetcher,
       readLocalConfiguration: () => readLocalCodexModelConfiguration({ codexHome: root }) });
     const server = Fastify();
     await gateway.register(server);

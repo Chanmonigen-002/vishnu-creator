@@ -89,14 +89,14 @@ describe('FileEditor', () => {
     render(
       <FileEditor
         path="README.md"
-        content={'# OpenCreator\n\n**raw**'}
+        content={'# VishnuCreator\n\n**raw**'}
         dirty={false}
         onChange={vi.fn()}
         onSave={vi.fn()}
       />
     );
 
-    expect(screen.getByRole('textbox', { name: 'README.md 编辑器' })).toHaveValue('# OpenCreator\n\n**raw**');
-    expect(screen.queryByRole('heading', { name: 'OpenCreator' })).not.toBeInTheDocument();
+    expect(screen.getByRole('textbox', { name: 'README.md 编辑器' })).toHaveValue('# VishnuCreator\n\n**raw**');
+    expect(screen.queryByRole('heading', { name: 'VishnuCreator' })).not.toBeInTheDocument();
   });
 });

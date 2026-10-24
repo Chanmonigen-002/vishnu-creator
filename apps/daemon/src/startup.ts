@@ -1,8 +1,8 @@
 import { dirname, join, resolve } from 'node:path';
 import {
-  resolveOpenCreatorPaths,
-  type OpenCreatorRuntimeChannel
-} from '@opencreator/config';
+  resolveVishnuCreatorPaths,
+  type VishnuCreatorRuntimeChannel
+} from '@vishnucreator/config';
 import type { BuildServerInput } from './api/server.js';
 import type {
   ScheduleBindingRepairResult,
@@ -32,9 +32,9 @@ export type ProductionRuntimePaths = {
 
 export function requiresPaidStartupProbe(env: NodeJS.ProcessEnv = process.env): boolean {
   // Desktop readiness checks alone must not trigger billable model inference.
-  return env.OPENCREATOR_REQUIRE_CODEX_PROBE === '1'
-    && env.OPENCREATOR_ENABLE_PAID_STARTUP_PROBE === '1'
-    && env.OPENCREATOR_CODEX_PROBE_VERIFIED !== '1';
+  return env.VISHNUCREATOR_REQUIRE_CODEX_PROBE === '1'
+    && env.VISHNUCREATOR_ENABLE_PAID_STARTUP_PROBE === '1'
+    && env.VISHNUCREATOR_CODEX_PROBE_VERIFIED !== '1';
 }
 
 export function resolveProductionServerEnvironment(
@@ -56,27 +56,27 @@ export function resolveProductionServerEnvironment(
   | 'gatewayOrigin'
 > {
   return {
-    gatewayOrigin: env.OPENCREATOR_GATEWAY_ORIGIN?.trim() || 'https://www.open-creator.ai',
-    ...optionalEnvironmentValue('appHome', env.OPENCREATOR_HOME),
-    ...optionalEnvironmentValue('dataDir', env.OPENCREATOR_DATA_DIR),
-    ...optionalEnvironmentValue('configFile', env.OPENCREATOR_CONFIG_FILE),
-    ...optionalEnvironmentValue('credentialsFile', env.OPENCREATOR_CREDENTIALS_FILE),
-    ...optionalEnvironmentValue('runtimeDir', env.OPENCREATOR_RUNTIME_DIR),
-    ...optionalEnvironmentValue('creatorDir', env.OPENCREATOR_CREATOR_DIR),
-    ...optionalEnvironmentValue('codexBin', env.OPENCREATOR_CODEX_BIN),
+    gatewayOrigin: env.VISHNUCREATOR_GATEWAY_ORIGIN?.trim() || 'https://www.vishnu-creator.ai',
+    ...optionalEnvironmentValue('appHome', env.VISHNUCREATOR_HOME),
+    ...optionalEnvironmentValue('dataDir', env.VISHNUCREATOR_DATA_DIR),
+    ...optionalEnvironmentValue('configFile', env.VISHNUCREATOR_CONFIG_FILE),
+    ...optionalEnvironmentValue('credentialsFile', env.VISHNUCREATOR_CREDENTIALS_FILE),
+    ...optionalEnvironmentValue('runtimeDir', env.VISHNUCREATOR_RUNTIME_DIR),
+    ...optionalEnvironmentValue('creatorDir', env.VISHNUCREATOR_CREATOR_DIR),
+    ...optionalEnvironmentValue('codexBin', env.VISHNUCREATOR_CODEX_BIN),
     ...optionalEnvironmentValue(
       'codexHome',
-      env.CODEX_HOME ?? env.OPENCREATOR_CODEX_HOME
+      env.CODEX_HOME ?? env.VISHNUCREATOR_CODEX_HOME
     ),
-    ...optionalEnvironmentValue('localCodexHome', env.OPENCREATOR_LOCAL_CODEX_HOME),
-    ...optionalEnvironmentValue('defaultCwd', env.OPENCREATOR_DEFAULT_CWD),
+    ...optionalEnvironmentValue('localCodexHome', env.VISHNUCREATOR_LOCAL_CODEX_HOME),
+    ...optionalEnvironmentValue('defaultCwd', env.VISHNUCREATOR_DEFAULT_CWD),
     ...optionalEnvironmentValue(
       'defaultProjectRoot',
-      env.OPENCREATOR_DEFAULT_PROJECT_ROOT
+      env.VISHNUCREATOR_DEFAULT_PROJECT_ROOT
     ),
     ...optionalEnvironmentValue(
       'creatorYtDlpPath',
-      env.OPENCREATOR_YT_DLP_PATH
+      env.VISHNUCREATOR_YT_DLP_PATH
     )
   };
 }
@@ -96,10 +96,10 @@ export function resolveProductionRuntimePaths(
   environment: ProductionPathEnvironment,
   input: {
     homeDir?: string;
-    runtimeChannel?: OpenCreatorRuntimeChannel;
+    runtimeChannel?: VishnuCreatorRuntimeChannel;
   } = {}
 ): ProductionRuntimePaths {
-  const defaults = resolveOpenCreatorPaths({
+  const defaults = resolveVishnuCreatorPaths({
     env: {},
     ...(input.homeDir === undefined ? {} : { homeDir: input.homeDir }),
     ...(input.runtimeChannel === undefined
@@ -130,13 +130,13 @@ export function resolveProductionRuntimePaths(
 
 export function parseRuntimeChannel(
   value: string | undefined
-): OpenCreatorRuntimeChannel {
+): VishnuCreatorRuntimeChannel {
   const normalized = value?.trim();
   if (normalized === undefined || normalized.length === 0 || normalized === 'production') {
     return 'production';
   }
   if (normalized === 'development') return 'development';
-  throw new Error(`Unsupported OpenCreator Runtime channel: ${normalized}`);
+  throw new Error(`Unsupported VishnuCreator Runtime channel: ${normalized}`);
 }
 
 export function prepareSchedulerStartup(input: {

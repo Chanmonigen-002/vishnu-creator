@@ -1,2 +1,2 @@
-export { OpenCreatorSettingsView as SettingsView } from './OpenCreatorSettingsView.js';
-export type { OpenCreatorSettingsViewProps as SettingsViewProps, RuntimeStatus } from './OpenCreatorSettingsView.js';
+export { VishnuCreatorSettingsView as SettingsView } from './VishnuCreatorSettingsView.js';
+export type { VishnuCreatorSettingsViewProps as SettingsViewProps, RuntimeStatus } from './VishnuCreatorSettingsView.js';

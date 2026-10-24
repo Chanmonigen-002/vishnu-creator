@@ -33,8 +33,8 @@ export async function exportDesktopDiagnostics(input: {
   };
   const now = dependencies.now();
   const result = await dependencies.showSaveDialog({
-    title: 'Export OpenCreator diagnostics',
-    defaultPath: `opencreator-diagnostics-${now.toISOString().slice(0, 10)}.json`,
+    title: 'Export VishnuCreator diagnostics',
+    defaultPath: `vishnucreator-diagnostics-${now.toISOString().slice(0, 10)}.json`,
     filters: [{ name: 'JSON', extensions: ['json'] }]
   });
   if (result.canceled || result.filePath === undefined) {

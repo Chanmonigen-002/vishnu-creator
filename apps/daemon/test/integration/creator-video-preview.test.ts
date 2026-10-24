@@ -1,7 +1,7 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { readCreatorResultSnapshots } from '@opencreator/protocol';
+import { readCreatorResultSnapshots } from '@vishnucreator/protocol';
 import { expect, it } from 'vitest';
 import { buildServer } from '../../src/api/server.js';
 import { createCreatorRepository } from '../../src/creator/repository.js';

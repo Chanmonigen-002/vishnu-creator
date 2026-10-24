@@ -2,8 +2,8 @@
 
 <h1>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="../images/OpenCreator_logo_vector_dark.svg" />
-    <img src="../images/OpenCreator_logo_vector.svg" alt="OpenCreator" width="380" />
+    <source media="(prefers-color-scheme: dark)" srcset="../images/Vishnu Creator_logo_vector_dark.svg" />
+    <img src="../images/Vishnu Creator_logo_vector.svg" alt="Vishnu Creator" width="380" />
   </picture>
   <br />
   Không gian làm việc AI mã nguồn mở & Skills dành cho nhà sáng tạo
@@ -11,16 +11,16 @@
 
 <p>Kết hợp thiết lập trực quan, Skills tái sử dụng và Agent để viết kịch bản, làm video, hình ảnh, giọng nói, dịch thuật và biên tập trong cùng một không gian làm việc.</p>
 
-<p><strong>OpenCreator trước đây có tên là KrillinAI.</strong></p>
+<p><strong>Vishnu Creator trước đây có tên là VishnuAI.</strong></p>
 
-<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="OpenCreator, trước đây là KrillinAI: kho mã đứng đầu ngày trên Trendshift" width="250" height="55" /></a>
+<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="Vishnu Creator, trước đây là VishnuAI: kho mã đứng đầu ngày trên Trendshift" width="250" height="55" /></a>
 
 [English](../../README.md) | [简体中文](../zh/README.md) | [日本語](../ja/README.md) | [한국어](../ko/README.md) | [Bahasa Indonesia](../id/README.md) | [Español](../es/README.md) | [Français](../fr/README.md) | [Deutsch](../de/README.md) | [Português](../pt/README.md) | [Русский](../ru/README.md) | [العربية](../ar/README.md) | [ภาษาไทย](../th/README.md) | [Türkçe](../tr/README.md) | [हिन्दी](../hi/README.md) | [বাংলা](../bn/README.md) | [اردو](../ur/README.md) | **Tiếng Việt** | [Filipino](../fil/README.md)
 
-[![GitHub Stars](https://badgen.net/github/stars/krillinai/OpenCreator?icon=github&label=Stars&color=EAB308)](https://github.com/krillinai/OpenCreator/stargazers)
+[![GitHub Stars](https://badgen.net/github/stars/vishnuai/Vishnu Creator?icon=github&label=Stars&color=EAB308)](https://github.com/vishnuai/Vishnu Creator/stargazers)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Bilibili](https://img.shields.io/badge/dynamic/json?label=Bilibili&query=%24.data.follower&suffix=%E7%B2%89%E4%B8%9D&url=https%3A%2F%2Fapi.bilibili.com%2Fx%2Frelation%2Fstat%3Fvmid%3D242124650&logo=bilibili&color=00A1D6&labelColor=FE7398&logoColor=FFFFFF)](https://space.bilibili.com/242124650)
-[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/krillinai/OpenCreator)
+[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/vishnuai/Vishnu Creator)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/fUNvbqDaw)
 [![Nhóm QQ](https://img.shields.io/badge/QQ%20群-754069680-green?logo=tencent-qq)](https://qm.qq.com/q/W4YC0PLMeA)
 
@@ -28,15 +28,15 @@
 
 </div>
 
-![Không gian làm việc Agent của OpenCreator](../images/opencreator-home-en.png)
+![Không gian làm việc Agent của Vishnu Creator](../images/vishnucreator-home-en.png)
 
 <a id="project-overview"></a>
 
 ## Tổng quan dự án
 
-OpenCreator dành cho cá nhân và nhóm muốn thực hiện công việc sáng tạo và phát triển ngay trên máy. Dự án sử dụng Codex CLI làm bộ máy thực thi, bổ sung Runtime cục bộ ổn định, không gian làm việc trực quan và ứng dụng Desktop, thay vì xây dựng lại vòng lặp Agent.
+Vishnu Creator dành cho cá nhân và nhóm muốn thực hiện công việc sáng tạo và phát triển ngay trên máy. Dự án sử dụng Codex CLI làm bộ máy thực thi, bổ sung Runtime cục bộ ổn định, không gian làm việc trực quan và ứng dụng Desktop, thay vì xây dựng lại vòng lặp Agent.
 
-OpenCreator cung cấp hai cách làm việc kết nối với nhau:
+Vishnu Creator cung cấp hai cách làm việc kết nối với nhau:
 
 - **Không gian nội dung**: dùng công cụ trực quan và mẫu sáng tạo để dịch, tải video; tạo ảnh, video, lời thuyết minh; viết bài và bài đăng mạng xã hội; viết kịch bản video ngắn và làm hoạt hình người que.
 - **Hội thoại Agent**: giao và hướng dẫn tác vụ sáng tạo hoặc phát triển bằng ngôn ngữ tự nhiên; tổ chức hội thoại theo dự án, để các Run tiếp tục chạy nền và quản lý phê duyệt, tệp đính kèm, tệp, Skills, MCP, lịch chạy, thông báo, bộ nhớ và chẩn đoán tại một nơi.
@@ -79,7 +79,7 @@ Bản hiện tại có mười công cụ sáng tạo. Mô hình và dịch vụ
 
 Mở Dashboard để viết bài, bài đăng Xiaohongshu, kịch bản video ngắn; làm hoạt hình người que; dịch hoặc tải video; tạo ảnh thu nhỏ, ảnh, video; và tạo lời thuyết minh với Text to Speech.
 
-![Dashboard sáng tạo của OpenCreator](../images/product/opencreator-dashboard-en.png)
+![Dashboard sáng tạo của Vishnu Creator](../images/product/vishnucreator-dashboard-en.png)
 
 > Các công cụ sáng tạo mới tiếp tục được bổ sung.
 
@@ -123,7 +123,7 @@ Mở Dashboard để viết bài, bài đăng Xiaohongshu, kịch bản video ng
 
 Bắt đầu từ mẫu thay vì tự xây dựng mọi prompt và thiết lập. Duyệt mẫu nổi bật theo danh mục, gồm tạo video và thiết kế ảnh, để tìm điểm khởi đầu cho ý tưởng.
 
-Bộ sưu tập gồm mẫu do OpenCreator và các nhà sáng tạo độc lập tạo ra. Trang chi tiết của mẫu bên thứ ba ghi công tác giả và dẫn tới nguồn gốc.
+Bộ sưu tập gồm mẫu do Vishnu Creator và các nhà sáng tạo độc lập tạo ra. Trang chi tiết của mẫu bên thứ ba ghi công tác giả và dẫn tới nguồn gốc.
 
 Mở mẫu để xem kết quả ví dụ, prompt, thiết lập, thẻ, tác giả và nguồn gốc. Chọn **Use this template** để bắt đầu, rồi điều chỉnh đầu vào cho công việc của bạn.
 
@@ -135,23 +135,23 @@ Mở mẫu để xem kết quả ví dụ, prompt, thiết lập, thẻ, tác gi
 
 Công cụ sáng tạo cung cấp điều khiển trực quan; Skills cung cấp cho Agent hướng dẫn và quy trình công cụ tái sử dụng. Kho mã có Skills sản xuất video và hỗ trợ quản lý Skills Codex cục bộ.
 
-Thư mục [`skills/`](../../skills/) chứa hướng dẫn tái sử dụng cho Agent vận hành KrillinAI CLI được nhúng.
+Thư mục [`skills/`](../../skills/) chứa hướng dẫn tái sử dụng cho Agent vận hành VishnuAI CLI được nhúng.
 
 | Skill | Khả năng |
 | --- | --- |
-| [KrillinAI CLI](../../skills/krillinai-cli/SKILL.md) | Chọn lệnh, kiểm tra cấu hình, đọc tiến độ, manifest, đầu ra và lỗi |
-| [Phụ đề](../../skills/krillinai-subtitle/SKILL.md) | Tải phụ đề nền tảng hoặc chép lời, dịch phụ đề, tạo phụ đề song ngữ hoặc phụ đề ngắn cho video dọc |
-| [TTS](../../skills/krillinai-tts/SKILL.md) | Tạo lồng tiếng ngôn ngữ đích từ phụ đề và tùy chọn tạo video đã lồng tiếng |
-| [Kết xuất ngang](../../skills/krillinai-render-horizontal/SKILL.md) | Kết xuất video ngang có phụ đề song ngữ hoặc âm thanh lồng tiếng và phụ đề ngôn ngữ đích |
-| [Kết xuất dọc](../../skills/krillinai-render-vertical/SKILL.md) | Dựng video dọc có tiêu đề, phụ đề song ngữ hoặc lồng tiếng |
-| [Ảnh bìa](../../skills/krillinai-cover/SKILL.md) | Tạo ảnh bìa từ prompt văn bản đầy đủ, lưu ảnh và prompt cuối cùng |
-| [Kế hoạch quy trình](../../skills/krillinai-pipeline/SKILL.md) | Kiểm tra kế hoạch đầu ra nhiều giai đoạn ở chế độ dry-run; thực thi qua từng Skill của giai đoạn |
+| [VishnuAI CLI](../../skills/vishnuai-cli/SKILL.md) | Chọn lệnh, kiểm tra cấu hình, đọc tiến độ, manifest, đầu ra và lỗi |
+| [Phụ đề](../../skills/vishnuai-subtitle/SKILL.md) | Tải phụ đề nền tảng hoặc chép lời, dịch phụ đề, tạo phụ đề song ngữ hoặc phụ đề ngắn cho video dọc |
+| [TTS](../../skills/vishnuai-tts/SKILL.md) | Tạo lồng tiếng ngôn ngữ đích từ phụ đề và tùy chọn tạo video đã lồng tiếng |
+| [Kết xuất ngang](../../skills/vishnuai-render-horizontal/SKILL.md) | Kết xuất video ngang có phụ đề song ngữ hoặc âm thanh lồng tiếng và phụ đề ngôn ngữ đích |
+| [Kết xuất dọc](../../skills/vishnuai-render-vertical/SKILL.md) | Dựng video dọc có tiêu đề, phụ đề song ngữ hoặc lồng tiếng |
+| [Ảnh bìa](../../skills/vishnuai-cover/SKILL.md) | Tạo ảnh bìa từ prompt văn bản đầy đủ, lưu ảnh và prompt cuối cùng |
+| [Kế hoạch quy trình](../../skills/vishnuai-pipeline/SKILL.md) | Kiểm tra kế hoạch đầu ra nhiều giai đoạn ở chế độ dry-run; thực thi qua từng Skill của giai đoạn |
 
 <a id="extend-with-your-own-skills"></a>
 
 ### Mở rộng bằng Skills của bạn
 
-OpenCreator hỗ trợ Skills Codex cục bộ được định nghĩa bằng `SKILL.md`, cho phép thêm phương pháp và quy trình riêng. Skills khả dụng tùy thuộc Codex home đang dùng và Skills đã cài; Skills video cần cấu hình CLI và dịch vụ liên quan. Có trong kho mã không có nghĩa mọi Skill tự được cài hoặc mọi dịch vụ ngoài đều đi kèm.
+Vishnu Creator hỗ trợ Skills Codex cục bộ được định nghĩa bằng `SKILL.md`, cho phép thêm phương pháp và quy trình riêng. Skills khả dụng tùy thuộc Codex home đang dùng và Skills đã cài; Skills video cần cấu hình CLI và dịch vụ liên quan. Có trong kho mã không có nghĩa mọi Skill tự được cài hoặc mọi dịch vụ ngoài đều đi kèm.
 
 <a id="conversation-and-workspace-moving-together"></a>
 
@@ -159,7 +159,7 @@ OpenCreator hỗ trợ Skills Codex cục bộ được định nghĩa bằng `S
 
 Mô tả tác vụ tự nhiên, rồi dùng công cụ trực quan khi cần điều khiển chính xác.
 
-![Hội thoại và không gian trực quan OpenCreator phối hợp](../images/examples/opencreator-auto-clips-en.png)
+![Hội thoại và không gian trực quan Vishnu Creator phối hợp](../images/examples/vishnucreator-auto-clips-en.png)
 
 <a id="fine-grained-workspace-controls"></a>
 
@@ -264,11 +264,11 @@ Chép lời cục bộ cũng hỗ trợ faster-whisper, WhisperKit và whisper.c
 
 ### Dịch video
 
-Các ví dụ công khai dưới đây được tạo khi OpenCreator còn tên KrillinAI. Chúng thể hiện quy trình căn chỉnh phụ đề, dịch, lồng tiếng và video dọc đã được kiểm chứng, nay được đưa vào quy trình Agent rộng hơn qua không gian Dịch video.
+Các ví dụ công khai dưới đây được tạo khi Vishnu Creator còn tên VishnuAI. Chúng thể hiện quy trình căn chỉnh phụ đề, dịch, lồng tiếng và video dọc đã được kiểm chứng, nay được đưa vào quy trình Agent rộng hơn qua không gian Dịch video.
 
 Dự án tạo tệp phụ đề bên dưới từ video cục bộ dài 46 phút trong một lần chạy, không sửa phụ đề thủ công. Kết quả công bố phủ đủ nội dung, không chồng dòng, phân đoạn tự nhiên và bản dịch chất lượng cao.
 
-![Ví dụ căn chỉnh phụ đề OpenCreator](../images/examples/krillinai-subtitle-alignment.png)
+![Ví dụ căn chỉnh phụ đề Vishnu Creator](../images/examples/vishnuai-subtitle-alignment.png)
 
 <table width="100%">
 <tr>
@@ -302,7 +302,7 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
 </tr>
 </table>
 
-> Các video ví dụ và ảnh căn chỉnh phụ đề được tạo khi OpenCreator còn dùng tên KrillinAI.
+> Các video ví dụ và ảnh căn chỉnh phụ đề được tạo khi Vishnu Creator còn dùng tên VishnuAI.
 
 <a id="video-downloader"></a>
 
@@ -329,7 +329,7 @@ Nguồn video hỗ trợ:
 
 Khả dụng tùy video và khu vực; một số nguồn cần cookie nền tảng.
 
-![Chọn định dạng trong trình tải video OpenCreator](../images/examples/video-downloader-formats-and-subtitles-en.png)
+![Chọn định dạng trong trình tải video Vishnu Creator](../images/examples/video-downloader-formats-and-subtitles-en.png)
 
 <a id="video-generation"></a>
 
@@ -337,19 +337,19 @@ Khả dụng tùy video và khu vực; một số nguồn cần cookie nền t�
 
 Tạo video AI từ prompt văn bản hoặc ảnh tham chiếu bằng Seedance. Đặt mô hình, tỷ lệ, độ phân giải và thời lượng, rồi xem trước, tạo lại hoặc tải từng phiên bản trong không gian dự án.
 
-![Tạo video OpenCreator bằng Seedance](../images/examples/video-generation-seedance-en.png)
+![Tạo video Vishnu Creator bằng Seedance](../images/examples/video-generation-seedance-en.png)
 
 <a id="stick-figure-animation"></a>
 
 ### Hoạt hình người que
 
-OpenCreator phát triển bộ nhân vật gốc này cùng họa sĩ [Harbor Hsia](https://www.behance.net/xiaheyuan1), tác giả [Stickman trên Behance](https://www.behance.net/gallery/254715463/Stickman). Bộ nhân vật tích hợp giữ danh tính nhân vật nhất quán suốt quy trình hoạt hình.
+Vishnu Creator phát triển bộ nhân vật gốc này cùng họa sĩ [Harbor Hsia](https://www.behance.net/xiaheyuan1), tác giả [Stickman trên Behance](https://www.behance.net/gallery/254715463/Stickman). Bộ nhân vật tích hợp giữ danh tính nhân vật nhất quán suốt quy trình hoạt hình.
 
-![Nhân vật người que OpenCreator hợp tác cùng họa sĩ](../images/examples/stick-figure-characters.webp)
+![Nhân vật người que Vishnu Creator hợp tác cùng họa sĩ](../images/examples/stick-figure-characters.webp)
 
 Biến văn bản hoặc nội dung YouTube thành hoạt hình hoàn chỉnh qua quy trình hướng dẫn: duyệt kịch bản, lời kể, thời gian, hình phân cảnh, phụ đề, kết xuất và video tải xuống.
 
-![Khung hình ví dụ hoạt hình người que OpenCreator](../images/examples/stick-figure-animation-frame.jpg)
+![Khung hình ví dụ hoạt hình người que Vishnu Creator](../images/examples/stick-figure-animation-frame.jpg)
 
 <a id="quick-start"></a>
 
@@ -359,13 +359,13 @@ Biến văn bản hoặc nội dung YouTube thành hoạt hình hoàn chỉnh qu
 
 ### Cài ứng dụng Desktop
 
-Tải bộ cài phù hợp từ [bản OpenCreator mới nhất](https://github.com/krillinai/OpenCreator/releases/latest) cho macOS Apple Silicon, macOS Intel hoặc Windows x64. Cài và mở ứng dụng; không cần Node.js hay pnpm. Gói Desktop có Codex CLI; tác vụ mô hình thực cần đăng nhập ChatGPT hoặc cấu hình API key dùng được.
+Tải bộ cài phù hợp từ [bản Vishnu Creator mới nhất](https://github.com/vishnuai/Vishnu Creator/releases/latest) cho macOS Apple Silicon, macOS Intel hoặc Windows x64. Cài và mở ứng dụng; không cần Node.js hay pnpm. Gói Desktop có Codex CLI; tác vụ mô hình thực cần đăng nhập ChatGPT hoặc cấu hình API key dùng được.
 
 Lần đầu mở, Desktop khởi động Runtime cục bộ, chuẩn bị dự án mặc định và kiểm tra cấu hình Codex. Nếu tìm thấy đăng nhập hoặc API key và thiết lập mô hình dùng được, chọn **Use local Codex and continue** để dùng lại. Bạn cũng có thể cấu hình nhà cung cấp khác ngay trong bước này:
 
-![Thiết lập nhà cung cấp mô hình khi mở Desktop lần đầu](../images/product/opencreator-codex-setup.png)
+![Thiết lập nhà cung cấp mô hình khi mở Desktop lần đầu](../images/product/vishnucreator-codex-setup.png)
 
-Sau thiết lập, nhập yêu cầu vào ô soạn để bắt đầu. Khi gặp lỗi, xem [hướng dẫn sử dụng và xử lý sự cố](../opencreator-user-guide-and-troubleshooting.md).
+Sau thiết lập, nhập yêu cầu vào ô soạn để bắt đầu. Khi gặp lỗi, xem [hướng dẫn sử dụng và xử lý sự cố](../vishnucreator-user-guide-and-troubleshooting.md).
 
 <a id="run-web-from-source"></a>
 
@@ -387,8 +387,8 @@ codex --version
 ```
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable
 pnpm install
 pnpm web:dev
@@ -427,10 +427,10 @@ pnpm desktop:dev
 | `pnpm desktop:package` | Thư mục chạy được cho nền tảng hiện tại, phục vụ kiểm tra cục bộ |
 | `pnpm desktop:dist` | Bộ cài cho nền tảng hiện tại |
 | `pnpm desktop:release` | Lệnh đóng gói phát hành chính thức |
-| `pnpm --filter @opencreator/desktop verify:package` | Kiểm tra gói Desktop đã có |
-| `pnpm krillinai:package` | Các tệp nén KrillinAI Server và CLI riêng cho nền tảng đã chọn |
+| `pnpm --filter @vishnucreator/desktop verify:package` | Kiểm tra gói Desktop đã có |
+| `pnpm vishnuai:package` | Các tệp nén VishnuAI Server và CLI riêng cho nền tảng đã chọn |
 
-Đóng gói Desktop dựng lại Web từ không gian hiện tại, ghi commit, trạng thái thay đổi chưa commit, nền tảng, kiến trúc và hash Web; so sánh `apps/web/dist` với tài nguyên nhúng trong ứng dụng. Khác nhau sẽ làm đóng gói thất bại. Xem [quy trình phát hành Desktop](../operations/opencreator-desktop-release-runbook.md) về ký, notarization, bản Windows và yêu cầu phát hành.
+Đóng gói Desktop dựng lại Web từ không gian hiện tại, ghi commit, trạng thái thay đổi chưa commit, nền tảng, kiến trúc và hash Web; so sánh `apps/web/dist` với tài nguyên nhúng trong ứng dụng. Khác nhau sẽ làm đóng gói thất bại. Xem [quy trình phát hành Desktop](../operations/vishnucreator-desktop-release-runbook.md) về ký, notarization, bản Windows và yêu cầu phát hành.
 
 <a id="core-workflows"></a>
 
@@ -459,14 +459,14 @@ pnpm desktop:dev
 
 ### Lịch chạy và luồng tác vụ riêng
 
-- Mỗi lịch chạy có một hội thoại OpenCreator riêng được lưu lâu dài.
+- Mỗi lịch chạy có một hội thoại Vishnu Creator riêng được lưu lâu dài.
 - Kích hoạt tự động, chạy thủ công và yêu cầu tiếp theo dùng lại hội thoại đó, chạy tuần tự theo chính sách `queue` hoặc `skip`.
 - Xóa lịch sẽ lưu trữ hội thoại riêng, giữ Run, kết quả và lịch sử Codex bên dưới.
-- Đổi hoặc khôi phục luồng Codex bên dưới không đổi mục tác vụ OpenCreator hoặc đường dẫn trang.
+- Đổi hoặc khôi phục luồng Codex bên dưới không đổi mục tác vụ Vishnu Creator hoặc đường dẫn trang.
 
-<a id="opencreator-system-architecture"></a>
+<a id="vishnucreator-system-architecture"></a>
 
-## Kiến trúc hệ thống OpenCreator
+## Kiến trúc hệ thống Vishnu Creator
 
 Không gian trực quan và hội thoại Agent là hai giao diện của cùng tác vụ sáng tạo. Mỗi quy trình được mô hình hóa thành máy trạng thái với đầu vào, cấu hình, tạo nội dung, duyệt, sửa và xuất dưới dạng trạng thái và sự kiện rõ ràng. Thao tác trực quan và lệnh hội thoại đi vào cùng máy trạng thái; bước hiện tại, cấu hình, tiến độ, phiên bản và kết quả hiển thị lại ở cả hai giao diện, giữ đồng bộ với một nguồn trạng thái duy nhất.
 
@@ -504,7 +504,7 @@ Sáng tạo cần lặp lại; chỉnh sửa không ghi đè kết quả hiện 
 +---------------------+  +---------------------+  +-------------------------+
 ```
 
-| Thành phần OpenCreator | Trách nhiệm | Triển khai |
+| Thành phần Vishnu Creator | Trách nhiệm | Triển khai |
 | --- | --- | --- |
 | Trải nghiệm sáng tạo | Dashboard, công cụ, hội thoại Agent, thiết lập và tệp | `apps/web` · React 18 · Vite · TypeScript |
 | Lõi cộng tác | Đồng bộ bước, ngữ cảnh hội thoại, tiến độ, kết quả và chỉnh sửa | Trạng thái quy trình chung · `CreatorCollaborationPanel` · lịch sử phiên bản |
@@ -529,7 +529,7 @@ Nguyên tắc chính:
 ## Cấu trúc kho mã
 
 ```text
-OpenCreator/
+Vishnu Creator/
 ├── apps/
 │   ├── web/          # Giao diện React duy nhất
 │   ├── daemon/       # Runtime Fastify cục bộ và bộ chuyển đổi Codex
@@ -553,7 +553,7 @@ OpenCreator/
 
 Mở **Settings → AI Services** để cấu hình nhà cung cấp mô hình, chép lời, giọng nói và ảnh cho các không gian hiện tại. Có thể có thêm danh mục chuẩn bị cho công cụ sắp ra mắt. Mỗi danh mục chỉ hiển thị trường nhà cung cấp đã chọn cần: Base URL, API Key, mô hình, proxy hoặc thông tin xác thực riêng.
 
-![Thiết lập API key dịch vụ AI OpenCreator](../images/product/opencreator-ai-services-en.png)
+![Thiết lập API key dịch vụ AI Vishnu Creator](../images/product/vishnucreator-ai-services-en.png)
 
 Thông tin xác thực lưu qua kho thông tin xác thực hệ thống của Runtime cục bộ, không bao giờ đưa vào kho mã. Một số nhà cung cấp cục bộ hoặc dựa trên hệ thống như Edge TTS không cần API Key.
 
@@ -561,12 +561,12 @@ Thông tin xác thực lưu qua kho thông tin xác thực hệ thống của Ru
 
 ### Tài khoản và gói đăng ký
 
-Trung tâm cá nhân hiển thị tài khoản, gói đã xác nhận và tín dụng khả dụng. Đăng nhập mở `https://www.open-creator.ai/device` trong trình duyệt. Đăng nhập trên web rồi phê duyệt thiết bị; Daemon cục bộ nhận phiên riêng. Trình duyệt và ứng dụng dùng chung tài khoản, nhưng có phiên độc lập.
+Trung tâm cá nhân hiển thị tài khoản, gói đã xác nhận và tín dụng khả dụng. Đăng nhập mở `https://www.vishnu-creator.ai/device` trong trình duyệt. Đăng nhập trên web rồi phê duyệt thiết bị; Daemon cục bộ nhận phiên riêng. Trình duyệt và ứng dụng dùng chung tài khoản, nhưng có phiên độc lập.
 
 
 
 
-Chọn gói trong OpenCreator. Mua mở Stripe Checkout; quản lý gói mở Stripe Billing Portal. Quay lại ứng dụng sau thanh toán dùng trang `/billing/return`, không cần phiên web. OpenCreator cập nhật quyền lợi từ Gateway sau thông báo Stripe đã xác minh. Trang `/pricing` và `/account` là lối mua khác tới cùng hệ thống đăng ký.
+Chọn gói trong Vishnu Creator. Mua mở Stripe Checkout; quản lý gói mở Stripe Billing Portal. Quay lại ứng dụng sau thanh toán dùng trang `/billing/return`, không cần phiên web. Vishnu Creator cập nhật quyền lợi từ Gateway sau thông báo Stripe đã xác minh. Trang `/pricing` và `/account` là lối mua khác tới cùng hệ thống đăng ký.
 
 
 
@@ -577,9 +577,9 @@ Chọn gói trong OpenCreator. Mua mở Stripe Checkout; quản lý gói mở St
 
 ### Thành phần Runtime bên thứ ba
 
-Mở **Settings → Third-party Components** để xem bản yt-dlp nightly đang dùng, bản kèm ứng dụng, nguồn và bản mới nhất. OpenCreator kiểm tra mỗi bảy ngày, không tự cài. Cập nhật cần người dùng yêu cầu; bản hoạt động hiện tại vẫn dùng được nếu tải, xác minh hoặc cài đặt thất bại.
+Mở **Settings → Third-party Components** để xem bản yt-dlp nightly đang dùng, bản kèm ứng dụng, nguồn và bản mới nhất. Vishnu Creator kiểm tra mỗi bảy ngày, không tự cài. Cập nhật cần người dùng yêu cầu; bản hoạt động hiện tại vẫn dùng được nếu tải, xác minh hoặc cài đặt thất bại.
 
-![Thiết lập thành phần bên thứ ba OpenCreator](../images/product/opencreator-third-party-components-en.png)
+![Thiết lập thành phần bên thứ ba Vishnu Creator](../images/product/vishnucreator-third-party-components-en.png)
 
 <a id="runtime-environment-variables"></a>
 
@@ -589,18 +589,18 @@ Phần lớn người dùng không cần biến môi trường. Dùng khi cần 
 
 | Biến môi trường | Mặc định | Mục đích |
 | --- | --- | --- |
-| `OPENCREATOR_DATA_DIR` | `.runtime` | Cơ sở dữ liệu OpenCreator, Run, tệp đính kèm và không gian được quản lý |
-| `OPENCREATOR_GATEWAY_ORIGIN` | `https://www.open-creator.ai` | Gateway đăng nhập, đăng ký, tín dụng và dịch vụ mô hình chính thức; ghi đè để dùng Gateway cục bộ |
-| `OPENCREATOR_CODEX_BIN` | `codex` | Đường dẫn tệp thực thi Codex CLI |
+| `VISHNUCREATOR_DATA_DIR` | `.runtime` | Cơ sở dữ liệu Vishnu Creator, Run, tệp đính kèm và không gian được quản lý |
+| `VISHNUCREATOR_GATEWAY_ORIGIN` | `https://www.vishnu-creator.ai` | Gateway đăng nhập, đăng ký, tín dụng và dịch vụ mô hình chính thức; ghi đè để dùng Gateway cục bộ |
+| `VISHNUCREATOR_CODEX_BIN` | `codex` | Đường dẫn tệp thực thi Codex CLI |
 | `CODEX_HOME` | `~/.codex` | Nguồn chuẩn cho phiên Codex, cấu hình, Skills, MCP và Profiles |
-| `OPENCREATOR_DEFAULT_CWD` | Thư mục làm việc hiện tại | Thư mục làm việc mặc định của daemon |
-| `OPENCREATOR_DEFAULT_PROJECT_ROOT` | Chính sách mặc định Runtime | Thư mục gốc dự án được quản lý; khi đặt, dùng thư mục con `OpenCreator/` |
-| `OPENCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | Số Run kết thúc để đổi luồng Codex của lịch chạy dài hạn; `0` tắt đổi chủ động |
+| `VISHNUCREATOR_DEFAULT_CWD` | Thư mục làm việc hiện tại | Thư mục làm việc mặc định của daemon |
+| `VISHNUCREATOR_DEFAULT_PROJECT_ROOT` | Chính sách mặc định Runtime | Thư mục gốc dự án được quản lý; khi đặt, dùng thư mục con `Vishnu Creator/` |
+| `VISHNUCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | Số Run kết thúc để đổi luồng Codex của lịch chạy dài hạn; `0` tắt đổi chủ động |
 
 Ví dụ tách dữ liệu Runtime và môi trường Codex:
 
 ```bash
-OPENCREATOR_DATA_DIR=/path/to/opencreator-data \
+VISHNUCREATOR_DATA_DIR=/path/to/vishnucreator-data \
 CODEX_HOME=/path/to/codex-home \
 pnpm web:dev
 ```
@@ -628,7 +628,7 @@ Các ranh giới bảo mật:
 - Chẩn đoán và nhật ký Run được che thông tin nhạy cảm trước khi trả về hoặc xuất.
 - Gói Desktop bật toàn vẹn ASAR và mã hóa cookie; tắt RunAsNode, `NODE_OPTIONS` và Node CLI Inspector.
 
-Xem [hướng dẫn sử dụng và xử lý sự cố](../opencreator-user-guide-and-troubleshooting.md) để biết đầy đủ cách sao lưu, khôi phục, dọn dẹp và đặt lại.
+Xem [hướng dẫn sử dụng và xử lý sự cố](../vishnucreator-user-guide-and-troubleshooting.md) để biết đầy đủ cách sao lưu, khôi phục, dọn dẹp và đặt lại.
 
 <a id="development"></a>
 
@@ -657,17 +657,17 @@ Thay đổi Desktop, Host Bridge, proxy Runtime hoặc quy trình giao diện ch
 Kiểm tra nhanh với Codex thật mặc định tắt. Bật rõ ràng bằng:
 
 ```bash
-OPENCREATOR_RUN_REAL_CODEX_SMOKE=1 \
-pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
+VISHNUCREATOR_RUN_REAL_CODEX_SMOKE=1 \
+pnpm --filter @vishnucreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 ```
 
 <a id="documentation"></a>
 
 ## Tài liệu
 
-- **Sử dụng:** [Bắt đầu](#quick-start) · [Hướng dẫn và xử lý sự cố](../opencreator-user-guide-and-troubleshooting.md)
+- **Sử dụng:** [Bắt đầu](#quick-start) · [Hướng dẫn và xử lý sự cố](../vishnucreator-user-guide-and-troubleshooting.md)
 - **Phát triển và mở rộng:** [Đóng góp](../../CONTRIBUTING.md) · [Quy tắc ứng xử](../../CODE_OF_CONDUCT.md) · [Đóng góp Skill](../contributing/skills-contributing.md) · [Đóng góp mẫu](../contributing/templates-contributing.md) · [Runtime API v1](../runtime-api-for-ui-v1.md) · [Hướng dẫn thành phần giao diện](../visual-component-guidelines.md)
-- **Bảo trì và phát hành:** [Thiết kế Runtime dựa trên Codex](../2026-07-03-codex-native-agent-runtime-design.md) · [Quy trình phát hành Desktop](../operations/opencreator-desktop-release-runbook.md) · [Phát hành Windows Desktop](../operations/opencreator-desktop-windows-release.md)
+- **Bảo trì và phát hành:** [Thiết kế Runtime dựa trên Codex](../2026-07-03-codex-native-agent-runtime-design.md) · [Quy trình phát hành Desktop](../operations/vishnucreator-desktop-release-runbook.md) · [Phát hành Windows Desktop](../operations/vishnucreator-desktop-windows-release.md)
 
 <a id="translation-convention"></a>
 
@@ -679,9 +679,9 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 ## Cộng đồng
 
-<p>Người dùng GitHub từ <strong>ít nhất 105 quốc gia và vùng lãnh thổ</strong> đã gắn sao OpenCreator.</p>
+<p>Người dùng GitHub từ <strong>ít nhất 105 quốc gia và vùng lãnh thổ</strong> đã gắn sao Vishnu Creator.</p>
 
-<img src="../images/star-coverage-map.svg" alt="Bản đồ quốc gia và vùng lãnh thổ có người gắn sao OpenCreator trên GitHub" width="760" />
+<img src="../images/star-coverage-map.svg" alt="Bản đồ quốc gia và vùng lãnh thổ có người gắn sao Vishnu Creator trên GitHub" width="760" />
 
 <a id="the-crew"></a>
 
@@ -694,7 +694,7 @@ Mỗi thành viên phụ trách tiêu chuẩn, xét duyệt và hợp nhất đ�
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/wulien.svg" width="64" height="64" alt="wulien avatar" /><br /><a href="https://github.com/wulien">wulien</a><br />Mã nguồn &amp; sửa lỗi</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/dle-kb.svg" width="64" height="64" alt="DLe-kb avatar" /><br /><a href="https://github.com/DLe-kb">DLe-kb</a><br />Mẫu sáng tạo</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/xiaheyuan.svg" width="64" height="64" alt="xiaheyuan avatar" /><br /><a href="https://github.com/xiaheyuan">xiaheyuan</a><br />Thiết kế &amp; tài nguyên</td>
-    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/krillinai.svg" width="64" height="64" alt="krillinai avatar" /><br /><a href="https://github.com/krillinai">krillinai</a><br />Skills &amp; tài liệu</td>
+    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/vishnuai.svg" width="64" height="64" alt="vishnuai avatar" /><br /><a href="https://github.com/vishnuai">vishnuai</a><br />Skills &amp; tài liệu</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/hbxugang.svg" width="64" height="64" alt="hbxugang avatar" /><br /><a href="https://github.com/hbxugang">hbxugang</a><br />Triển khai doanh nghiệp</td>
   </tr>
 </table>
@@ -710,7 +710,7 @@ Danh sách README này được quản lý riêng với biểu đồ Contributor
   <a href="https://github.com/maranello-o"><img src="../images/contributors/maranello-o.svg" width="48" height="48" alt="maranello-o" /></a>
   <a href="https://github.com/wulien"><img src="../images/contributors/wulien.svg" width="48" height="48" alt="wulien" /></a>
   <a href="https://github.com/puji4810"><img src="../images/contributors/puji4810.svg" width="48" height="48" alt="puji4810" /></a>
-  <a href="https://github.com/krillinai"><img src="../images/contributors/krillinai.svg" width="48" height="48" alt="krillinai" /></a>
+  <a href="https://github.com/vishnuai"><img src="../images/contributors/vishnuai.svg" width="48" height="48" alt="vishnuai" /></a>
   <a href="https://github.com/PairZhu"><img src="../images/contributors/pairzhu.svg" width="48" height="48" alt="PairZhu" /></a>
   <a href="https://github.com/Mijaelx"><img src="../images/contributors/mijaelx.svg" width="48" height="48" alt="Mijaelx" /></a>
   <a href="https://github.com/OutisLi"><img src="../images/contributors/outisli.svg" width="48" height="48" alt="OutisLi" /></a>
@@ -726,7 +726,7 @@ Danh sách README này được quản lý riêng với biểu đồ Contributor
   <a href="https://github.com/DLe-kb"><img src="../images/contributors/dle-kb.svg" width="48" height="48" alt="DLe-kb" /></a>
   <a href="https://github.com/liupig"><img src="../images/contributors/liupig.svg" width="48" height="48" alt="liupig" /></a>
   <a href="https://github.com/alextavares" title="alextavares"><img src="../images/contributors/alextavares.svg" width="48" height="48" alt="alextavares" /></a>
-  <a href="https://github.com/krillinai/OpenCreator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
+  <a href="https://github.com/vishnuai/Vishnu Creator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
   <a href="https://github.com/mifan100g" title="mifan100g (米饭二两)"><img src="../images/contributors/mifan100g.svg" width="48" height="48" alt="mifan100g (米饭二两)" /></a>
   <a href="https://github.com/askalf"><img src="../images/contributors/askalf.svg" width="48" height="48" alt="askalf" /></a>
   <a href="https://github.com/Yi-111-a"><img src="../images/contributors/yi-111-a.svg" width="48" height="48" alt="Yi-111-a" /></a>
@@ -753,9 +753,9 @@ Hướng dẫn đầy đủ về thiết lập cục bộ, tiêu chí duyệt v�
 
 ## Lịch sử sao
 
-OpenCreator trước đây có tên KrillinAI. Biểu đồ bao gồm toàn bộ lịch sử kho mã trước và sau đổi tên.
+Vishnu Creator trước đây có tên VishnuAI. Biểu đồ bao gồm toàn bộ lịch sử kho mã trước và sau đổi tên.
 
-[![Lịch sử sao OpenCreator](https://api.star-history.com/svg?repos=krillinai/OpenCreator&type=date)](https://www.star-history.com/?type=date&repos=krillinai%2FOpenCreator)
+[![Lịch sử sao Vishnu Creator](https://api.star-history.com/svg?repos=vishnuai/Vishnu Creator&type=date)](https://www.star-history.com/?type=date&repos=vishnuai%2FVishnu Creator)
 
 <a id="related-projects"></a>
 
@@ -777,6 +777,6 @@ OpenCreator trước đây có tên KrillinAI. Biểu đồ bao gồm toàn bộ
 
 <div align="center">
 
-**OpenCreator · Sáng tạo trên máy, làm việc liên tục.**
+**Vishnu Creator · Sáng tạo trên máy, làm việc liên tục.**
 
 </div>

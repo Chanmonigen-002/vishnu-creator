@@ -4,20 +4,20 @@ import {
   type CreatorTtsProvider,
   type SmartDubbingFormat,
   type SmartDubbingStyle
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { createHash } from 'node:crypto';
 import { writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 import {
-  KrillinTtsServiceError,
-  type KrillinTtsService
-} from '../krillin/tts-service.js';
+  VishnuTtsServiceError,
+  type VishnuTtsService
+} from '../vishnu/tts-service.js';
 import { smartDubbingInstructions } from '../../smart-dubbing/styles.js';
 import type { CreatorExecutor } from '../executor.js';
 import { CreatorExecutorError } from '../executor.js';
 
 export function createSmartDubbingExecutor(input: {
-  ttsService: Pick<KrillinTtsService, 'synthesize'>;
+  ttsService: Pick<VishnuTtsService, 'synthesize'>;
   isOfficial?(): boolean;
 }): CreatorExecutor {
   return {
@@ -46,7 +46,7 @@ export function createSmartDubbingExecutor(input: {
           throw new CreatorExecutorError('creator_stage_canceled', 'Creator stage was canceled');
         }
         stage.reportProgress({ phase: 'finalizing_output', percent: 90 });
-        const fileName = `OpenCreator-dubbing.${synthesis.format}`;
+        const fileName = `VishnuCreator-dubbing.${synthesis.format}`;
         const path = join(stage.workdir, fileName);
         await writeFile(path, synthesis.content, { mode: 0o600 });
         const characterCount = [...request.text].length;
@@ -84,7 +84,7 @@ export function createSmartDubbingExecutor(input: {
           throw new CreatorExecutorError('creator_stage_canceled', 'Creator stage was canceled');
         }
         if (error instanceof CreatorExecutorError) throw error;
-        if (error instanceof KrillinTtsServiceError) {
+        if (error instanceof VishnuTtsServiceError) {
           const code = error.code === 'VALIDATION_FAILED'
             ? 'creator_stage_input_missing'
             : error.code;

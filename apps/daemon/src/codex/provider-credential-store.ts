@@ -3,8 +3,8 @@ import {
   writePrivateJsonFile
 } from '../config/private-json-file.js';
 import {
-  readOpenCreatorCredentials,
-  updateOpenCreatorCredentials
+  readVishnuCreatorCredentials,
+  updateVishnuCreatorCredentials
 } from '../config/credentials-file.js';
 
 type CredentialEntry = {
@@ -67,12 +67,12 @@ export function createFileCodexProviderCredentialStore(
   };
 }
 
-export function createOpenCreatorCodexProviderCredentialStore(
+export function createVishnuCreatorCodexProviderCredentialStore(
   path: string
 ): CodexProviderCredentialStore {
   return {
     async readApiKey(provider) {
-      const document = await readOpenCreatorCredentials(path);
+      const document = await readVishnuCreatorCredentials(path);
       const current = document.codexProvider?.apiKey.trim();
       if (
         provider !== undefined
@@ -81,7 +81,7 @@ export function createOpenCreatorCodexProviderCredentialStore(
       return current === undefined || current.length === 0 ? undefined : current;
     },
     async writeApiKey(apiKey, provider) {
-      await updateOpenCreatorCredentials(path, value => ({
+      await updateVishnuCreatorCredentials(path, value => ({
         ...value,
         codexProvider: {
           apiKey,

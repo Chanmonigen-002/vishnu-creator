@@ -1,6 +1,6 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { CreatorSubtitlePreviewRequest } from '@opencreator/protocol';
+import type { CreatorSubtitlePreviewRequest } from '@vishnucreator/protocol';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import VideoTranslationStylePreview from './VideoTranslationStylePreview.js';
 

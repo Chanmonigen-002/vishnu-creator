@@ -21,7 +21,7 @@ describe('Creator Preset build gate', () => {
     expect(workflow).toContain(gate);
     const gateIndex = workflow.indexOf(gate);
     for (const consumer of [
-      'pnpm krillinai:test',
+      'pnpm vishnuai:test',
       'pnpm test',
       'pnpm typecheck',
       'pnpm build'
@@ -48,7 +48,7 @@ describe('Creator Preset build gate', () => {
     );
     expect(viteConfig).toContain("join(webDir, '../../.runtime/generated/creator-presets')");
     expect(viteConfig).toContain("join(webDir, 'dist', 'creator-presets')");
-    expect(viteConfig).toContain("join(webDir, 'dist', 'fonts', 'opencreator')");
+    expect(viteConfig).toContain("join(webDir, 'dist', 'fonts', 'vishnucreator')");
     expect(builderConfig).toContain('from: .pack/daemon/runtime');
     expect(builderConfig).toContain('from: ../web/dist');
     expect(builderConfig.match(/creator-presets/g) ?? []).toHaveLength(0);

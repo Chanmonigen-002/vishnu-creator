@@ -1,6 +1,6 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import type { CreatorSubtitleRenderBundle, CreatorSubtitleRenderRequest } from '@opencreator/protocol';
+import type { CreatorSubtitleRenderBundle, CreatorSubtitleRenderRequest } from '@vishnucreator/protocol';
 import SubtitleCompositionPreview from './SubtitleCompositionPreview.js';
 
 const mocks = vi.hoisted(() => ({ create: vi.fn(), draw: vi.fn(), track: vi.fn(), fonts: vi.fn(), resize: vi.fn(), destroy: vi.fn() }));

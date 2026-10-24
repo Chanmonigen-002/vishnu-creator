@@ -98,7 +98,7 @@ export class WindowManager {
       minHeight: 680,
       show: false,
       backgroundColor: nativeWindowBackgroundColor(this.colorMode),
-      title: 'OpenCreator',
+      title: 'VishnuCreator',
       webPreferences: {
         nodeIntegration: false,
         contextIsolation: true,
@@ -116,7 +116,7 @@ export class WindowManager {
       { urls: ['https://www.youtube-nocookie.com/embed/*'] },
       (details, callback) => {
         callback({ requestHeaders: details.webContentsId === window.webContents.id
-          && window.webContents.getURL().startsWith('opencreator-app://app/')
+          && window.webContents.getURL().startsWith('vishnucreator-app://app/')
           ? youtubeEmbedRequestHeaders(details)
           : details.requestHeaders });
       }
@@ -185,7 +185,7 @@ export class WindowManager {
     window.webContents.once('dom-ready', onDomReady);
     window.webContents.once('did-finish-load', onFinish);
     try {
-      await window.loadURL('opencreator-app://bootstrap/index.html');
+      await window.loadURL('vishnucreator-app://bootstrap/index.html');
     } finally {
       window.webContents.removeListener('dom-ready', onDomReady);
       window.webContents.removeListener('did-finish-load', onFinish);
@@ -316,7 +316,7 @@ export class WindowManager {
   private workspaceUrl(): string {
     return this.input.development
       ? 'http://127.0.0.1:19861'
-      : 'opencreator-app://app/index.html';
+      : 'vishnucreator-app://app/index.html';
   }
 
   private cancelWorkspaceLoad(error: Error): void {
@@ -338,7 +338,7 @@ export function youtubeEmbedRequestHeaders(details: {
     return details.requestHeaders;
   }
   // A custom-scheme document cannot supply the HTTP Referer required by YouTube embeds (error 153).
-  return { ...details.requestHeaders, Referer: 'https://github.com/krillinai/OpenCreator/' };
+  return { ...details.requestHeaders, Referer: 'https://github.com/vishnuai/VishnuCreator/' };
 }
 
 export function applyWindowAction(
@@ -423,7 +423,7 @@ function visibleBounds(
 function isInternalWindowUrl(value: string, development: boolean): boolean {
   try {
     const url = new URL(value);
-    if (url.protocol === 'opencreator-app:' && (url.hostname === 'app' || url.hostname === 'bootstrap')) {
+    if (url.protocol === 'vishnucreator-app:' && (url.hostname === 'app' || url.hostname === 'bootstrap')) {
       return true;
     }
     return development
@@ -438,7 +438,7 @@ function isInternalWindowUrl(value: string, development: boolean): boolean {
 export function isWorkspaceUrl(value: string, development: boolean): boolean {
   try {
     const url = new URL(value);
-    if (url.protocol === 'opencreator-app:' && url.hostname === 'app') return true;
+    if (url.protocol === 'vishnucreator-app:' && url.hostname === 'app') return true;
     return development
       && url.protocol === 'http:'
       && url.hostname === '127.0.0.1'

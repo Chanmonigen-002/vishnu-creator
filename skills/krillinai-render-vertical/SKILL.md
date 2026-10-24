@@ -1,16 +1,16 @@
 ---
-name: krillinai-render-vertical
-description: Use when rendering portrait videos with KrillinAI CLI, including converting source video to vertical format, adding short bilingual subtitles, rendering dubbed vertical videos, and checking vertical subtitle readability.
+name: vishnuai-render-vertical
+description: Use when rendering portrait videos with VishnuAI CLI, including converting source video to vertical format, adding short bilingual subtitles, rendering dubbed vertical videos, and checking vertical subtitle readability.
 ---
 
-# KrillinAI Render Vertical
+# VishnuAI Render Vertical
 
-Use this skill for `render-vertical`. Read `skills/krillinai-cli/references/cli-contract.md` first for binary location, execution working directory, configuration, and JSON behavior.
+Use this skill for `render-vertical`. Read `skills/vishnuai-cli/references/cli-contract.md` first for binary location, execution working directory, configuration, and JSON behavior.
 
 ## Bilingual Short-Subtitle Video
 
 ```bash
-(cd "$KRILLINAI_CWD" && "$KRILLINAI_CLI" render-vertical \
+(cd "$VISHNUAI_CWD" && "$VISHNUAI_CLI" render-vertical \
   --workdir "$WORKDIR" \
   --video "$WORKDIR/origin_video.mp4" \
   --subtitle "$WORKDIR/short_origin_mixed_srt.srt" \
@@ -21,7 +21,7 @@ Use this skill for `render-vertical`. Read `skills/krillinai-cli/references/cli-
 ## Dubbed Vertical Video
 
 ```bash
-(cd "$KRILLINAI_CWD" && "$KRILLINAI_CLI" render-vertical \
+(cd "$VISHNUAI_CWD" && "$VISHNUAI_CLI" render-vertical \
   --workdir "$WORKDIR" \
   --video "$WORKDIR/video_with_tts.mp4" \
   --subtitle "$WORKDIR/target_language_srt.srt" \

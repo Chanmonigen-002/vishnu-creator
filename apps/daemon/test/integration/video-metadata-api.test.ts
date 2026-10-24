@@ -3,7 +3,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { buildServer } from '../../src/api/server.js';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { registerVideoMetadataRoutes } from '../../src/api/routes.video-metadata.js';
 import {
@@ -196,7 +196,7 @@ describe('video metadata API', () => {
     await server.close();
     try {
       server = await buildServer({ token: 'secret', dataDir, codexHome: join(dataDir, 'codex-home'),
-        creatorExecutors: [{ id: 'krillinai', run }], videoMetadataService: { get },
+        creatorExecutors: [{ id: 'vishnuai', run }], videoMetadataService: { get },
         creatorServicesConfigStore: { read: async () => config, write: async value => value, reset: async () => config } });
       const url = 'https://www.bilibili.com/video/BV18E421w7bf?p=3';
       const response = await server.inject({ method: 'GET', url: `/video-metadata?${new URLSearchParams({ url })}`,

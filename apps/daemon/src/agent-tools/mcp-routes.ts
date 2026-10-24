@@ -30,7 +30,7 @@ export async function registerCreatorMcpRoute(
     const authorization = authorizeMcpRequest(request, reply, input.capabilities);
     if (authorization === undefined) return;
     const baseUrl = input.getBaseUrl();
-    if (baseUrl === undefined) return reply.code(503).send(jsonRpcError('OpenCreator runtime is not listening'));
+    if (baseUrl === undefined) return reply.code(503).send(jsonRpcError('VishnuCreator runtime is not listening'));
     const allowed = new Set(authorization.grant.scopes);
     const names: CreatorToolName[] = [
       ...(allowed.has('creator:context') ? ['creator_get_context' as const] : []),
@@ -44,7 +44,7 @@ export async function registerCreatorMcpRoute(
     ]);
     const client = createCreatorToolHttpClient({ baseUrl, token: authorization.token });
     const definitions = createCreatorToolDefinitions({ request: client.request });
-    const mcpServer = new McpServer({ name: 'opencreator-tools', version: '0.1.0' });
+    const mcpServer = new McpServer({ name: 'vishnucreator-tools', version: '0.1.0' });
     for (const name of names) {
       const tool = definitions[name];
       mcpServer.registerTool(name, {
@@ -108,7 +108,7 @@ export async function registerAgentScheduleMcpRoute(
       if (authorization === undefined) return;
       const baseUrl = input.getBaseUrl();
       if (baseUrl === undefined) {
-        return reply.code(503).send(jsonRpcError('OpenCreator runtime is not listening'));
+        return reply.code(503).send(jsonRpcError('VishnuCreator runtime is not listening'));
       }
 
       const [{ StreamableHTTPServerTransport }, { createAgentScheduleMcpServer }] = await Promise.all([

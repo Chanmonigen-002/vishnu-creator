@@ -1,4 +1,4 @@
-import { normalizeVideoSourceUrl, supportedVideoSourcePlatform, parseBilibiliVideoSource, type VideoMetadataResponse, type VideoSourcePart } from '@opencreator/protocol';
+import { normalizeVideoSourceUrl, supportedVideoSourcePlatform, parseBilibiliVideoSource, type VideoMetadataResponse, type VideoSourcePart } from '@vishnucreator/protocol';
 import { request as httpsRequest } from 'node:https';
 import { HttpsProxyAgent } from 'https-proxy-agent';
 import type { YtDlpRuntime } from '../creator/yt-dlp/runtime.js';

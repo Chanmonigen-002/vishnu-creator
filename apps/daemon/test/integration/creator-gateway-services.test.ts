@@ -1,5 +1,5 @@
 import Fastify from 'fastify';
-import { createDefaultCreatorServicesConfig, type GatewayModel } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type GatewayModel } from '@vishnucreator/protocol';
 import { afterEach, expect, it, vi } from 'vitest';
 import * as module from '../../src/gateway/creator-service-source.js';
 import { createVideoGenerationService } from '../../src/video-generation/service.js';
@@ -54,12 +54,12 @@ it.each(['text', 'image', 'video', 'speech', 'transcription'] as const)('uses th
   expect(fetcher).not.toHaveBeenCalled();
 });
 
-it.each(['failed', 'outcome_unknown'] as const)('reconciles a rejected Krillin stream with the gateway state (%s)', async remoteState => {
-  const root = await mkdtemp(join(tmpdir(), 'oc-gateway-krillin-error-'));
+it.each(['failed', 'outcome_unknown'] as const)('reconciles a rejected Vishnu stream with the gateway state (%s)', async remoteState => {
+  const root = await mkdtemp(join(tmpdir(), 'oc-gateway-vishnu-error-'));
   const db = openRuntimeDatabase(join(root, 'runtime.sqlite'));
   const repository = createCreatorRepository(db);
   const job = repository.createJob({ projectId: 'project', templateId: 'video-translation', templateVersion: 1, status: 'running', state: {} });
-  const stage = repository.createStageRun({ jobId: job.id, stageId: 'subtitle', executor: 'krillin', status: 'running' });
+  const stage = repository.createStageRun({ jobId: job.id, stageId: 'subtitle', executor: 'vishnu', status: 'running' });
   const manual = createDefaultCreatorServicesConfig();
   const requestId = 'gateway_rejected_translation';
   const fetcher = vi.fn<typeof fetch>(async (_url, options) => options?.method === 'GET'
@@ -80,7 +80,7 @@ it.each(['failed', 'outcome_unknown'] as const)('reconciles a rejected Krillin s
     await source.register(server);
     const response = await source.runForJob(job.id, stage.id, async () => {
       const config = await source.store.read();
-      return server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/chat/completions',
+      return server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/chat/completions',
         headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: 'text', stream: true, messages: [{ role: 'user', content: 'translate' }] } });
     });
     const frames = response.body.trim().split('\n\n').map(frame => JSON.parse(frame.replace(/^data: /, '')));
@@ -102,7 +102,7 @@ it.each(['temporary-network-error', 'expired-key'] as const)('recovers status lo
   const repository = createCreatorRepository(db);
   const issues = createCreatorIssueService(repository);
   const job = repository.createJob({ projectId: 'project', templateId: 'video-translation', templateVersion: 1, status: 'running', state: {} });
-  const stage = repository.createStageRun({ jobId: job.id, stageId: 'subtitle', executor: 'krillin', status: 'running' });
+  const stage = repository.createStageRun({ jobId: job.id, stageId: 'subtitle', executor: 'vishnu', status: 'running' });
   const manual = createDefaultCreatorServicesConfig();
   const requestId = 'gateway_successful_translation';
   let lookups = 0;
@@ -133,7 +133,7 @@ it.each(['temporary-network-error', 'expired-key'] as const)('recovers status lo
       status: 'running', progress: { resumedFromStageRunId: stage.id } });
     await source.runForJob(job.id, resumed.id, async () => {
       const config = await source.store.read();
-      expect((await server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/chat/completions',
+      expect((await server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/chat/completions',
         headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: 'text', messages: [{ role: 'user', content: 'translate' }] } })).statusCode).toBe(200);
     });
     expect(repository.listProviderRequests(job.id)).toEqual([expect.objectContaining({ stageRunId: resumed.id, status: 'succeeded', remoteTaskId: requestId })]);
@@ -174,7 +174,7 @@ it('reuses the persisted legacy request identity after acceptance loss and Daemo
   let source = buildSource();
   const submit = () => source.runForJob(job.id, currentStage, async () => {
     const config = await source.store.read();
-    return server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/chat/completions', headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: 'text', messages: [{ role: 'user', content: 'write article' }] } });
+    return server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/chat/completions', headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: 'text', messages: [{ role: 'user', content: 'write article' }] } });
   });
   try {
     await source.register(server);
@@ -216,7 +216,7 @@ it('stores one original gateway receipt for managed legacy model retries', async
   await source.runForJob(job.id, stage.id, async () => {
     const config = await source.store.read();
     for (let retry = 0; retry < 2; retry++) {
-      expect((await server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/chat/completions', headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: 'text', messages: [{ role: 'user', content: 'write article' }] } })).statusCode).toBe(200);
+      expect((await server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/chat/completions', headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: 'text', messages: [{ role: 'user', content: 'write article' }] } })).statusCode).toBe(200);
     }
   });
   await vi.waitFor(() => expect(repository.getJob(job.id)!.providerRequests).toHaveLength(1));
@@ -249,7 +249,7 @@ it('official services share one local capability and inject the cloud Key only d
   expect(config.tts.openai.apiKey).toBe(config.llm.apiKey);
   expect(config.transcription.openai.apiKey).toBe(config.llm.apiKey);
   for (const operation of ['chat/completions','images/generations','audio/speech','audio/transcriptions']) {
-    const res = await server.inject({ method: 'POST', url: `/internal/krillin-llm/gateway/v1/${operation}`, headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Idempotency-Key': `stable-${operation}` }, payload: { model: credentials.defaults.text, input: 'hello' } });
+    const res = await server.inject({ method: 'POST', url: `/internal/vishnu-llm/gateway/v1/${operation}`, headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Idempotency-Key': `stable-${operation}` }, payload: { model: credentials.defaults.text, input: 'hello' } });
     expect(res.statusCode).toBe(200);
     const options = vi.mocked(fetcher).mock.lastCall?.[1];
     expect(new Headers(options?.headers).get('Authorization')).toBe('Bearer cloud-secret');
@@ -258,7 +258,7 @@ it('official services share one local capability and inject the cloud Key only d
   }
   await source.runForJob('job-original', 'stage-original', async () => {
     const scoped = await source.store.read();
-    const call = () => server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/chat/completions', headers: { Authorization: `Bearer ${scoped.llm.apiKey}` }, payload: { model: 'text', messages: [{ role: 'user', content: 'retry the same work' }] } });
+    const call = () => server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/chat/completions', headers: { Authorization: `Bearer ${scoped.llm.apiKey}` }, payload: { model: 'text', messages: [{ role: 'user', content: 'retry the same work' }] } });
     await call();
     const first = new Headers(vi.mocked(fetcher).mock.lastCall?.[1]?.headers).get('Idempotency-Key');
     await call();
@@ -266,7 +266,7 @@ it('official services share one local capability and inject the cloud Key only d
     const multipart = async () => {
       const form = new FormData(); form.set('model', 'transcription'); form.set('file', new Blob(['same audio'], { type: 'audio/wav' }), 'audio.wav');
       const request = new Request('http://localhost', { method: 'POST', body: form });
-      await server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/audio/transcriptions', headers: { Authorization: `Bearer ${scoped.llm.apiKey}`, 'Content-Type': request.headers.get('Content-Type')! }, payload: Buffer.from(await request.arrayBuffer()) });
+      await server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/audio/transcriptions', headers: { Authorization: `Bearer ${scoped.llm.apiKey}`, 'Content-Type': request.headers.get('Content-Type')! }, payload: Buffer.from(await request.arrayBuffer()) });
       return new Headers(vi.mocked(fetcher).mock.lastCall?.[1]?.headers).get('Idempotency-Key');
     };
     expect(await multipart()).toBe(await multipart());
@@ -282,12 +282,12 @@ it('official services share one local capability and inject the cloud Key only d
     release = () => reject(new Error('request closed'));
     forwardingSignal.addEventListener('abort', release, { once: true });
   }));
-  const pending = server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/chat/completions', headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: 'text' } });
+  const pending = server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/chat/completions', headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: 'text' } });
   await vi.waitFor(() => expect(forwardingSignal).toBeDefined());
   await source.revoke();
   try { expect(forwardingSignal!.aborted).toBe(true); } finally { release(); await pending; }
   active = false; await source.revoke();
-  expect((await server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/chat/completions', headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: {} })).statusCode).toBe(401);
+  expect((await server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/chat/completions', headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: {} })).statusCode).toBe(401);
   expect(manual.llm.apiKey).toBe('personal-key');
 });
 
@@ -311,7 +311,7 @@ it('uses a task-specific official model without changing account defaults and re
     const config = await source.store.read();
     expect(config.image.openai.model).toBe('official/image-second');
     expect(module.gatewayCreatorBinding(config)?.capabilities?.image).toEqual(['edit']);
-    expect((await server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/images/generations', headers: { Authorization: `Bearer ${config.image.openai.apiKey}` }, payload: { model: config.image.openai.model, prompt: 'draw' } })).statusCode).toBe(200);
+    expect((await server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/images/generations', headers: { Authorization: `Bearer ${config.image.openai.apiKey}` }, payload: { model: config.image.openai.model, prompt: 'draw' } })).statusCode).toBe(200);
   });
   expect(JSON.parse(String(fetcher.mock.lastCall?.[1]?.body))).toMatchObject({ model: 'official/image-second' });
   expect(credentials.defaults.image).toBe('official/image-first');
@@ -332,7 +332,7 @@ it('video uses the unified gateway task and preserves its account for query and 
     if (String(url).endsWith('/result')) return new Response(new Uint8Array([1,2,3]), { headers: { 'Content-Type': 'video/mp4' } });
     return Response.json({ requestId, state: 'succeeded' }, { headers: { 'X-Request-ID': requestId } });
   }) as typeof fetch;
-  const binding = { accountId: 'a', bindingVersion: 'a:1', baseUrl: 'http://127.0.0.1:39999/internal/krillin-llm/gateway/v1', apiKey: 'local-token', models: { video: 'gateway-video' }, catalog: [{ id: 'gateway-video', modality: 'video' as const, capabilities: [], sizes: ['1280x720', '720x1280'], durations: [4, 5] }] };
+  const binding = { accountId: 'a', bindingVersion: 'a:1', baseUrl: 'http://127.0.0.1:39999/internal/vishnu-llm/gateway/v1', apiKey: 'local-token', models: { video: 'gateway-video' }, catalog: [{ id: 'gateway-video', modality: 'video' as const, capabilities: [], sizes: ['1280x720', '720x1280'], durations: [4, 5] }] };
   const service = createVideoGenerationService({ dataDir: root, configStore: { read: async () => createDefaultCreatorServicesConfig(), write: async c => c, reset: async () => createDefaultCreatorServicesConfig() }, fetchImpl: fetcher, gatewaySource: { binding: async () => binding } });
   await expect(service.create({ prompt: 'test', provider: 'seedance', model: 'personal-model', size: '1280x720', duration: 5 })).rejects.toMatchObject({ code: 'VALIDATION_FAILED' });
   await expect(service.create({ prompt: 'test', provider: 'seedance', size: '1024x1024', duration: 5 })).rejects.toMatchObject({ code: 'VALIDATION_FAILED' });

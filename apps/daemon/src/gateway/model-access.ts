@@ -1,9 +1,9 @@
-import { gatewayModelIdMatches } from '@opencreator/protocol';
+import { gatewayModelIdMatches } from '@vishnucreator/protocol';
 import { createHash } from 'node:crypto';
 import { isIP } from 'node:net';
 import { join } from 'node:path';
 import { z } from 'zod/v3';
-import { gatewayModelOperations, gatewayModelCompatible, gatewayModelReady, isRetiredOpenAiImageModel, type GatewayModel, type GatewayModelAvailability, type GatewayModelOperation, type PublicErrorFacts } from '@opencreator/protocol';
+import { gatewayModelOperations, gatewayModelCompatible, gatewayModelReady, isRetiredOpenAiImageModel, type GatewayModel, type GatewayModelAvailability, type GatewayModelOperation, type PublicErrorFacts } from '@vishnucreator/protocol';
 import { readPrivateJsonFile, writePrivateJsonFile } from '../config/private-json-file.js';
 import { catalogSchema, type GatewayBootstrap } from './client.js';
 import { imageModelsSchema, officialCatalogModels, openRouterModelSchema, videoModelsSchema } from './openrouter-model-catalog.js';
@@ -43,7 +43,7 @@ export function modelAccessGroup(model: GatewayModel): string | undefined {
 }
 
 export function officialModelPolicy(models: GatewayModel[]) {
-  // Account catalog availability does not override OpenCreator's adapter compatibility.
+  // Account catalog availability does not override VishnuCreator's adapter compatibility.
   return models.filter(model => !(model.modality === 'image' && isRetiredOpenAiImageModel(model.id))
     && (model.catalogSchema === 2 || (model.vendor?.toLowerCase() !== 'anthropic' && !/^claude-/i.test(model.id) && modelAccessGroup(model) !== 'anthropic'
     && !model.id.endsWith(':batch')

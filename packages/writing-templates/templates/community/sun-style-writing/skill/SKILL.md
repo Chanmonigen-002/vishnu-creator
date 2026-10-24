@@ -1,6 +1,6 @@
 # 孙学写作法
 
-这是一套来自 `KKKKhazix/sun-style-writing`、经 OpenCreator 接入的非虚构叙事规则。使用写作技法本身，不要求复刻任何现实人物的独特口吻。
+这是一套来自 `KKKKhazix/sun-style-writing`、经 Vishnu Creator 接入的非虚构叙事规则。使用写作技法本身，不要求复刻任何现实人物的独特口吻。
 
 ## 核心原则
 

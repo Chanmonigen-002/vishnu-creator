@@ -1,4 +1,4 @@
-import type { CreatorJson } from '@opencreator/protocol';
+import type { CreatorJson } from '@vishnucreator/protocol';
 
 export function videoTranslationArtifactRefsPatch(
   state: Record<string, CreatorJson>,

@@ -40,8 +40,8 @@ button {
   z-index: 10;
   top: 0;
   right: 0;
-  left: var(--opencreator-traffic-light-inset, 76px);
-  height: var(--opencreator-titlebar-height, 38px);
+  left: var(--vishnucreator-traffic-light-inset, 76px);
+  height: var(--vishnucreator-titlebar-height, 38px);
   content: "";
   -webkit-app-region: drag;
   user-select: none;
@@ -52,7 +52,7 @@ button {
   z-index: 20;
   top: 0;
   left: 10px;
-  height: var(--opencreator-titlebar-height, 38px);
+  height: var(--vishnucreator-titlebar-height, 38px);
   display: flex;
   align-items: center;
   gap: 6px;

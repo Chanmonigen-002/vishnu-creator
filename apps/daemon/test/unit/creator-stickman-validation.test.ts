@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import sharp from 'sharp';
 import { afterEach, describe, expect, it } from 'vitest';
-import type { CreatorArtifact } from '@opencreator/protocol';
+import type { CreatorArtifact } from '@vishnucreator/protocol';
 import { createStickmanValidationExecutor } from '../../src/creator/stickman/validation-executor.js';
 
 let tempDir = '';

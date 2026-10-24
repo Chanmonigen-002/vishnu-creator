@@ -1,4 +1,4 @@
-# KrillinAI 多语言扩展：实施与验收记录
+# VishnuAI 多语言扩展：实施与验收记录
 
 日期：2026-10-16。平台：macOS arm64。本记录区分代码能力、结构与渲染验证、模型声明以及自然语言质量；没有调用付费识别或翻译服务。
 
@@ -28,12 +28,12 @@
 | 实际 CLI 预览 | 18 文字样例 × 横/竖屏 × 单/双语 | 72/72；FFmpeg 日志无缺字或回退失败，已查看接触表 |
 | 实际 CLI 正式输出 | ar、hi、th、ko × 横/竖屏双语，各 1 秒 | 8/8 MP4；ffprobe 确认尺寸与音视频轨道，无缺字日志 |
 | 实际 ASR | 本机 WhisperKit large-v2；hi、vi、th 的 macOS 合成语音 | 3/3 生成有效带时间字幕，约 12.13/4.10/6.45 秒；不能替代自然语音质量验收 |
-| 构建 | 当前工作树 Krillin CLI/server、Web、Desktop 目录包 | CLI/server 已重建；最终包及实际 App 检查见下方记录 |
+| 构建 | 当前工作树 Vishnu CLI/server、Web、Desktop 目录包 | CLI/server 已重建；最终包及实际 App 检查见下方记录 |
 
 Go 定向命令：
 
 ```sh
-cd runtime/krillinai
+cd runtime/vishnuai
 go test ./internal/types ./internal/service ./internal/pipeline ./pkg/whisper ./pkg/whisperkit ./pkg/whispercpp ./pkg/fasterwhisper ./pkg/funasr ./pkg/aliyun ./pkg/volcengine ./pkg/util \
   -run 'Language|Unicode|Wrap|Vertical|OriginCue|OriginSubtitle|Transcription|PairedTranslation|ShortSubtitle|Multilingual|Font|Render|Ass' -count=1
 ```
@@ -116,7 +116,7 @@ go test ./internal/types ./internal/service ./internal/pipeline ./pkg/whisper ./
 
 ## 最终 Desktop 包记录
 
-最终目录包：`apps/desktop/release/mac-arm64/OpenCreator.app`，构建来源为当前未提交工作树；不是发布包。`pnpm desktop:package` 会从当前源码重建 Web、Daemon 与 Runtime，并核对包内资源及 Web 文件列表/哈希。
+最终目录包：`apps/desktop/release/mac-arm64/Vishnu Creator.app`，构建来源为当前未提交工作树；不是发布包。`pnpm desktop:package` 会从当前源码重建 Web、Daemon 与 Runtime，并核对包内资源及 Web 文件列表/哈希。
 
 实际包定向验证已覆盖语言 52/124 选项、中文/原生名检索、检索保留选择、阿拉伯语状态保存、页面重载、退出 App 后重启恢复、内置阿拉伯字体加载，以及内嵌 Runtime/默认项目连接。
 
@@ -126,7 +126,7 @@ go test ./internal/types ./internal/service ./internal/pipeline ./pkg/whisper ./
 
 最终 CLI SHA-256：`9bdb0cebe221ac7d1b9678c78e88046bdd1ae1ce82e031578173eb8e6555fa32`。目录包资源仅用于本机验证；未进行签名公证或发布。
 
-最后一次包的实际 App 定向结果：2/2 通过（8.4 秒），包括上述视频翻译多语言检索/持久化/退出重启恢复/字体加载，以及内嵌 Runtime 与默认项目连接。原始结果：`/tmp/opencreator-language-packaged-latest.txt`。
+最后一次包的实际 App 定向结果：2/2 通过（8.4 秒），包括上述视频翻译多语言检索/持久化/退出重启恢复/字体加载，以及内嵌 Runtime 与默认项目连接。原始结果：`/tmp/vishnucreator-language-packaged-latest.txt`。
 
 ## 2026-10-17：导入原文字幕自动识别语言
 
@@ -160,7 +160,7 @@ go test ./internal/types ./internal/service ./internal/pipeline ./pkg/whisper ./
 - Daemon CLI 协议与 runner：39 项通过，1 项 Windows 环境用例在 macOS 跳过；包含零完成数、非法计数过滤、标准字段透传与最终 100%。
 - Web Adapter 与共享 Panel：53 项通过；等待 30 秒仍保持实际百分比，同时更新运行时间。
 - Daemon 源码及测试、Web 类型检查通过；相关文件 whitespace 检查通过。
-- 已重建开发用 Krillin CLI/server 和 Runtime 资源。CLI SHA-256：`400620788d629e2418f815481f14da2d6933f3cea31698c7cf91dc28ecff2f99`。确认没有活动任务后重新加载开发 Daemon，健康检查通过。
+- 已重建开发用 Vishnu CLI/server 和 Runtime 资源。CLI SHA-256：`400620788d629e2418f815481f14da2d6933f3cea31698c7cf91dc28ecff2f99`。确认没有活动任务后重新加载开发 Daemon，健康检查通过。
 
 以上验证使用本地模拟模型响应，没有额外调用真实翻译模型；没有执行 Desktop App 打包或更新已安装 App。本次只改变进度报告与展示，原来任务的完成记录保留原值。
 
@@ -189,7 +189,7 @@ go test ./internal/types ./internal/service ./internal/pipeline ./pkg/whisper ./
 - Daemon CLI 协议与 runner：39 项通过，1 项 Windows 环境用例在 macOS 跳过，包含配音片段数的标准字段透传。
 - Web Adapter 与共享 Panel：66 项通过，覆盖识别/翻译交叠、下载量/速度/余时、配音数量、合成时长、本地化，以及等待 30 秒百分比保持不变。
 - Daemon 源码及测试、Web 类型检查通过。相关修改 whitespace 检查通过。
-- 已构建 CLI/server 并准备开发 Runtime。CLI SHA-256：`a2dffece3e59d99f437fa7bd8b9b3b3a273b6c972b84a9d93e0b80d3073daac8`。确认没有运行任务后重载受管 Daemon，`http://127.0.0.1:19861/.opencreator/runtime/healthz` 返回 200 / `ok: true`；Vite 保持运行。
+- 已构建 CLI/server 并准备开发 Runtime。CLI SHA-256：`a2dffece3e59d99f437fa7bd8b9b3b3a273b6c972b84a9d93e0b80d3073daac8`。确认没有运行任务后重载受管 Daemon，`http://127.0.0.1:19861/.vishnucreator/runtime/healthz` 返回 200 / `ok: true`；Vite 保持运行。
 
 本次未调用真实 GPT/ASR/TTS 服务，未调整应用并发配置，未执行 Desktop App 打包或更新已安装 App。没有逐一实测各外部视频平台与识别供应商；识别引擎不提供片段内进度时，只能显示片段完成量及运行/等待状态。上方旧包记录不包含此次增量修改。
 
@@ -217,9 +217,9 @@ go test ./internal/types ./internal/service ./internal/pipeline ./pkg/whisper ./
 
 本次未调用真实 GPT、ASR 或 TTS，未调整翻译并发配置，未执行 Desktop App 打包或更新已安装 App。没有完成全部 123 项语言的真实语音识别、实际模型翻译或母语人工质量验收；上方旧 App 包记录不包含本次扩展。
 
-## 2026-10-17：KrillinAI 翻译执行链专项检查
+## 2026-10-17：VishnuAI 翻译执行链专项检查
 
-本次按用户补充要求，检查 KrillinAI 自身的翻译处理能力。上一轮目录、字体和 Whisper 覆盖检查不能单独证明翻译流程兼容。当前代码中，123 项源语言均有对应的运行时元数据和语言名称，能够进入 LLM 翻译主流程；没有仅允许 52 项源语言的翻译引擎分支。但这仍是应用接入范围，真实翻译质量取决于实际选择的 LLM，不能据此宣称全部语种质量已达标。
+本次按用户补充要求，检查 VishnuAI 自身的翻译处理能力。上一轮目录、字体和 Whisper 覆盖检查不能单独证明翻译流程兼容。当前代码中，123 项源语言均有对应的运行时元数据和语言名称，能够进入 LLM 翻译主流程；没有仅允许 52 项源语言的翻译引擎分支。但这仍是应用接入范围，真实翻译质量取决于实际选择的 LLM，不能据此宣称全部语种质量已达标。
 
 执行链检查结果：
 
@@ -237,11 +237,11 @@ go test ./internal/types ./internal/service ./internal/pipeline ./pkg/whisper ./
 本次验证：
 
 - 123 项源语言分别经过导入 SRT、平台块级 VTT 和音频识别稿后的翻译阶段，共 369 个场景通过，目标均为简体中文。SRT/VTT 使用真实 Service 构造、HTTP LLM 客户端、分句、结构化回包解析、原译配对、时间轴和原文/译文/双语文件写入；音频阶段覆盖翻译检查点与带标点、清理标点两种时间匹配路径。
-- 测试输入为“语言原生名 + OpenCreator + 数字 + 标点”的合成路由探针，模型返回固定译文；并非 123 种语言的自然语料或真实模型翻译。测试证明程序兼容这些语言代码和文字、请求及输出链路，没有提供语义准确率。
+- 测试输入为“语言原生名 + Vishnu Creator + 数字 + 标点”的合成路由探针，模型返回固定译文；并非 123 种语言的自然语料或真实模型翻译。测试证明程序兼容这些语言代码和文字、请求及输出链路，没有提供语义准确率。
 - Service 定向检查 33 个顶层测试通过（含子测试 242 项），覆盖已有多文字分段、Unicode 句界、缩写跨 cue、字素边界、预算、纠错与新增空格保留场景。Pipeline 定向检查 4 个顶层测试通过（含子测试 375 项）。新增的 369 个场景包含在上述数量中，不重复相加。
 - 已从当前源码重建 CLI/server。CLI SHA-256：`6a1e6a8e48547dab54ae07e75846555544a57ddc4e1d7a57df883192dcb0b30d`。额外用实际 CLI 执行新挪威语 SRT → 简体中文，经本地 HTTP 模型替身先返回错误空格、再返回正确结果，确认两次请求后输出正确原文和译文，保留原始时间轴。
 - 确认无活动任务后，仅重载当前开发 Daemon；Web 服务继续运行。修改 whitespace 检查通过。
 
-逐语言结果及实际 CLI 复测记录见[KrillinAI 翻译执行链验证数据](./assets/video-translation-languages/krillin-translation-engine-20261017.json)。本轮没有改动 Web 界面、调用真实 GPT/ASR/TTS、调整用户并发配置或打包 Desktop App。
+逐语言结果及实际 CLI 复测记录见[VishnuAI 翻译执行链验证数据](./assets/video-translation-languages/vishnu-translation-engine-20261017.json)。本轮没有改动 Web 界面、调用真实 GPT/ASR/TTS、调整用户并发配置或打包 Desktop App。
 
 仍需明确的质量边界：`hasTargetLanguageCharacteristics` 只有中、英、日等少量文字特征检查，其余语言默认放行；这不是完整的目标语检测，也不能判断译义是否准确。Unicode 分句及字素安全也不等于各语言的语法和词典分词，本地缩写与意群规则仍主要覆盖英语和中文。要把某个源语言标记为质量已验收，需要使用该语言的自然字幕，经用户实际选定的 LLM 串行翻译，再核对含义、数字、专名、否定、断句和时间同步。

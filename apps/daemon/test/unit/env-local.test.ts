@@ -28,7 +28,7 @@ describe('local environment files', () => {
   });
 
   it('does not walk the working directory or copy unrelated secrets into process.env', () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-env-local-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-env-local-'));
     writeFileSync(join(root, '.env.local'), [
       'VOLCENGINE_APP_ID=file-app-id',
       'VOLCENGINE_ACCESS_TOKEN=file-token',
@@ -45,11 +45,11 @@ describe('local environment files', () => {
     expect(env.DATABASE_URL).toBeUndefined();
   });
 
-  it('loads only VOLCENGINE_* keys from ~/.opencreator/.env.local', () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-home-env-'));
+  it('loads only VOLCENGINE_* keys from ~/.vishnucreator/.env.local', () => {
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-home-env-'));
     const homeDir = join(root, 'home');
-    mkdirSync(join(homeDir, '.opencreator'), { recursive: true });
-    writeFileSync(join(homeDir, '.opencreator', '.env.local'), [
+    mkdirSync(join(homeDir, '.vishnucreator'), { recursive: true });
+    writeFileSync(join(homeDir, '.vishnucreator', '.env.local'), [
       'VOLCENGINE_APP_ID=home-app-id',
       'VOLCENGINE_ACCESS_TOKEN=home-token',
       'DATABASE_URL=should-not-load',
@@ -66,15 +66,15 @@ describe('local environment files', () => {
     expect(env).toEqual({});
   });
 
-  it('loads an explicit OPENCREATOR_ENV_FILE when provided', () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-env-file-'));
+  it('loads an explicit VISHNUCREATOR_ENV_FILE when provided', () => {
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-env-file-'));
     const file = join(root, 'secrets.env');
     writeFileSync(file, [
       'VOLCENGINE_ACCESS_TOKEN=from-explicit-file',
       'DATABASE_URL=should-not-load'
     ].join('\n'));
     const env: NodeJS.ProcessEnv = {
-      OPENCREATOR_ENV_FILE: file
+      VISHNUCREATOR_ENV_FILE: file
     };
 
     expect(loadVolcengineEnvironment({ env, homeDir: null })).toEqual({
@@ -85,10 +85,10 @@ describe('local environment files', () => {
   });
 
   it('does not fall back to a file when a process env key is explicitly empty', () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-empty-env-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-empty-env-'));
     const homeDir = join(root, 'home');
-    mkdirSync(join(homeDir, '.opencreator'), { recursive: true });
-    writeFileSync(join(homeDir, '.opencreator', '.env.local'), 'VOLCENGINE_APP_ID=home-app-id\n');
+    mkdirSync(join(homeDir, '.vishnucreator'), { recursive: true });
+    writeFileSync(join(homeDir, '.vishnucreator', '.env.local'), 'VOLCENGINE_APP_ID=home-app-id\n');
     const env: NodeJS.ProcessEnv = {
       VOLCENGINE_APP_ID: ''
     };

@@ -122,7 +122,7 @@ test('自定义时长在 Browser/Desktop 下支持逐位输入并保持自定义
       const context = await browser.newContext({ viewport, locale: 'zh-CN' });
       const page = await context.newPage();
       await fakeDaemon.attach(page);
-      await page.route('**/.opencreator/runtime/creator/components/status', route => route.fulfill({
+      await page.route('**/.vishnucreator/runtime/creator/components/status', route => route.fulfill({
         json: { platform: 'darwin', arch: 'arm64', selectedProvider: 'openai', selectedModel: null, components: [] }
       }));
       await installPlatformEnvironment(page, platform);
@@ -452,21 +452,21 @@ async function compareScreenshots(
 async function installPlatformEnvironment(page: Page, platform: Platform): Promise<void> {
   await page.addInitScript(({ currentPlatform }) => {
     localStorage.setItem('clawee.preferences.dynamicBackground', 'false');
-    localStorage.setItem('opencreator.preferences.colorMode', 'dark');
-    localStorage.setItem('opencreator.preferences.language', 'zh-CN');
-    Object.defineProperty(window, '__opencreatorStickmanDirectorySelections', {
+    localStorage.setItem('vishnucreator.preferences.colorMode', 'dark');
+    localStorage.setItem('vishnucreator.preferences.language', 'zh-CN');
+    Object.defineProperty(window, '__vishnucreatorStickmanDirectorySelections', {
       configurable: true,
       writable: true,
       value: 0
     });
     if (currentPlatform !== 'desktop') return;
     const success = { ok: true as const };
-    Object.defineProperty(window, 'opencreatorDesktop', {
+    Object.defineProperty(window, 'vishnucreatorDesktop', {
       configurable: true,
       value: {
         kind: 'desktop',
         readAppVersion: async () => '3.2.2',
-        readConnectionConfig: async () => ({ baseUrl: '/.opencreator/runtime' }),
+        readConnectionConfig: async () => ({ baseUrl: '/.vishnucreator/runtime' }),
         subscribeConnectionConfig: () => () => undefined,
         restartRuntime: async () => success,
         selectCodexPath: async () => success,
@@ -482,18 +482,18 @@ async function installPlatformEnvironment(page: Page, platform: Platform): Promi
         }),
         selectProjectDirectory: async () => {
           const target = window as Window & {
-            __opencreatorStickmanDirectorySelections?: number;
+            __vishnucreatorStickmanDirectorySelections?: number;
           };
-          target.__opencreatorStickmanDirectorySelections =
-            (target.__opencreatorStickmanDirectorySelections ?? 0) + 1;
+          target.__vishnucreatorStickmanDirectorySelections =
+            (target.__vishnucreatorStickmanDirectorySelections ?? 0) + 1;
           return null;
         },
         resolveDroppedFilePath: () => {
           const target = window as Window & {
-            __opencreatorStickmanDirectorySelections?: number;
+            __vishnucreatorStickmanDirectorySelections?: number;
           };
-          target.__opencreatorStickmanDirectorySelections =
-            (target.__opencreatorStickmanDirectorySelections ?? 0) + 1;
+          target.__vishnucreatorStickmanDirectorySelections =
+            (target.__vishnucreatorStickmanDirectorySelections ?? 0) + 1;
           return null;
         },
         openExternal: async () => undefined,
@@ -547,12 +547,12 @@ async function verifyNativeProjectCapability(
   });
   if (platform === 'desktop') {
     await expect.poll(() => page.evaluate(() => Number((window as Window & {
-      __opencreatorStickmanDirectorySelections?: number;
-    }).__opencreatorStickmanDirectorySelections ?? 0))).toBe(1);
+      __vishnucreatorStickmanDirectorySelections?: number;
+    }).__vishnucreatorStickmanDirectorySelections ?? 0))).toBe(1);
   }
   return await page.evaluate(() => Number((window as Window & {
-    __opencreatorStickmanDirectorySelections?: number;
-  }).__opencreatorStickmanDirectorySelections ?? 0));
+    __vishnucreatorStickmanDirectorySelections?: number;
+  }).__vishnucreatorStickmanDirectorySelections ?? 0));
 }
 
 async function captureCheckpoint(page: Page): Promise<Checkpoint> {

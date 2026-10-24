@@ -2,14 +2,14 @@ import type {
   LegacyLocalStorageProjectV1,
   ProjectResponse,
   ThreadResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export type ProjectPermission =
   | 'follow-global'
   | 'workspace-write'
   | 'danger-full-access';
 
-export type OpenCreatorProject = Pick<
+export type VishnuCreatorProject = Pick<
   ProjectResponse,
   'id' | 'name' | 'cwd' | 'sandbox' | 'profile' | 'model' | 'reasoning'
 > & Partial<Pick<
@@ -22,7 +22,7 @@ export type OpenCreatorProject = Pick<
   | 'archivedAt'
 >>;
 
-export type OpenCreatorConversation = {
+export type VishnuCreatorConversation = {
   id: string;
   projectId: string;
   title: string;
@@ -31,7 +31,7 @@ export type OpenCreatorConversation = {
   pinnedAt?: string | null;
 };
 
-export function sortProjectConversations<T extends OpenCreatorConversation>(
+export function sortProjectConversations<T extends VishnuCreatorConversation>(
   conversations: readonly T[]
 ): T[] {
   return [...conversations].sort((left, right) => {
@@ -41,12 +41,12 @@ export function sortProjectConversations<T extends OpenCreatorConversation>(
   });
 }
 
-export const PROJECTS_STORAGE_KEY = 'opencreator.projects.v1';
+export const PROJECTS_STORAGE_KEY = 'vishnucreator.projects.v1';
 
 export function findProjectById(
-  projects: OpenCreatorProject[],
+  projects: VishnuCreatorProject[],
   projectId: string | undefined
-): OpenCreatorProject | undefined {
+): VishnuCreatorProject | undefined {
   if (projectId === undefined) return undefined;
   return projects.find(project => project.id === projectId);
 }

@@ -1,4 +1,4 @@
-import type { CodexImageStatus } from '@opencreator/protocol';
+import type { CodexImageStatus } from '@vishnucreator/protocol';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';

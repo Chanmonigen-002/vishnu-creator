@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -212,7 +212,7 @@ describe('creator image generation', () => {
       url: `/creator/jobs/${initial.id}/reference-image?expectedRevision=${updated.json().job.revision}&fileName=reference.png&mime=image%2Fpng&lastModified=123`,
       headers: {
         authorization: 'Bearer secret',
-        'content-type': 'application/vnd.opencreator.creator-reference-image'
+        'content-type': 'application/vnd.vishnucreator.creator-reference-image'
       },
       payload: reference
     });

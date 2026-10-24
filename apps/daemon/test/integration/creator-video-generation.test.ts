@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -56,7 +56,7 @@ describe('creator video generation', () => {
     const initial = created.json().job;
     const uploaded = await server.inject({
       method: 'POST', url: `/creator/jobs/${initial.id}/reference-image?expectedRevision=${initial.revision}&fileName=reference.png&mime=image%2Fpng`,
-      headers: { authorization: 'Bearer secret', 'content-type': 'application/vnd.opencreator.creator-reference-image' },
+      headers: { authorization: 'Bearer secret', 'content-type': 'application/vnd.vishnucreator.creator-reference-image' },
       payload: png('reference')
     });
     expect(uploaded.statusCode).toBe(201);
@@ -186,7 +186,7 @@ describe('creator video generation', () => {
         + '&fileName=reference.png&mime=image%2Fpng&lastModified=123',
       headers: {
         authorization: 'Bearer secret',
-        'content-type': 'application/vnd.opencreator.creator-reference-image'
+        'content-type': 'application/vnd.vishnucreator.creator-reference-image'
       },
       payload: reference
     });

@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import { completeLocalApiRequest, LocalApiCompletionError } from '../../src/creator/krillin/local-api-completion.js';
+import { completeLocalApiRequest, LocalApiCompletionError } from '../../src/creator/vishnu/local-api-completion.js';
 
 const local = { authentication: 'api_key' as const, wireApi: 'responses' as const,
   provider: { baseUrl: 'https://local.example/v1', apiKey: 'provider-secret', model: 'local-model' } };
@@ -20,7 +20,7 @@ function stream(events: unknown[]) {
   } }), { headers: { 'content-type': 'text/event-stream' } });
 }
 
-describe('Krillin local HTTP model transport', () => {
+describe('Vishnu local HTTP model transport', () => {
   it('preserves JSON format, budget and none reasoning without adding Agent instructions', async () => {
     const fetcher = vi.fn<typeof fetch>(async () => Response.json(result));
     const completion = await completeLocalApiRequest({ local, body: { ...body, response_format: { type: 'json_schema',
@@ -41,7 +41,7 @@ describe('Krillin local HTTP model transport', () => {
     expect(completion.usage.total_tokens).toBe(22);
   });
 
-  it('marks output-budget exhaustion as length so Krillin does not accept a truncated translation', async () => {
+  it('marks output-budget exhaustion as length so Vishnu does not accept a truncated translation', async () => {
     const completion = await completeLocalApiRequest({ local, body, signal: new AbortController().signal,
       fetcher: async () => stream([{ type: 'response.incomplete', response: { ...result, status: 'incomplete',
         incomplete_details: { reason: 'max_output_tokens' } } }]) });

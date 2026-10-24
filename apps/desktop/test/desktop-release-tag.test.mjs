@@ -31,7 +31,7 @@ describe('Desktop release tag', () => {
   });
 
   it('blocks a matching tag when its source notes are missing or not entirely English', () => {
-    const directory = realpathSync(mkdtempSync(join(tmpdir(), 'opencreator-tag-notes-')));
+    const directory = realpathSync(mkdtempSync(join(tmpdir(), 'vishnucreator-tag-notes-')));
     try {
       mkdirSync(join(directory, 'scripts'));
       mkdirSync(join(directory, 'release-notes'));

@@ -6,7 +6,7 @@ import type {
   CreatorArtifactImportRequest,
   CreatorArtifactImportResponse,
   RuntimeErrorCode
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CreatorService } from './service.js';
 
 export type CreatorArtifactImportService = ReturnType<

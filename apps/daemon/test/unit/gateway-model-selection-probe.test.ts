@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import sharp from 'sharp';
 import { afterEach, expect, it, vi } from 'vitest';
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 import { createModelSelectionProbe } from '../../src/gateway/model-selection-probe.js';
 import { modelProbeAudio } from '../../src/gateway/model-probe-audio.js';
 

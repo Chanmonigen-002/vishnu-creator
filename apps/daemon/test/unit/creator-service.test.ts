@@ -5,7 +5,7 @@ import {
   createDefaultCreatorServicesConfig,
   videoGenerationModelIds,
   type CreatorJson
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createCreatorStageRunner } from '../../src/creator/stage-runner.js';
 import { createCreatorRepository } from '../../src/creator/repository.js';
@@ -613,7 +613,7 @@ describe('creator service', () => {
       state: { targetLanguage: 'en' }
     });
 
-    const invalidInputs: Array<Record<string, import('@opencreator/protocol').CreatorJson>> = [
+    const invalidInputs: Array<Record<string, import('@vishnucreator/protocol').CreatorJson>> = [
       { objectId: 'targetLanguage' },
       { patch: {} }
     ];
@@ -714,7 +714,7 @@ describe('creator service', () => {
     repository.createStageRun({
       jobId: job.id,
       stageId: 'subtitle',
-      executor: 'krillinai',
+      executor: 'vishnuai',
       status: 'succeeded',
       progress: { workflow: true }
     });
@@ -739,7 +739,7 @@ describe('creator service', () => {
   it.each([
     ['target_subtitle', '采访.片段.srt'],
     ['vertical_subtitle', '采访.片段.srt'],
-    ['target_subtitle', '采访.片段.opencreator-bilingual-v1.opencreator-bilingual-v2.srt']
+    ['target_subtitle', '采访.片段.vishnucreator-bilingual-v1.vishnucreator-bilingual-v2.srt']
   ] as const)('keeps subtitle names bounded and previous files intact across repeated edits of %s from %s', (kind, fileName) => {
     const { db, repository, service } = setup();
     try {
@@ -767,7 +767,7 @@ describe('creator service', () => {
         subtitle = current.artifacts.filter(artifact => artifact.kind === kind).at(-1)!;
         const resultVersion = index === 2 ? 3 : 2;
         const editSuffix = index === 1 ? '-edit2' : '';
-        expect(subtitle.metadata.fileName).toBe(`采访.片段.opencreator-${label}-v${resultVersion}${editSuffix}.srt`);
+        expect(subtitle.metadata.fileName).toBe(`采访.片段.vishnucreator-${label}-v${resultVersion}${editSuffix}.srt`);
         for (const [savedPath, content] of savedFiles) expect(readFileSync(savedPath, 'utf8')).toBe(content);
         const editedArtifacts = current.artifacts.filter(artifact => !savedFiles.has(artifact.path!));
         for (const artifact of editedArtifacts) {

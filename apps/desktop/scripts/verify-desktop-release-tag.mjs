@@ -32,7 +32,7 @@ if (invokedDirectly) {
       readFileSync(resolve(desktopDir, 'package.json'), 'utf8')
     );
     const tag = process.argv[2]
-      ?? process.env.OPENCREATOR_DESKTOP_RELEASE_TAG
+      ?? process.env.VISHNUCREATOR_DESKTOP_RELEASE_TAG
       ?? '';
     const result = verifyDesktopReleaseTag(tag.trim(), packageJson.version);
     if (!result.skipped) {

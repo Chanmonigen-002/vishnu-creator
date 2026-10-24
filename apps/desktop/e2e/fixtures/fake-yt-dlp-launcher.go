@@ -7,8 +7,8 @@ import (
 )
 
 func main() {
-	nodeBinary := requireEnv("OPENCREATOR_E2E_NODE_BINARY")
-	script := requireEnv("OPENCREATOR_E2E_FAKE_YT_DLP_SCRIPT")
+	nodeBinary := requireEnv("VISHNUCREATOR_E2E_NODE_BINARY")
+	script := requireEnv("VISHNUCREATOR_E2E_FAKE_YT_DLP_SCRIPT")
 	command := exec.Command(nodeBinary, append([]string{script}, os.Args[1:]...)...)
 	command.Env = os.Environ()
 	command.Stdin = os.Stdin

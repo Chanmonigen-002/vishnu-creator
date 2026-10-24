@@ -1,4 +1,4 @@
-import type { CodexMcpListResponse, CodexSkillListResponse } from '@opencreator/protocol';
+import type { CodexMcpListResponse, CodexSkillListResponse } from '@vishnucreator/protocol';
 import type { CodexProfileListResponse } from '../../services/capability-service.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 

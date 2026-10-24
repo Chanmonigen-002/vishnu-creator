@@ -1,5 +1,5 @@
-import { gatewayModelIdMatches } from '@opencreator/protocol';
-import { gatewayModelCompatible, gatewayModelReady, gatewayModelSupports, migrateOpenAiImageModel, type GatewayModel, type GatewayModelPurpose } from '@opencreator/protocol';
+import { gatewayModelIdMatches } from '@vishnucreator/protocol';
+import { gatewayModelCompatible, gatewayModelReady, gatewayModelSupports, migrateOpenAiImageModel, type GatewayModel, type GatewayModelPurpose } from '@vishnucreator/protocol';
 
 export const modelModalities: GatewayModelPurpose[] = ['text', 'image', 'video', 'speech', 'transcription'];
 const historicalDefaults: Record<string, string[]> = {

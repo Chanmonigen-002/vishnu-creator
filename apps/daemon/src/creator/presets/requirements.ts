@@ -4,10 +4,10 @@ import type {
   CreatorPresetRequirements,
   CreatorRuntimeWorkspace,
   CreatorServicesConfig
-} from '@opencreator/protocol';
-import { creatorProviderOfKind } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { creatorProviderOfKind } from '@vishnucreator/protocol';
 import { imageProviderConfigured } from '../image-settings.js';
-import { videoGenerationModelIds } from '@opencreator/protocol';
+import { videoGenerationModelIds } from '@vishnucreator/protocol';
 import { CreatorExecutorError } from '../executor.js';
 import type { CreatorPresetModuleDefinition, CreatorPresetLocale } from './types.js';
 

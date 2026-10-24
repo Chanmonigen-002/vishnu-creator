@@ -1,4 +1,4 @@
-import type { AgentEventEnvelope, RunResponse } from '@opencreator/protocol';
+import type { AgentEventEnvelope, RunResponse } from '@vishnucreator/protocol';
 import { describe, expect, it } from 'vitest';
 import {
   getRunCancelState,

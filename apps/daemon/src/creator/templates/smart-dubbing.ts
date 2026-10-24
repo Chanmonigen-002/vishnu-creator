@@ -1,4 +1,4 @@
-import { smartDubbingStyles } from '@opencreator/protocol';
+import { smartDubbingStyles } from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 import type { CreatorTemplateDefinition } from './types.js';
 

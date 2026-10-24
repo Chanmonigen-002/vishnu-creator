@@ -6,7 +6,7 @@ import { spawnCreatorProcess } from '../creator/process-tree.js';
 import type { YtDlpRuntime } from '../creator/yt-dlp/runtime.js';
 import { BrowserCloseError } from './browser-close.js';
 import { PublicPlatformConnectionError } from './errors.js';
-import type { ConnectionPlatform } from '@opencreator/protocol';
+import type { ConnectionPlatform } from '@vishnucreator/protocol';
 import { filterPlatformCookies, hasPlatformSession, type PlatformCookie } from './cookies.js';
 
 export type BrowserProfile = { id: string; browser: 'chrome' | 'edge'; label: string; directory: string; preferred: boolean };

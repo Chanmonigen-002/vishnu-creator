@@ -5,30 +5,30 @@ import { fileURLToPath } from 'node:url';
 
 const rootDir = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const sourceRoot = resolve(
-  process.env.OPENCREATOR_PREVIEW_SOURCE_ROOT
+  process.env.VISHNUCREATOR_PREVIEW_SOURCE_ROOT
     ?? join(rootDir, 'assets', 'creator-preset-video-sources', 'video-generation')
 );
 const outputRoot = resolve(
-  process.env.OPENCREATOR_PREVIEW_OUTPUT_ROOT
+  process.env.VISHNUCREATOR_PREVIEW_OUTPUT_ROOT
     ?? join(rootDir, 'template', 'video-generation')
 );
-const maxDuration = Number(process.env.OPENCREATOR_PREVIEW_MAX_SECONDS ?? 8);
-const maxDimension = Number(process.env.OPENCREATOR_PREVIEW_MAX_DIMENSION ?? 640);
-const fps = Number(process.env.OPENCREATOR_PREVIEW_FPS ?? 15);
-const crf = Number(process.env.OPENCREATOR_PREVIEW_CRF ?? 29);
+const maxDuration = Number(process.env.VISHNUCREATOR_PREVIEW_MAX_SECONDS ?? 8);
+const maxDimension = Number(process.env.VISHNUCREATOR_PREVIEW_MAX_DIMENSION ?? 640);
+const fps = Number(process.env.VISHNUCREATOR_PREVIEW_FPS ?? 15);
+const crf = Number(process.env.VISHNUCREATOR_PREVIEW_CRF ?? 29);
 const dryRun = process.argv.includes('--dry-run');
 
 if (!Number.isFinite(maxDuration) || maxDuration <= 0) {
-  throw new Error('OPENCREATOR_PREVIEW_MAX_SECONDS must be a positive number');
+  throw new Error('VISHNUCREATOR_PREVIEW_MAX_SECONDS must be a positive number');
 }
 if (!Number.isInteger(maxDimension) || maxDimension < 128) {
-  throw new Error('OPENCREATOR_PREVIEW_MAX_DIMENSION must be an integer >= 128');
+  throw new Error('VISHNUCREATOR_PREVIEW_MAX_DIMENSION must be an integer >= 128');
 }
 if (!Number.isInteger(fps) || fps < 1 || fps > 30) {
-  throw new Error('OPENCREATOR_PREVIEW_FPS must be an integer between 1 and 30');
+  throw new Error('VISHNUCREATOR_PREVIEW_FPS must be an integer between 1 and 30');
 }
 if (!Number.isInteger(crf) || crf < 18 || crf > 40) {
-  throw new Error('OPENCREATOR_PREVIEW_CRF must be an integer between 18 and 40');
+  throw new Error('VISHNUCREATOR_PREVIEW_CRF must be an integer between 18 and 40');
 }
 if (!existsSync(sourceRoot)) {
   throw new Error(`Creator preview source directory does not exist: ${sourceRoot}`);

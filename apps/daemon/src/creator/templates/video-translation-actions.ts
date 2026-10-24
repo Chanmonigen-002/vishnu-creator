@@ -6,7 +6,7 @@ import {
   type CreatorServicesConfig,
   type CreatorStageRun,
   type CreatorTtsProvider
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CreatorServicesConfigStore } from '../../creator-services/config-store.js';
 import type { CreatorCommandDispatcher } from '../command-dispatcher.js';
 import type { CreatorService } from '../service.js';

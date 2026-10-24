@@ -3,7 +3,7 @@ import type {
   MemoryListQuery,
   MemoryScope,
   UpdateMemoryRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import {
   MemoryServiceError,
@@ -17,8 +17,8 @@ export async function registerMemoryRoutes(
   options: {
     readThreadHistory(
       threadId: string
-    ): Promise<{ items: import('@opencreator/protocol').ThreadHistoryItem[] } | undefined>
-      | { items: import('@opencreator/protocol').ThreadHistoryItem[] }
+    ): Promise<{ items: import('@vishnucreator/protocol').ThreadHistoryItem[] } | undefined>
+      | { items: import('@vishnucreator/protocol').ThreadHistoryItem[] }
       | undefined;
   }
 ): Promise<void> {

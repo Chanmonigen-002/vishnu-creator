@@ -21,15 +21,15 @@ Skill — это папка внутри [`skills/`](../../../skills/) с фай
 ## Быстрый старт
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable && pnpm install
-cp -r skills/krillinai-tts skills/<ваш-skill>   # начните с ближайшего существующего Skill
+cp -r skills/vishnuai-tts skills/<ваш-skill>   # начните с ближайшего существующего Skill
 # отредактируйте skills/<ваш-skill>/SKILL.md
 pnpm web:dev                                    # проверьте, что агент распознаёт его в диалоге
 ```
 
-Самый быстрый путь — скопировать Skill, наиболее близкий к вашей идее, и переписать его: существующие Skill `krillinai-*` показывают ожидаемую структуру и тон.
+Самый быстрый путь — скопировать Skill, наиболее близкий к вашей идее, и переписать его: существующие Skill `vishnuai-*` показывают ожидаемую структуру и тон.
 
 ## Анатомия Skill
 
@@ -93,4 +93,4 @@ description: Use when <условие срабатывания>, including <ос
 
 ---
 
-Вопросы? [Откройте issue](https://github.com/krillinai/OpenCreator/issues/new) с темой `skill` — мы поможем определить рамки.
+Вопросы? [Откройте issue](https://github.com/vishnuai/Vishnu Creator/issues/new) с темой `skill` — мы поможем определить рамки.

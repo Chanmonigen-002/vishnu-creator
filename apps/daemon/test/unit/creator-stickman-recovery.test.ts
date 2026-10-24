@@ -71,7 +71,7 @@ describe('stickman video recovery', () => {
     const failed = repository.createStageRun({
       jobId: job.id,
       stageId: 'source-transcript',
-      executor: 'krillinai',
+      executor: 'vishnuai',
       status: 'failed'
     });
 

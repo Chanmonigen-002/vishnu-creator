@@ -13,7 +13,7 @@ import {
   writeFile
 } from 'node:fs/promises';
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
-import { stickmanCanvasForRatio, type CreatorArtifact } from '@opencreator/protocol';
+import { stickmanCanvasForRatio, type CreatorArtifact } from '@vishnucreator/protocol';
 import type { CreatorExecutor, CreatorExecutorOutput } from '../executor.js';
 import { CreatorExecutorError } from '../executor.js';
 import { validateMediaFile } from '../validators/media.js';

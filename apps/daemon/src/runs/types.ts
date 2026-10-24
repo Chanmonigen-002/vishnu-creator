@@ -4,7 +4,7 @@ import type {
   RunContextItem,
   RunSubmissionMode,
   SandboxMode
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 type CreateRunBase = {
   prompt: string;

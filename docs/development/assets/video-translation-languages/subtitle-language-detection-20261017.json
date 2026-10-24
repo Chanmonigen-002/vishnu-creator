@@ -1,7 +1,7 @@
 {
   "date": "2026-10-17",
   "method": "Local franc-all detection from parsed subtitle text; no model requests",
-  "sourceDirectory": "/Users/leggett/Documents/OpenCreator/Exports/多语言回译评测-20261016",
+  "sourceDirectory": "/Users/leggett/Documents/VishnuCreator/Exports/多语言回译评测-20261016",
   "total": 52,
   "matched": 47,
   "needsSelection": [

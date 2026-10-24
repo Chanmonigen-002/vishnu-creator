@@ -2,8 +2,8 @@ import { createHash, randomUUID } from 'node:crypto';
 import { readFile, mkdir, rename, rm, stat } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { z } from 'zod/v3';
-import type { CreatorJson, CreatorRuntimeComponent } from '@opencreator/protocol';
-import { configuredOrDownloadedFile } from '../krillin/dependency-loader.js';
+import type { CreatorJson, CreatorRuntimeComponent } from '@vishnucreator/protocol';
+import { configuredOrDownloadedFile } from '../vishnu/dependency-loader.js';
 import { spawnCreatorProcess } from '../process-tree.js';
 import { readStickmanRemotionRuntime, type StickmanRemotionRuntime } from './remotion-runtime.js';
 
@@ -165,7 +165,7 @@ export function createRemotionComponentManager(input: {
         id: 'remotion', name: 'Remotion', available: release !== undefined,
         version: prepared ? release?.remotionVersion ?? null : null,
         supportedVersion: release?.remotionVersion ?? null, installedAt, path: resolve(input.root),
-        source: 'OpenCreator release · SHA-256 verified', models: [], model: null,
+        source: 'VishnuCreator release · SHA-256 verified', models: [], model: null,
         state, item: typeof progress.dependencyItem === 'string' ? progress.dependencyItem : null,
         downloadedBytes: numeric(progress.downloadedBytes) ?? 0, totalBytes: numeric(progress.totalBytes),
         percent: state === 'ready' ? 100 : numeric(progress.dependencyPercent),

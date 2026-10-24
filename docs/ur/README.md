@@ -4,8 +4,8 @@
 
 <h1>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="../images/OpenCreator_logo_vector_dark.svg" />
-    <img src="../images/OpenCreator_logo_vector.svg" alt="OpenCreator" width="380" />
+    <source media="(prefers-color-scheme: dark)" srcset="../images/Vishnu Creator_logo_vector_dark.svg" />
+    <img src="../images/Vishnu Creator_logo_vector.svg" alt="Vishnu Creator" width="380" />
   </picture>
   <br />
   تخلیق کاروں کے لیے اوپن سورس AI ورک اسپیس اور Skills
@@ -13,16 +13,16 @@
 
 <p>اسکرپٹ، ویڈیو، تصاویر، آواز، ترجمے اور تدوین کے لیے بصری ترتیبات، دوبارہ استعمال ہونے والے Skills اور Agent کو ایک ورک اسپیس میں یکجا کریں۔</p>
 
-<p><strong>OpenCreator کا سابقہ نام KrillinAI تھا۔</strong></p>
+<p><strong>Vishnu Creator کا سابقہ نام VishnuAI تھا۔</strong></p>
 
-<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="OpenCreator، سابقہ KrillinAI: Trendshift پر دن کی سرفہرست ریپوزٹری" width="250" height="55" /></a>
+<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="Vishnu Creator، سابقہ VishnuAI: Trendshift پر دن کی سرفہرست ریپوزٹری" width="250" height="55" /></a>
 
 [English](../../README.md) | [简体中文](../zh/README.md) | [日本語](../ja/README.md) | [한국어](../ko/README.md) | [Bahasa Indonesia](../id/README.md) | [Español](../es/README.md) | [Français](../fr/README.md) | [Deutsch](../de/README.md) | [Português](../pt/README.md) | [Русский](../ru/README.md) | [العربية](../ar/README.md) | [ภาษาไทย](../th/README.md) | [Türkçe](../tr/README.md) | [हिन्दी](../hi/README.md) | [বাংলা](../bn/README.md) | **اردو** | [Tiếng Việt](../vi/README.md) | [Filipino](../fil/README.md)
 
-[![GitHub Stars](https://badgen.net/github/stars/krillinai/OpenCreator?icon=github&label=Stars&color=EAB308)](https://github.com/krillinai/OpenCreator/stargazers)
+[![GitHub Stars](https://badgen.net/github/stars/vishnuai/Vishnu Creator?icon=github&label=Stars&color=EAB308)](https://github.com/vishnuai/Vishnu Creator/stargazers)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Bilibili](https://img.shields.io/badge/dynamic/json?label=Bilibili&query=%24.data.follower&suffix=%E7%B2%89%E4%B8%9D&url=https%3A%2F%2Fapi.bilibili.com%2Fx%2Frelation%2Fstat%3Fvmid%3D242124650&logo=bilibili&color=00A1D6&labelColor=FE7398&logoColor=FFFFFF)](https://space.bilibili.com/242124650)
-[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/krillinai/OpenCreator)
+[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/vishnuai/Vishnu Creator)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/fUNvbqDaw)
 [![QQ گروپ](https://img.shields.io/badge/QQ%20群-754069680-green?logo=tencent-qq)](https://qm.qq.com/q/W4YC0PLMeA)
 
@@ -30,15 +30,15 @@
 
 </div>
 
-![OpenCreator کا Agent ورک اسپیس](../images/opencreator-home-en.png)
+![Vishnu Creator کا Agent ورک اسپیس](../images/vishnucreator-home-en.png)
 
 <a id="project-overview"></a>
 
 ## منصوبے کا تعارف
 
-OpenCreator ان افراد اور ٹیموں کے لیے ہے جو تخلیقی اور ترقیاتی کام اپنے کمپیوٹر پر چلانا چاہتے ہیں۔ Agent لوپ دوبارہ بنانے کے بجائے یہ Codex CLI کو عملی انجن بناتا ہے، اور اس کے ساتھ مستحکم مقامی Runtime، بصری ورک اسپیس اور Desktop ہوسٹ شامل کرتا ہے۔
+Vishnu Creator ان افراد اور ٹیموں کے لیے ہے جو تخلیقی اور ترقیاتی کام اپنے کمپیوٹر پر چلانا چاہتے ہیں۔ Agent لوپ دوبارہ بنانے کے بجائے یہ Codex CLI کو عملی انجن بناتا ہے، اور اس کے ساتھ مستحکم مقامی Runtime، بصری ورک اسپیس اور Desktop ہوسٹ شامل کرتا ہے۔
 
-OpenCreator میں کام کے دو مربوط طریقے ہیں:
+Vishnu Creator میں کام کے دو مربوط طریقے ہیں:
 
 - **مواد کی ورک اسپیس**: بصری ٹولز اور سانچوں سے ویڈیو ترجمہ اور ڈاؤن لوڈ، تصاویر اور ویڈیو بنانا، وائس اوور، مضامین اور سوشل پوسٹ، مختصر ویڈیو کے اسکرپٹ اور اسٹک فگر اینیمیشن تیار کریں۔
 - **Agent گفتگو**: عام زبان میں تخلیقی یا ترقیاتی کام شروع کریں اور رہنمائی دیں؛ گفتگو منصوبوں کے مطابق ترتیب دیں، Run پس منظر میں جاری رکھیں، اور منظوری، منسلکات، فائلیں، Skills، MCP، شیڈول، اطلاعات، یادداشت اور تشخیصی معلومات ایک جگہ سنبھالیں۔
@@ -81,7 +81,7 @@ Web واحد فرنٹ اینڈ ہے۔ Desktop وہی Web بلڈ لوڈ کرتا 
 
 Dashboard سے مضمون، Xiaohongshu پوسٹ یا مختصر ویڈیو اسکرپٹ لکھیں؛ اسٹک فگر اینیمیشن بنائیں؛ ویڈیو ترجمہ یا ڈاؤن لوڈ کریں؛ تھمب نیل، تصاویر یا ویڈیو بنائیں؛ Text to Speech سے وائس اوور تیار کریں۔
 
-![OpenCreator تخلیقی Dashboard](../images/product/opencreator-dashboard-en.png)
+![Vishnu Creator تخلیقی Dashboard](../images/product/vishnucreator-dashboard-en.png)
 
 > مزید تخلیقی ٹولز مسلسل شامل ہو رہے ہیں۔
 
@@ -125,7 +125,7 @@ Dashboard سے مضمون، Xiaohongshu پوسٹ یا مختصر ویڈیو اس
 
 ہر پرامپٹ اور ترتیب ابتدا سے بنانے کے بجائے سانچے سے شروع کریں۔ ویڈیو اور تصویری ڈیزائن سمیت زمروں میں نمایاں سانچے دیکھیں اور اپنے خیال کا نقطۂ آغاز منتخب کریں۔
 
-مجموعے میں OpenCreator اور آزاد تخلیق کاروں کے سانچے ہیں۔ تیسرے فریق کے سانچے کی تفصیل میں تخلیق کار کا نام اور اصل ماخذ کا لنک ہے۔
+مجموعے میں Vishnu Creator اور آزاد تخلیق کاروں کے سانچے ہیں۔ تیسرے فریق کے سانچے کی تفصیل میں تخلیق کار کا نام اور اصل ماخذ کا لنک ہے۔
 
 سانچہ کھول کر نمونہ نتیجہ، پرامپٹ، ترتیبات، ٹیگ، مصنف اور اصل ماخذ دیکھیں۔ **Use this template** منتخب کرکے اپنے کام کے مطابق ان پٹ بدلیں۔
 
@@ -137,23 +137,23 @@ Dashboard سے مضمون، Xiaohongshu پوسٹ یا مختصر ویڈیو اس
 
 تخلیقی ٹولز بصری کنٹرول دیتے ہیں؛ Skills، Agent کو دوبارہ استعمال ہونے والی ہدایات اور ٹولز کے طریقۂ کار دیتے ہیں۔ ریپوزٹری میں ویڈیو بنانے کے Skills اور مقامی Codex Skills کے انتظام کی سہولت ہے۔
 
-[`skills/`](../../skills/) میں شامل KrillinAI CLI چلانے والے Agent کے لیے قابلِ استعمال ہدایات ہیں۔
+[`skills/`](../../skills/) میں شامل VishnuAI CLI چلانے والے Agent کے لیے قابلِ استعمال ہدایات ہیں۔
 
 | Skill | صلاحیتیں |
 | --- | --- |
-| [KrillinAI CLI](../../skills/krillinai-cli/SKILL.md) | کمانڈ منتخب کریں، ترتیب جانچیں اور پیش رفت، مینی فیسٹ، نتائج اور غلطیاں سمجھیں |
-| [سب ٹائٹل](../../skills/krillinai-subtitle/SKILL.md) | کیپشن ڈاؤن لوڈ یا میڈیا نقل نویسی؛ ترجمہ اور دو لسانی یا عمودی ویڈیو کے مختصر سب ٹائٹل |
-| [TTS](../../skills/krillinai-tts/SKILL.md) | سب ٹائٹل سے ہدف زبان کی ڈبنگ اور اختیاری ڈب شدہ ویڈیو |
-| [افقی رینڈر](../../skills/krillinai-render-horizontal/SKILL.md) | دو لسانی سب ٹائٹل یا ڈب آڈیو اور ہدف سب ٹائٹل کے ساتھ افقی ویڈیو |
-| [عمودی رینڈر](../../skills/krillinai-render-vertical/SKILL.md) | عنوان، دو لسانی سب ٹائٹل یا ڈبنگ کے ساتھ عمودی ویڈیو |
-| [سرورق](../../skills/krillinai-cover/SKILL.md) | مکمل متنی پرامپٹ سے سرورق بنائیں، تصویر اور آخری پرامپٹ محفوظ کریں |
-| [پائپ لائن منصوبہ](../../skills/krillinai-pipeline/SKILL.md) | متعدد مراحل کے آؤٹ پٹ منصوبے کی dry-run جانچ؛ اصل کام ہر مرحلے کے Skills سے کریں |
+| [VishnuAI CLI](../../skills/vishnuai-cli/SKILL.md) | کمانڈ منتخب کریں، ترتیب جانچیں اور پیش رفت، مینی فیسٹ، نتائج اور غلطیاں سمجھیں |
+| [سب ٹائٹل](../../skills/vishnuai-subtitle/SKILL.md) | کیپشن ڈاؤن لوڈ یا میڈیا نقل نویسی؛ ترجمہ اور دو لسانی یا عمودی ویڈیو کے مختصر سب ٹائٹل |
+| [TTS](../../skills/vishnuai-tts/SKILL.md) | سب ٹائٹل سے ہدف زبان کی ڈبنگ اور اختیاری ڈب شدہ ویڈیو |
+| [افقی رینڈر](../../skills/vishnuai-render-horizontal/SKILL.md) | دو لسانی سب ٹائٹل یا ڈب آڈیو اور ہدف سب ٹائٹل کے ساتھ افقی ویڈیو |
+| [عمودی رینڈر](../../skills/vishnuai-render-vertical/SKILL.md) | عنوان، دو لسانی سب ٹائٹل یا ڈبنگ کے ساتھ عمودی ویڈیو |
+| [سرورق](../../skills/vishnuai-cover/SKILL.md) | مکمل متنی پرامپٹ سے سرورق بنائیں، تصویر اور آخری پرامپٹ محفوظ کریں |
+| [پائپ لائن منصوبہ](../../skills/vishnuai-pipeline/SKILL.md) | متعدد مراحل کے آؤٹ پٹ منصوبے کی dry-run جانچ؛ اصل کام ہر مرحلے کے Skills سے کریں |
 
 <a id="extend-with-your-own-skills"></a>
 
 ### اپنے Skills سے توسیع
 
-OpenCreator میں `SKILL.md` سے متعین مقامی Codex Skills کے ذریعے اپنے طریقے اور عمل شامل کر سکتے ہیں۔ دستیابی فعال Codex home اور نصب Skills پر منحصر ہے؛ ویڈیو Skills کے لیے CLI اور متعلقہ خدمات کا سیٹ اپ چاہیے۔ ریپوزٹری میں موجودگی سے ہر Skill خود نصب یا ہر بیرونی خدمت شامل نہیں ہو جاتی۔
+Vishnu Creator میں `SKILL.md` سے متعین مقامی Codex Skills کے ذریعے اپنے طریقے اور عمل شامل کر سکتے ہیں۔ دستیابی فعال Codex home اور نصب Skills پر منحصر ہے؛ ویڈیو Skills کے لیے CLI اور متعلقہ خدمات کا سیٹ اپ چاہیے۔ ریپوزٹری میں موجودگی سے ہر Skill خود نصب یا ہر بیرونی خدمت شامل نہیں ہو جاتی۔
 
 <a id="conversation-and-workspace-moving-together"></a>
 
@@ -161,7 +161,7 @@ OpenCreator میں `SKILL.md` سے متعین مقامی Codex Skills کے ذر�
 
 کام عام زبان میں بتائیں؛ درست کنٹرول کے لیے بصری ٹولز کھولیں۔
 
-![OpenCreator گفتگو اور بصری ورک اسپیس کا اشتراک](../images/examples/opencreator-auto-clips-en.png)
+![Vishnu Creator گفتگو اور بصری ورک اسپیس کا اشتراک](../images/examples/vishnucreator-auto-clips-en.png)
 
 <a id="fine-grained-workspace-controls"></a>
 
@@ -266,11 +266,11 @@ Agent کو تبدیلی بتائیں اور عام زبان میں نتیجہ ب
 
 ### ویڈیو ترجمہ
 
-درج ذیل عوامی مثالیں اس وقت بنیں جب OpenCreator کا نام KrillinAI تھا۔ یہ سب ٹائٹل مطابقت، ترجمے، ڈبنگ اور عمودی ویڈیو کا مستحکم عمل دکھاتی ہیں، جسے اب Video Translation ورک اسپیس وسیع Agent عمل سے جوڑتی ہے۔
+درج ذیل عوامی مثالیں اس وقت بنیں جب Vishnu Creator کا نام VishnuAI تھا۔ یہ سب ٹائٹل مطابقت، ترجمے، ڈبنگ اور عمودی ویڈیو کا مستحکم عمل دکھاتی ہیں، جسے اب Video Translation ورک اسپیس وسیع Agent عمل سے جوڑتی ہے۔
 
 نیچے کی سب ٹائٹل فائل 46 منٹ کی مقامی ویڈیو سے ایک Run میں بنی، بغیر دستی اصلاح کے۔ شائع شدہ نتیجے میں مکمل احاطہ، غیر متداخل سطریں، قدرتی تقسیم اور معیاری ترجمہ نظر آتا ہے۔
 
-![OpenCreator سب ٹائٹل مطابقت کی مثال](../images/examples/krillinai-subtitle-alignment.png)
+![Vishnu Creator سب ٹائٹل مطابقت کی مثال](../images/examples/vishnuai-subtitle-alignment.png)
 
 <table width="100%">
 <tr>
@@ -304,7 +304,7 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
 </tr>
 </table>
 
-> یہ ویڈیو مثالیں اور سب ٹائٹل مطابقت کی تصویر KrillinAI نام کے دور کی ہیں۔
+> یہ ویڈیو مثالیں اور سب ٹائٹل مطابقت کی تصویر VishnuAI نام کے دور کی ہیں۔
 
 <a id="video-downloader"></a>
 
@@ -331,7 +331,7 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
 
 دستیابی ویڈیو اور خطے کے مطابق بدلتی ہے؛ بعض ذرائع کو پلیٹ فارم کوکی چاہیے۔
 
-![OpenCreator ویڈیو ڈاؤن لوڈر میں فارمیٹ انتخاب](../images/examples/video-downloader-formats-and-subtitles-en.png)
+![Vishnu Creator ویڈیو ڈاؤن لوڈر میں فارمیٹ انتخاب](../images/examples/video-downloader-formats-and-subtitles-en.png)
 
 <a id="video-generation"></a>
 
@@ -339,19 +339,19 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
 
 Seedance سے متنی پرامپٹ یا حوالہ تصویر پر AI ویڈیو بنائیں۔ ماڈل، تناسب، ریزولیوشن اور دورانیہ مقرر کرکے منصوبے میں ہر ورژن دیکھیں، دوبارہ بنائیں یا ڈاؤن لوڈ کریں۔
 
-![Seedance سے OpenCreator ویڈیو تخلیق](../images/examples/video-generation-seedance-en.png)
+![Seedance سے Vishnu Creator ویڈیو تخلیق](../images/examples/video-generation-seedance-en.png)
 
 <a id="stick-figure-animation"></a>
 
 ### اسٹک فگر اینیمیشن
 
-OpenCreator نے یہ اصل کرداروں کا مجموعہ مصور [Harbor Hsia](https://www.behance.net/xiaheyuan1)، [Behance پر Stickman](https://www.behance.net/gallery/254715463/Stickman) کے خالق، کے ساتھ تیار کیا۔ شامل کردار پورے اینیمیشن عمل میں یکساں شناخت رکھتے ہیں۔
+Vishnu Creator نے یہ اصل کرداروں کا مجموعہ مصور [Harbor Hsia](https://www.behance.net/xiaheyuan1)، [Behance پر Stickman](https://www.behance.net/gallery/254715463/Stickman) کے خالق، کے ساتھ تیار کیا۔ شامل کردار پورے اینیمیشن عمل میں یکساں شناخت رکھتے ہیں۔
 
-![مصور کے تعاون سے OpenCreator اسٹک فگر کردار](../images/examples/stick-figure-characters.webp)
+![مصور کے تعاون سے Vishnu Creator اسٹک فگر کردار](../images/examples/stick-figure-characters.webp)
 
 اسکرپٹ جائزے، بیان، وقت، اسٹوری بورڈ، سب ٹائٹل اور رینڈرنگ کے رہنما عمل سے متن یا YouTube مواد کو مکمل قابلِ ڈاؤن لوڈ اینیمیشن بنائیں۔
 
-![OpenCreator اسٹک فگر اینیمیشن کا فریم](../images/examples/stick-figure-animation-frame.jpg)
+![Vishnu Creator اسٹک فگر اینیمیشن کا فریم](../images/examples/stick-figure-animation-frame.jpg)
 
 <a id="quick-start"></a>
 
@@ -361,13 +361,13 @@ OpenCreator نے یہ اصل کرداروں کا مجموعہ مصور [Harbor H
 
 ### Desktop ایپ نصب کریں
 
-[تازہ ترین OpenCreator ریلیز](https://github.com/krillinai/OpenCreator/releases/latest) سے macOS Apple Silicon، macOS Intel یا Windows x64 کا انسٹالر لیں۔ نصب کرکے کھولیں؛ Node.js یا pnpm ضروری نہیں۔ Codex CLI شامل ہے؛ حقیقی ماڈل کام کے لیے قابلِ استعمال ChatGPT سائن اِن یا API key سیٹ اپ چاہیے۔
+[تازہ ترین Vishnu Creator ریلیز](https://github.com/vishnuai/Vishnu Creator/releases/latest) سے macOS Apple Silicon، macOS Intel یا Windows x64 کا انسٹالر لیں۔ نصب کرکے کھولیں؛ Node.js یا pnpm ضروری نہیں۔ Codex CLI شامل ہے؛ حقیقی ماڈل کام کے لیے قابلِ استعمال ChatGPT سائن اِن یا API key سیٹ اپ چاہیے۔
 
 پہلی بار Desktop مقامی Runtime چلاتا، طے شدہ منصوبہ بناتا اور Codex ترتیب دیکھتا ہے۔ موزوں سائن اِن یا API key اور ماڈل ترتیبات ملیں تو **Use local Codex and continue** منتخب کریں۔ اسی عمل میں دوسرا فراہم کنندہ بھی طے کر سکتے ہیں:
 
-![Desktop پہلی بار ماڈل فراہم کنندہ کا سیٹ اپ](../images/product/opencreator-codex-setup.png)
+![Desktop پہلی بار ماڈل فراہم کنندہ کا سیٹ اپ](../images/product/vishnucreator-codex-setup.png)
 
-سیٹ اپ کے بعد ان پٹ خانے میں درخواست لکھیں۔ مسئلہ ہو تو [صارف رہنما اور خرابیوں کا حل](../opencreator-user-guide-and-troubleshooting.md) دیکھیں۔
+سیٹ اپ کے بعد ان پٹ خانے میں درخواست لکھیں۔ مسئلہ ہو تو [صارف رہنما اور خرابیوں کا حل](../vishnucreator-user-guide-and-troubleshooting.md) دیکھیں۔
 
 <a id="run-web-from-source"></a>
 
@@ -395,8 +395,8 @@ codex --version
 <div dir="ltr">
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable
 pnpm install
 pnpm web:dev
@@ -445,10 +445,10 @@ pnpm desktop:dev
 | `pnpm desktop:package` | مقامی جانچ کے لیے موجودہ پلیٹ فارم پر چلنے والا فولڈر |
 | `pnpm desktop:dist` | موجودہ پلیٹ فارم کا انسٹالر |
 | `pnpm desktop:release` | رسمی ریلیز پیکیجنگ کا نقطۂ آغاز |
-| `pnpm --filter @opencreator/desktop verify:package` | موجود Desktop پیکیج کی جانچ |
-| `pnpm krillinai:package` | منتخب پلیٹ فارم کے الگ KrillinAI Server اور CLI آرکائیو |
+| `pnpm --filter @vishnucreator/desktop verify:package` | موجود Desktop پیکیج کی جانچ |
+| `pnpm vishnuai:package` | منتخب پلیٹ فارم کے الگ VishnuAI Server اور CLI آرکائیو |
 
-Desktop پیکیجنگ موجودہ ورک اسپیس سے Web دوبارہ بناتی؛ commit، commit نہ کی گئی تبدیلیوں کی حالت، پلیٹ فارم، ساخت اور Web hash درج کرتی؛ اور `apps/web/dist` کو ایپ کے شامل وسائل سے ملاتی ہے۔ فرق ہو تو پیکیجنگ ناکام ہوتی ہے۔ دستخط، notarization، Windows بلڈ اور ریلیز شرائط کے لیے [Desktop ریلیز رہنما](../operations/opencreator-desktop-release-runbook.md) دیکھیں۔
+Desktop پیکیجنگ موجودہ ورک اسپیس سے Web دوبارہ بناتی؛ commit، commit نہ کی گئی تبدیلیوں کی حالت، پلیٹ فارم، ساخت اور Web hash درج کرتی؛ اور `apps/web/dist` کو ایپ کے شامل وسائل سے ملاتی ہے۔ فرق ہو تو پیکیجنگ ناکام ہوتی ہے۔ دستخط، notarization، Windows بلڈ اور ریلیز شرائط کے لیے [Desktop ریلیز رہنما](../operations/vishnucreator-desktop-release-runbook.md) دیکھیں۔
 
 <a id="core-workflows"></a>
 
@@ -477,14 +477,14 @@ Desktop پیکیجنگ موجودہ ورک اسپیس سے Web دوبارہ بن
 
 ### شیڈول اور مخصوص کام کے تھریڈ
 
-- ہر شیڈول کی مستقل، مخصوص OpenCreator گفتگو ہے۔
+- ہر شیڈول کی مستقل، مخصوص Vishnu Creator گفتگو ہے۔
 - خودکار ٹرگر، دستی Run اور اگلی درخواستیں وہی گفتگو استعمال کرتے اور `queue` یا `skip` کے تحت باری باری چلتے ہیں۔
 - شیڈول مٹانے سے گفتگو آرکائیو ہوتی ہے؛ موجود Run، نتائج اور Codex تاریخ محفوظ رہتی ہے۔
-- اندرونی Codex تھریڈ بدلنے یا بحال کرنے سے OpenCreator کام کی اندراج یا صفحے کا راستہ نہیں بدلتا۔
+- اندرونی Codex تھریڈ بدلنے یا بحال کرنے سے Vishnu Creator کام کی اندراج یا صفحے کا راستہ نہیں بدلتا۔
 
-<a id="opencreator-system-architecture"></a>
+<a id="vishnucreator-system-architecture"></a>
 
-## OpenCreator نظام کی ساخت
+## Vishnu Creator نظام کی ساخت
 
 بصری ورک اسپیس اور Agent گفتگو ایک تخلیقی کام کے دو انٹرفیس ہیں۔ ہر عمل اسٹیٹ مشین ہے: ماخذ، ترتیب، تخلیق، جائزہ، ترمیم اور برآمد واضح حالتیں اور واقعات ہیں۔ بصری اقدامات اور گفتگو کی ہدایات ایک مشین میں جاتی ہیں؛ موجودہ مرحلہ، ترتیب، پیش رفت، ورژن اور نتائج دونوں انٹرفیس پر لوٹتے ہیں۔ یوں ایک مستند حالت سے ہم آہنگی برقرار رہتی ہے۔
 
@@ -526,7 +526,7 @@ Desktop پیکیجنگ موجودہ ورک اسپیس سے Web دوبارہ بن
 
 </div>
 
-| OpenCreator جزو | ذمہ داری | نفاذ |
+| Vishnu Creator جزو | ذمہ داری | نفاذ |
 | --- | --- | --- |
 | تخلیقی تجربہ | Dashboard، ٹولز، Agent گفتگو، ترتیبات اور فائلیں | `apps/web` · React 18 · Vite · TypeScript |
 | اشتراک کا مرکز | مراحل، گفتگو کا سیاق، پیش رفت، نتائج اور ترمیم ہم آہنگ رکھنا | مشترکہ عمل کی حالت · `CreatorCollaborationPanel` · ورژن کی تاریخ |
@@ -553,7 +553,7 @@ Desktop پیکیجنگ موجودہ ورک اسپیس سے Web دوبارہ بن
 <div dir="ltr">
 
 ```text
-OpenCreator/
+Vishnu Creator/
 ├── apps/
 │   ├── web/          # واحد React فرنٹ اینڈ
 │   ├── daemon/       # مقامی Fastify Runtime اور Codex اڈاپٹر
@@ -579,7 +579,7 @@ OpenCreator/
 
 **Settings → AI Services** میں موجودہ ورک اسپیس کے ماڈل، نقل نویسی، آواز اور تصویر کے فراہم کنندگان طے کریں۔ آئندہ ٹولز کے لیے اضافی زمرے دکھ سکتے ہیں۔ ہر زمرہ منتخب خدمت کے ضروری خانے ہی دکھاتا ہے: Base URL، API Key، ماڈل، پراکسی یا مخصوص اسناد۔
 
-![OpenCreator AI خدمات کی API key ترتیبات](../images/product/opencreator-ai-services-en.png)
+![Vishnu Creator AI خدمات کی API key ترتیبات](../images/product/vishnucreator-ai-services-en.png)
 
 اسناد مقامی Runtime کے سسٹم ذخیرے میں محفوظ ہوتی ہیں؛ کبھی ریپوزٹری میں commit نہ کریں۔ Edge TTS جیسی کچھ مقامی یا سسٹم خدمات کو API Key نہیں چاہیے۔
 
@@ -587,12 +587,12 @@ OpenCreator/
 
 ### اکاؤنٹ اور رکنیت
 
-ذاتی مرکز میں اکاؤنٹ، تصدیق شدہ رکنیت اور دستیاب کریڈٹ ہیں۔ سائن اِن سے `https://www.open-creator.ai/device` کھلتا ہے۔ ویب سائٹ پر لاگ اِن کرکے آلہ منظور کریں؛ مقامی Daemon اپنا سیشن پاتا ہے۔ براؤزر اور ایپ کا اکاؤنٹ ایک، سیشن الگ ہیں۔
+ذاتی مرکز میں اکاؤنٹ، تصدیق شدہ رکنیت اور دستیاب کریڈٹ ہیں۔ سائن اِن سے `https://www.vishnu-creator.ai/device` کھلتا ہے۔ ویب سائٹ پر لاگ اِن کرکے آلہ منظور کریں؛ مقامی Daemon اپنا سیشن پاتا ہے۔ براؤزر اور ایپ کا اکاؤنٹ ایک، سیشن الگ ہیں۔
 
 
 
 
-رکنیت OpenCreator میں منتخب کریں۔ خرید سے Stripe Checkout اور انتظام سے Stripe Billing Portal کھلتا ہے۔ ادائیگی کے بعد واپسی `/billing/return` سے ہوتی ہے، ویب سیشن ضروری نہیں۔ تصدیق شدہ Stripe اطلاع کے بعد Gateway سے فوائد تازہ ہوتے ہیں۔ `/pricing` اور `/account` بھی اسی رکنیت نظام تک خرید کا راستہ دیتے ہیں۔
+رکنیت Vishnu Creator میں منتخب کریں۔ خرید سے Stripe Checkout اور انتظام سے Stripe Billing Portal کھلتا ہے۔ ادائیگی کے بعد واپسی `/billing/return` سے ہوتی ہے، ویب سیشن ضروری نہیں۔ تصدیق شدہ Stripe اطلاع کے بعد Gateway سے فوائد تازہ ہوتے ہیں۔ `/pricing` اور `/account` بھی اسی رکنیت نظام تک خرید کا راستہ دیتے ہیں۔
 
 
 
@@ -605,7 +605,7 @@ OpenCreator/
 
 **Settings → Third-party Components** میں فعال yt-dlp nightly، شامل ورژن، ماخذ اور تازہ ریلیز دیکھیں۔ ہر سات دن جانچ ہوتی ہے، خودکار تنصیب نہیں۔ اپ ڈیٹ صارف کی واضح کارروائی سے ہوتا ہے؛ ڈاؤن لوڈ، تصدیق یا تنصیب ناکام ہو تو کارآمد ورژن رہتا ہے۔
 
-![OpenCreator تیسرے فریق کے اجزا کی ترتیبات](../images/product/opencreator-third-party-components-en.png)
+![Vishnu Creator تیسرے فریق کے اجزا کی ترتیبات](../images/product/vishnucreator-third-party-components-en.png)
 
 <a id="runtime-environment-variables"></a>
 
@@ -615,20 +615,20 @@ OpenCreator/
 
 | ماحول کا متغیر | طے شدہ | مقصد |
 | --- | --- | --- |
-| `OPENCREATOR_DATA_DIR` | `.runtime` | OpenCreator ڈیٹابیس، Run، منسلکات اور زیرِ انتظام ورک اسپیس |
-| `OPENCREATOR_GATEWAY_ORIGIN` | `https://www.open-creator.ai` | لاگ اِن، رکنیت، کریڈٹ اور آفیشل ماڈل خدمات کا Gateway؛ مقامی Gateway کے لیے بدلیں |
-| `OPENCREATOR_CODEX_BIN` | `codex` | Codex CLI کی قابلِ اجرا فائل کا راستہ |
+| `VISHNUCREATOR_DATA_DIR` | `.runtime` | Vishnu Creator ڈیٹابیس، Run، منسلکات اور زیرِ انتظام ورک اسپیس |
+| `VISHNUCREATOR_GATEWAY_ORIGIN` | `https://www.vishnu-creator.ai` | لاگ اِن، رکنیت، کریڈٹ اور آفیشل ماڈل خدمات کا Gateway؛ مقامی Gateway کے لیے بدلیں |
+| `VISHNUCREATOR_CODEX_BIN` | `codex` | Codex CLI کی قابلِ اجرا فائل کا راستہ |
 | `CODEX_HOME` | `~/.codex` | Codex سیشن، ترتیب، Skills، MCP اور Profiles کا مستند ذریعہ |
-| `OPENCREATOR_DEFAULT_CWD` | موجودہ کام کا فولڈر | daemon کا طے شدہ کام کا فولڈر |
-| `OPENCREATOR_DEFAULT_PROJECT_ROOT` | Runtime کی طے شدہ پالیسی | زیرِ انتظام منصوبوں کی جڑ؛ مقرر ہو تو اس کا `OpenCreator/` ذیلی فولڈر استعمال ہوتا ہے |
-| `OPENCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | طویل شیڈول میں Codex تھریڈ بدلنے کی ختم شدہ Run حد؛ `0` سے پیشگی تبدیلی بند |
+| `VISHNUCREATOR_DEFAULT_CWD` | موجودہ کام کا فولڈر | daemon کا طے شدہ کام کا فولڈر |
+| `VISHNUCREATOR_DEFAULT_PROJECT_ROOT` | Runtime کی طے شدہ پالیسی | زیرِ انتظام منصوبوں کی جڑ؛ مقرر ہو تو اس کا `Vishnu Creator/` ذیلی فولڈر استعمال ہوتا ہے |
+| `VISHNUCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | طویل شیڈول میں Codex تھریڈ بدلنے کی ختم شدہ Run حد؛ `0` سے پیشگی تبدیلی بند |
 
 مثال: Runtime ڈیٹا اور Codex ماحول الگ کریں:
 
 <div dir="ltr">
 
 ```bash
-OPENCREATOR_DATA_DIR=/path/to/opencreator-data \
+VISHNUCREATOR_DATA_DIR=/path/to/vishnucreator-data \
 CODEX_HOME=/path/to/codex-home \
 pnpm web:dev
 ```
@@ -658,7 +658,7 @@ Codex سیشن اور ترتیب `$CODEX_HOME` میں رہتے ہیں؛ `.runtim
 - تشخیص اور Run لاگ واپس یا برآمد کرنے سے پہلے حساس معلومات ہٹتی ہیں۔
 - Desktop میں ASAR سالمیت اور کوکی خفیہ کاری فعال؛ RunAsNode، `NODE_OPTIONS` اور Node CLI Inspector غیر فعال ہیں۔
 
-بیک اپ، بحالی، صفائی اور ری سیٹ کے مکمل مراحل [صارف رہنما](../opencreator-user-guide-and-troubleshooting.md) میں ہیں۔
+بیک اپ، بحالی، صفائی اور ری سیٹ کے مکمل مراحل [صارف رہنما](../vishnucreator-user-guide-and-troubleshooting.md) میں ہیں۔
 
 <a id="development"></a>
 
@@ -689,8 +689,8 @@ Desktop، Host Bridge، Runtime پراکسی یا مشترکہ فرنٹ اینڈ
 <div dir="ltr">
 
 ```bash
-OPENCREATOR_RUN_REAL_CODEX_SMOKE=1 \
-pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
+VISHNUCREATOR_RUN_REAL_CODEX_SMOKE=1 \
+pnpm --filter @vishnucreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 ```
 
 </div>
@@ -699,9 +699,9 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 ## دستاویزات
 
-- **استعمال:** [فوری آغاز](#quick-start) · [رہنما اور خرابیوں کا حل](../opencreator-user-guide-and-troubleshooting.md)
+- **استعمال:** [فوری آغاز](#quick-start) · [رہنما اور خرابیوں کا حل](../vishnucreator-user-guide-and-troubleshooting.md)
 - **ترقی اور توسیع:** [شراکت](../../CONTRIBUTING.md) · [ضابطۂ اخلاق](../../CODE_OF_CONDUCT.md) · [Skill شراکت](../contributing/skills-contributing.md) · [سانچے کی شراکت](../contributing/templates-contributing.md) · [Runtime API v1](../runtime-api-for-ui-v1.md) · [بصری اجزا کی رہنمائی](../visual-component-guidelines.md)
-- **دیکھ بھال اور ریلیز:** [Codex پر مبنی Runtime ڈیزائن](../2026-07-03-codex-native-agent-runtime-design.md) · [Desktop ریلیز عمل](../operations/opencreator-desktop-release-runbook.md) · [Windows Desktop ریلیز](../operations/opencreator-desktop-windows-release.md)
+- **دیکھ بھال اور ریلیز:** [Codex پر مبنی Runtime ڈیزائن](../2026-07-03-codex-native-agent-runtime-design.md) · [Desktop ریلیز عمل](../operations/vishnucreator-desktop-release-runbook.md) · [Windows Desktop ریلیز](../operations/vishnucreator-desktop-windows-release.md)
 
 <a id="translation-convention"></a>
 
@@ -713,9 +713,9 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 ## کمیونٹی
 
-<p><strong>کم از کم 105 ممالک اور خطوں</strong> کے GitHub صارفین نے OpenCreator کو اسٹار دیا ہے۔</p>
+<p><strong>کم از کم 105 ممالک اور خطوں</strong> کے GitHub صارفین نے Vishnu Creator کو اسٹار دیا ہے۔</p>
 
-<img src="../images/star-coverage-map.svg" alt="OpenCreator کو GitHub اسٹار دینے والے ممالک اور خطوں کا نقشہ" width="760" />
+<img src="../images/star-coverage-map.svg" alt="Vishnu Creator کو GitHub اسٹار دینے والے ممالک اور خطوں کا نقشہ" width="760" />
 
 <a id="the-crew"></a>
 
@@ -728,7 +728,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/wulien.svg" width="64" height="64" alt="wulien avatar" /><br /><a href="https://github.com/wulien">wulien</a><br />کوڈ اور خرابیوں کی اصلاح</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/dle-kb.svg" width="64" height="64" alt="DLe-kb avatar" /><br /><a href="https://github.com/DLe-kb">DLe-kb</a><br />تخلیقی سانچے</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/xiaheyuan.svg" width="64" height="64" alt="xiaheyuan avatar" /><br /><a href="https://github.com/xiaheyuan">xiaheyuan</a><br />ڈیزائن اور وسائل</td>
-    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/krillinai.svg" width="64" height="64" alt="krillinai avatar" /><br /><a href="https://github.com/krillinai">krillinai</a><br />Skills اور دستاویزات</td>
+    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/vishnuai.svg" width="64" height="64" alt="vishnuai avatar" /><br /><a href="https://github.com/vishnuai">vishnuai</a><br />Skills اور دستاویزات</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/hbxugang.svg" width="64" height="64" alt="hbxugang avatar" /><br /><a href="https://github.com/hbxugang">hbxugang</a><br />اداروں میں تنصیب</td>
   </tr>
 </table>
@@ -744,7 +744,7 @@ README کی یہ فہرست GitHub کے خودکار Contributors گراف سے 
   <a href="https://github.com/maranello-o"><img src="../images/contributors/maranello-o.svg" width="48" height="48" alt="maranello-o" /></a>
   <a href="https://github.com/wulien"><img src="../images/contributors/wulien.svg" width="48" height="48" alt="wulien" /></a>
   <a href="https://github.com/puji4810"><img src="../images/contributors/puji4810.svg" width="48" height="48" alt="puji4810" /></a>
-  <a href="https://github.com/krillinai"><img src="../images/contributors/krillinai.svg" width="48" height="48" alt="krillinai" /></a>
+  <a href="https://github.com/vishnuai"><img src="../images/contributors/vishnuai.svg" width="48" height="48" alt="vishnuai" /></a>
   <a href="https://github.com/PairZhu"><img src="../images/contributors/pairzhu.svg" width="48" height="48" alt="PairZhu" /></a>
   <a href="https://github.com/Mijaelx"><img src="../images/contributors/mijaelx.svg" width="48" height="48" alt="Mijaelx" /></a>
   <a href="https://github.com/OutisLi"><img src="../images/contributors/outisli.svg" width="48" height="48" alt="OutisLi" /></a>
@@ -760,7 +760,7 @@ README کی یہ فہرست GitHub کے خودکار Contributors گراف سے 
   <a href="https://github.com/DLe-kb"><img src="../images/contributors/dle-kb.svg" width="48" height="48" alt="DLe-kb" /></a>
   <a href="https://github.com/liupig"><img src="../images/contributors/liupig.svg" width="48" height="48" alt="liupig" /></a>
   <a href="https://github.com/alextavares" title="alextavares"><img src="../images/contributors/alextavares.svg" width="48" height="48" alt="alextavares" /></a>
-  <a href="https://github.com/krillinai/OpenCreator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
+  <a href="https://github.com/vishnuai/Vishnu Creator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
   <a href="https://github.com/mifan100g" title="mifan100g (米饭二两)"><img src="../images/contributors/mifan100g.svg" width="48" height="48" alt="mifan100g (米饭二两)" /></a>
   <a href="https://github.com/askalf"><img src="../images/contributors/askalf.svg" width="48" height="48" alt="askalf" /></a>
   <a href="https://github.com/Yi-111-a"><img src="../images/contributors/yi-111-a.svg" width="48" height="48" alt="Yi-111-a" /></a>
@@ -787,9 +787,9 @@ README کی یہ فہرست GitHub کے خودکار Contributors گراف سے 
 
 ## اسٹار کی تاریخ
 
-OpenCreator پہلے KrillinAI تھا۔ چارٹ میں نام بدلنے سے پہلے اور بعد کی پوری تاریخ ہے۔
+Vishnu Creator پہلے VishnuAI تھا۔ چارٹ میں نام بدلنے سے پہلے اور بعد کی پوری تاریخ ہے۔
 
-[![OpenCreator اسٹار کی تاریخ](https://api.star-history.com/svg?repos=krillinai/OpenCreator&type=date)](https://www.star-history.com/?type=date&repos=krillinai%2FOpenCreator)
+[![Vishnu Creator اسٹار کی تاریخ](https://api.star-history.com/svg?repos=vishnuai/Vishnu Creator&type=date)](https://www.star-history.com/?type=date&repos=vishnuai%2FVishnu Creator)
 
 <a id="related-projects"></a>
 
@@ -811,7 +811,7 @@ OpenCreator پہلے KrillinAI تھا۔ چارٹ میں نام بدلنے سے �
 
 <div align="center">
 
-**OpenCreator · مقامی تخلیق، مسلسل کام۔**
+**Vishnu Creator · مقامی تخلیق، مسلسل کام۔**
 
 </div>
 

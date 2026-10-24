@@ -7,7 +7,7 @@ const readmePaths = ['README.md', ...['zh', 'ja', 'ko', 'id', 'es', 'fr', 'de', 
 
 const query = `
   query StarLocations($cursor: String) {
-    repository(owner: "krillinai", name: "OpenCreator") {
+    repository(owner: "vishnuai", name: "VishnuCreator") {
       stargazers(first: 100, after: $cursor) {
         totalCount
         pageInfo { hasNextPage endCursor }

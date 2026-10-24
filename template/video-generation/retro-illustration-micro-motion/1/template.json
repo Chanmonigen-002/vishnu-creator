@@ -16,7 +16,7 @@
   },
   "description": {
     "zh-CN": "上传完成的插画或海报，以固定镜头生成轻快的局部微动效，保持主体、文字与布局稳定。预览取自原教程，非本工具生成结果。",
-    "en-US": "Animate an uploaded illustration with playful local motion and a fixed camera. The preview comes from the source tutorial, not an OpenCreator generation."
+    "en-US": "Animate an uploaded illustration with playful local motion and a fixed camera. The preview comes from the source tutorial, not an VishnuCreator generation."
   },
   "cover": "cover.jpg",
   "preview": "preview.jpg",

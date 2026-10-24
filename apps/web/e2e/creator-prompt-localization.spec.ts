@@ -1,4 +1,4 @@
-import type { CreatorJob, CreatorPresetListResponse } from '@opencreator/protocol';
+import type { CreatorJob, CreatorPresetListResponse } from '@vishnucreator/protocol';
 import { test, expect } from './fixtures/runtime.js';
 
 test('模板提示词在 Browser/Desktop Bridge 下按语言显示并完整带入任务', async ({ browser, runtime }, testInfo) => {
@@ -13,12 +13,12 @@ test('模板提示词在 Browser/Desktop Bridge 下按语言显示并完整带�
     if (platform === 'desktop') {
       await page.addInitScript(() => {
         const success = { ok: true as const };
-        Object.defineProperty(window, 'opencreatorDesktop', {
+        Object.defineProperty(window, 'vishnucreatorDesktop', {
           configurable: true,
           value: {
             kind: 'desktop',
             readAppVersion: async () => '3.2.2',
-            readConnectionConfig: async () => ({ baseUrl: '/.opencreator/runtime' }),
+            readConnectionConfig: async () => ({ baseUrl: '/.vishnucreator/runtime' }),
             subscribeConnectionConfig: () => () => undefined,
             restartRuntime: async () => success,
             selectCodexPath: async () => success,

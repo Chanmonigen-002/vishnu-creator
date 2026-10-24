@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import type { CreatorArtifact, CreatorJob, CreatorJson } from '@opencreator/protocol';
+import type { CreatorArtifact, CreatorJob, CreatorJson } from '@vishnucreator/protocol';
 import type { CreatorRepository } from '../repository.js';
 import type { StickmanShot, StickmanShotSpec } from './contracts.js';
 import {

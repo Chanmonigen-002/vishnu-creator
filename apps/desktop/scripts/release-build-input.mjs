@@ -17,8 +17,8 @@ const releaseOnlyFiles = new Set([
   'apps/desktop/test/release-assets.test.mjs',
   'apps/desktop/test/release-build-input.test.mjs',
   'apps/desktop/test/release-workflow.test.mjs',
-  'docs/operations/opencreator-desktop-release-runbook.md',
-  'docs/operations/opencreator-desktop-windows-release.md'
+  'docs/operations/vishnucreator-desktop-release-runbook.md',
+  'docs/operations/vishnucreator-desktop-windows-release.md'
 ]);
 
 export function isReleaseOnlyPath(path) {

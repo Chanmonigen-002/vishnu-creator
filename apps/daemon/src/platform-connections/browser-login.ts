@@ -47,7 +47,7 @@ export async function openWindowsYouTubeLogin(input: { root: string; signal: Abo
   });
   return {
     profile: { id: createHash('sha256').update(directory).digest('hex').slice(0, 24), browser: 'chrome',
-      label: 'Chrome · OpenCreator', directory: join(directory, 'Default'), preferred: true },
+      label: 'Chrome · VishnuCreator', directory: join(directory, 'Default'), preferred: true },
     exited,
     async close(signal) {
       // 每次关闭前按完整用户目录重新确认归属，绝不请求关闭用户的普通 Chrome。

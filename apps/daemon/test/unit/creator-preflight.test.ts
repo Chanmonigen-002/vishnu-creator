@@ -2,7 +2,7 @@ import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createDefaultCreatorServicesConfig, type CreatorJob, type CreatorJson } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type CreatorJob, type CreatorJson } from '@vishnucreator/protocol';
 import { createCreatorPreflight, CreatorPreflightError } from '../../src/creator/preflight.js';
 import { createImageGenerationTemplate } from '../../src/creator/templates/image-generation.js';
 import { createVideoDownloadTemplate } from '../../src/creator/templates/video-download.js';
@@ -10,7 +10,7 @@ import { createStickmanVideoTemplate } from '../../src/creator/templates/stickma
 import { createCoverTemplate } from '../../src/creator/templates/cover.js';
 import { createSmartDubbingTemplate } from '../../src/creator/templates/smart-dubbing.js';
 import { createVideoTranslationTemplate } from '../../src/creator/templates/video-translation.js';
-import { createKrillinCreatorServicesCapabilities } from '../../src/creator/krillin/capabilities.js';
+import { createVishnuCreatorServicesCapabilities } from '../../src/creator/vishnu/capabilities.js';
 import { createGatewayCreatorSource } from '../../src/gateway/creator-service-source.js';
 
 let root = '';
@@ -37,8 +37,8 @@ describe('creator preflight', () => {
       getLocalOrigin: () => 'http://127.0.0.1:39999'
     });
     const result = await createCreatorPreflight({ configStore: source.store,
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root,
-      jobsRoot: join(root, 'jobs'), executorIds: ['krillinai'], validateRuntimeAssets: false
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root,
+      jobsRoot: join(root, 'jobs'), executorIds: ['vishnuai'], validateRuntimeAssets: false
     }).check(fakeJob('video-translation', { sourceType: 'file', sourceLanguage: 'hi', officialModels: { transcription: selected } }), createVideoTranslationTemplate().stages.find(stage => stage.id === 'subtitle')!);
     expect(result.blocked.some(item => item.id === 'transcription-timestamps')).toBe(selected === 'text-only');
     expect(result.warning).toContainEqual(expect.objectContaining({ id: 'transcription-language-unknown', executionMode: 'remote' }));
@@ -53,7 +53,7 @@ describe('creator preflight', () => {
       job.state.importedSourceSubtitleId = 'source-srt';
       job.artifacts = [{ id: 'source-srt', jobId: job.id, kind: 'source_subtitle', version: 1, status: 'completed', path, scopeKey: null, inputFingerprint: null, sha256: null, sourceArtifactIds: [], metadata: {}, createdAt: job.createdAt }];
     }
-    const result = await createCreatorPreflight({ configStore: { read: async () => config }, readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root, jobsRoot: join(root, 'jobs'), executorIds: ['krillinai'], validateRuntimeAssets: false }).check(job, createVideoTranslationTemplate().stages.find(stage => stage.id === 'subtitle')!);
+    const result = await createCreatorPreflight({ configStore: { read: async () => config }, readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root, jobsRoot: join(root, 'jobs'), executorIds: ['vishnuai'], validateRuntimeAssets: false }).check(job, createVideoTranslationTemplate().stages.find(stage => stage.id === 'subtitle')!);
     expect(result.blocked.some(item => item.id === 'transcription-language')).toBe(route === 'file');
     expect(result.warning.some(item => item.id === 'transcription-language')).toBe(route === 'platform');
     if (route === 'srt' || route === 'import') expect([...result.ready, ...result.warning, ...result.blocked].some(item => item.id.startsWith('transcription-'))).toBe(false);
@@ -72,8 +72,8 @@ describe('creator preflight', () => {
     const job = fakeJob('video-translation', { sourceType: 'subtitle', sourceUrl: 'https://www.bilibili.com/video/BV18E421w7bf', preferPlatformCaptions: false });
     const get = vi.fn();
     const preflight = createCreatorPreflight({ configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'),
-      resourceRoot: root, jobsRoot: join(root, 'jobs'), executorIds: ['krillinai'],
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'),
+      resourceRoot: root, jobsRoot: join(root, 'jobs'), executorIds: ['vishnuai'],
       validateRuntimeAssets: false, videoMetadataService: { get }
     });
     const stage = createVideoTranslationTemplate().stages.find(stage => stage.id === 'subtitle')!;
@@ -102,8 +102,8 @@ describe('creator preflight', () => {
       scopeKey: null, inputFingerprint: null, sha256: null, sourceArtifactIds: [], metadata: {}, createdAt: job.createdAt }];
     const validateOfficialModel = vi.fn(async () => {});
     const result = await createCreatorPreflight({ configStore: source.store, validateOfficialModel,
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root,
-      jobsRoot: join(root, 'jobs'), executorIds: ['krillinai'], validateRuntimeAssets: false
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root,
+      jobsRoot: join(root, 'jobs'), executorIds: ['vishnuai'], validateRuntimeAssets: false
     }).check(job, createVideoTranslationTemplate().stages.find(stage => stage.id === 'subtitle')!);
     expect(result.blocked).toEqual([]);
     expect(validateOfficialModel).toHaveBeenCalledExactlyOnceWith('text', 'official-text');
@@ -120,7 +120,7 @@ describe('creator preflight', () => {
       if (denied) throw Object.assign(new Error('unavailable'), { code: 'invalid_model' });
     });
     const result = await createCreatorPreflight({ configStore: source.store, validateOfficialModel,
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root,
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root,
       jobsRoot: join(root, 'jobs'), executorIds: ['image'], validateRuntimeAssets: false
     }).check(fakeJob('image-generation', { provider: 'openai', prompt: 'Draw a circle', officialModels: { image: 'task-image' } }), createImageGenerationTemplate().stages[0]!);
     expect(validateOfficialModel).toHaveBeenCalledWith('image', 'task-image');
@@ -143,7 +143,7 @@ describe('creator preflight', () => {
     });
     const result = await createCreatorPreflight({ configStore: source.store,
       readConfigForJob: id => source.runForJob(id, `preflight:${id}`, () => source.store.read()),
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root,
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root,
       jobsRoot: join(root, 'jobs'), executorIds: ['image'], validateRuntimeAssets: false
     }).check(job, createImageGenerationTemplate().stages[0]!);
     expect(result.canStart).toBe(true);
@@ -159,7 +159,7 @@ describe('creator preflight', () => {
     });
     const job = fakeJob('smart-dubbing', { text: 'hello', speed: 1, ...(style ? { style } : {}) });
     const result = await createCreatorPreflight({ configStore: source.store,
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root,
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root,
       jobsRoot: join(root, 'jobs'), executorIds: ['smart-dubbing'], validateRuntimeAssets: false
     }).check(job, createSmartDubbingTemplate().stages[0]!);
     expect(result.blocked.map(item => item.id)).not.toContain('tts-style-capability');
@@ -174,7 +174,7 @@ describe('creator preflight', () => {
     });
     const job = fakeJob('stickman-video', { provider: 'gemini' });
     job.artifacts = ['character_reference', 'style_reference'].map((kind, i) => ({ id: `ref-${i}`, jobId: job.id, kind, version: 1, scopeKey: null, inputFingerprint: null, sourceArtifactIds: [], path: join(root, `${i}.png`), status: 'completed', metadata: {}, sha256: 'hash', producerStageRunId: null, createdAt: job.createdAt, updatedAt: job.updatedAt }));
-    const result = await createCreatorPreflight({ configStore: source.store, readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root, jobsRoot: join(root, 'jobs'), validateRuntimeAssets: false }).check(job, createStickmanVideoTemplate().stages.find(stage => stage.executor === 'stickman-image')!);
+    const result = await createCreatorPreflight({ configStore: source.store, readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root, jobsRoot: join(root, 'jobs'), validateRuntimeAssets: false }).check(job, createStickmanVideoTemplate().stages.find(stage => stage.executor === 'stickman-image')!);
     expect(result.blocked.some(item => item.id === 'reference-image-count')).toBe(maxReferences < 2);
   });
   it.each(['reference', 'speech-style'])('blocks unverified official %s before executing', async feature => {
@@ -188,14 +188,14 @@ describe('creator preflight', () => {
       ? fakeJob('image-generation', { provider: 'openai', prompt: 'draw', referenceImageArtifactId: 'reference' })
       : fakeJob('smart-dubbing', { text: 'hello', style: 'professional', speed: 1 });
     const template = feature === 'reference' ? createImageGenerationTemplate() : createSmartDubbingTemplate();
-    const result = await createCreatorPreflight({ configStore: source.store, readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root, jobsRoot: join(root, 'jobs'), validateRuntimeAssets: false }).check(job, template.stages[0]!);
+    const result = await createCreatorPreflight({ configStore: source.store, readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'), resourceRoot: root, jobsRoot: join(root, 'jobs'), validateRuntimeAssets: false }).check(job, template.stages[0]!);
     expect(result.blocked.map(item => item.id)).toContain(feature === 'reference' ? 'reference-image-capability' : 'tts-style-capability');
   });
   it.each(['openai', 'codex-native'])('blocks missing reference input for %s before starting a task', async provider => {
     root = await mkdtemp(join(tmpdir(), 'creator-preflight-reference-'));
     const check = createCreatorPreflight({
       configStore: { read: async () => createDefaultCreatorServicesConfig() },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'),
       resourceRoot: root, jobsRoot: join(root, 'jobs'), executorIds: ['image'], validateRuntimeAssets: false
     });
     const job = fakeJob('image-generation', { provider, prompt: '以上传的人物照片为唯一主体，生成复古海报', referenceImageArtifactId: 'missing-artifact' });
@@ -210,7 +210,7 @@ describe('creator preflight', () => {
     const stage = createStickmanVideoTemplate().stages.find(candidate => candidate.id === 'render-clean')!;
     const result = await createCreatorPreflight({
       configStore: { read: async () => createDefaultCreatorServicesConfig() },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'),
       resourceRoot: root, jobsRoot: join(root, 'jobs'), ffprobePath: '/fixture/ffprobe',
       executorIds: ['stickman-remotion'], remotionComponent: { status }
     }).check(fakeJob('stickman-video', {}), stage);
@@ -233,7 +233,7 @@ describe('creator preflight', () => {
       parts: [1, 2, 3].map(index => ({ index, title: `Lesson ${index}` })) }));
     const preflight = createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'),
       resourceRoot: join(root, 'runtime'), jobsRoot: join(root, 'jobs'),
       executorIds: ['download'], validateRuntimeAssets: false, videoMetadataService: { get }
     });
@@ -251,9 +251,9 @@ describe('creator preflight', () => {
       sourceUrl: `https://www.bilibili.com/video/BV18E421w7bf${part === undefined ? '' : `?p=${part}`}` });
     const result = await createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'),
       resourceRoot: join(root, 'runtime'), jobsRoot: join(root, 'jobs'),
-      executorIds: ['krillinai'], validateRuntimeAssets: false,
+      executorIds: ['vishnuai'], validateRuntimeAssets: false,
       videoMetadataService: { get: async () => ({ platform: 'bilibili', title: 'Course',
         parts: [1, 2, 3].map(index => ({ index, title: `Lesson ${index}` })) }) }
     }).check(job, createVideoTranslationTemplate().stages.find(stage => stage.id === 'subtitle')!);
@@ -271,7 +271,7 @@ describe('creator preflight', () => {
     const job = fakeJob('image-generation', { provider: 'openai', prompt: 'test' });
     const result = await createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('win32', 'x64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('win32', 'x64'),
       resourceRoot: join(root, 'runtime'),
       jobsRoot: join(root, 'jobs'),
       executorIds: ['image']
@@ -291,7 +291,7 @@ describe('creator preflight', () => {
     const job = fakeJob('video-download', { sourceUrl: 'https://youtu.be/example' });
     const result = await createCreatorPreflight({
       configStore: { read: async () => createDefaultCreatorServicesConfig() },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('win32', 'x64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('win32', 'x64'),
       resourceRoot: join(root, 'runtime'),
       jobsRoot: join(root, 'jobs'),
       executorIds: ['download'],
@@ -313,7 +313,7 @@ describe('creator preflight', () => {
     let settled = false;
     const checking = createCreatorPreflight({
       configStore: { read: async () => createDefaultCreatorServicesConfig() },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('win32', 'x64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('win32', 'x64'),
       resourceRoot: join(root, 'runtime'),
       jobsRoot: join(root, 'jobs'),
       executorIds: ['download'],
@@ -361,7 +361,7 @@ describe('creator preflight', () => {
 
     const result = await createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('win32', 'x64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('win32', 'x64'),
       resourceRoot: join(root, 'runtime'),
       jobsRoot: join(root, 'jobs'),
       executorIds: ['image']
@@ -379,7 +379,7 @@ describe('creator preflight', () => {
     const stage = createStickmanVideoTemplate().stages.find(candidate => candidate.id === 'images')!;
     const result = await createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('win32', 'x64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('win32', 'x64'),
       resourceRoot: join(root, 'runtime'),
       jobsRoot: join(root, 'jobs'),
       executorIds: ['stickman-image'],
@@ -399,7 +399,7 @@ describe('creator preflight', () => {
     config.image.provider = 'codex-native';
     const result = await createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'),
       resourceRoot: root, jobsRoot: join(root, 'jobs'), validateRuntimeAssets: false,
       ...(available === undefined ? {} : { readCodexImageStatus: async () => ({ authentication: 'chatgpt' as const, ready: false, executionMode: null, message: 'Runtime 不支持原生生图' }) })
     }).check(fakeJob('image-generation', { provider: 'codex-native', prompt: 'test' }), createImageGenerationTemplate().stages[0]!);
@@ -412,7 +412,7 @@ describe('creator preflight', () => {
     const config = createDefaultCreatorServicesConfig();
     const result = await createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'),
       resourceRoot: root, jobsRoot: join(root, 'jobs'), validateRuntimeAssets: false,
       readCodexImageStatus: async () => ({ authentication: 'api_key', ready: true, executionMode: 'api', message: '接口需支持图片生成' })
     }).check(fakeJob('image-generation', { provider: 'codex-native', prompt: 'test' }), createImageGenerationTemplate().stages[0]!);
@@ -431,7 +431,7 @@ describe('creator preflight', () => {
     if (blockedId === 'image-provider') config.image.provider = 'openai';
     const result = await createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('win32', 'x64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('win32', 'x64'),
       resourceRoot: join(root, 'runtime'),
       jobsRoot: join(root, 'jobs'),
       executorIds: [executor]
@@ -445,7 +445,7 @@ describe('creator preflight', () => {
     const stage = createCoverTemplate().stages.find(candidate => candidate.id === 'analyze-source')!;
     const result = await createCreatorPreflight({
       configStore: { read: async () => createDefaultCreatorServicesConfig() },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('win32', 'x64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('win32', 'x64'),
       resourceRoot: join(root, 'runtime'),
       jobsRoot: join(root, 'jobs'),
       executorIds: ['cover-analysis']
@@ -461,7 +461,7 @@ describe('creator preflight', () => {
     const stage = createSmartDubbingTemplate().stages.find(candidate => candidate.id === 'tts')!;
     const preflight = createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('win32', 'x64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('win32', 'x64'),
       resourceRoot: join(root, 'runtime'),
       jobsRoot: join(root, 'jobs'),
       executorIds: ['smart-dubbing'],
@@ -484,10 +484,10 @@ describe('creator preflight', () => {
     const stage = createVideoTranslationTemplate().stages.find(candidate => candidate.id === 'subtitle')!;
     const result = await createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('win32', 'x64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('win32', 'x64'),
       resourceRoot: join(root, 'runtime'),
       jobsRoot: join(root, 'jobs'),
-      executorIds: ['krillinai'],
+      executorIds: ['vishnuai'],
       validateRuntimeAssets: false
     }).check(fakeJob('video-translation', {
       sourceType: 'file',
@@ -506,10 +506,10 @@ describe('creator preflight', () => {
     const stage = createVideoTranslationTemplate().stages.find(candidate => candidate.id === 'subtitle')!;
     const result = await createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'),
       resourceRoot: join(root, 'runtime'),
       jobsRoot: join(root, 'jobs'),
-      executorIds: ['krillinai'],
+      executorIds: ['vishnuai'],
       validateRuntimeAssets: false
     }).check(fakeJob('video-translation', {
       sourceType: 'url',
@@ -563,7 +563,7 @@ describe('creator preflight', () => {
 
     const result = await createCreatorPreflight({
       configStore: { read: async () => config },
-      readCapabilities: () => createKrillinCreatorServicesCapabilities('win32', 'x64'),
+      readCapabilities: () => createVishnuCreatorServicesCapabilities('win32', 'x64'),
       resourceRoot: join(root, 'runtime'),
       jobsRoot: join(root, 'jobs'),
       executorIds: ['image']

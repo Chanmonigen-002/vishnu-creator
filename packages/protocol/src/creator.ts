@@ -1,5 +1,5 @@
 import type { SandboxMode } from './api.js';
-import type { OpenCreatorIssue } from './issues.js';
+import type { VishnuCreatorIssue } from './issues.js';
 
 export const creatorJobStatuses = [
   'draft',
@@ -292,7 +292,7 @@ export type CreatorJob = {
   artifacts: CreatorArtifact[];
   providerRequests: CreatorProviderRequest[];
   activities: CreatorActivity[];
-  issues?: OpenCreatorIssue[];
+  issues?: VishnuCreatorIssue[];
   createdAt: string;
   updatedAt: string;
 };
@@ -482,8 +482,8 @@ export type AgentContextEnvelope = {
     createdAt: string;
   }>;
   allowedActions: string[];
-  focusedIssue: OpenCreatorIssue | null;
-  issues: OpenCreatorIssue[];
+  focusedIssue: VishnuCreatorIssue | null;
+  issues: VishnuCreatorIssue[];
 };
 
 export type CreatorHostScope = {

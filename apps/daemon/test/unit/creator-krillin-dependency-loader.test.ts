@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { describe, expect, it } from 'vitest';
 import { createHash } from 'node:crypto';
 import { createServer } from 'node:http';
@@ -7,13 +7,13 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import {
   configuredOrDownloadedFile,
-  createKrillinDependencyLoader,
+  createVishnuDependencyLoader,
   promoteDependencyPath
-} from '../../src/creator/krillin/dependency-loader.js';
+} from '../../src/creator/vishnu/dependency-loader.js';
 
-describe('KrillinAI on-demand dependency loader', () => {
+describe('VishnuAI on-demand dependency loader', () => {
   it('reports actual downloaded bytes and HTTP content length before verifying the file', async () => {
-    const root = await mkdtemp(join(tmpdir(), 'opencreator-download-progress-'));
+    const root = await mkdtemp(join(tmpdir(), 'vishnucreator-download-progress-'));
     const content = Buffer.alloc(128 * 1024, 'model');
     const server = createServer((_request, response) => {
       response.writeHead(200, { 'Content-Length': content.length });
@@ -58,7 +58,7 @@ describe('KrillinAI on-demand dependency loader', () => {
   });
 
   it('does not enable Windows x64 Whisper.cpp on ARM64', async () => {
-    const loader = createKrillinDependencyLoader({ root: '/tmp/whispercpp', platform: 'win32', arch: 'arm64' });
+    const loader = createVishnuDependencyLoader({ root: '/tmp/whispercpp', platform: 'win32', arch: 'arm64' });
     const config = createDefaultCreatorServicesConfig();
     config.transcription.provider = 'whisper.cpp';
     expect(loader.capabilities().transcription.providers.find(value => value.provider === 'whisper.cpp')?.available).toBe(false);
@@ -67,8 +67,8 @@ describe('KrillinAI on-demand dependency loader', () => {
 
   it('does not prepare WhisperKit when OpenAI is selected without an API key', async () => {
     let installs = 0;
-    const loader = createKrillinDependencyLoader({
-      root: '/tmp/opencreator-test-dependencies',
+    const loader = createVishnuDependencyLoader({
+      root: '/tmp/vishnucreator-test-dependencies',
       platform: 'darwin',
       arch: 'arm64',
       whisperKitInstaller: {
@@ -92,8 +92,8 @@ describe('KrillinAI on-demand dependency loader', () => {
   });
 
   it('reports capabilities for the loader Runtime', () => {
-    const loader = createKrillinDependencyLoader({
-      root: '/tmp/opencreator-test-dependencies',
+    const loader = createVishnuDependencyLoader({
+      root: '/tmp/vishnucreator-test-dependencies',
       platform: 'darwin',
       arch: 'arm64'
     });
@@ -114,8 +114,8 @@ describe('KrillinAI on-demand dependency loader', () => {
     let installed = false;
     let installs = 0;
     const phases: string[] = [];
-    const loader = createKrillinDependencyLoader({
-      root: '/tmp/opencreator-test-dependencies',
+    const loader = createVishnuDependencyLoader({
+      root: '/tmp/vishnucreator-test-dependencies',
       platform: 'darwin',
       arch: 'arm64',
       whisperKitInstaller: {
@@ -153,8 +153,8 @@ describe('KrillinAI on-demand dependency loader', () => {
 
   it('rejects WhisperKit on unsupported platforms without installing anything', async () => {
     let installs = 0;
-    const loader = createKrillinDependencyLoader({
-      root: '/tmp/opencreator-test-dependencies',
+    const loader = createVishnuDependencyLoader({
+      root: '/tmp/vishnucreator-test-dependencies',
       platform: 'linux',
       arch: 'x64',
       whisperKitInstaller: {
@@ -181,8 +181,8 @@ describe('KrillinAI on-demand dependency loader', () => {
     const installed = new Set<string>();
     const installs: string[] = [];
     const phases: string[] = [];
-    const loader = createKrillinDependencyLoader({
-      root: 'C:\\opencreator-test-dependencies',
+    const loader = createVishnuDependencyLoader({
+      root: 'C:\\vishnucreator-test-dependencies',
       platform: 'win32',
       arch: 'x64',
       whisperCppInstaller: {
@@ -223,8 +223,8 @@ describe('KrillinAI on-demand dependency loader', () => {
   it('passes large-v3-turbo through the dependency loader', async () => {
     let installed = false;
     let selectedModel = '';
-    const loader = createKrillinDependencyLoader({
-      root: 'C:\\opencreator-test-dependencies', platform: 'win32', arch: 'x64',
+    const loader = createVishnuDependencyLoader({
+      root: 'C:\\vishnucreator-test-dependencies', platform: 'win32', arch: 'x64',
       whisperCppInstaller: {
         async isInstalled() { return installed; },
         async install(input) {
@@ -243,8 +243,8 @@ describe('KrillinAI on-demand dependency loader', () => {
   });
 
   it('does not accept a large-v3-turbo install that fails post-install verification', async () => {
-    const loader = createKrillinDependencyLoader({
-      root: 'C:\\opencreator-test-dependencies', platform: 'win32', arch: 'x64',
+    const loader = createVishnuDependencyLoader({
+      root: 'C:\\vishnucreator-test-dependencies', platform: 'win32', arch: 'x64',
       whisperCppInstaller: {
         async isInstalled() { return false; },
         async install() {}
@@ -263,8 +263,8 @@ describe('KrillinAI on-demand dependency loader', () => {
 
   it('rejects Whisper.cpp outside Windows x64 without installing anything', async () => {
     let installs = 0;
-    const loader = createKrillinDependencyLoader({
-      root: '/tmp/opencreator-test-dependencies',
+    const loader = createVishnuDependencyLoader({
+      root: '/tmp/vishnucreator-test-dependencies',
       platform: 'win32',
       arch: 'arm64',
       whisperCppInstaller: {

@@ -2,8 +2,8 @@
 
 <h1>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="../images/OpenCreator_logo_vector_dark.svg" />
-    <img src="../images/OpenCreator_logo_vector.svg" alt="OpenCreator" width="380" />
+    <source media="(prefers-color-scheme: dark)" srcset="../images/Vishnu Creator_logo_vector_dark.svg" />
+    <img src="../images/Vishnu Creator_logo_vector.svg" alt="Vishnu Creator" width="380" />
   </picture>
   <br />
   Рабочее пространство ИИ с открытым исходным кодом и Skills для авторов
@@ -11,16 +11,16 @@
 
 <p>Объедините визуальные инструменты для творчества, повторно используемые Skills и Agents для сценариев, видео, изображений, озвучки, аватаров, перевода и монтажа — всё в одном рабочем пространстве.</p>
 
-<p><strong>Ранее OpenCreator назывался KrillinAI.</strong></p>
+<p><strong>Ранее Vishnu Creator назывался VishnuAI.</strong></p>
 
-<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="OpenCreator (ранее KrillinAI): репозиторий дня № 1 на Trendshift" width="250" height="55" /></a>
+<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="Vishnu Creator (ранее VishnuAI): репозиторий дня № 1 на Trendshift" width="250" height="55" /></a>
 
 [English](../../README.md) | [简体中文](../zh/README.md) | [日本語](../ja/README.md) | [한국어](../ko/README.md) | [Bahasa Indonesia](../id/README.md) | [Español](../es/README.md) | [Français](../fr/README.md) | [Deutsch](../de/README.md) | [Português](../pt/README.md) | **Русский** | [العربية](../ar/README.md) | [ภาษาไทย](../th/README.md) | [Türkçe](../tr/README.md) | [हिन्दी](../hi/README.md) | [বাংলা](../bn/README.md) | [اردو](../ur/README.md) | [Tiếng Việt](../vi/README.md) | [Filipino](../fil/README.md)
 
-[![GitHub Stars](https://badgen.net/github/stars/krillinai/OpenCreator?icon=github&label=Stars&color=EAB308)](https://github.com/krillinai/OpenCreator/stargazers)
+[![GitHub Stars](https://badgen.net/github/stars/vishnuai/Vishnu Creator?icon=github&label=Stars&color=EAB308)](https://github.com/vishnuai/Vishnu Creator/stargazers)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Bilibili](https://img.shields.io/badge/dynamic/json?label=Bilibili&query=%24.data.follower&suffix=%E7%B2%89%E4%B8%9D&url=https%3A%2F%2Fapi.bilibili.com%2Fx%2Frelation%2Fstat%3Fvmid%3D242124650&logo=bilibili&color=00A1D6&labelColor=FE7398&logoColor=FFFFFF)](https://space.bilibili.com/242124650)
-[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/krillinai/OpenCreator)
+[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/vishnuai/Vishnu Creator)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/fUNvbqDaw)
 [![Группа QQ](https://img.shields.io/badge/QQ%20群-754069680-green?logo=tencent-qq)](https://qm.qq.com/q/W4YC0PLMeA)
 
@@ -28,13 +28,13 @@
 
 </div>
 
-![Рабочее пространство Agent в OpenCreator](../images/opencreator-home-en.png)
+![Рабочее пространство Agent в Vishnu Creator](../images/vishnucreator-home-en.png)
 
 ## Обзор проекта
 
-OpenCreator создан для отдельных пользователей и команд, которые хотят выполнять творческие задачи и разработку локально. Вместо повторной реализации цикла Agent он использует Codex CLI как движок выполнения и дополняет его стабильным локальным Runtime, визуальным рабочим пространством и хостом Desktop.
+Vishnu Creator создан для отдельных пользователей и команд, которые хотят выполнять творческие задачи и разработку локально. Вместо повторной реализации цикла Agent он использует Codex CLI как движок выполнения и дополняет его стабильным локальным Runtime, визуальным рабочим пространством и хостом Desktop.
 
-OpenCreator предлагает два взаимосвязанных способа работы:
+Vishnu Creator предлагает два взаимосвязанных способа работы:
 
 - **Рабочее пространство для контента**: используйте визуальные инструменты и шаблоны для перевода и загрузки видео, создания обложек и изображений и других творческих задач.
 - **Диалог с Agent**: запускайте творческие задачи или задачи разработки и управляйте ими на естественном языке, организуйте диалоги по проектам, оставляйте Runs выполняться в фоновом режиме и управляйте подтверждениями, вложениями, файлами, Skills, MCP, расписаниями, уведомлениями, памятью и диагностикой в одном месте.
@@ -45,7 +45,7 @@ Web — единственная реализация фронтенда. Deskto
 
 - 🤖 **Нативная интеграция с Codex**: используйте цикл Agent, модели, рассуждения, вызовы инструментов, диалоги, Skills и MCP из Codex без поддержки второго движка выполнения.
 
-- 🚀 **Готовое приложение Desktop**: запускайте OpenCreator прямо из приложения Desktop со встроенным Codex CLI. Локальный Runtime запускается по запросу и автоматически подготавливает проект по умолчанию.
+- 🚀 **Готовое приложение Desktop**: запускайте Vishnu Creator прямо из приложения Desktop со встроенным Codex CLI. Локальный Runtime запускается по запросу и автоматически подготавливает проект по умолчанию.
 
 - ⚙️ **Обнаружение локальной конфигурации Codex**: при первом запуске Desktop проверяет существующие настройки и предлагает использовать действующий вход в ChatGPT или API-ключ. Другого поставщика моделей можно настроить в мастере запуска.
 
@@ -73,7 +73,7 @@ Web — единственная реализация фронтенда. Deskto
 
 Откройте Dashboard, чтобы переводить или загружать видео, генерировать обложки или изображения, создавать озвучивание с помощью Умного озвучивания или генерировать видео с Seedance.
 
-![Панель творческих инструментов OpenCreator](../images/product/opencreator-dashboard-en.png)
+![Панель творческих инструментов Vishnu Creator](../images/product/vishnucreator-dashboard-en.png)
 
 > Новые творческие инструменты добавляются постоянно.
 
@@ -115,7 +115,7 @@ Web — единственная реализация фронтенда. Deskto
 
 Начните работу по шаблону вместо того, чтобы составлять промпт и настраивать всё с нуля. Просматривайте подборку шаблонов по категориям, включая создание видео и дизайн изображений.
 
-В коллекции представлены шаблоны OpenCreator и независимых авторов. Для сторонних шаблонов на странице сведений указаны автор и ссылка на первоисточник.
+В коллекции представлены шаблоны Vishnu Creator и независимых авторов. Для сторонних шаблонов на странице сведений указаны автор и ссылка на первоисточник.
 
 Откройте шаблон, чтобы увидеть пример результата, промпт, настройки, теги, автора и первоисточник. Выберите **Использовать шаблон**, чтобы сразу начать работу, а затем измените входные данные под свою задачу.
 
@@ -123,23 +123,23 @@ Web — единственная реализация фронтенда. Deskto
 
 ## Skills
 
-Инструменты для творчества предоставляют визуальные элементы управления, а Skills — повторно используемые инструкции и рабочие процессы для Agent. Репозиторий OpenCreator содержит Skills для видеопроизводства; также поддерживается управление локальными Skills Codex.
+Инструменты для творчества предоставляют визуальные элементы управления, а Skills — повторно используемые инструкции и рабочие процессы для Agent. Репозиторий Vishnu Creator содержит Skills для видеопроизводства; также поддерживается управление локальными Skills Codex.
 
-Каталог [`skills/`](../../skills/) в репозитории содержит повторно используемые инструкции для Agents, работающих со встроенным KrillinAI CLI.
+Каталог [`skills/`](../../skills/) в репозитории содержит повторно используемые инструкции для Agents, работающих со встроенным VishnuAI CLI.
 
 | Skill | Возможности |
 | --- | --- |
-| [KrillinAI CLI](../../skills/krillinai-cli/SKILL.md) | Выбор команд, проверка конфигурации и интерпретация прогресса, манифестов, результатов и ошибок |
-| [Субтитры](../../skills/krillinai-subtitle/SKILL.md) | Загрузка субтитров с платформ или транскрибирование медиа, перевод и создание двуязычных либо коротких субтитров для вертикального видео |
-| [TTS](../../skills/krillinai-tts/SKILL.md) | Создание дубляжа на целевом языке из субтитров и, при необходимости, видео с дубляжом |
-| [Горизонтальный рендеринг](../../skills/krillinai-render-horizontal/SKILL.md) | Создание горизонтального видео с двуязычными субтитрами либо с дубляжом и субтитрами на целевом языке |
-| [Вертикальный рендеринг](../../skills/krillinai-render-vertical/SKILL.md) | Сборка вертикального видео с заголовками, двуязычными субтитрами или дубляжом |
-| [Обложка](../../skills/krillinai-cover/SKILL.md) | Генерация обложки по полному текстовому промпту и сохранение изображения и окончательного промпта |
-| [Планирование этапов](../../skills/krillinai-pipeline/SKILL.md) | Проверка многоэтапного плана результатов в режиме dry-run; выполнение реальной работы через Skills отдельных этапов |
+| [VishnuAI CLI](../../skills/vishnuai-cli/SKILL.md) | Выбор команд, проверка конфигурации и интерпретация прогресса, манифестов, результатов и ошибок |
+| [Субтитры](../../skills/vishnuai-subtitle/SKILL.md) | Загрузка субтитров с платформ или транскрибирование медиа, перевод и создание двуязычных либо коротких субтитров для вертикального видео |
+| [TTS](../../skills/vishnuai-tts/SKILL.md) | Создание дубляжа на целевом языке из субтитров и, при необходимости, видео с дубляжом |
+| [Горизонтальный рендеринг](../../skills/vishnuai-render-horizontal/SKILL.md) | Создание горизонтального видео с двуязычными субтитрами либо с дубляжом и субтитрами на целевом языке |
+| [Вертикальный рендеринг](../../skills/vishnuai-render-vertical/SKILL.md) | Сборка вертикального видео с заголовками, двуязычными субтитрами или дубляжом |
+| [Обложка](../../skills/vishnuai-cover/SKILL.md) | Генерация обложки по полному текстовому промпту и сохранение изображения и окончательного промпта |
+| [Планирование этапов](../../skills/vishnuai-pipeline/SKILL.md) | Проверка многоэтапного плана результатов в режиме dry-run; выполнение реальной работы через Skills отдельных этапов |
 
 ### Расширение собственными Skills
 
-OpenCreator поддерживает локальные Skills Codex, определённые в `SKILL.md`, поэтому можно добавлять собственные методы и рабочие процессы, не ограничиваясь фиксированными инструментами для творчества. Доступность зависит от активного Codex home и установленных Skills; для видео-Skills требуется настройка CLI и соответствующих сервисов. Наличие Skill в репозитории не означает автоматическую установку или включение всех внешних сервисов в приложение.
+Vishnu Creator поддерживает локальные Skills Codex, определённые в `SKILL.md`, поэтому можно добавлять собственные методы и рабочие процессы, не ограничиваясь фиксированными инструментами для творчества. Доступность зависит от активного Codex home и установленных Skills; для видео-Skills требуется настройка CLI и соответствующих сервисов. Наличие Skill в репозитории не означает автоматическую установку или включение всех внешних сервисов в приложение.
 
 ## Диалог и рабочее пространство движутся вместе
 
@@ -228,11 +228,11 @@ OpenCreator поддерживает локальные Skills Codex, опред
 
 ### Перевод видео
 
-Публичные примеры ниже были созданы, когда OpenCreator еще назывался KrillinAI. Они демонстрируют отработанный процесс выравнивания субтитров, перевода, озвучивания и создания вертикального видео, который рабочее пространство Перевода видео OpenCreator включает в более широкий процесс работы с Agent.
+Публичные примеры ниже были созданы, когда Vishnu Creator еще назывался VishnuAI. Они демонстрируют отработанный процесс выравнивания субтитров, перевода, озвучивания и создания вертикального видео, который рабочее пространство Перевода видео Vishnu Creator включает в более широкий процесс работы с Agent.
 
 Проект создал приведенный ниже файл субтитров из локального видео продолжительностью 46 минут за один запуск, без ручной корректировки. Опубликованный результат полностью покрывает видео, не содержит пересекающихся строк и отличается естественной сегментацией и высоким качеством перевода.
 
-![Пример выравнивания субтитров в OpenCreator](../images/examples/krillinai-subtitle-alignment.png)
+![Пример выравнивания субтитров в Vishnu Creator](../images/examples/vishnuai-subtitle-alignment.png)
 
 <table width="100%">
 <tr>
@@ -260,7 +260,7 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
 </tr>
 </table>
 
-> Эти примеры видео и изображение выравнивания субтитров были созданы, когда OpenCreator еще использовал название KrillinAI.
+> Эти примеры видео и изображение выравнивания субтитров были созданы, когда Vishnu Creator еще использовал название VishnuAI.
 
 ### Скачивание видео
 
@@ -283,37 +283,37 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
   </tr>
 </table>
 
-Доступность зависит от видео и региона; некоторым источникам могут потребоваться cookie платформы. OpenCreator не импортирует cookie браузера автоматически.
+Доступность зависит от видео и региона; некоторым источникам могут потребоваться cookie платформы. Vishnu Creator не импортирует cookie браузера автоматически.
 
-![Выбор формата в загрузчике видео OpenCreator](../images/examples/video-downloader-formats-and-subtitles-en.png)
+![Выбор формата в загрузчике видео Vishnu Creator](../images/examples/video-downloader-formats-and-subtitles-en.png)
 
 ### Генерация видео
 
 Создавайте видео с помощью ИИ по текстовому запросу или референсному изображению с Seedance. Настройте модель, соотношение сторон, разрешение и длительность, а затем просматривайте, повторно генерируйте или скачивайте каждую версию из рабочего пространства проекта.
 
-![Генерация видео в OpenCreator с Seedance](../images/examples/video-generation-seedance-en.png)
+![Генерация видео в Vishnu Creator с Seedance](../images/examples/video-generation-seedance-en.png)
 
 ### Анимация стикменов
 
-OpenCreator разработал эту коллекцию оригинальных персонажей совместно с художником [Harbor Hsia](https://www.behance.net/xiaheyuan1), автором проекта [Stickman на Behance](https://www.behance.net/gallery/254715463/Stickman). Встроенные персонажи сохраняют свои образы на протяжении создания анимации.
+Vishnu Creator разработал эту коллекцию оригинальных персонажей совместно с художником [Harbor Hsia](https://www.behance.net/xiaheyuan1), автором проекта [Stickman на Behance](https://www.behance.net/gallery/254715463/Stickman). Встроенные персонажи сохраняют свои образы на протяжении создания анимации.
 
-![Персонажи-стикмены OpenCreator, разработанные совместно с художниками](../images/examples/stick-figure-characters.webp)
+![Персонажи-стикмены Vishnu Creator, разработанные совместно с художниками](../images/examples/stick-figure-characters.webp)
 
 Превратите текст или контент YouTube в анимацию с проверкой сценария, озвучиванием, настройкой времени, раскадровкой, субтитрами, рендерингом и скачиваемым видео.
 
-![Пример кадра анимации стикменов в OpenCreator](../images/examples/stick-figure-animation-frame.jpg)
+![Пример кадра анимации стикменов в Vishnu Creator](../images/examples/stick-figure-animation-frame.jpg)
 
 ## Быстрый старт
 
 ### Установка приложения Desktop
 
-Загрузите установщик для macOS Apple Silicon, macOS Intel или Windows x64 из [последнего выпуска](https://github.com/krillinai/OpenCreator/releases/latest). Для Desktop не требуются Node.js и pnpm, Codex CLI входит в комплект. Для реальных задач с моделью нужен действующий вход в ChatGPT или настроенный API-ключ.
+Загрузите установщик для macOS Apple Silicon, macOS Intel или Windows x64 из [последнего выпуска](https://github.com/vishnuai/Vishnu Creator/releases/latest). Для Desktop не требуются Node.js и pnpm, Codex CLI входит в комплект. Для реальных задач с моделью нужен действующий вход в ChatGPT или настроенный API-ключ.
 
 При первом запуске Desktop запускает локальный Runtime, подготавливает проект по умолчанию и проверяет локальную конфигурацию Codex. Если найдены пригодные для работы данные входа или API-ключ и настройки модели, выберите **Использовать локальный Codex и продолжить**. В том же мастере запуска можно настроить другого поставщика моделей.
 
-![Настройка поставщика моделей при первом запуске OpenCreator Desktop](../images/product/opencreator-codex-setup.png)
+![Настройка поставщика моделей при первом запуске Vishnu Creator Desktop](../images/product/vishnucreator-codex-setup.png)
 
-После настройки введите запрос, чтобы начать задачу. При возникновении проблем см. [руководство пользователя](../opencreator-user-guide-and-troubleshooting.md).
+После настройки введите запрос, чтобы начать задачу. При возникновении проблем см. [руководство пользователя](../vishnucreator-user-guide-and-troubleshooting.md).
 
 ### Запуск Web из исходного кода
 
@@ -333,8 +333,8 @@ codex --version
 ```
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable
 pnpm install
 pnpm web:dev
@@ -367,9 +367,9 @@ pnpm desktop:dev
 | `pnpm desktop:package` | Исполняемый каталог для текущей платформы, предназначенный для локальной проверки |
 | `pnpm desktop:dist` | Установщик для текущей платформы |
 | `pnpm desktop:release` | Точка входа для упаковки официального релиза |
-| `pnpm --filter @opencreator/desktop verify:package` | Проверка существующего пакета Desktop |
+| `pnpm --filter @vishnucreator/desktop verify:package` | Проверка существующего пакета Desktop |
 
-При упаковке Desktop Web заново собирается из текущего рабочего пространства, записываются commit, dirty-состояние, платформа, архитектура и хеш Web, после чего `apps/web/dist` сравнивается с ресурсами, встроенными в приложение. При наличии различий упаковка завершается ошибкой. Информацию о подписывании, нотаризации, сборках Windows и требованиях к выпуску см. в [руководстве по выпуску Desktop](../operations/opencreator-desktop-release-runbook.md).
+При упаковке Desktop Web заново собирается из текущего рабочего пространства, записываются commit, dirty-состояние, платформа, архитектура и хеш Web, после чего `apps/web/dist` сравнивается с ресурсами, встроенными в приложение. При наличии различий упаковка завершается ошибкой. Информацию о подписывании, нотаризации, сборках Windows и требованиях к выпуску см. в [руководстве по выпуску Desktop](../operations/vishnucreator-desktop-release-runbook.md).
 
 ## Основные рабочие процессы
 
@@ -386,18 +386,18 @@ pnpm desktop:dev
 - Просматривайте маркетплейс Skills, историю установок и локально доступные Skills в центре плагинов.
 - Выберите Skill в поле ввода с помощью `/` или меню добавления, чтобы следующая задача выполнялась по его рабочему процессу.
 - MCP управляется через нативные команды и конфигурацию Codex, без поддержки второго движка выполнения.
-- OpenCreator по умолчанию использует активный `$CODEX_HOME`, поэтому перед изменением глобальных Skills или конфигурации MCP оцените последствия.
+- Vishnu Creator по умолчанию использует активный `$CODEX_HOME`, поэтому перед изменением глобальных Skills или конфигурации MCP оцените последствия.
 
 ### Расписания и выделенные потоки задач
 
-- Каждое расписание использует постоянный выделенный диалог OpenCreator.
+- Каждое расписание использует постоянный выделенный диалог Vishnu Creator.
 - Автоматические срабатывания, ручные запуски и последующие запросы пользователя повторно используют этот диалог и выполняются последовательно согласно политике `queue` или `skip`.
 - При удалении расписания его выделенный диалог архивируется, но существующие Runs, результаты и базовая история Codex сохраняются.
-- Ротация или восстановление базового потока Codex не изменяет запись задачи OpenCreator и маршрут страницы.
+- Ротация или восстановление базового потока Codex не изменяет запись задачи Vishnu Creator и маршрут страницы.
 
-## Структура системы OpenCreator
+## Структура системы Vishnu Creator
 
-OpenCreator рассматривает визуальное рабочее пространство и диалог с Agent как два интерфейса одной творческой задачи, а не как два отдельных рабочих процесса. Каждый творческий процесс моделируется как машина состояний: ввод исходных данных, настройка, генерация, проверка, изменение и экспорт становятся явными состояниями и событиями. Действия рабочего пространства и команды из диалога поступают в одну и ту же машину состояний, а текущий этап, конфигурация, прогресс, версии и результаты отображаются в обоих интерфейсах. Так рабочее пространство и диалог остаются синхронизированными без появления второго источника данных.
+Vishnu Creator рассматривает визуальное рабочее пространство и диалог с Agent как два интерфейса одной творческой задачи, а не как два отдельных рабочих процесса. Каждый творческий процесс моделируется как машина состояний: ввод исходных данных, настройка, генерация, проверка, изменение и экспорт становятся явными состояниями и событиями. Действия рабочего пространства и команды из диалога поступают в одну и ту же машину состояний, а текущий этап, конфигурация, прогресс, версии и результаты отображаются в обоих интерфейсах. Так рабочее пространство и диалог остаются синхронизированными без появления второго источника данных.
 
 Творческая работа итеративна, поэтому изменения не перезаписывают текущий результат. Каждое исправление или повторная генерация создает новую версию из существующего состояния рабочего процесса, сохраняя настройки и результаты предыдущих версий для просмотра, сравнения и дальнейшего улучшения.
 
@@ -433,7 +433,7 @@ OpenCreator рассматривает визуальное рабочее пр�
 +---------------------+  +---------------------+  +-------------------------+
 ```
 
-| Компонент OpenCreator | Назначение | Реализация |
+| Компонент Vishnu Creator | Назначение | Реализация |
 | --- | --- | --- |
 | Среда для творчества | Dashboard, творческие инструменты, диалог с Agent, настройки и файлы | `apps/web` · React 18 · Vite · TypeScript |
 | Ядро совместной работы | Синхронизирует этапы рабочего пространства, контекст диалога, прогресс, результаты и версии | Общее состояние процесса · `CreatorCollaborationPanel` · история версий |
@@ -456,7 +456,7 @@ OpenCreator рассматривает визуальное рабочее пр�
 ## Структура репозитория
 
 ```text
-OpenCreator/
+Vishnu Creator/
 ├── apps/
 │   ├── web/          # Единственная реализация React-фронтенда
 │   ├── daemon/       # Локальный Fastify Runtime и адаптер Codex
@@ -476,32 +476,32 @@ OpenCreator/
 
 Откройте **Настройки → Сервисы ИИ**, чтобы настроить поставщиков моделей, распознавания речи, аудио и изображений, используемых текущими рабочими пространствами. При подготовке будущих творческих инструментов могут появляться дополнительные категории сервисов. В каждой категории отображаются только поля, необходимые выбранному поставщику: Base URL, API Key, модель, прокси или специальные учетные данные.
 
-![Настройка API-ключей сервисов ИИ в OpenCreator](../images/product/opencreator-ai-services-en.png)
+![Настройка API-ключей сервисов ИИ в Vishnu Creator](../images/product/vishnucreator-ai-services-en.png)
 
 Учетные данные сохраняются через системное хранилище учетных данных локального Runtime и никогда не должны попадать в репозиторий. Некоторым локальным или системным поставщикам, например Edge TTS, API Key не требуется.
 
 ### Сторонние компоненты Runtime
 
-Откройте **Настройки → Сторонние компоненты**, чтобы просмотреть используемую версию yt-dlp nightly, встроенную в OpenCreator версию, ее источник и последний доступный выпуск. OpenCreator проверяет обновления каждые семь дней, но никогда не устанавливает их автоматически. Обновление запускается только явным действием пользователя, а текущая рабочая версия остается доступной, если загрузка, проверка или установка завершится с ошибкой.
+Откройте **Настройки → Сторонние компоненты**, чтобы просмотреть используемую версию yt-dlp nightly, встроенную в Vishnu Creator версию, ее источник и последний доступный выпуск. Vishnu Creator проверяет обновления каждые семь дней, но никогда не устанавливает их автоматически. Обновление запускается только явным действием пользователя, а текущая рабочая версия остается доступной, если загрузка, проверка или установка завершится с ошибкой.
 
-![Настройки сторонних компонентов OpenCreator](../images/product/opencreator-third-party-components-en.png)
+![Настройки сторонних компонентов Vishnu Creator](../images/product/vishnucreator-third-party-components-en.png)
 ### Переменные окружения Runtime
 
 Большинству пользователей переменные окружения не нужны. Используйте их, если требуется изолировать данные, указать определенный исполняемый файл Codex или задать собственный каталог управляемых проектов:
 
 | Переменная окружения | Значение по умолчанию | Назначение |
 | --- | --- | --- |
-| `OPENCREATOR_DATA_DIR` | `.runtime` | База данных OpenCreator, Runs, вложения и управляемые рабочие пространства |
-| `OPENCREATOR_CODEX_BIN` | `codex` | Путь к исполняемому файлу Codex CLI |
+| `VISHNUCREATOR_DATA_DIR` | `.runtime` | База данных Vishnu Creator, Runs, вложения и управляемые рабочие пространства |
+| `VISHNUCREATOR_CODEX_BIN` | `codex` | Путь к исполняемому файлу Codex CLI |
 | `CODEX_HOME` | `~/.codex` | Основной источник сессий, конфигурации, Skills, MCP и Profiles Codex |
-| `OPENCREATOR_DEFAULT_CWD` | Текущий рабочий каталог | Рабочий каталог daemon по умолчанию |
-| `OPENCREATOR_DEFAULT_PROJECT_ROOT` | Стандартная политика Runtime | Корневой каталог управляемых проектов; если задан, OpenCreator использует его дочерний каталог `OpenCreator/` |
-| `OPENCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | Порог количества завершенных Runs для ротации потока Codex длительного расписания; `0` отключает упреждающую ротацию |
+| `VISHNUCREATOR_DEFAULT_CWD` | Текущий рабочий каталог | Рабочий каталог daemon по умолчанию |
+| `VISHNUCREATOR_DEFAULT_PROJECT_ROOT` | Стандартная политика Runtime | Корневой каталог управляемых проектов; если задан, Vishnu Creator использует его дочерний каталог `Vishnu Creator/` |
+| `VISHNUCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | Порог количества завершенных Runs для ротации потока Codex длительного расписания; `0` отключает упреждающую ротацию |
 
 Например, чтобы изолировать и данные Runtime, и окружение Codex:
 
 ```bash
-OPENCREATOR_DATA_DIR=/path/to/opencreator-data \
+VISHNUCREATOR_DATA_DIR=/path/to/vishnucreator-data \
 CODEX_HOME=/path/to/codex-home \
 pnpm web:dev
 ```
@@ -523,11 +523,11 @@ pnpm web:dev
 
 - Daemon прослушивает только `127.0.0.1`; для всех API, кроме проверки состояния, требуется Bearer-токен.
 - Предпросмотр HTML по умолчанию отключает скрипты, навигацию и всплывающие окна и разрешает только контролируемые относительные ресурсы из того же рабочего пространства.
-- Для конфиденциальной памяти требуется повторное подтверждение. OpenCreator никогда не сохраняет неподтвержденные предложения автоматически и навсегда.
+- Для конфиденциальной памяти требуется повторное подтверждение. Vishnu Creator никогда не сохраняет неподтвержденные предложения автоматически и навсегда.
 - Конфиденциальные данные удаляются из диагностики и журналов Runs до их возврата или экспорта.
 - Пакеты Desktop включают проверку целостности ASAR и шифрование cookie, отключая RunAsNode, `NODE_OPTIONS` и Node CLI Inspector.
 
-Полные инструкции по резервному копированию, восстановлению, очистке и сбросу см. в [руководстве пользователя и справочнике по устранению неполадок](../opencreator-user-guide-and-troubleshooting.md).
+Полные инструкции по резервному копированию, восстановлению, очистке и сбросу см. в [руководстве пользователя и справочнике по устранению неполадок](../vishnucreator-user-guide-and-troubleshooting.md).
 
 ## Разработка
 
@@ -552,15 +552,15 @@ pnpm web:dev
 Smoke-тест с настоящим Codex по умолчанию отключен. Включите его явно:
 
 ```bash
-OPENCREATOR_RUN_REAL_CODEX_SMOKE=1 \
-pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
+VISHNUCREATOR_RUN_REAL_CODEX_SMOKE=1 \
+pnpm --filter @vishnucreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 ```
 
 ## Документация
 
-- **Использование OpenCreator:** [Быстрый старт](#быстрый-старт) · [Руководство пользователя и устранение неполадок](../opencreator-user-guide-and-troubleshooting.md)
+- **Использование Vishnu Creator:** [Быстрый старт](#быстрый-старт) · [Руководство пользователя и устранение неполадок](../vishnucreator-user-guide-and-troubleshooting.md)
 - **Разработка и расширение:** [Руководство для участников](../../CONTRIBUTING.md) · [Добавление Skill](../contributing/skills-contributing.md) · [Добавление шаблона](../contributing/templates-contributing.md) · [Runtime API v1](../runtime-api-for-ui-v1.md) · [Рекомендации по визуальным компонентам](../visual-component-guidelines.md)
-- **Поддержка и выпуск:** [Проектирование нативного для Codex Runtime](../2026-07-03-codex-native-agent-runtime-design.md) · [Руководство по выпуску Desktop](../operations/opencreator-desktop-release-runbook.md) · [Руководство по выпуску Desktop для Windows](../operations/opencreator-desktop-windows-release.md)
+- **Поддержка и выпуск:** [Проектирование нативного для Codex Runtime](../2026-07-03-codex-native-agent-runtime-design.md) · [Руководство по выпуску Desktop](../operations/vishnucreator-desktop-release-runbook.md) · [Руководство по выпуску Desktop для Windows](../operations/vishnucreator-desktop-windows-release.md)
 
 ## Правила перевода
 
@@ -568,9 +568,9 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 ## Сообщество
 
-<p>Пользователи GitHub как минимум из <strong>105 стран и регионов</strong> поставили OpenCreator звезду.</p>
+<p>Пользователи GitHub как минимум из <strong>105 стран и регионов</strong> поставили Vishnu Creator звезду.</p>
 
-<img src="../images/star-coverage-map.svg" alt="Карта мира с отмеченными странами и регионами пользователей GitHub, поставивших звезду OpenCreator" width="760" />
+<img src="../images/star-coverage-map.svg" alt="Карта мира с отмеченными странами и регионами пользователей GitHub, поставивших звезду Vishnu Creator" width="760" />
 
 ### Команда
 
@@ -581,7 +581,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/wulien.svg" width="64" height="64" alt="wulien avatar" /><br /><a href="https://github.com/wulien">wulien</a><br />Код и исправление ошибок</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/dle-kb.svg" width="64" height="64" alt="DLe-kb avatar" /><br /><a href="https://github.com/DLe-kb">DLe-kb</a><br />Шаблоны создания</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/xiaheyuan.svg" width="64" height="64" alt="xiaheyuan avatar" /><br /><a href="https://github.com/xiaheyuan">xiaheyuan</a><br />Дизайн и материалы</td>
-    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/krillinai.svg" width="64" height="64" alt="krillinai avatar" /><br /><a href="https://github.com/krillinai">krillinai</a><br />Skills и документация</td>
+    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/vishnuai.svg" width="64" height="64" alt="vishnuai avatar" /><br /><a href="https://github.com/vishnuai">vishnuai</a><br />Skills и документация</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/hbxugang.svg" width="64" height="64" alt="hbxugang avatar" /><br /><a href="https://github.com/hbxugang">hbxugang</a><br />Корпоративное развертывание</td>
   </tr>
 </table>
@@ -594,7 +594,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
   <a href="https://github.com/maranello-o"><img src="../images/contributors/maranello-o.svg" width="48" height="48" alt="maranello-o" /></a>
   <a href="https://github.com/wulien"><img src="../images/contributors/wulien.svg" width="48" height="48" alt="wulien" /></a>
   <a href="https://github.com/puji4810"><img src="../images/contributors/puji4810.svg" width="48" height="48" alt="puji4810" /></a>
-  <a href="https://github.com/krillinai"><img src="../images/contributors/krillinai.svg" width="48" height="48" alt="krillinai" /></a>
+  <a href="https://github.com/vishnuai"><img src="../images/contributors/vishnuai.svg" width="48" height="48" alt="vishnuai" /></a>
   <a href="https://github.com/PairZhu"><img src="../images/contributors/pairzhu.svg" width="48" height="48" alt="PairZhu" /></a>
   <a href="https://github.com/Mijaelx"><img src="../images/contributors/mijaelx.svg" width="48" height="48" alt="Mijaelx" /></a>
   <a href="https://github.com/OutisLi"><img src="../images/contributors/outisli.svg" width="48" height="48" alt="OutisLi" /></a>
@@ -610,7 +610,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
   <a href="https://github.com/DLe-kb"><img src="../images/contributors/dle-kb.svg" width="48" height="48" alt="DLe-kb" /></a>
   <a href="https://github.com/liupig"><img src="../images/contributors/liupig.svg" width="48" height="48" alt="liupig" /></a>
   <a href="https://github.com/alextavares" title="alextavares"><img src="../images/contributors/alextavares.svg" width="48" height="48" alt="alextavares" /></a>
-  <a href="https://github.com/krillinai/OpenCreator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
+  <a href="https://github.com/vishnuai/Vishnu Creator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
   <a href="https://github.com/mifan100g" title="mifan100g (米饭二两)"><img src="../images/contributors/mifan100g.svg" width="48" height="48" alt="mifan100g (米饭二两)" /></a>
   <a href="https://github.com/askalf"><img src="../images/contributors/askalf.svg" width="48" height="48" alt="askalf" /></a>
   <a href="https://github.com/Yi-111-a"><img src="../images/contributors/yi-111-a.svg" width="48" height="48" alt="Yi-111-a" /></a>
@@ -618,7 +618,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 ### Участие в разработке
 
-Помочь OpenCreator можно не только кодом:
+Помочь Vishnu Creator можно не только кодом:
 
 | Тип | Что предложить | Что подготовить | Куда отправить |
 | --- | --- | --- | --- |
@@ -632,20 +632,20 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 Как внести вклад:
 
-1. Опишите проблему, сценарий использования и ожидаемое поведение в [Issues](https://github.com/krillinai/OpenCreator/issues).
+1. Опишите проблему, сценарий использования и ожидаемое поведение в [Issues](https://github.com/vishnuai/Vishnu Creator/issues).
 2. Создайте отдельную ветку для функции или исправления от последней ветки разработки.
 3. Следуйте существующей архитектуре: реализуйте общие возможности продукта один раз в Web и Daemon, а нативные различия изолируйте за явными capabilities.
 4. Добавьте подходящие модульные, интеграционные или E2E-тесты для изменений поведения и перечислите в Pull Request как выполненные, так и пропущенные проверки.
 5. Никогда не добавляйте в commit `.runtime/`, локальные учетные данные, сессии Codex, кеши сборки и другие пользовательские данные.
 
-[contribute-issue]: https://github.com/krillinai/OpenCreator/issues
-[contribute-pr]: https://github.com/krillinai/OpenCreator/pulls
+[contribute-issue]: https://github.com/vishnuai/Vishnu Creator/issues
+[contribute-pr]: https://github.com/vishnuai/Vishnu Creator/pulls
 
 ## История Stars
 
-Ранее OpenCreator назывался KrillinAI. Этот график охватывает всю историю репозитория до и после переименования.
+Ранее Vishnu Creator назывался VishnuAI. Этот график охватывает всю историю репозитория до и после переименования.
 
-[![История Stars OpenCreator](https://api.star-history.com/svg?repos=krillinai/OpenCreator&type=date)](https://www.star-history.com/?type=date&repos=krillinai%2FOpenCreator)
+[![История Stars Vishnu Creator](https://api.star-history.com/svg?repos=vishnuai/Vishnu Creator&type=date)](https://www.star-history.com/?type=date&repos=vishnuai%2FVishnu Creator)
 
 ## Связанные проекты
 
@@ -665,6 +665,6 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 <div align="center">
 
-**OpenCreator · Создавайте локально, работайте непрерывно.**
+**Vishnu Creator · Создавайте локально, работайте непрерывно.**
 
 </div>

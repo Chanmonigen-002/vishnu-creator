@@ -1,6 +1,6 @@
 import { isDirectTransport } from '../gateway/supplier.js';
 import type Database from 'better-sqlite3';
-import type { CodexAvailabilityProbe, CodexRuntimeComponentReadiness } from '@opencreator/protocol';
+import type { CodexAvailabilityProbe, CodexRuntimeComponentReadiness } from '@vishnucreator/protocol';
 import cors from '@fastify/cors';
 import Fastify from 'fastify';
 import { existsSync, readFileSync } from 'node:fs';
@@ -42,20 +42,20 @@ import { publishCreatorArtifacts } from '../creator/artifact-publisher.js';
 import { createCreatorStageScheduler } from '../creator/stage-scheduler.js';
 import { createCreatorCommandDispatcher } from '../creator/command-dispatcher.js';
 import type { CreatorExecutor } from '../creator/executor.js';
-import { createKrillinExecutor } from '../creator/krillin/adapter.js';
-import { createKrillinDependencyLoader } from '../creator/krillin/dependency-loader.js';
-import { readKrillinRuntimeManifest, resolveInside } from '../creator/krillin/manifest.js';
+import { createVishnuExecutor } from '../creator/vishnu/adapter.js';
+import { createVishnuDependencyLoader } from '../creator/vishnu/dependency-loader.js';
+import { readVishnuRuntimeManifest, resolveInside } from '../creator/vishnu/manifest.js';
 import {
-  hasKrillinRuntimeVerificationWorker,
-  startKrillinRuntimeVerification
-} from '../creator/krillin/runtime-verifier.js';
-import { createKrillinTtsService } from '../creator/krillin/tts-service.js';
-import { createSubtitlePreviewService } from '../creator/krillin/subtitle-preview.js';
-import { createSubtitleRenderService } from '../creator/krillin/subtitle-render.js';
+  hasVishnuRuntimeVerificationWorker,
+  startVishnuRuntimeVerification
+} from '../creator/vishnu/runtime-verifier.js';
+import { createVishnuTtsService } from '../creator/vishnu/tts-service.js';
+import { createSubtitlePreviewService } from '../creator/vishnu/subtitle-preview.js';
+import { createSubtitleRenderService } from '../creator/vishnu/subtitle-render.js';
 import {
-  createKrillinCodexLlmGateway,
-  KRILLIN_LLM_ROUTE_PREFIX
-} from '../creator/krillin/codex-llm-gateway.js';
+  createVishnuCodexLlmGateway,
+  VISHNU_LLM_ROUTE_PREFIX
+} from '../creator/vishnu/codex-llm-gateway.js';
 import { createDownloadExecutor } from '../creator/download/executor.js';
 import { resolveYtDlpRuntime } from '../creator/yt-dlp/runtime.js';
 import {
@@ -152,7 +152,7 @@ import { createCodexRuntimeReadiness } from '../codex/runtime-readiness.js';
 import { createCodexProviderConfigService } from '../codex/provider-config.js';
 import {
   createFileCodexProviderCredentialStore,
-  createOpenCreatorCodexProviderCredentialStore,
+  createVishnuCreatorCodexProviderCredentialStore,
   readCodexProviderApiKey,
   type CodexProviderCredentialStore
 } from '../codex/provider-credential-store.js';
@@ -191,7 +191,7 @@ import { createCleanupService } from '../cleanup/service.js';
 import {
   createCreatorServicesConfigStoreWithTextModelFallback,
   createFileCreatorServicesConfigStore,
-  createOpenCreatorCreatorServicesConfigStore,
+  createVishnuCreatorCreatorServicesConfigStore,
   type CreatorServicesConfigStore
 } from '../creator-services/config-store.js';
 import { createLocalCodexTextModelDefaults } from '../creator-services/local-codex-defaults.js';
@@ -224,7 +224,7 @@ import { openRuntimeDatabase } from '../storage/database.js';
 import { createRunRepository, createThreadRepository } from '../storage/repositories.js';
 import { createThreadManager } from '../threads/manager.js';
 import { createTaskService } from '../tasks/service.js';
-import { createOpenCreatorSettingsStore } from '../settings/store.js';
+import { createVishnuCreatorSettingsStore } from '../settings/store.js';
 import { createDefaultRevealExecutor } from '../workspace-files/reveal.js';
 import { createWorkspaceFileService } from '../workspace-files/service.js';
 import {
@@ -272,7 +272,7 @@ import { registerThreadRoutes } from './routes.threads.js';
 import { registerWorkspaceFileRoutes } from './routes.workspace-files.js';
 import { registerVideoMetadataRoutes } from './routes.video-metadata.js';
 import { PlatformConnectionService } from '../platform-connections/service.js';
-import { supportedVideoSourcePlatform, gatewayModelReady } from '@opencreator/protocol';
+import { supportedVideoSourcePlatform, gatewayModelReady } from '@vishnucreator/protocol';
 import { registerPlatformConnectionRoutes } from './routes.platform-connections.js';
 
 export type BuildServerInput = {
@@ -312,7 +312,7 @@ export type BuildServerInput = {
   codexModelCatalog?: CodexModelCatalog;
   getCodexAvailabilityProbe?(): CodexAvailabilityProbe | undefined;
   onPrepareAvailabilityProbe?(prepare: () => ReturnType<typeof prepareOfficialRuntimeProbe>): void;
-  memoryHistoryReader?(threadId: string): { items: import('@opencreator/protocol').ThreadHistoryItem[] } | undefined;
+  memoryHistoryReader?(threadId: string): { items: import('@vishnucreator/protocol').ThreadHistoryItem[] } | undefined;
   creatorServicesConfigStore?: CreatorServicesConfigStore;
   videoMetadataService?: VideoMetadataService;
   codexProviderCredentialStore?: CodexProviderCredentialStore;
@@ -336,7 +336,7 @@ export type BuildServerInput = {
 };
 
 const ATTACHMENT_CLEANUP_INTERVAL_MS = 60 * 60 * 1000;
-const KRILLIN_VERIFICATION_BACKGROUND_DELAY_MS = 500;
+const VISHNU_VERIFICATION_BACKGROUND_DELAY_MS = 500;
 
 export async function buildServer(input: BuildServerInput) {
   const server = Fastify({
@@ -365,9 +365,9 @@ export async function buildServer(input: BuildServerInput) {
   const creatorDir = resolve(input.creatorDir ?? join(dataDir, 'creator'));
   const defaultManagedProjectRoot = join(
     input.defaultProjectRoot ?? join(homedir(), 'Documents'),
-    'OpenCreator'
+    'VishnuCreator'
   );
-  const openCreatorSettingsStore = createOpenCreatorSettingsStore(configFile, {
+  const vishnuCreatorSettingsStore = createVishnuCreatorSettingsStore(configFile, {
     defaultProjectRoot: defaultManagedProjectRoot,
     outputRoot: join(defaultManagedProjectRoot, 'Exports')
   });
@@ -411,7 +411,7 @@ export async function buildServer(input: BuildServerInput) {
     db,
     managedProjectRoot: defaultManagedProjectRoot,
     resolveManagedProjectRoot: () => (
-      openCreatorSettingsStore.readStorage().settings.defaultProjectRoot
+      vishnuCreatorSettingsStore.readStorage().settings.defaultProjectRoot
     )
   });
   const threadManager = createThreadManager({ db, dataDir, projectManager });
@@ -489,7 +489,7 @@ export async function buildServer(input: BuildServerInput) {
         ? createFileCreatorServicesConfigStore(
             join(dataDir, 'config', 'creator-services.json')
           )
-        : createOpenCreatorCreatorServicesConfigStore({
+        : createVishnuCreatorCreatorServicesConfigStore({
             configFile,
             credentialsFile: input.credentialsFile
           })
@@ -500,7 +500,7 @@ export async function buildServer(input: BuildServerInput) {
         ? createFileCodexProviderCredentialStore(
             join(dataDir, 'config', 'codex-provider.json')
           )
-        : createOpenCreatorCodexProviderCredentialStore(input.credentialsFile)
+        : createVishnuCreatorCodexProviderCredentialStore(input.credentialsFile)
     );
   const resolveCodexProviderApiKey = async (provider: {
     baseUrl: string;
@@ -528,7 +528,7 @@ export async function buildServer(input: BuildServerInput) {
         jobId: job.id,
         revision: job.revision,
         kind: 'issue_changed',
-        payload: JSON.parse(JSON.stringify({ issue })) as Record<string, import('@opencreator/protocol').CreatorJson>,
+        payload: JSON.parse(JSON.stringify({ issue })) as Record<string, import('@vishnucreator/protocol').CreatorJson>,
         createdAt: issue.lastOccurredAt
       });
     }
@@ -540,7 +540,7 @@ export async function buildServer(input: BuildServerInput) {
   const officialManagers = new Map<string, AppServerRuntimeManager>();
   let officialBindings: ReturnType<typeof createGatewayRuntimeBindings> | undefined;
   let officialRuntimeIdentity: string | undefined;
-  const gatewayOrigin = input.gatewayOrigin ?? process.env.OPENCREATOR_GATEWAY_ORIGIN;
+  const gatewayOrigin = input.gatewayOrigin ?? process.env.VISHNUCREATOR_GATEWAY_ORIGIN;
   const unavailable = async (): Promise<never> => { throw new GatewayError('services_not_ready'); };
   const readCommonProxy = async () => (await storedCreatorServicesConfigStore.read()).proxy;
   const gatewayClient: GatewayClient = gatewayOrigin ? createGatewayClient(gatewayOrigin, createOfficialFetch({ readProxy: readCommonProxy })) : {
@@ -637,7 +637,7 @@ export async function buildServer(input: BuildServerInput) {
   const runtimeTransport = input.runtimeTransport ?? 'app-server';
   const getAgentToolBaseUrl = () =>
     resolveListeningOrigin(server.server.address());
-  const krillinCodexLlmGateway = createKrillinCodexLlmGateway({
+  const vishnuCodexLlmGateway = createVishnuCodexLlmGateway({
     codexBin,
     codexHome,
     cwd: dataDir,
@@ -657,26 +657,26 @@ export async function buildServer(input: BuildServerInput) {
       '..',
       '..',
       'runtime',
-      'opencreator-runtime'
+      'vishnucreator-runtime'
     )
   };
   let creatorAgentBootstrap = bootstrapCreatorAgentRuntime(creatorAgentBootstrapInput);
   const codexRuntimeReadiness = createCodexRuntimeReadiness({
     client: codexControlClient,
-    mode: process.env.OPENCREATOR_CODEX_RUNTIME_MODE === 'external'
+    mode: process.env.VISHNUCREATOR_CODEX_RUNTIME_MODE === 'external'
       ? 'external'
       : 'bundled',
     version: capabilities.codexVersion.replace(/^codex-cli\s+/, ''),
-    commit: process.env.OPENCREATOR_CODEX_RUNTIME_MODE === 'external'
+    commit: process.env.VISHNUCREATOR_CODEX_RUNTIME_MODE === 'external'
       ? null
       : '758ef40f50c1a458425c7cfbf1eb12cbc07af0b0',
     binaryPath: codexBin,
     codexHome,
     cwd: dataDir,
     binary: readCodexBinaryReadiness(
-      process.env.OPENCREATOR_CODEX_RUNTIME_MODE === 'external'
+      process.env.VISHNUCREATOR_CODEX_RUNTIME_MODE === 'external'
         ? undefined
-        : process.env.OPENCREATOR_CODEX_RUNTIME_ROOT
+        : process.env.VISHNUCREATOR_CODEX_RUNTIME_ROOT
     ),
     checkToolServer: () => creatorAgentBootstrap.available
       ? { status: 'ready' }
@@ -719,7 +719,7 @@ export async function buildServer(input: BuildServerInput) {
     codexHome: localCodexHome,
     readGatewayConfig() {
       const baseUrl = resolveListeningOrigin(server.server.address());
-      return baseUrl === undefined ? undefined : krillinCodexLlmGateway.config(baseUrl);
+      return baseUrl === undefined ? undefined : vishnuCodexLlmGateway.config(baseUrl);
     }
   });
   const manualCreatorServicesConfigStore =
@@ -762,24 +762,24 @@ export async function buildServer(input: BuildServerInput) {
     presets: creatorPresetRegistry,
     creatorServicesConfig: creatorServicesConfigStore
   });
-  const creatorRuntimeRoot = process.env.OPENCREATOR_CREATOR_RUNTIME_ROOT
-    ?? join(runtimeDir, 'krillinai');
-  const krillinVerificationCachePath = join(
+  const creatorRuntimeRoot = process.env.VISHNUCREATOR_CREATOR_RUNTIME_ROOT
+    ?? join(runtimeDir, 'vishnuai');
+  const vishnuVerificationCachePath = join(
     dataDir,
     'runtime-verification',
-    'krillinai.json'
+    'vishnuai.json'
   );
-  let krillinVerificationTimer: NodeJS.Timeout | undefined;
-  let startKrillinVerification: (() => ReturnType<typeof startKrillinRuntimeVerification>) | undefined;
-  let ensureKrillinRuntimeReady = async () => {};
-  const krillinDependencyLoader = createKrillinDependencyLoader({
-    root: join(runtimeDir, 'krillinai', 'dependencies'),
+  let vishnuVerificationTimer: NodeJS.Timeout | undefined;
+  let startVishnuVerification: (() => ReturnType<typeof startVishnuRuntimeVerification>) | undefined;
+  let ensureVishnuRuntimeReady = async () => {};
+  const vishnuDependencyLoader = createVishnuDependencyLoader({
+    root: join(runtimeDir, 'vishnuai', 'dependencies'),
     ...(input.creatorRuntimePlatform === undefined
       ? {}
       : { platform: input.creatorRuntimePlatform }),
     ...(input.creatorRuntimeArch === undefined ? {} : { arch: input.creatorRuntimeArch })
   });
-  const krillinTtsService = createKrillinTtsService({
+  const vishnuTtsService = createVishnuTtsService({
     resourceRoot: creatorRuntimeRoot,
     workRoot: join(creatorJobsRoot, '.tts'),
     configStore: creatorServicesConfigStore,
@@ -788,12 +788,12 @@ export async function buildServer(input: BuildServerInput) {
     officialPreview: createOfficialVoicePreview({ origin: gatewayClient.origin,
       getState: () => gatewayAccount.peekState(),
       fetcher: createOfficialFetch({ readProxy: readCommonProxy }) }),
-    verificationCachePath: krillinVerificationCachePath,
-    ensureRuntimeReady: () => ensureKrillinRuntimeReady()
+    verificationCachePath: vishnuVerificationCachePath,
+    ensureRuntimeReady: () => ensureVishnuRuntimeReady()
   });
   const smartDubbingService = createSmartDubbingService({
     dataDir,
-    ttsService: krillinTtsService
+    ttsService: vishnuTtsService
   });
   const videoGenerationService = createVideoGenerationService({
     dataDir,
@@ -812,19 +812,19 @@ export async function buildServer(input: BuildServerInput) {
     dirname(fileURLToPath(import.meta.url)),
     '../../runtime/remotion-component.json'
   );
-  const stickmanRuntimeRoot = process.env.OPENCREATOR_STICKMAN_RUNTIME_ROOT
+  const stickmanRuntimeRoot = process.env.VISHNUCREATOR_STICKMAN_RUNTIME_ROOT
     ?? join(dataDir, 'creator-runtime', 'stickman');
   const developmentRemotionReleasePath = resolve(dirname(fileURLToPath(import.meta.url)), '../../../desktop/.pack/components/remotion-component.json');
-  const remotionReleasePath = process.env.OPENCREATOR_REMOTION_COMPONENT_MANIFEST
+  const remotionReleasePath = process.env.VISHNUCREATOR_REMOTION_COMPONENT_MANIFEST
     ?? (existsSync(packagedRemotionReleasePath) ? packagedRemotionReleasePath : developmentRemotionReleasePath);
   const remotionComponent = createRemotionComponentManager({
     root: stickmanRuntimeRoot,
     releasePath: remotionReleasePath,
-    archivePath: process.env.OPENCREATOR_REMOTION_COMPONENT_ARCHIVE,
-    developmentArchiveRoot: !existsSync(packagedRemotionReleasePath) && process.env.OPENCREATOR_RUNTIME_CHANNEL === 'development' ? dirname(remotionReleasePath) : undefined,
+    archivePath: process.env.VISHNUCREATOR_REMOTION_COMPONENT_ARCHIVE,
+    developmentArchiveRoot: !existsSync(packagedRemotionReleasePath) && process.env.VISHNUCREATOR_RUNTIME_CHANNEL === 'development' ? dirname(remotionReleasePath) : undefined,
     readProxy: async () => (await creatorServicesConfigStore.read()).proxy.trim()
   });
-  const packagedStickmanAssetsRoot = process.env.OPENCREATOR_STICKMAN_ASSETS_ROOT
+  const packagedStickmanAssetsRoot = process.env.VISHNUCREATOR_STICKMAN_ASSETS_ROOT
     ?? resolve(dirname(fileURLToPath(import.meta.url)), '../../runtime/stickman-assets');
   const packagedStickmanCatalog = join(packagedStickmanAssetsRoot, 'visual-assets', 'catalog.json');
   const developmentStickmanCatalog = resolve(
@@ -850,7 +850,7 @@ export async function buildServer(input: BuildServerInput) {
     ? createStickmanVisualAssetRegistry(stickmanVisualAssetOptions)
     : undefined;
   const creatorTesseractPath = [
-    process.env.OPENCREATOR_TESSERACT_PATH,
+    process.env.VISHNUCREATOR_TESSERACT_PATH,
     process.platform === 'win32' ? 'C:\\Program Files\\Tesseract-OCR\\tesseract.exe' : undefined,
     process.platform === 'win32' ? 'C:\\Program Files (x86)\\Tesseract-OCR\\tesseract.exe' : undefined
   ].find(candidate => candidate !== undefined && existsSync(candidate));
@@ -883,17 +883,17 @@ export async function buildServer(input: BuildServerInput) {
   let creatorYtDlpUpdateManager = input.creatorYtDlpUpdateManager;
   let getYtDlpRuntime: ((sourceUrl?: string) => ReturnType<typeof resolveYtDlpRuntime>) | undefined;
   try {
-    const runtimeManifest = readKrillinRuntimeManifest(creatorRuntimeRoot);
-    let runtimeVerification: ReturnType<typeof startKrillinRuntimeVerification> | undefined;
-    startKrillinVerification = () => {
-      if (krillinVerificationTimer !== undefined) {
-        clearTimeout(krillinVerificationTimer);
-        krillinVerificationTimer = undefined;
+    const runtimeManifest = readVishnuRuntimeManifest(creatorRuntimeRoot);
+    let runtimeVerification: ReturnType<typeof startVishnuRuntimeVerification> | undefined;
+    startVishnuVerification = () => {
+      if (vishnuVerificationTimer !== undefined) {
+        clearTimeout(vishnuVerificationTimer);
+        vishnuVerificationTimer = undefined;
       }
       if (runtimeVerification === undefined) {
-        runtimeVerification = startKrillinRuntimeVerification({
+        runtimeVerification = startVishnuRuntimeVerification({
           resourceRoot: creatorRuntimeRoot,
-          cachePath: krillinVerificationCachePath
+          cachePath: vishnuVerificationCachePath
         });
         void runtimeVerification.catch(error => {
           console.warn(`Creator runtime verification failed: ${formatError(error)}`);
@@ -901,8 +901,8 @@ export async function buildServer(input: BuildServerInput) {
       }
       return runtimeVerification;
     };
-    ensureKrillinRuntimeReady = async () => {
-      await startKrillinVerification!();
+    ensureVishnuRuntimeReady = async () => {
+      await startVishnuVerification!();
     };
     const executable = (pattern: RegExp) => {
       const resource = runtimeManifest.resources.find(candidate => (
@@ -940,14 +940,14 @@ export async function buildServer(input: BuildServerInput) {
       ? douyinConnection : youtubeConnection).authenticatedRuntime(creatorYtDlpUpdateManager?.getRuntime() ?? ytDlp);
     getCreatorYtDlpRuntime = getYtDlpRuntime;
     if (input.creatorExecutors === undefined) {
-      creatorExecutors.push(createKrillinExecutor({
+      creatorExecutors.push(createVishnuExecutor({
         resourceRoot: creatorRuntimeRoot,
         jobsRoot: creatorJobsRoot,
-        dependencyLoader: krillinDependencyLoader,
+        dependencyLoader: vishnuDependencyLoader,
         configStore: creatorServicesConfigStore,
         getYtDlpRuntime,
-        verificationCachePath: krillinVerificationCachePath,
-        ensureRuntimeReady: () => ensureKrillinRuntimeReady()
+        verificationCachePath: vishnuVerificationCachePath,
+        ensureRuntimeReady: () => ensureVishnuRuntimeReady()
       }));
     }
     if (
@@ -985,7 +985,7 @@ export async function buildServer(input: BuildServerInput) {
     if (input.creatorExecutors === undefined && creatorFfprobePath) {
       creatorExecutors.push(createStickmanAudioExecutor({
         configStore: creatorServicesConfigStore,
-        ttsService: krillinTtsService,
+        ttsService: vishnuTtsService,
         ledger: creatorProviderRequestLedger,
         ffprobePath: creatorFfprobePath
       }));
@@ -1016,7 +1016,7 @@ export async function buildServer(input: BuildServerInput) {
       configStore: creatorServicesConfigStore
     }));
     creatorExecutors.push(createSmartDubbingExecutor({
-      ttsService: krillinTtsService,
+      ttsService: vishnuTtsService,
       isOfficial: () => gatewayAccount.peekState().source === 'gateway'
     }));
     creatorExecutors.push(createImageExecutor({
@@ -1057,7 +1057,7 @@ export async function buildServer(input: BuildServerInput) {
     readCodexImageStatus,
     videoMetadataService,
     configStore: creatorServicesConfigStore,
-    readCapabilities: () => krillinDependencyLoader.capabilities(),
+    readCapabilities: () => vishnuDependencyLoader.capabilities(),
     resourceRoot: creatorRuntimeRoot,
     jobsRoot: creatorJobsRoot,
     ffmpegPath: creatorFfmpegPath,
@@ -1065,21 +1065,21 @@ export async function buildServer(input: BuildServerInput) {
     stickmanRuntimeRoot,
     remotionComponent,
     ...(getYtDlpRuntime === undefined ? {} : { getYtDlpRuntime }),
-    runtimeVerificationCachePath: krillinVerificationCachePath,
-    ensureRuntimeReady: () => ensureKrillinRuntimeReady(),
+    runtimeVerificationCachePath: vishnuVerificationCachePath,
+    ensureRuntimeReady: () => ensureVishnuRuntimeReady(),
     executorIds: creatorExecutors.map(executor => executor.id),
     validateRuntimeAssets: input.creatorExecutors === undefined
   });
   const creatorProjectCoverService = createCreatorProjectCoverService({
     jobsRoot: creatorJobsRoot,
-    ensureRuntimeReady: () => ensureKrillinRuntimeReady(),
+    ensureRuntimeReady: () => ensureVishnuRuntimeReady(),
     ...(creatorFfmpegPath === undefined ? {} : { ffmpegPath: creatorFfmpegPath })
   });
   const creatorSourceMediaProbe = input.creatorSourceMediaProbe
     ?? (creatorFfprobePath === undefined
       ? undefined
       : async (path: string) => {
-          await ensureKrillinRuntimeReady();
+          await ensureVishnuRuntimeReady();
           return await validateMediaFile(path, creatorFfprobePath!);
         });
   const creatorSourceUploadService = input.creatorSourceUploadService
@@ -1123,7 +1123,7 @@ export async function buildServer(input: BuildServerInput) {
           id: executor.id,
           supportsProcessPause: executor.supportsProcessPause,
           run: stage => gatewayCreatorSource!.runForJob(stage.job.id, stage.stageRun.id, () =>
-            ['download', 'krillinai', 'cover-analysis', 'wechat-article'].includes(executor.id)
+            ['download', 'vishnuai', 'cover-analysis', 'wechat-article'].includes(executor.id)
               ? youtubeConnection.withCookies(() => douyinConnection.withCookies(() => executor.run(stage)))
               : executor.run(stage))
         })),
@@ -1174,7 +1174,7 @@ export async function buildServer(input: BuildServerInput) {
               void publishCreatorArtifacts({
                 job: completedJob,
                 project,
-                outputRoot: openCreatorSettingsStore.readStorage().settings.outputRoot
+                outputRoot: vishnuCreatorSettingsStore.readStorage().settings.outputRoot
               }).catch(error => {
                 console.warn(`Creator artifact publication failed: ${formatError(error)}`);
               });
@@ -1388,7 +1388,7 @@ export async function buildServer(input: BuildServerInput) {
       persistentAppServerExecutor,
       codexThreadRotationRunThreshold:
         input.codexThreadRotationRunThreshold
-        ?? parseNonNegativeInteger(process.env.OPENCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD),
+        ?? parseNonNegativeInteger(process.env.VISHNUCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD),
       prepareThreadRotationContext: context =>
         memoryService.prepareThreadRotationContext(context),
       agentToolInjector,
@@ -1491,14 +1491,14 @@ export async function buildServer(input: BuildServerInput) {
       console.warn(`Background startup failed: ${formatError(error)}`);
     });
     if (
-      startKrillinVerification === undefined
-      || !hasKrillinRuntimeVerificationWorker()
+      startVishnuVerification === undefined
+      || !hasVishnuRuntimeVerificationWorker()
     ) return;
-    krillinVerificationTimer = setTimeout(() => {
-      krillinVerificationTimer = undefined;
-      void startKrillinVerification?.();
-    }, KRILLIN_VERIFICATION_BACKGROUND_DELAY_MS);
-    krillinVerificationTimer.unref();
+    vishnuVerificationTimer = setTimeout(() => {
+      vishnuVerificationTimer = undefined;
+      void startVishnuVerification?.();
+    }, VISHNU_VERIFICATION_BACKGROUND_DELAY_MS);
+    vishnuVerificationTimer.unref();
   });
 
   server.addHook('onClose', async () => {
@@ -1519,7 +1519,7 @@ export async function buildServer(input: BuildServerInput) {
 
     await capture(() => clearInterval(attachmentCleanupTimer));
     await capture(() => {
-      if (krillinVerificationTimer !== undefined) clearTimeout(krillinVerificationTimer);
+      if (vishnuVerificationTimer !== undefined) clearTimeout(vishnuVerificationTimer);
     });
     await capture(() => initialAttachmentCleanup);
     await capture(() => unsubscribeApprovalNotifications());
@@ -1528,7 +1528,7 @@ export async function buildServer(input: BuildServerInput) {
     await capture(() => appServerRuntimeManager?.close());
     await capture(() => creatorAppServerRuntimeManager?.close());
     await capture(() => stickmanContentRuntimeManager?.close());
-    await capture(() => krillinCodexLlmGateway.close());
+    await capture(() => vishnuCodexLlmGateway.close());
     await capture(() => codexSessionProvider.close());
     await capture(() => codexModelCatalog.close());
     await capture(() => codexControlClient.close());
@@ -1550,7 +1550,7 @@ export async function buildServer(input: BuildServerInput) {
   server.addHook('preHandler', async (request, reply) => {
     if (request.url === '/healthz') return;
     if (isAgentToolInternalRequest(request.url)) return;
-    if (request.url.startsWith(`${KRILLIN_LLM_ROUTE_PREFIX}/`)) return;
+    if (request.url.startsWith(`${VISHNU_LLM_ROUTE_PREFIX}/`)) return;
     await auth(request, reply);
   });
 
@@ -1614,7 +1614,7 @@ export async function buildServer(input: BuildServerInput) {
       contextBuilder: creatorAgentContextBuilder
     })
   });
-  await krillinCodexLlmGateway.register(server);
+  await vishnuCodexLlmGateway.register(server);
   if (input.agentToolsEnabled === true) {
     await registerAgentScheduleMcpRoute(server, {
       capabilities: agentCapabilityTokens,
@@ -1626,12 +1626,12 @@ export async function buildServer(input: BuildServerInput) {
     getBaseUrl: () => resolveListeningOrigin(server.server.address())
   });
   await registerCleanupRoutes(server, cleanupService);
-  await registerSettingsRoutes(server, openCreatorSettingsStore);
+  await registerSettingsRoutes(server, vishnuCreatorSettingsStore);
   await registerCreatorServicesRoutes(
     server,
     creatorServicesConfigStore,
-    () => krillinDependencyLoader.capabilities(),
-    krillinTtsService,
+    () => vishnuDependencyLoader.capabilities(),
+    vishnuTtsService,
     async () => {
       await videoTranslationWorkflow?.resumeConfiguredJobs();
       await coverWorkflow?.resumeConfiguredJobs();
@@ -1647,7 +1647,7 @@ export async function buildServer(input: BuildServerInput) {
   await gatewayCreatorSource.register(server);
   await registerSmartDubbingRoutes(server, smartDubbingService);
   await registerCreatorRuntimeRoutes(server, creatorYtDlpUpdateManager, {
-    loader: krillinDependencyLoader,
+    loader: vishnuDependencyLoader,
     remotion: remotionComponent,
     readConfig: () => creatorServicesConfigStore.read()
   });
@@ -1676,13 +1676,13 @@ export async function buildServer(input: BuildServerInput) {
     subtitlePreviewService: createSubtitlePreviewService({
       resourceRoot: creatorRuntimeRoot,
       workRoot: join(creatorJobsRoot, '.previews'),
-      ensureRuntimeReady: () => ensureKrillinRuntimeReady(),
+      ensureRuntimeReady: () => ensureVishnuRuntimeReady(),
       getYtDlpRuntime: () => getCreatorYtDlpRuntime?.()
     }),
     subtitleRenderService: createSubtitleRenderService({
       resourceRoot: creatorRuntimeRoot,
       workRoot: join(creatorJobsRoot, '.previews'),
-      ensureRuntimeReady: () => ensureKrillinRuntimeReady()
+      ensureRuntimeReady: () => ensureVishnuRuntimeReady()
     })
   });
   await registerAttachmentRoutes(server, attachmentService, {
@@ -1805,10 +1805,10 @@ function combineRunInjectors(
 async function readAllCodexHistory(
   provider: CodexSessionProvider,
   codexThreadId: string
-): Promise<import('@opencreator/protocol').ThreadHistoryItem[]> {
+): Promise<import('@vishnucreator/protocol').ThreadHistoryItem[]> {
   let cursor: string | undefined;
   const seenCursors = new Set<string>();
-  let items: import('@opencreator/protocol').ThreadHistoryItem[] = [];
+  let items: import('@vishnucreator/protocol').ThreadHistoryItem[] = [];
   do {
     const page = await provider.listTurns({
       codexThreadId,

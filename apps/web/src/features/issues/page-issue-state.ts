@@ -1,4 +1,4 @@
-import { isPublicErrorFacts, publicErrorCodeFromFailure, publicErrorKindForCode, safePublicErrorCode, sanitizePublicErrorFacts, type PublicErrorFacts, type OpenCreatorIssue } from '@opencreator/protocol';
+import { isPublicErrorFacts, publicErrorCodeFromFailure, publicErrorKindForCode, safePublicErrorCode, sanitizePublicErrorFacts, type PublicErrorFacts, type VishnuCreatorIssue } from '@vishnucreator/protocol';
 import { useCallback, useMemo, useState } from 'react';
 import { ApiClientError } from '../../runtime/errors.js';
 import {
@@ -9,20 +9,20 @@ import {
 } from './page-issue-hub.js';
 
 export type PageIssueState = {
-  issues: OpenCreatorIssue[];
+  issues: VishnuCreatorIssue[];
   captureOperationFailure(
     operationId: string,
     cause: unknown,
     fallbackMessage?: string,
     options?: { retryable?: boolean; risk?: 'normal' | 'paid' | 'overwrite' }
-  ): OpenCreatorIssue;
+  ): VishnuCreatorIssue;
   resolveOperation(operationId: string): void;
   dismissIssue(issueId: string): void;
   clearIssues(): void;
 };
 
 export function usePageIssueState(surface: string): PageIssueState {
-  const [byOperation, setByOperation] = useState<Record<string, OpenCreatorIssue>>({});
+  const [byOperation, setByOperation] = useState<Record<string, VishnuCreatorIssue>>({});
 
   const captureOperationFailure = useCallback((
     operationId: string,
@@ -83,7 +83,7 @@ export function normalizePageIssue(
   operationId: string,
   cause: unknown,
   fallbackMessage: string
-): OpenCreatorIssue {
+): VishnuCreatorIssue {
   if (cause instanceof ApiClientError && cause.issue !== undefined) {
     const issue = cause.issue;
     if (issue.scope.kind === 'creator-job') return issue;
@@ -150,7 +150,7 @@ export function normalizePageIssue(
   };
 }
 
-function mergeOccurrence(previous: OpenCreatorIssue | undefined, next: OpenCreatorIssue): OpenCreatorIssue {
+function mergeOccurrence(previous: VishnuCreatorIssue | undefined, next: VishnuCreatorIssue): VishnuCreatorIssue {
   if (previous === undefined || previous.fingerprint !== next.fingerprint) return next;
   return {
     ...next,

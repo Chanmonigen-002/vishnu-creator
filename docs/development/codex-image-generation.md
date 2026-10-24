@@ -29,9 +29,9 @@
 ## 定向验证
 
 ```sh
-pnpm --filter @opencreator/protocol build
-pnpm --filter @opencreator/daemon exec vitest run test/unit/codex-local-provider.test.ts test/unit/codex-argv.test.ts test/unit/codex-native-image.test.ts test/unit/image-generation-codex-native.test.ts test/unit/creator-preflight.test.ts test/integration/creator-services-api.test.ts test/integration/image-generation-api.test.ts test/integration/creator-image-generation.test.ts
-pnpm --filter @opencreator/web exec vitest run src/features/settings/CodexImageStatusNotice.test.tsx src/features/settings/CreatorServicesSettingsView.test.tsx src/features/dashboard/creator-panel-adapters.test.ts src/services/creator-services-service.test.ts
+pnpm --filter @vishnucreator/protocol build
+pnpm --filter @vishnucreator/daemon exec vitest run test/unit/codex-local-provider.test.ts test/unit/codex-argv.test.ts test/unit/codex-native-image.test.ts test/unit/image-generation-codex-native.test.ts test/unit/creator-preflight.test.ts test/integration/creator-services-api.test.ts test/integration/image-generation-api.test.ts test/integration/creator-image-generation.test.ts
+pnpm --filter @vishnucreator/web exec vitest run src/features/settings/CodexImageStatusNotice.test.tsx src/features/settings/CreatorServicesSettingsView.test.tsx src/features/dashboard/creator-panel-adapters.test.ts src/services/creator-services-service.test.ts
 ```
 
 自动测试使用模拟 Codex 子进程，覆盖认证分流、进度、产物、错误与取消，不构成真实 ChatGPT 账号生图验收。真实验收应在用户已经登录的 Runtime 上执行；不要替换用户当前的 API Key 配置来制造登录态测试。

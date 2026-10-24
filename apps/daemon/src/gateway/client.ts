@@ -1,5 +1,5 @@
 import { z } from 'zod/v3';
-import type { GatewayModel, GatewayConnectionDiagnostics } from '@opencreator/protocol';
+import type { GatewayModel, GatewayConnectionDiagnostics } from '@vishnucreator/protocol';
 import { isDirectTransport, isSupplierBase, supplierBases, type SupplierRegion } from './supplier.js';
 
 const tokenSchema = z.object({ accessToken: z.string().min(12), refreshToken: z.string().min(12), expiresIn: z.number().int().positive() });
@@ -73,7 +73,7 @@ export type GatewayClient = {
   cancelPendingRequests?(): void;
 };
 export class GatewayError extends Error {
-  constructor(readonly code: string, readonly status = 503, readonly diagnostics?: GatewayConnectionDiagnostics) { super('The OpenCreator gateway request did not complete'); }
+  constructor(readonly code: string, readonly status = 503, readonly diagnostics?: GatewayConnectionDiagnostics) { super('The VishnuCreator gateway request did not complete'); }
 }
 export function validateGatewayOrigin(origin: string) {
   const u = new URL(origin);
@@ -144,7 +144,7 @@ export function createGatewayClient(origin: string, fetcher: typeof fetch = fetc
   return {
     origin, request,
     cancelPendingRequests() { for (const controller of pendingRequests) controller.abort(); },
-    async startDevice() { return z.object({ attemptId: z.string().min(1), deviceSecret: z.string().min(12), authorizationUrl: z.string().url(), interval: z.number().positive(), expiresIn: z.number().positive() }).parse(await request('/api/v1/auth/device/start', '', { label: 'OpenCreator' })); },
+    async startDevice() { return z.object({ attemptId: z.string().min(1), deviceSecret: z.string().min(12), authorizationUrl: z.string().url(), interval: z.number().positive(), expiresIn: z.number().positive() }).parse(await request('/api/v1/auth/device/start', '', { label: 'VishnuCreator' })); },
     async pollDevice(attemptId, deviceSecret) { return tokenSchema.parse(await request('/api/v1/auth/device/token', '', { attemptId, deviceSecret })); },
     async cancelDevice(attemptId, deviceSecret) { await request('/api/v1/auth/device/cancel', '', { attemptId, deviceSecret }); },
     async refresh(refreshToken) { return tokenSchema.parse(await request('/api/v1/auth/refresh', '', { refreshToken })); },

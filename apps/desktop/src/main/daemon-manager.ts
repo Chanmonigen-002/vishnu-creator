@@ -108,7 +108,7 @@ export class DaemonManager extends EventEmitter<DaemonManagerEvents> {
       const child = utilityProcess.fork(input.entryPath, buildDaemonArguments(input), {
         cwd: input.cwd,
         env: buildDaemonEnvironment(input),
-        serviceName: 'OpenCreator Runtime',
+        serviceName: 'VishnuCreator Runtime',
         stdio: 'pipe'
       });
       this.child = child;
@@ -143,7 +143,7 @@ export class DaemonManager extends EventEmitter<DaemonManagerEvents> {
         if (handledBootstrapEvents.has(key)) return;
         handledBootstrapEvents.add(key);
         this.emit('bootstrap', event);
-        if (event.type === 'opencreator_daemon_bootstrap_error') {
+        if (event.type === 'vishnucreator_daemon_bootstrap_error') {
           fail(new DaemonStartError(
             event.code,
             event.message,
@@ -315,33 +315,33 @@ export function buildDaemonEnvironment(
 ): NodeJS.ProcessEnv {
   const env = { ...input.env };
   Object.assign(env, {
-    OPENCREATOR_HOME: input.appHome,
-    OPENCREATOR_MANAGED_PARENT_PID: String(process.pid),
-    OPENCREATOR_CODEX_BIN: input.codexBin,
-    OPENCREATOR_CODEX_VERSION: input.codexVersion,
+    VISHNUCREATOR_HOME: input.appHome,
+    VISHNUCREATOR_MANAGED_PARENT_PID: String(process.pid),
+    VISHNUCREATOR_CODEX_BIN: input.codexBin,
+    VISHNUCREATOR_CODEX_VERSION: input.codexVersion,
     ...(input.codexCommit === null
       ? {}
-      : { OPENCREATOR_CODEX_COMMIT: input.codexCommit }),
+      : { VISHNUCREATOR_CODEX_COMMIT: input.codexCommit }),
     CODEX_HOME: input.codexHome,
-    OPENCREATOR_LOCAL_CODEX_HOME: process.env.CODEX_HOME?.trim()
+    VISHNUCREATOR_LOCAL_CODEX_HOME: process.env.CODEX_HOME?.trim()
       || join(input.env.HOME || input.env.USERPROFILE || homedir(), '.codex'),
-    OPENCREATOR_DATA_DIR: input.dataDir,
+    VISHNUCREATOR_DATA_DIR: input.dataDir,
     ...(input.creatorRuntimeRoot === undefined
       ? {}
-      : { OPENCREATOR_CREATOR_RUNTIME_ROOT: input.creatorRuntimeRoot }),
+      : { VISHNUCREATOR_CREATOR_RUNTIME_ROOT: input.creatorRuntimeRoot }),
     ...(input.stickmanRuntimeRoot === undefined
       ? {}
-      : { OPENCREATOR_STICKMAN_RUNTIME_ROOT: input.stickmanRuntimeRoot }),
+      : { VISHNUCREATOR_STICKMAN_RUNTIME_ROOT: input.stickmanRuntimeRoot }),
     ...(input.codexRuntimeRoot === undefined
       ? {}
-      : { OPENCREATOR_CODEX_RUNTIME_ROOT: input.codexRuntimeRoot }),
+      : { VISHNUCREATOR_CODEX_RUNTIME_ROOT: input.codexRuntimeRoot }),
     ...(input.codexRuntimeMode === undefined
       ? {}
-      : { OPENCREATOR_CODEX_RUNTIME_MODE: input.codexRuntimeMode }),
-    OPENCREATOR_DEFAULT_CWD: input.defaultCwd,
-    OPENCREATOR_DEFAULT_PROJECT_ROOT: input.defaultProjectRoot,
-    OPENCREATOR_REQUIRE_CODEX_PROBE: input.requireProbe ? '1' : '0',
-    OPENCREATOR_CODEX_PROBE_VERIFIED: input.probeVerified ? '1' : '0'
+      : { VISHNUCREATOR_CODEX_RUNTIME_MODE: input.codexRuntimeMode }),
+    VISHNUCREATOR_DEFAULT_CWD: input.defaultCwd,
+    VISHNUCREATOR_DEFAULT_PROJECT_ROOT: input.defaultProjectRoot,
+    VISHNUCREATOR_REQUIRE_CODEX_PROBE: input.requireProbe ? '1' : '0',
+    VISHNUCREATOR_CODEX_PROBE_VERIFIED: input.probeVerified ? '1' : '0'
   });
   return env;
 }
@@ -421,14 +421,14 @@ export function parseDaemonOutputLine(line: string): ParsedDaemonLine {
   }
   if (!isRecord(parsed)) return { kind: 'ignored' };
   if (
-    parsed.type === 'opencreator_daemon_bootstrap'
+    parsed.type === 'vishnucreator_daemon_bootstrap'
     && typeof parsed.phase === 'string'
     && typeof parsed.at === 'string'
   ) {
     return { kind: 'bootstrap', event: parsed as DaemonBootstrapEvent };
   }
   if (
-    parsed.type === 'opencreator_daemon_bootstrap_error'
+    parsed.type === 'vishnucreator_daemon_bootstrap_error'
     && typeof parsed.code === 'string'
     && typeof parsed.message === 'string'
   ) {
@@ -462,8 +462,8 @@ export function parseDaemonParentMessage(
   const payload = unwrapProcessMessage(value);
   if (!isRecord(payload)) return { kind: 'ignored' };
   if (
-    payload.type === 'opencreator_daemon_bootstrap'
-    || payload.type === 'opencreator_daemon_bootstrap_error'
+    payload.type === 'vishnucreator_daemon_bootstrap'
+    || payload.type === 'vishnucreator_daemon_bootstrap_error'
   ) {
     const parsed = parseDaemonOutputLine(JSON.stringify(payload));
     return parsed.kind === 'bootstrap'
@@ -471,7 +471,7 @@ export function parseDaemonParentMessage(
       : { kind: 'ignored' };
   }
   if (
-    payload.type === 'opencreator_daemon_ready'
+    payload.type === 'vishnucreator_daemon_ready'
     && typeof payload.address === 'string'
     && typeof payload.token === 'string'
   ) {
@@ -561,7 +561,7 @@ function summarizeDaemonFailure(value: string): string | undefined {
 }
 
 function bootstrapEventKey(event: DaemonBootstrapEvent): string {
-  return event.type === 'opencreator_daemon_bootstrap_error'
+  return event.type === 'vishnucreator_daemon_bootstrap_error'
     ? `${event.type}:${event.at ?? ''}:${event.code}:${event.message}`
     : `${event.type}:${event.at}:${event.phase}`;
 }

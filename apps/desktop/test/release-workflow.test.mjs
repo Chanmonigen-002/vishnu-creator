@@ -12,10 +12,10 @@ const ciWorkflow = readFileSync(
 );
 
 describe('Desktop release workflow', () => {
-  it('uses OpenCreator as the release name', () => {
-    expect(releaseWorkflow).toContain('name: OpenCreator Release');
-    expect(releaseWorkflow).toContain('--title "OpenCreator $TAG"');
-    expect(releaseWorkflow).not.toContain('--title "KrillinAI $TAG"');
+  it('uses VishnuCreator as the release name', () => {
+    expect(releaseWorkflow).toContain('name: VishnuCreator Release');
+    expect(releaseWorkflow).toContain('--title "VishnuCreator $TAG"');
+    expect(releaseWorkflow).not.toContain('--title "VishnuAI $TAG"');
   });
 
   it('runs CI on demand, for pull requests, and for master pushes', () => {
@@ -66,7 +66,7 @@ describe('Desktop release workflow', () => {
     expect(releaseWorkflow).toContain('run: pnpm desktop:dist');
     expect(releaseWorkflow).not.toContain('secrets.WINDOWS_CERTIFICATE');
     expect(releaseWorkflow).toContain(
-      '"artifact":"opencreator-desktop-windows-x64-unsigned"'
+      '"artifact":"vishnucreator-desktop-windows-x64-unsigned"'
     );
     expect(releaseWorkflow).not.toContain('WINDOWS-UNSIGNED.txt');
   });
@@ -116,7 +116,7 @@ describe('Desktop release workflow', () => {
     expect(releaseWorkflow).toContain("inputs.target == 'all'");
     expect(releaseWorkflow).toContain('e2e:package:smoke');
     expect(releaseWorkflow).not.toContain("matrix.name == 'macos-arm64'");
-    expect(releaseWorkflow).toContain('opencreator-release-candidate-${{ steps.build-input.outputs.digest }}');
+    expect(releaseWorkflow).toContain('vishnucreator-release-candidate-${{ steps.build-input.outputs.digest }}');
   });
 
   it('promotes an immutable successful master candidate instead of rebuilding a tag', () => {
@@ -146,47 +146,47 @@ describe('Desktop release workflow', () => {
     expect(releaseWorkflow).toContain('TAG: ${{ needs.verify.outputs.release-tag }}');
     expect(releaseWorkflow).toContain('RELEASE_SHA: ${{ needs.verify.outputs.release-sha }}');
     expect(releaseWorkflow).toContain('"$GITHUB_SHA" "$RELEASE_SHA"');
-    expect(releaseWorkflow).toContain('pnpm install --filter @opencreator/daemon --frozen-lockfile --ignore-scripts');
+    expect(releaseWorkflow).toContain('pnpm install --filter @vishnucreator/daemon --frozen-lockfile --ignore-scripts');
     expect(releaseWorkflow).not.toContain('git tag -f');
     expect(releaseWorkflow).not.toContain('git push --force');
   });
 
   it('keeps build diagnostics separate from validated public release assets', () => {
     expect(releaseWorkflow).toContain(
-      'opencreator-desktop-build-manifest-${{ matrix.platform }}-${{ matrix.arch }}.json'
+      'vishnucreator-desktop-build-manifest-${{ matrix.platform }}-${{ matrix.arch }}.json'
     );
-    expect(releaseWorkflow).toContain('pattern: opencreator-desktop-*');
+    expect(releaseWorkflow).toContain('pattern: vishnucreator-desktop-*');
     expect(releaseWorkflow).toContain('merge-multiple: true');
     expect(releaseWorkflow).toContain('name: desktop-build-diagnostics-${{ matrix.name }}');
-    expect(releaseWorkflow).toContain('path: ${{ env.OPENCREATOR_DESKTOP_RELEASE_ASSETS }}/*');
-    expect(releaseWorkflow).toContain('pattern: krillinai-release-*');
-    expect(releaseWorkflow).toContain('path: ${{ env.OPENCREATOR_KRILLINAI_RELEASE_ASSETS }}/*');
+    expect(releaseWorkflow).toContain('path: ${{ env.VISHNUCREATOR_DESKTOP_RELEASE_ASSETS }}/*');
+    expect(releaseWorkflow).toContain('pattern: vishnuai-release-*');
+    expect(releaseWorkflow).toContain('path: ${{ env.VISHNUCREATOR_VISHNUAI_RELEASE_ASSETS }}/*');
     expect(releaseWorkflow).toContain('release-assets.mjs artifacts');
     expect(releaseWorkflow).not.toContain('apps/desktop/release/*.exe');
-    expect(releaseWorkflow).not.toContain('apps/desktop/release/krillinai-*');
+    expect(releaseWorkflow).not.toContain('apps/desktop/release/vishnuai-*');
     expect(releaseWorkflow).toContain('--verify-tag --draft');
     expect(releaseWorkflow).toContain('--draft=false --latest');
   });
 
-  it('publishes separate KrillinAI Server and CLI packages for desktop and Linux targets', () => {
-    expect(releaseWorkflow).toContain('run: pnpm krillinai:package');
+  it('publishes separate VishnuAI Server and CLI packages for desktop and Linux targets', () => {
+    expect(releaseWorkflow).toContain('run: pnpm vishnuai:package');
     expect(releaseWorkflow).toContain(
-      'OPENCREATOR_KRILLINAI_TARGET_PLATFORM: ${{ matrix.platform }}'
+      'VISHNUCREATOR_VISHNUAI_TARGET_PLATFORM: ${{ matrix.platform }}'
     );
     expect(releaseWorkflow).toContain(
-      'OPENCREATOR_KRILLINAI_TARGET_ARCH: ${{ matrix.arch }}'
+      'VISHNUCREATOR_VISHNUAI_TARGET_ARCH: ${{ matrix.arch }}'
     );
-    expect(releaseWorkflow).toContain('krillinai-linux-package:');
+    expect(releaseWorkflow).toContain('vishnuai-linux-package:');
     expect(releaseWorkflow).toContain('for arch in x64 arm64; do');
     expect(releaseWorkflow).toContain(
-      'node scripts/package-krillinai-release.mjs'
+      'node scripts/package-vishnuai-release.mjs'
     );
-    expect(releaseWorkflow).toContain('name: krillinai-release-linux');
-    const linuxJob = releaseWorkflow.split('\n  krillinai-linux-package:')[1].split('\n  candidate-ready:')[0];
-    const install = linuxJob.indexOf('pnpm install --filter @opencreator/daemon --frozen-lockfile --ignore-scripts');
+    expect(releaseWorkflow).toContain('name: vishnuai-release-linux');
+    const linuxJob = releaseWorkflow.split('\n  vishnuai-linux-package:')[1].split('\n  candidate-ready:')[0];
+    const install = linuxJob.indexOf('pnpm install --filter @vishnucreator/daemon --frozen-lockfile --ignore-scripts');
     expect(linuxJob).toContain('uses: pnpm/action-setup@v4');
     expect(install).toBeGreaterThan(0);
-    expect(install).toBeLessThan(linuxJob.indexOf('node scripts/package-krillinai-release.mjs'));
+    expect(install).toBeLessThan(linuxJob.indexOf('node scripts/package-vishnuai-release.mjs'));
   });
 
   it('invalidates the Desktop cache when Creator Runtime releases change', () => {

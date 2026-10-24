@@ -4,7 +4,7 @@ import { runStapler, submitAndWaitForNotarization } from '../scripts/apple-notar
 describe('Apple notarization tickets', () => {
   const connectionLost = {
     status: 68,
-    stdout: 'Processing: /tmp/OpenCreator.app',
+    stdout: 'Processing: /tmp/VishnuCreator.app',
     stderr: 'Error Domain=NSURLErrorDomain Code=-1005 "The network connection was lost."'
   };
 
@@ -13,10 +13,10 @@ describe('Apple notarization tickets', () => {
       .mockReturnValueOnce(connectionLost)
       .mockReturnValue({ status: 0, stdout: 'The action worked!' });
     const delay = vi.fn();
-    await runStapler(action, '/tmp/OpenCreator.app', { run, delay, logger: vi.fn() });
+    await runStapler(action, '/tmp/VishnuCreator.app', { run, delay, logger: vi.fn() });
     expect(run).toHaveBeenCalledTimes(2);
     expect(run).toHaveBeenLastCalledWith('xcrun', [
-      'stapler', action, '/tmp/OpenCreator.app'
+      'stapler', action, '/tmp/VishnuCreator.app'
     ], expect.objectContaining({ timeout: 120_000 }));
     expect(delay).toHaveBeenCalledExactlyOnceWith(15_000);
   });
@@ -24,7 +24,7 @@ describe('Apple notarization tickets', () => {
   it('stops after bounded retries and retains the final diagnostic', async () => {
     const run = vi.fn().mockReturnValue(connectionLost);
     const delay = vi.fn();
-    await expect(runStapler('staple', '/tmp/OpenCreator.dmg', {
+    await expect(runStapler('staple', '/tmp/VishnuCreator.dmg', {
       run, delay, logger: vi.fn()
     })).rejects.toThrow(/exit 68:[\s\S]*Processing:[\s\S]*network connection was lost/);
     expect(run).toHaveBeenCalledTimes(5);
@@ -39,7 +39,7 @@ describe('Apple notarization tickets', () => {
   ])('fails immediately for a permanent validation or tooling error: %j', async result => {
     const run = vi.fn().mockReturnValue(result);
     const delay = vi.fn();
-    await expect(runStapler('validate', '/tmp/OpenCreator.app', {
+    await expect(runStapler('validate', '/tmp/VishnuCreator.app', {
       run, delay, logger: vi.fn()
     })).rejects.toThrow();
     expect(run).toHaveBeenCalledOnce();
@@ -51,7 +51,7 @@ describe('Apple notarization tickets', () => {
       .mockReturnValueOnce({ status: null, error: Object.assign(new Error('Timed out'), { code: 'ETIMEDOUT' }) })
       .mockReturnValue({ status: 0 });
     const delay = vi.fn();
-    await runStapler('validate', '/tmp/OpenCreator.app', { run, delay, logger: vi.fn() });
+    await runStapler('validate', '/tmp/VishnuCreator.app', { run, delay, logger: vi.fn() });
     expect(run).toHaveBeenCalledTimes(2);
     expect(delay).toHaveBeenCalledOnce();
   });
@@ -70,7 +70,7 @@ describe('Apple notarization polling', () => {
     });
 
     await expect(submitAndWaitForNotarization(
-      '/tmp/OpenCreator.zip',
+      '/tmp/VishnuCreator.zip',
       ['--keychain-profile', 'clawee-notary'],
       { delay, logger, maxPolls: 3, pollIntervalMs: 1, runJson }
     )).resolves.toEqual({
@@ -88,14 +88,14 @@ describe('Apple notarization polling', () => {
       return {
         statusSummary: 'Archive contains critical validation errors',
         issues: [{
-          path: 'OpenCreator.app/Contents/Resources/bin/ffmpeg',
+          path: 'VishnuCreator.app/Contents/Resources/bin/ffmpeg',
           message: 'The binary is not signed.'
         }]
       };
     });
 
     await expect(submitAndWaitForNotarization(
-      '/tmp/OpenCreator.zip',
+      '/tmp/VishnuCreator.zip',
       [],
       { logger: vi.fn(), runJson }
     )).rejects.toThrow(

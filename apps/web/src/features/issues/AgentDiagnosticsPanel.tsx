@@ -1,7 +1,7 @@
-import type { OpenCreatorIssue } from '@opencreator/protocol';
+import type { VishnuCreatorIssue } from '@vishnucreator/protocol';
 import { MessageSquareText, Send, X } from 'lucide-react';
 import { useEffect, useMemo, useRef, useState, useSyncExternalStore } from 'react';
-import OpenCreatorMark from '../../components/brand/OpenCreatorMark.js';
+import VishnuCreatorMark from '../../components/brand/VishnuCreatorMark.js';
 import { useAppLanguage } from '../../i18n/LanguageProvider.js';
 import { IssueActionButtons, type IssueActionRegistry } from './IssuePresenter.js';
 import { issueConversationText, issueDiagnosticText, presentIssue } from './issue-catalog.js';
@@ -20,7 +20,7 @@ import './agent-diagnostics.css';
 export default function AgentDiagnosticsPanel(props: {
   hiddenCreatorIssues?: boolean;
   hiddenBackgroundRuntimeIssues?: boolean;
-  onAskIssue(issue: OpenCreatorIssue, question: string): void;
+  onAskIssue(issue: VishnuCreatorIssue, question: string): void;
 }) {
   const { language } = useAppLanguage();
   const localize = useLocalizedCopy();
@@ -115,7 +115,7 @@ export default function AgentDiagnosticsPanel(props: {
       onFocusCapture={() => setVisibility('manual')}
     >
       <header>
-        <span aria-hidden="true"><OpenCreatorMark size={18} /></span>
+        <span aria-hidden="true"><VishnuCreatorMark size={18} /></span>
         <strong>Vishnu Creator</strong>
         <button type="button" onClick={() => { restoreFocusRef.current = true; setVisibility('closed'); }} aria-label={localize('收起诊断', 'Close diagnostics', 'Stäng diagnostiken')} title={localize('收起诊断', 'Close diagnostics', 'Stäng diagnostiken')}><X size={17} aria-hidden="true" /></button>
       </header>
@@ -145,13 +145,13 @@ export default function AgentDiagnosticsPanel(props: {
   );
 }
 
-function isBackgroundRuntimeIssue(issue: OpenCreatorIssue): boolean {
+function isBackgroundRuntimeIssue(issue: VishnuCreatorIssue): boolean {
   return issue.scope.kind === 'page' && issue.scope.surface === 'runtime'
     && (issue.operation === 'runtime.load-yt-dlp' || issue.operation === 'runtime.auto-check-yt-dlp');
 }
 
 function DiagnosticMessage(props: {
-  issue: OpenCreatorIssue;
+  issue: VishnuCreatorIssue;
   language: AppLanguage;
   actions?: IssueActionRegistry;
   focused: boolean;

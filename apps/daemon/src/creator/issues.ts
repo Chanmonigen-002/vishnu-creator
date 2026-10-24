@@ -4,10 +4,10 @@ import type {
   IssueCategory,
   IssueRetryResult,
   IssueSource,
-  OpenCreatorIssue,
+  VishnuCreatorIssue,
   PublicErrorFacts
-} from '@opencreator/protocol';
-import { sanitizePublicErrorFacts } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { sanitizePublicErrorFacts } from '@vishnucreator/protocol';
 import { createHash } from 'node:crypto';
 import type { CreatorRepository } from './repository.js';
 
@@ -16,7 +16,7 @@ export type CreatorIssueCaptureInput = {
   code: string;
   source: IssueSource;
   category?: IssueCategory;
-  severity?: OpenCreatorIssue['severity'];
+  severity?: VishnuCreatorIssue['severity'];
   operation?: string;
   stageId?: string;
   stageRunId?: string;
@@ -30,15 +30,15 @@ export type CreatorIssueCaptureInput = {
   repairActions?: CreatorRepairAction[];
 };
 
-export type NormalizedCreatorIssueInput = Omit<OpenCreatorIssue,
+export type NormalizedCreatorIssueInput = Omit<VishnuCreatorIssue,
   'id' | 'diagnosticId' | 'occurrenceCount' | 'occurredAt' | 'lastOccurredAt' | 'resolvedAt'
 > & { scope: { kind: 'creator-job'; jobId: string } };
 
 export type CreatorIssueAssociationKind = 'stage-run' | 'provider-request' | 'command-receipt' | 'endpoint';
 
 export type CreatorIssueService = {
-  capture(input: CreatorIssueCaptureInput): OpenCreatorIssue;
-  get(jobId: string, issueId: string): OpenCreatorIssue | undefined;
+  capture(input: CreatorIssueCaptureInput): VishnuCreatorIssue;
+  get(jobId: string, issueId: string): VishnuCreatorIssue | undefined;
   beginResolution(input: {
     jobId: string;
     issueId: string;
@@ -46,7 +46,7 @@ export type CreatorIssueService = {
     associationKind: CreatorIssueAssociationKind;
     associationId: string;
     stageRunId?: string;
-  }): OpenCreatorIssue;
+  }): VishnuCreatorIssue;
   finishResolution(input: {
     jobId: string;
     issueId: string;
@@ -54,17 +54,17 @@ export type CreatorIssueService = {
     result: Exclude<IssueRetryResult, 'none'>;
     publicFacts?: PublicErrorFacts;
     technicalDetail?: string;
-  }): OpenCreatorIssue;
+  }): VishnuCreatorIssue;
   stats(jobId: string, range: { from: string; to: string }): CreatorIssueStatsResponse['rows'];
-  list(jobId: string): OpenCreatorIssue[];
+  list(jobId: string): VishnuCreatorIssue[];
   listEvents(jobId: string, input?: { cursor?: string; limit?: number }): ReturnType<CreatorRepository['listIssueEvents']>;
 };
 
 export function createCreatorIssueService(
   repository: CreatorRepository,
-  options: { onChanged?(issue: OpenCreatorIssue): void } = {}
+  options: { onChanged?(issue: VishnuCreatorIssue): void } = {}
 ): CreatorIssueService {
-  const changed = (issue: OpenCreatorIssue) => {
+  const changed = (issue: VishnuCreatorIssue) => {
     options.onChanged?.(issue);
     return issue;
   };

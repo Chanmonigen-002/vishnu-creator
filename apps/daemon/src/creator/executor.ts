@@ -5,9 +5,9 @@ import type {
   CreatorStageRun,
   CreatorJob,
   PublicErrorFacts
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { publicFactsFromFailure } from './public-error-facts.js';
-import { safePublicErrorMessage } from '@opencreator/protocol';
+import { safePublicErrorMessage } from '@vishnucreator/protocol';
 import type { CreatorProcessControl } from './process-tree.js';
 
 export type CreatorExecutorOutput = {

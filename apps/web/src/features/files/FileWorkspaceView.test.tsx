@@ -1,4 +1,4 @@
-import type { ThreadResponse, WorkspaceDirectoryResponse, WorkspaceFileMeta, WorkspaceFileNode } from '@opencreator/protocol';
+import type { ThreadResponse, WorkspaceDirectoryResponse, WorkspaceFileMeta, WorkspaceFileNode } from '@vishnucreator/protocol';
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { useState } from 'react';
@@ -106,7 +106,7 @@ describe('FileWorkspaceView', () => {
     expect(await screen.findAllByText('README.md')).not.toHaveLength(0);
     expect(screen.getByRole('button', { name: '预览' })).toHaveAttribute('aria-pressed', 'true');
     expect(screen.queryByRole('textbox', { name: 'README.md editor' })).not.toBeInTheDocument();
-    expect(window.localStorage.getItem(`opencreator.file-workspace.recent.${workspaceKey(thread.canonicalCwd)}`)).toBe('README.md');
+    expect(window.localStorage.getItem(`vishnucreator.file-workspace.recent.${workspaceKey(thread.canonicalCwd)}`)).toBe('README.md');
   });
 
   it('优先打开外部传入的 selectedPath', async () => {
@@ -1020,7 +1020,7 @@ function createThread(overrides: Partial<ThreadResponse> = {}): ThreadResponse {
     id: 'thread-1',
     title: '会话',
     projectId: 'project-one',
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     codexThreadId: null,
     cwd: '/Users/test/repo',
     canonicalCwd: '/Users/test/repo',

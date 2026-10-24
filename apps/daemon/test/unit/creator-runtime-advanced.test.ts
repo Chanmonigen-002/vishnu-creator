@@ -51,7 +51,7 @@ describe('creator runtime advanced contracts', () => {
     const runner = createCreatorStageRunner({ repository, templates, issueService, workRoot: join(tempDir, 'work'),
       executors: [{ id: 'image', async run({ stageRun, job, workdir }) {
         const request = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: stageRun.id,
-          provider: 'opencreator-gateway-images/generations', requestKey: 'first', request: {},
+          provider: 'vishnucreator-gateway-images/generations', requestKey: 'first', request: {},
           gateway: { accountId: 'a', bindingVersion: 'a:1', logicalId: 'first' } });
         ledger.markSubmitting(request.id);
         if (outcome === 'unknown') ledger.markUnknownRemoteAcceptance(request.id);
@@ -78,7 +78,7 @@ describe('creator runtime advanced contracts', () => {
     const issueService = createCreatorIssueService(repository);
     const bottom = Object.assign(new Error('File size (4014655674) is greater than 2 GiB token=private'), { code: 'ERR_FS_FILE_TOO_LARGE' });
     const runner = createCreatorStageRunner({ repository, templates, issueService,
-      executors: [{ id: 'krillinai', async run() { throw mode === 'direct' ? bottom : new Error('Output collection failed', { cause: bottom }); } }],
+      executors: [{ id: 'vishnuai', async run() { throw mode === 'direct' ? bottom : new Error('Output collection failed', { cause: bottom }); } }],
       workRoot: join(tempDir, 'work') });
     const job = service.createJob({ projectId: 'p1', templateId: 'video-translation',
       state: { sourceType: 'url', sourceUrl: 'https://youtube.com/watch?v=test', sourceLanguage: 'en', targetLanguage: 'zh_cn' } });
@@ -93,7 +93,7 @@ describe('creator runtime advanced contracts', () => {
   it('does not treat generated subtitles from an older result snapshot as imported subtitles', async () => {
     const { db, repository, service, templates, dispatcher } = setup();
     const runner = createCreatorStageRunner({ repository, templates, workRoot: join(tempDir, 'work'), executors: [{
-      id: 'krillinai', async run({ inputArtifacts, workdir }) {
+      id: 'vishnuai', async run({ inputArtifacts, workdir }) {
         expect(inputArtifacts.some(artifact => artifact.kind.endsWith('_subtitle'))).toBe(false);
         const path = join(workdir, 'fixture');
         writeFileSync(path, 'fixture');
@@ -637,7 +637,7 @@ describe('creator runtime advanced contracts', () => {
       repository,
       templates,
       executors: [{
-        id: 'krillinai',
+        id: 'vishnuai',
         async run() {
           throw new CreatorExecutorError(
             'creator_transcription_config_missing',
@@ -815,7 +815,7 @@ describe('creator runtime advanced contracts', () => {
       repository,
       templates,
       executors: [{
-        id: 'krillinai',
+        id: 'vishnuai',
         async run({ stageRun }) {
           if (stageRun.stageId === 'subtitle') {
             writeFileSync(join(tempDir, 'subtitle-v1.srt'), '1\n00:00:00,000 --> 00:00:01,000\nTest\n');
@@ -951,7 +951,7 @@ describe('creator runtime advanced contracts', () => {
       repository,
       templates,
       executors: [{
-        id: 'krillinai',
+        id: 'vishnuai',
         async run({ inputArtifacts }) {
           observedInputIds = inputArtifacts.map(artifact => artifact.id);
           writeFileSync(join(tempDir, 'branched-horizontal.mp4'), 'video');
@@ -1146,7 +1146,7 @@ describe('creator runtime advanced contracts', () => {
       repository,
       templates,
       executors: [{
-        id: 'krillinai',
+        id: 'vishnuai',
         async run({ inputArtifacts }) {
           observedInputs = inputArtifacts.map(artifact => artifact.id);
           return {
@@ -1272,7 +1272,7 @@ describe('creator runtime advanced contracts', () => {
     db.close();
   });
 
-  it('installs and repairs the isolated opencreator runtime skill without touching the source home', () => {
+  it('installs and repairs the isolated vishnucreator runtime skill without touching the source home', () => {
     tempDir = mkdtempSync(join(tmpdir(), 'creator-bootstrap-'));
     const sourceHome = join(tempDir, 'source-home');
     const bundled = join(tempDir, 'bundled');
@@ -1281,15 +1281,15 @@ describe('creator runtime advanced contracts', () => {
     mkdirSync(bundled, { recursive: true });
     writeFileSync(join(sourceHome, 'auth.json'), '{"token":"sentinel"}');
     writeFileSync(join(sourceHome, 'config.toml'), 'model = "gpt-before"\nmodel_provider = "legacy"\n[model_providers.legacy]\nbase_url = "https://legacy.test/v1"\n');
-    writeFileSync(join(bundled, 'SKILL.md'), '# OpenCreator Runtime\n');
+    writeFileSync(join(bundled, 'SKILL.md'), '# VishnuCreator Runtime\n');
     writeFileSync(join(bundled, 'manifest.json'), '{"version":2}\n');
     const first = bootstrapCreatorAgentRuntime({ sourceCodexHome: sourceHome, runtimeRoot, bundledSkillDir: bundled });
     expect(first).toMatchObject({ available: true, guideVersion: 2 });
     writeFileSync(join(first.skillPath, 'SKILL.md'), 'damaged');
-    writeFileSync(join(first.skillPath, '.opencreator-hash'), 'damaged');
+    writeFileSync(join(first.skillPath, '.vishnucreator-hash'), 'damaged');
     writeFileSync(join(sourceHome, 'config.toml'), 'model = "gpt-after"\nopenai_base_url = "https://current.test/v1"\n');
     const repaired = bootstrapCreatorAgentRuntime({ sourceCodexHome: sourceHome, runtimeRoot, bundledSkillDir: bundled });
-    expect(readFileSync(join(repaired.skillPath, 'SKILL.md'), 'utf8')).toBe('# OpenCreator Runtime\n');
+    expect(readFileSync(join(repaired.skillPath, 'SKILL.md'), 'utf8')).toBe('# VishnuCreator Runtime\n');
     expect(readFileSync(join(sourceHome, 'auth.json'), 'utf8')).toBe('{"token":"sentinel"}');
     expect(readFileSync(join(repaired.codexHome, 'config.toml'), 'utf8')).toContain('model = "gpt-after"');
     expect(readFileSync(join(repaired.codexHome, 'config.toml'), 'utf8')).not.toContain('model_provider');

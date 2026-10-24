@@ -4,7 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import sharp from 'sharp';
 import { afterEach, describe, expect, it } from 'vitest';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { CreatorProviderRequestLedger } from '../../src/creator/provider-requests.js';
 import { createCreatorRepository } from '../../src/creator/repository.js';
 import { createCreatorService } from '../../src/creator/service.js';

@@ -7,7 +7,7 @@ import type {
   VideoGenerationProvider,
   VideoGenerationResult,
   VideoGenerationSize
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { readFile, stat } from 'node:fs/promises';
 import { extname, join } from 'node:path';
 import type { MediaProbe } from '../validators/media.js';
@@ -44,7 +44,7 @@ export function createVideoExecutor(input: {
         });
         const request = await videoRequest(stage);
         const resumedResultId = readResumedResultId(stage);
-        const outputPath = join(stage.workdir, 'OpenCreator-generated-video.mp4');
+        const outputPath = join(stage.workdir, 'VishnuCreator-generated-video.mp4');
 
         let result: VideoGenerationResult;
         if (resumedResultId === undefined) {
@@ -66,7 +66,7 @@ export function createVideoExecutor(input: {
             signal: stage.signal,
             logicalId: stage.stageRun.id,
             onGatewayBinding: gateway => {
-              providerRequest = input.ledger?.registerBeforeSubmit({ jobId:stage.job.id, stageRunId:stage.stageRun.id, provider:'opencreator-gateway-video', requestKey:gateway.logicalId, gateway,
+              providerRequest = input.ledger?.registerBeforeSubmit({ jobId:stage.job.id, stageRunId:stage.stageRun.id, provider:'vishnucreator-gateway-video', requestKey:gateway.logicalId, gateway,
                 request:{model:request.model ?? null,prompt:request.prompt,duration:request.duration,size:request.size,reference:request.referenceImage?.data ?? null,
                   references:request.references ?? [],generateAudio:request.generateAudio ?? null,priceVersion:request.priceVersion ?? null} });
               if (providerRequest) providerRequest = input.ledger!.markSubmitting(providerRequest.id);
@@ -83,7 +83,7 @@ export function createVideoExecutor(input: {
           });
         } else {
           const binding = await input.service.getGatewayBinding?.(resumedResultId);
-          providerRequest = binding ? stage.job.providerRequests.find(value => value.provider === 'opencreator-gateway-video'
+          providerRequest = binding ? stage.job.providerRequests.find(value => value.provider === 'vishnucreator-gateway-video'
             && value.gateway?.logicalId === binding.logicalId && value.gateway.accountId === binding.accountId) : undefined;
           if (providerRequest && binding?.requestId && ['submitting', 'waiting_remote', 'unknown_remote_acceptance'].includes(providerRequest.status)) providerRequest = input.ledger!.markWaitingRemote(providerRequest.id, binding.requestId);
           result = await input.service.get(resumedResultId);
@@ -171,7 +171,7 @@ export function createVideoExecutor(input: {
         }
         const info = await stat(outputPath);
         const reference = stage.inputArtifacts.find(artifact => artifact.kind === 'reference_image');
-        const fileName = result.fileName || 'OpenCreator-generated-video.mp4';
+        const fileName = result.fileName || 'VishnuCreator-generated-video.mp4';
         const metadata: Record<string, CreatorJson> = {
           provider: result.provider,
           model: result.model,
@@ -296,7 +296,7 @@ function readResumedResultId(stage: CreatorExecutorInput): string | undefined {
         && candidate.status === 'failed'
       ));
   if (typeof resumedFrom !== 'string' && (previous?.errorCode !== 'creator_video_upstream_error'
-    || stage.job.providerRequests.some(request => request.stageRunId === previous.id && request.provider === 'opencreator-gateway-video' && request.status === 'failed'))) return undefined;
+    || stage.job.providerRequests.some(request => request.stageRunId === previous.id && request.provider === 'vishnucreator-gateway-video' && request.status === 'failed'))) return undefined;
   const resultId = previous?.progress.videoGenerationResultId;
   return typeof resultId === 'string' && resultId.length > 0 ? resultId : undefined;
 }

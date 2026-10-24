@@ -24,7 +24,7 @@ afterEach(() => {
 
 describe('thread manager', () => {
   it('creates conversations from projects and preserves schedule thread creation', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-thread-project-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-thread-project-'));
     const database = openTestDatabase(tempDir);
     const projectDir = join(tempDir, 'project');
     const missingDir = join(tempDir, 'missing-project');
@@ -55,7 +55,7 @@ describe('thread manager', () => {
 
     expect(conversation).toMatchObject({
       projectId: project.id,
-      origin: 'opencreator_created',
+      origin: 'vishnucreator_created',
       cwd: projectDir,
       canonicalCwd: realpathSync(projectDir),
       workspaceMode: 'external',
@@ -93,14 +93,14 @@ describe('thread manager', () => {
     });
     expect(draft).toMatchObject({
       projectId: null,
-      origin: 'opencreator_created',
+      origin: 'vishnucreator_created',
       purpose: 'schedule_draft',
       workspaceMode: 'managed'
     });
   });
 
   it('creates a managed thread with fixed workspace', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-thread-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-thread-'));
     const database = openTestDatabase(tempDir);
     const manager = createThreadManager({ db: database, dataDir: tempDir });
     const thread = manager.createThread({
@@ -115,7 +115,7 @@ describe('thread manager', () => {
   });
 
   it('stores an absolute managed workspace when dataDir is relative', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-thread-relative-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-thread-relative-'));
     const database = openTestDatabase(tempDir);
     const manager = createThreadManager({
       db: database,
@@ -133,7 +133,7 @@ describe('thread manager', () => {
   });
 
   it('persists managed and external threads', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-thread-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-thread-'));
     const database = openTestDatabase(tempDir);
     const manager = createThreadManager({ db: database, dataDir: tempDir });
 
@@ -172,7 +172,7 @@ describe('thread manager', () => {
   });
 
   it('returns SQLite UTC timestamps as timezone-qualified ISO values', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-thread-timestamp-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-thread-timestamp-'));
     const database = openTestDatabase(tempDir);
     const manager = createThreadManager({ db: database, dataDir: tempDir });
     const thread = manager.createThread({
@@ -200,7 +200,7 @@ describe('thread manager', () => {
   });
 
   it('creates schedule drafts and schedule tasks only through explicit internal purposes', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-thread-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-thread-'));
     const database = openTestDatabase(tempDir);
     const manager = createThreadManager({ db: database, dataDir: tempDir });
 
@@ -222,7 +222,7 @@ describe('thread manager', () => {
   });
 
   it('returns the active schedule binding with task thread queries', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-thread-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-thread-'));
     const database = openTestDatabase(tempDir);
     const manager = createThreadManager({ db: database, dataDir: tempDir });
     const task = manager.createThread({
@@ -238,7 +238,7 @@ describe('thread manager', () => {
   });
 
   it('filters bounded thread summaries by included or excluded purpose', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-thread-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-thread-'));
     const database = openTestDatabase(tempDir);
     const manager = createThreadManager({ db: database, dataDir: tempDir });
     const conversation = manager.createThread({
@@ -280,7 +280,7 @@ describe('thread manager', () => {
   });
 
   it('uses explicit internal methods to manage schedule task configuration and lifecycle', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-thread-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-thread-'));
     const database = openTestDatabase(tempDir);
     const manager = createThreadManager({ db: database, dataDir: tempDir });
     const draft = manager.createThread({
@@ -319,7 +319,7 @@ describe('thread manager', () => {
   });
 
   it('expands home-relative cwd for external threads', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-thread-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-thread-'));
     const database = openTestDatabase(tempDir);
     const testHome = join(tempDir, 'home');
     const manager = createThreadManager({ db: database, dataDir: tempDir, homeDir: testHome });
@@ -327,17 +327,17 @@ describe('thread manager', () => {
     const thread = manager.createThread({
       title: 'Playground',
       workspaceMode: 'external',
-      cwd: '~/develop/opencreator/playground',
+      cwd: '~/develop/vishnucreator/playground',
       profile: 'default',
       sandbox: 'read-only'
     });
 
-    expect(thread.cwd).toBe(join(testHome, 'develop/opencreator/playground'));
+    expect(thread.cwd).toBe(join(testHome, 'develop/vishnucreator/playground'));
     expect(thread.canonicalCwd).toBe(realpathSync(thread.cwd));
   });
 
   it('archives active threads and rejects missing threads', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-thread-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-thread-'));
     const database = openTestDatabase(tempDir);
     const manager = createThreadManager({ db: database, dataDir: tempDir });
     const thread = manager.createThread({ workspaceMode: 'managed' });

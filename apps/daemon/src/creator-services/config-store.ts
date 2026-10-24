@@ -2,17 +2,17 @@ import type {
   CreatorServicesConfig,
   CreatorServicesConfigResponse,
   CreatorServicesCredentialField
-} from '@opencreator/protocol';
-import { createDefaultCreatorServicesConfig, migrateOpenAiImageModel } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { createDefaultCreatorServicesConfig, migrateOpenAiImageModel } from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 import {
-  readOpenCreatorConfig,
-  updateOpenCreatorConfig
-} from '@opencreator/config';
+  readVishnuCreatorConfig,
+  updateVishnuCreatorConfig
+} from '@vishnucreator/config';
 import { createPrivateJsonDocumentEntry } from '../config/private-json-file.js';
 import {
-  readOpenCreatorCredentials,
-  updateOpenCreatorCredentials
+  readVishnuCreatorCredentials,
+  updateVishnuCreatorCredentials
 } from '../config/credentials-file.js';
 import { applyVolcengineEnvironmentOverrides } from './volcengine-env.js';
 
@@ -231,13 +231,13 @@ export function createFileCreatorServicesConfigStore(
   return createCreatorServicesConfigStore(createPrivateJsonDocumentEntry(path));
 }
 
-export function createOpenCreatorCreatorServicesConfigStore(input: {
+export function createVishnuCreatorCreatorServicesConfigStore(input: {
   configFile: string;
   credentialsFile: string;
 }): CreatorServicesConfigStore {
   const store: CreatorServicesConfigStore = {
     async read() {
-      const snapshot = readOpenCreatorConfig(input.configFile);
+      const snapshot = readVishnuCreatorConfig(input.configFile);
       if (!snapshot.configured.creatorServices) {
         return applyVolcengineEnvironmentOverrides(
           createDefaultCreatorServicesConfig()
@@ -247,7 +247,7 @@ export function createOpenCreatorCreatorServicesConfigStore(input: {
         snapshot.document.creatorServices
       );
       const credentials = (
-        await readOpenCreatorCredentials(input.credentialsFile)
+        await readVishnuCreatorCredentials(input.credentialsFile)
       ).creatorServices ?? {};
       return applyVolcengineEnvironmentOverrides(
         applyCreatorServiceCredentials(publicConfig, credentials)
@@ -256,23 +256,23 @@ export function createOpenCreatorCreatorServicesConfigStore(input: {
     async write(config) {
       const normalized = parseCreatorServicesConfig(config);
       const split = splitCreatorServiceCredentials(normalized);
-      await updateOpenCreatorCredentials(input.credentialsFile, document => ({
+      await updateVishnuCreatorCredentials(input.credentialsFile, document => ({
         ...document,
         creatorServices: split.credentials
       }));
-      updateOpenCreatorConfig(input.configFile, document => ({
+      updateVishnuCreatorConfig(input.configFile, document => ({
         ...document,
         creatorServices: split.publicConfig as unknown as Record<string, unknown>
       }));
       return structuredClone(normalized);
     },
     async reset() {
-      updateOpenCreatorConfig(input.configFile, document => {
+      updateVishnuCreatorConfig(input.configFile, document => {
         const next = { ...document };
         delete next.creatorServices;
         return next;
       });
-      await updateOpenCreatorCredentials(input.credentialsFile, document => {
+      await updateVishnuCreatorCredentials(input.credentialsFile, document => {
         const next = { ...document };
         delete next.creatorServices;
         return next;

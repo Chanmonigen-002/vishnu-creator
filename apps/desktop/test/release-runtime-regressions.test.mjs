@@ -38,10 +38,10 @@ describe('Desktop release runtime regressions', () => {
       'utf8'
     );
     const workspacePackages = [
-      '@opencreator/config',
-      '@opencreator/protocol',
-      '@opencreator/skill-market',
-      '@opencreator/writing-templates'
+      '@vishnucreator/config',
+      '@vishnucreator/protocol',
+      '@vishnucreator/skill-market',
+      '@vishnucreator/writing-templates'
     ];
     const expectedRuntimeDependencies = Object.keys(daemonPackage.dependencies)
       .filter(name => !workspacePackages.includes(name))
@@ -52,7 +52,7 @@ describe('Desktop release runtime regressions', () => {
     expect(Object.keys(runtimePackage.dependencies).sort())
       .toEqual(expectedRuntimeDependencies);
     for (const name of workspacePackages) {
-      expect(prepareSource).toContain(name.replace('@opencreator/', ''));
+      expect(prepareSource).toContain(name.replace('@vishnucreator/', ''));
     }
     expect(runtimePackage.dependencies).toMatchObject({
       '@iarna/toml': '2.2.5',
@@ -93,7 +93,7 @@ describe('Desktop release runtime regressions', () => {
   });
 
   it('reports executable output when a runtime version check fails', () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-runtime-check-test-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-runtime-check-test-'));
     const executable = join(root, 'runtime-check.cjs');
     writeFileSync(
       executable,
@@ -109,7 +109,7 @@ describe('Desktop release runtime regressions', () => {
   });
 
   it('keeps downloaded electron-builder tools in CommonJS scope', () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-builder-cache-test-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-builder-cache-test-'));
     writeFileSync(join(root, 'package.json'), '{"type":"module"}\n');
     const cache = join(root, '.cache', 'electron-builder');
     prepareElectronBuilderCache(cache);
@@ -133,8 +133,8 @@ describe('Desktop release runtime regressions', () => {
     );
     expect(source).toContain("join(binDir, 'codex.exe')");
     expect(source).toContain("join(cacheDir, 'fake-codex-launcher.exe')");
-    expect(source).toContain('OPENCREATOR_E2E_NODE_BINARY: process.execPath');
-    expect(source).toContain('OPENCREATOR_E2E_FAKE_CODEX_SCRIPT: fakeCodexScript');
+    expect(source).toContain('VISHNUCREATOR_E2E_NODE_BINARY: process.execPath');
+    expect(source).toContain('VISHNUCREATOR_E2E_FAKE_CODEX_SCRIPT: fakeCodexScript');
     expect(source).not.toContain("join(binDir, 'codex.cmd')");
   });
 
@@ -146,7 +146,7 @@ describe('Desktop release runtime regressions', () => {
     expect(source).toContain("join(binDir, 'yt-dlp.exe')");
     expect(source).toContain("join(cacheDir, 'fake-yt-dlp-launcher.exe')");
     expect(source).toContain(
-      'OPENCREATOR_E2E_FAKE_YT_DLP_SCRIPT: fakeYtDlpScript'
+      'VISHNUCREATOR_E2E_FAKE_YT_DLP_SCRIPT: fakeYtDlpScript'
     );
     expect(source).not.toContain("join(binDir, 'yt-dlp.cmd')");
   });

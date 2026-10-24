@@ -18,8 +18,8 @@ async function writeWindowsLocalState(root: string): Promise<void> {
   await writeFile(join(root, 'Local State'), JSON.stringify({ os_crypt: { encrypted_key: key } }));
 }
 
-it.runIf(!!process.env.OPENCREATOR_TEST_BROWSER_RUNTIME_ROOT)('uses the real portable Python and yt-dlp importer and normalizes Chromium cookie types and epoch', async () => {
-  const resourceRoot = process.env.OPENCREATOR_TEST_BROWSER_RUNTIME_ROOT!;
+it.runIf(!!process.env.VISHNUCREATOR_TEST_BROWSER_RUNTIME_ROOT)('uses the real portable Python and yt-dlp importer and normalizes Chromium cookie types and epoch', async () => {
+  const resourceRoot = process.env.VISHNUCREATOR_TEST_BROWSER_RUNTIME_ROOT!;
   const manifest = JSON.parse(await readFile(join(resourceRoot, 'manifest.json'), 'utf8'));
   const runtime = resolveYtDlpRuntime({ resourceRoot, manifest });
   const root = await mkdtemp(join(tmpdir(), 'youtube-browser-import-'));
@@ -45,8 +45,8 @@ it.runIf(!!process.env.OPENCREATOR_TEST_BROWSER_RUNTIME_ROOT)('uses the real por
   } finally { await rm(root, { recursive: true, force: true }); }
 }, 20_000);
 
-it.runIf(process.platform === 'win32' && !!process.env.OPENCREATOR_TEST_BROWSER_RUNTIME_ROOT)('Windows 真实文件锁会提示手动关闭浏览器', async () => {
-  const resourceRoot = process.env.OPENCREATOR_TEST_BROWSER_RUNTIME_ROOT!;
+it.runIf(process.platform === 'win32' && !!process.env.VISHNUCREATOR_TEST_BROWSER_RUNTIME_ROOT)('Windows 真实文件锁会提示手动关闭浏览器', async () => {
+  const resourceRoot = process.env.VISHNUCREATOR_TEST_BROWSER_RUNTIME_ROOT!;
   const manifest = JSON.parse(await readFile(join(resourceRoot, 'manifest.json'), 'utf8'));
   const runtime = resolveYtDlpRuntime({ resourceRoot, manifest });
   const root = await mkdtemp(join(tmpdir(), 'youtube-browser-locked-'));
@@ -71,8 +71,8 @@ it.runIf(process.platform === 'win32' && !!process.env.OPENCREATOR_TEST_BROWSER_
   }
 }, 20_000);
 
-it.runIf(process.platform === 'win32' && !!process.env.OPENCREATOR_TEST_BROWSER_RUNTIME_ROOT)('新版 Chromium v20 加密失败时明确提示解密问题，不误报为未登录', async () => {
-  const resourceRoot = process.env.OPENCREATOR_TEST_BROWSER_RUNTIME_ROOT!;
+it.runIf(process.platform === 'win32' && !!process.env.VISHNUCREATOR_TEST_BROWSER_RUNTIME_ROOT)('新版 Chromium v20 加密失败时明确提示解密问题，不误报为未登录', async () => {
+  const resourceRoot = process.env.VISHNUCREATOR_TEST_BROWSER_RUNTIME_ROOT!;
   const manifest = JSON.parse(await readFile(join(resourceRoot, 'manifest.json'), 'utf8'));
   const runtime = resolveYtDlpRuntime({ resourceRoot, manifest });
   const root = await mkdtemp(join(tmpdir(), 'youtube-browser-v20-'));

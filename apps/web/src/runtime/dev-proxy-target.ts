@@ -1,4 +1,4 @@
-export const DEV_RUNTIME_PROXY_BASE = '/.opencreator/runtime';
+export const DEV_RUNTIME_PROXY_BASE = '/.vishnucreator/runtime';
 
 export type DevDaemonConfig = {
   baseUrl: string;
@@ -65,7 +65,7 @@ export function parseDevDaemonStartupError(
       }
       const record = parsed as Record<string, unknown>;
       if (
-        record.type === 'opencreator_daemon_bootstrap_error'
+        record.type === 'vishnucreator_daemon_bootstrap_error'
         && typeof record.code === 'string'
         && typeof record.message === 'string'
       ) {

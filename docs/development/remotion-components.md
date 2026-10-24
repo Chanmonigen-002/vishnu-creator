@@ -13,7 +13,7 @@ Remotion 由共享 Daemon 管理。Web 和 Desktop 使用同一组 `/creator/com
 
 ## 构建与发布
 
-`pnpm --filter @opencreator/desktop prepare:stickman-runtime` 为当前平台构建：
+`pnpm --filter @vishnucreator/desktop prepare:stickman-runtime` 为当前平台构建：
 
 - `.pack/stickman-runtime`：完整的独立渲染组件。
 - `.pack/stickman-assets`：App 保留的轻量角色资源。
@@ -24,7 +24,7 @@ Desktop 打包只嵌入兼容性描述和轻量资源。构建清单绑定完整
 
 正式 Release 必须将独立组件压缩包与安装器一起上传同一个版本的 GitHub Release；发布附件整理与校验流程包含 macOS arm64、macOS x64、Windows x64 的组件产物。未上传对应组件时，安装器的远端下载不能成功，不得仅发布安装器。
 
-macOS Developer ID 打包先独立签名组件中的所有 Mach-O，再生成资源哈希和下载压缩包。正式 Release 对组件执行独立公证。使用仅由 Electron Builder 临时导入的签名证书时，需要为组件准备可用的签名 keychain，或设置 `OPENCREATOR_REMOTION_SIGNING_IDENTITY`；无法独立签名时发布必须失败。
+macOS Developer ID 打包先独立签名组件中的所有 Mach-O，再生成资源哈希和下载压缩包。正式 Release 对组件执行独立公证。使用仅由 Electron Builder 临时导入的签名证书时，需要为组件准备可用的签名 keychain，或设置 `VISHNUCREATOR_REMOTION_SIGNING_IDENTITY`；无法独立签名时发布必须失败。
 
 ## 安装与更新
 
@@ -34,7 +34,7 @@ macOS Developer ID 打包先独立签名组件中的所有 Mach-O，再生成资
 
 设置页将“检查更新”和“更新到受支持版本”分开：检查只刷新状态，不开始下载；已就绪且版本一致时不显示更新按钮，只展示组件状态；版本不一致时才显示更新入口。尚未安装、缺少资源和准备失败仍分别提供下载、补齐和重试入口。
 
-开发环境可以显式指定 `OPENCREATOR_REMOTION_COMPONENT_MANIFEST`、`OPENCREATOR_REMOTION_COMPONENT_ARCHIVE` 和 `OPENCREATOR_STICKMAN_ASSETS_ROOT`。Vite 管理的开发 Daemon 优先使用本机构建的组件包，但不自动构建或安装它。正式 App 不自动回退到开发机依赖。
+开发环境可以显式指定 `VISHNUCREATOR_REMOTION_COMPONENT_MANIFEST`、`VISHNUCREATOR_REMOTION_COMPONENT_ARCHIVE` 和 `VISHNUCREATOR_STICKMAN_ASSETS_ROOT`。Vite 管理的开发 Daemon 优先使用本机构建的组件包，但不自动构建或安装它。正式 App 不自动回退到开发机依赖。
 
 ## 验证范围
 

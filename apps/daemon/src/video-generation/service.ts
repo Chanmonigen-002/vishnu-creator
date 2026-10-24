@@ -9,11 +9,11 @@ import {
   type VideoGenerationProvider,
   type VideoGenerationResult,
   type VideoGenerationStatus
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { randomBytes } from 'node:crypto';
 import { copyFile, mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
-import type { CreatorServicesConfig } from '@opencreator/protocol';
+import type { CreatorServicesConfig } from '@vishnucreator/protocol';
 import type { CreatorServicesConfigStore } from '../creator-services/config-store.js';
 import { createKlingAuthorization } from '../creator-services/kling-auth.js';
 import {
@@ -127,7 +127,7 @@ export function createVideoGenerationService(input: {
       ...(params ? { body: JSON.stringify(params) } : {})
     });
     if (!response.ok) {
-      const failure = await creatorServiceErrorInfo(response, 'Official video', 'opencreator-gateway-video');
+      const failure = await creatorServiceErrorInfo(response, 'Official video', 'vishnucreator-gateway-video');
       throw new VideoGenerationError('VIDEO_GENERATION_UPSTREAM_ERROR', failure.message, response.status, failure.publicFacts);
     }
     return response;
@@ -162,7 +162,7 @@ export function createVideoGenerationService(input: {
       const content = Buffer.concat(chunks);
       if (!content.length) throw new VideoGenerationError('VIDEO_GENERATION_UPSTREAM_ERROR', 'The official video result is empty', 502);
       await writeFile(videoPath(stored.result.id), content, { mode: 0o600 });
-      stored.result = { ...stored.result, status: 'completed', phase: undefined, progress: 100, progressKnown: true, fileName: `OpenCreator-video-${stored.result.id}.mp4`, mime: 'video/mp4', size: content.length, updatedAt: now().toISOString() };
+      stored.result = { ...stored.result, status: 'completed', phase: undefined, progress: 100, progressKnown: true, fileName: `VishnuCreator-video-${stored.result.id}.mp4`, mime: 'video/mp4', size: content.length, updatedAt: now().toISOString() };
       await writeStored(stored);
     }
     return stored.result;
@@ -211,7 +211,7 @@ export function createVideoGenerationService(input: {
       ...stored.result,
       status: 'completed',
       progress: 100,
-      fileName: `OpenCreator-video-${stored.result.id}.mp4`,
+      fileName: `VishnuCreator-video-${stored.result.id}.mp4`,
       mime: 'video/mp4',
       size: content.length,
       progressKnown: true,
@@ -238,7 +238,7 @@ export function createVideoGenerationService(input: {
       const response = await (input.fetchImpl ?? fetch)(`${gateway.baseUrl}/video/assets`, { method: 'POST', redirect: 'error', signal: AbortSignal.timeout(REQUEST_TIMEOUT_MS),
         headers: { Authorization: `Bearer ${gateway.apiKey}`, 'Content-Type': mime }, body: new Uint8Array(content) });
       if (!response.ok) {
-        const failure = await creatorServiceErrorInfo(response, 'Official video upload', 'opencreator-gateway-video');
+        const failure = await creatorServiceErrorInfo(response, 'Official video upload', 'vishnucreator-gateway-video');
         throw new VideoGenerationError('VIDEO_GENERATION_UPSTREAM_ERROR', failure.message, response.status, failure.publicFacts);
       }
       const result = await response.json() as { assetId?: string; expiresAt?: string };

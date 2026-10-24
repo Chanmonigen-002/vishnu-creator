@@ -7,7 +7,7 @@
 .sidebar-account__copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; flex: 1; }
 .sidebar-account__copy strong { font-size: 13px; font-weight: 500; }
 .sidebar-account__copy small { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-size: 11px; color: var(--muted); }
-.opencreator-sidebar[data-collapsed=true] .sidebar-account { justify-content: center; padding: 6px 0; }
+.vishnucreator-sidebar[data-collapsed=true] .sidebar-account { justify-content: center; padding: 6px 0; }
 .personal-center { min-width: 0; height: 100%; padding: var(--page-title-inset) 32px 40px; }
 .personal-center__content { width: 100%; max-width: 640px; margin: 0 auto; }
 .personal-center__heading { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }

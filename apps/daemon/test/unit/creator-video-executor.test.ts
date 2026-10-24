@@ -3,7 +3,7 @@ import type {
   CreatorJob,
   CreatorStageRun,
   VideoGenerationResult
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { mkdtemp, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -36,7 +36,7 @@ describe('creator video executor', () => {
       repository.updateStageRun({ id: previous.id, status: 'failed', errorCode: 'creator_video_upstream_error', errorMessage: 'Rejected' });
       const current = repository.createStageRun({ jobId: job.id, stageId: 'generate', executor: 'video', status: 'running' });
       const ledger = new CreatorProviderRequestLedger(repository);
-      const receipt = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: previous.id, provider: 'opencreator-gateway-video', requestKey: previous.id, request: {} });
+      const receipt = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: previous.id, provider: 'vishnucreator-gateway-video', requestKey: previous.id, request: {} });
       ledger.markSubmitting(receipt.id); ledger.markFailed(receipt.id);
       const service = videoService({});
       const stage = stageInput({}, []); stage.job = repository.getJob(job.id)!; stage.stageRun = current;
@@ -74,7 +74,7 @@ describe('creator video executor', () => {
       const resumed = repository.createStageRun({ jobId: job.id, stageId: 'generate', executor: 'video', status: 'running', progress: { resumedFromStageRunId: original.id } });
       const ledger = new CreatorProviderRequestLedger(repository);
       const register = (logicalId: string) => {
-        const record = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: original.id, provider: 'opencreator-gateway-video', requestKey: logicalId, request: { prompt: logicalId }, gateway: { accountId: 'a', bindingVersion: 'a:1', logicalId } });
+        const record = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: original.id, provider: 'vishnucreator-gateway-video', requestKey: logicalId, request: { prompt: logicalId }, gateway: { accountId: 'a', bindingVersion: 'a:1', logicalId } });
         return ledger.markSubmitting(record.id);
       };
       const other = register('another-video');
@@ -144,7 +144,7 @@ describe('creator video executor', () => {
       status: 'completed',
       progress: 100,
       progressKnown: true,
-      fileName: 'OpenCreator-video-result.mp4',
+      fileName: 'VishnuCreator-video-result.mp4',
       size: 12
     });
     const service = videoService({
@@ -239,7 +239,7 @@ describe('creator video executor', () => {
       status: 'completed',
       progress: 100,
       progressKnown: true,
-      fileName: 'OpenCreator-video-result.mp4',
+      fileName: 'VishnuCreator-video-result.mp4',
       size: 12
     });
     const service = videoService({
@@ -294,7 +294,7 @@ describe('creator video executor', () => {
       status: 'completed',
       progress: 100,
       progressKnown: true,
-      fileName: 'OpenCreator-video-result.mp4',
+      fileName: 'VishnuCreator-video-result.mp4',
       size: 12
     });
     const service = videoService({
@@ -339,7 +339,7 @@ describe('creator video executor', () => {
       status: 'completed',
       progress: 100,
       progressKnown: true,
-      fileName: 'OpenCreator-video-result.mp4',
+      fileName: 'VishnuCreator-video-result.mp4',
       size: 12
     });
     const refresh = vi.fn()

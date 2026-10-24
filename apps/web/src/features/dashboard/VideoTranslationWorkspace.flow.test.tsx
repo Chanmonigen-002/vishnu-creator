@@ -2,7 +2,7 @@ import { changeControl } from '../../test/select-option.js';
 import { StrictMode } from 'react';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createDefaultCreatorServicesConfig, type CreatorArtifact, type CreatorJob, type CreatorJson, type CreatorTtsProvider, type GatewayAccountState } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type CreatorArtifact, type CreatorJob, type CreatorJson, type CreatorTtsProvider, type GatewayAccountState } from '@vishnucreator/protocol';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { CreatorSessionProvider, useCreatorSession } from './creator-session-store.js';
 import { readTranslationContinuation, saveTranslationContinuation } from './video-translation-continuation.js';

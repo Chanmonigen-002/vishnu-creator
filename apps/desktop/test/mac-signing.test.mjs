@@ -264,11 +264,11 @@ describe('macOS directory signing', () => {
     const pattern = builderConfig.match(/signIgnore:\n\s+- '([^']+)'/)?.[1];
     expect(pattern).toBeDefined();
     const shouldIgnore = new RegExp(pattern);
-    const resources = '/OpenCreator.app/Contents/Resources';
+    const resources = '/VishnuCreator.app/Contents/Resources';
     const ignoredCreatorBinaries = [
       'bin/ffmpeg',
       'bin/ffprobe',
-      'bin/krillinai-cli',
+      'bin/vishnuai-cli',
       'yt-dlp-runtime/python/bin/python3.13',
       'yt-dlp-runtime/python/lib/libpython3.13.dylib',
       'yt-dlp-runtime/python/lib/python3.13/lib-dynload/_dbm.cpython-313-darwin.so'
@@ -276,14 +276,14 @@ describe('macOS directory signing', () => {
 
     for (const path of ignoredCreatorBinaries) {
       expect(shouldIgnore.test(
-        `${resources}/creator-runtime/krillinai/${path}`
+        `${resources}/creator-runtime/vishnuai/${path}`
       )).toBe(true);
     }
     expect(shouldIgnore.test(
       `${resources}/daemon/node_modules/better_sqlite3.node`
     )).toBe(false);
     expect(shouldIgnore.test(
-      `${resources}/creator-runtime/krillinai/manifest.json`
+      `${resources}/creator-runtime/vishnuai/manifest.json`
     )).toBe(true);
     expect(shouldIgnore.test(
       `${resources}/codex-runtime/bin/codex`
@@ -309,10 +309,10 @@ describe('macOS directory signing', () => {
     );
 
     expect(packageScript).toContain(
-      "OPENCREATOR_REQUIRE_NOTARIZED_MAC_APP: '1'"
+      "VISHNUCREATOR_REQUIRE_NOTARIZED_MAC_APP: '1'"
     );
     expect(verifier).toContain(
-      "process.env.OPENCREATOR_REQUIRE_NOTARIZED_MAC_APP === '1'"
+      "process.env.VISHNUCREATOR_REQUIRE_NOTARIZED_MAC_APP === '1'"
     );
     expect(verifier).toContain("manifest.macSigningMode === 'developer-id'");
     expect(verifier).toContain('const expectedTeamId = expectedAppleTeamId();');

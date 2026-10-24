@@ -116,12 +116,12 @@ describe('codex argv', () => {
 
   it('injects the same non-secret MCP config into exec and resume', () => {
     const mcpServers = [{
-      name: 'opencreator_schedule',
+      name: 'vishnucreator_schedule',
       url: 'http://127.0.0.1:43123/internal/agent-tools/mcp',
-      bearerTokenEnvVar: 'OPENCREATOR_AGENT_CAPABILITY_TOKEN',
+      bearerTokenEnvVar: 'VISHNUCREATOR_AGENT_CAPABILITY_TOKEN',
       enabledTools: [
-        'opencreator_schedule_update',
-        'opencreator_schedule_get'
+        'vishnucreator_schedule_update',
+        'vishnucreator_schedule_get'
       ],
       required: true,
       startupTimeoutSec: 10,
@@ -140,17 +140,17 @@ describe('codex argv', () => {
     });
     const expected = [
       '-c',
-      'mcp_servers.opencreator_schedule.url="http://127.0.0.1:43123/internal/agent-tools/mcp"',
+      'mcp_servers.vishnucreator_schedule.url="http://127.0.0.1:43123/internal/agent-tools/mcp"',
       '-c',
-      'mcp_servers.opencreator_schedule.bearer_token_env_var="OPENCREATOR_AGENT_CAPABILITY_TOKEN"',
+      'mcp_servers.vishnucreator_schedule.bearer_token_env_var="VISHNUCREATOR_AGENT_CAPABILITY_TOKEN"',
       '-c',
-      'mcp_servers.opencreator_schedule.enabled_tools=["opencreator_schedule_update","opencreator_schedule_get"]',
+      'mcp_servers.vishnucreator_schedule.enabled_tools=["vishnucreator_schedule_update","vishnucreator_schedule_get"]',
       '-c',
-      'mcp_servers.opencreator_schedule.required=true',
+      'mcp_servers.vishnucreator_schedule.required=true',
       '-c',
-      'mcp_servers.opencreator_schedule.startup_timeout_sec=10',
+      'mcp_servers.vishnucreator_schedule.startup_timeout_sec=10',
       '-c',
-      'mcp_servers.opencreator_schedule.tool_timeout_sec=30'
+      'mcp_servers.vishnucreator_schedule.tool_timeout_sec=30'
     ];
 
     expect(exec).toEqual(expect.arrayContaining(expected));

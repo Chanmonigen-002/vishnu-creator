@@ -10,7 +10,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import type { FastifyInstance } from 'fastify';
 import { afterEach, describe, expect, it } from 'vitest';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { buildServer } from '../../src/api/server.js';
 import type { AgentRuntimeAdapter } from '../../src/creator/agent/runtime-adapter.js';
 import type { CreatorExecutor } from '../../src/creator/executor.js';
@@ -78,7 +78,7 @@ describe('creator api', () => {
 
   it('translates a standalone SRT without video and stops after the subtitle stage', async () => {
     const calls: string[] = [];
-    await setupServer({ creatorExecutors: [{ id: 'krillinai', async run(stage) {
+    await setupServer({ creatorExecutors: [{ id: 'vishnuai', async run(stage) {
       calls.push(stage.stageRun.stageId);
       expect(stage.job.state.sourceType).toBe('subtitle');
       expect(stage.inputArtifacts.map(artifact => artifact.kind)).toEqual(['source_subtitle']);
@@ -127,7 +127,7 @@ describe('creator api', () => {
   it.each(['source_subtitle', 'target_subtitle'])('imports %s and runs downstream workflow with the persisted input', async kind => {
     const calls: string[] = [];
     await setupServer({ llmConfigured: kind === 'source_subtitle', creatorExecutors: [{
-      id: 'krillinai', async run(stage) {
+      id: 'vishnuai', async run(stage) {
         calls.push(stage.stageRun.stageId);
         const path = join(stage.workdir, 'output.srt');
         writeFileSync(path, '1\n00:00:00,000 --> 00:00:01,000\nHello\n');
@@ -197,7 +197,7 @@ describe('creator api', () => {
       url: `/creator/jobs/${job.id}/article-image?expectedRevision=${job.revision}&fileName=photo.png&mime=image%2Fpng&lastModified=123`,
       headers: {
         authorization: 'Bearer secret',
-        'content-type': 'application/vnd.opencreator.creator-reference-image'
+        'content-type': 'application/vnd.vishnucreator.creator-reference-image'
       },
       payload: png('article-inline-image')
     });
@@ -254,7 +254,7 @@ describe('creator api', () => {
   it('stops an active translation stage and resumes the workflow from that stage', async () => {
     let subtitleRuns = 0;
     const executor: CreatorExecutor = {
-      id: 'krillinai',
+      id: 'vishnuai',
       async run({ stageRun, signal }) {
         if (stageRun.stageId === 'subtitle') {
           subtitleRuns += 1;
@@ -698,7 +698,7 @@ describe('creator api', () => {
       url: uploadUrl,
       headers: {
         authorization: 'Bearer secret',
-        'content-type': 'application/vnd.opencreator.creator-source'
+        'content-type': 'application/vnd.vishnucreator.creator-source'
       },
       payload: sourceBytes
     });
@@ -730,7 +730,7 @@ describe('creator api', () => {
       url: uploadUrl.replace('expectedRevision=0', 'expectedRevision=1'),
       headers: {
         authorization: 'Bearer secret',
-        'content-type': 'application/vnd.opencreator.creator-source'
+        'content-type': 'application/vnd.vishnucreator.creator-source'
       },
       payload: sourceBytes
     });
@@ -867,7 +867,7 @@ describe('creator api', () => {
               type: 'userMessage',
               content: [{
                 type: 'inputText',
-                text: '用户请求：测试\nOpenCreator Context Projection：{"private":true}'
+                text: '用户请求：测试\nVishnuCreator Context Projection：{"private":true}'
               }]
             }
           }

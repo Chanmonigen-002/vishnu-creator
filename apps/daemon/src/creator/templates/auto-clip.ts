@@ -18,7 +18,7 @@ export function createLegacyAutoClipTemplate(): CreatorTemplateDefinition {
     stages: [
       { id: 'probe', executor: 'download', allowedJobStatuses: ['draft', 'running', 'failed', 'needs_input'], inputArtifacts: [], outputArtifacts: [{ kind: 'download_probe', status: 'completed' }] },
       { id: 'download', executor: 'download', dependsOn: ['probe'], allowedJobStatuses: ['draft', 'running', 'failed', 'needs_input'], inputArtifacts: [{ kind: 'download_probe', selector: 'latest-completed' }], outputArtifacts: [{ kind: 'source_video', status: 'completed' }] },
-      { id: 'subtitle', executor: 'krillinai', dependsOn: ['download'], allowedJobStatuses: ['draft', 'running', 'failed', 'needs_input'], inputArtifacts: [{ kind: 'source_video', selector: 'latest-completed' }], outputArtifacts: [{ kind: 'target_subtitle', status: 'completed' }] },
+      { id: 'subtitle', executor: 'vishnuai', dependsOn: ['download'], allowedJobStatuses: ['draft', 'running', 'failed', 'needs_input'], inputArtifacts: [{ kind: 'source_video', selector: 'latest-completed' }], outputArtifacts: [{ kind: 'target_subtitle', status: 'completed' }] },
       { id: 'analyze', executor: 'clip', dependsOn: ['subtitle'], allowedJobStatuses: ['draft', 'running', 'failed', 'needs_input'], inputArtifacts: [{ kind: 'source_video', selector: 'latest-completed' }, { kind: 'target_subtitle', selector: 'latest-completed' }], outputArtifacts: [{ kind: 'clip_candidates', status: 'completed' }] },
       { id: 'render', executor: 'clip', dependsOn: ['analyze'], allowedJobStatuses: ['draft', 'running', 'failed', 'needs_input'], inputArtifacts: [{ kind: 'source_video', selector: 'latest-completed' }, { kind: 'clip_candidates', selector: 'latest-completed' }], outputArtifacts: [{ kind: 'auto_clip_video', status: 'completed' }] }
     ],
@@ -74,7 +74,7 @@ export function createAutoClipTemplate(): CreatorTemplateDefinition {
       },
       {
         id: 'subtitle',
-        executor: 'krillinai',
+        executor: 'vishnuai',
         completesJob: false,
         resultVersionPolicy: 'none',
         dependsOn: ['download'],

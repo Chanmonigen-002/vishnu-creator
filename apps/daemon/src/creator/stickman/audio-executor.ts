@@ -2,9 +2,9 @@ import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { readFile, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { CreatorArtifact, CreatorServicesConfig } from '@opencreator/protocol';
+import type { CreatorArtifact, CreatorServicesConfig } from '@vishnucreator/protocol';
 import type { CreatorServicesConfigStore } from '../../creator-services/config-store.js';
-import type { KrillinTtsService } from '../krillin/tts-service.js';
+import type { VishnuTtsService } from '../vishnu/tts-service.js';
 import type { CreatorExecutor, CreatorExecutorInput } from '../executor.js';
 import { CreatorExecutorError } from '../executor.js';
 import { CreatorProviderRequestLedger } from '../provider-requests.js';
@@ -16,7 +16,7 @@ import {
 import { stickmanEdgeTtsVoiceForLanguage } from './tts.js';
 import { gatewayCreatorBinding } from '../../gateway/creator-service-source.js';
 
-type Synthesize = Pick<KrillinTtsService, 'synthesize'>['synthesize'];
+type Synthesize = Pick<VishnuTtsService, 'synthesize'>['synthesize'];
 type EdgeTtsSynthesisResult = {
   content: Buffer;
   mime: 'audio/mpeg';
@@ -36,7 +36,7 @@ type EdgeTtsSynthesize = (input: {
 
 export function createStickmanAudioExecutor(input: {
   configStore: Pick<CreatorServicesConfigStore, 'read'>;
-  ttsService: Pick<KrillinTtsService, 'synthesize'>;
+  ttsService: Pick<VishnuTtsService, 'synthesize'>;
   ledger: CreatorProviderRequestLedger;
   ffprobePath: string;
   synthesize?: Synthesize;
@@ -335,7 +335,7 @@ async function synthesizeWithEdgeTts(input: {
   signal: AbortSignal;
 }): Promise<EdgeTtsSynthesisResult> {
   const outputPath = join(input.workdir, `${input.scopeKey}.edge-tts.mp3`);
-  const command = input.command ?? process.env.OPENCREATOR_EDGE_TTS_COMMAND ?? 'edge-tts';
+  const command = input.command ?? process.env.VISHNUCREATOR_EDGE_TTS_COMMAND ?? 'edge-tts';
   try {
     await execFileAsync(command, [
       '--voice', input.voiceId,

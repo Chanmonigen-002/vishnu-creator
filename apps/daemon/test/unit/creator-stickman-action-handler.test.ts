@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { CreatorArtifact, CreatorJob } from '@opencreator/protocol';
+import type { CreatorArtifact, CreatorJob } from '@vishnucreator/protocol';
 import type { CreatorRepository } from '../../src/creator/repository.js';
 import { handleStickmanAction } from '../../src/creator/stickman/action-handler.js';
 

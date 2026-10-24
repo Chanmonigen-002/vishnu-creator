@@ -1,4 +1,4 @@
-import { gatewayDefaultVoiceId } from '@opencreator/protocol';
+import { gatewayDefaultVoiceId } from '@vishnucreator/protocol';
 import { DIRECT_MEDIA_ADAPTER_VERSION } from '../src/gateway/direct-transport.js';
 
 export function verifiedAudioProfiles(results: Record<string, unknown>[], evidence: string, verifiedAt: string) {

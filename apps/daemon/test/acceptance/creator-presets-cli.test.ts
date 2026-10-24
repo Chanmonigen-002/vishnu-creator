@@ -70,8 +70,8 @@ function runCli(command: 'validate' | 'compile', sourceRoot: string, outputRoot:
       cwd: repositoryRoot,
       env: {
         ...process.env,
-        OPENCREATOR_PRESET_SOURCE_ROOT: sourceRoot,
-        OPENCREATOR_PRESET_CATALOG_ROOT: outputRoot
+        VISHNUCREATOR_PRESET_SOURCE_ROOT: sourceRoot,
+        VISHNUCREATOR_PRESET_CATALOG_ROOT: outputRoot
       },
       encoding: 'utf8'
     }

@@ -6,7 +6,7 @@ import type {
   ThreadResponse,
   ThreadRunsResponse,
   UpdateThreadRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 export function createThreadService(client: RuntimeClient) {

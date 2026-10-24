@@ -3,7 +3,7 @@ import type {
   CreatorPresetListResponse,
   CreatorRuntimeWorkspace,
   CreatorServicesConfig
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { Locator, Page } from '@playwright/test';
 import { createServer, type Server } from 'node:http';
 import {
@@ -304,7 +304,7 @@ test('@AC-4 六模块解析严格默认值，工作台首帧预填并持久化�
   });
   await stubVideoDownloadProbe(page, runtime);
   const downloadJob = jobs.get('video-download')!;
-  const downloadUrl = 'https://www.youtube.com/watch?v=OpenCreatorPreset';
+  const downloadUrl = 'https://www.youtube.com/watch?v=VishnuCreatorPreset';
   await openWorkspace(page, runtime, 'video-download', downloadJob.id);
   const downloadInput = page.getByRole('textbox', { name: '视频链接', exact: true });
   await expect(downloadInput).toHaveValue('');

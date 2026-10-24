@@ -28,7 +28,7 @@ import {
 } from '@playwright/test';
 import { packagedExecutable } from './package-artifact.js';
 import type { GatewayCredentials } from '../../daemon/src/gateway/config-store.js';
-import { createOpenCreatorCreatorServicesConfigStore } from '../../daemon/src/creator-services/config-store.js';
+import { createVishnuCreatorCreatorServicesConfigStore } from '../../daemon/src/creator-services/config-store.js';
 import {
   closePackagedApp,
   launchPackagedApp,
@@ -90,11 +90,11 @@ test('@package-smoke 官方配音试听加载公开样本且不触发付费合�
     });
     await waitForWorkspace(fixture.page);
     await expect.poll(async () => (await runtimeRequest<{ activationState: string }>(fixture!.page, 'GET', '/gateway/account')).body.activationState).toBe('ready');
-    expect(await fixture.page.evaluate(() => window.opencreatorDesktop?.readConnectionConfig())).toEqual({ baseUrl: '/.opencreator/runtime' });
+    expect(await fixture.page.evaluate(() => window.vishnucreatorDesktop?.readConnectionConfig())).toEqual({ baseUrl: '/.vishnucreator/runtime' });
     expect((await runtimeRequest(fixture.page, 'GET', '/projects?status=all')).body)
       .toMatchObject({ projects: expect.arrayContaining([expect.objectContaining({ name: 'Default project' })]) });
     const audio = await fixture.page.evaluate(async () => {
-      const response = await fetch('/.opencreator/runtime/creator-services/tts/preview', { method: 'POST',
+      const response = await fetch('/.vishnucreator/runtime/creator-services/tts/preview', { method: 'POST',
         headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ provider: 'openai', voiceId: 'marin', text: 'Hello' }) });
       return { status: response.status, contentType: response.headers.get('content-type'), content: await response.text() };
     });
@@ -151,9 +151,9 @@ test('@package-smoke 慢网关不阻塞缓存账号进入工作区，后台恢�
         expiresIn: 900, accessExpiresAt: new Date(Date.now() + 900_000).toISOString()
       }
     });
-    await fixture.page.waitForURL(url => url.protocol === 'opencreator-app:' && url.hostname === 'app');
-    await expect(fixture.page.locator('.opencreator-shell')).toBeVisible();
-    await expect.poll(() => fixture!.page.evaluate(async () => (await window.opencreatorDesktop?.readBootstrapState())?.phase)).toBe('ready');
+    await fixture.page.waitForURL(url => url.protocol === 'vishnucreator-app:' && url.hostname === 'app');
+    await expect(fixture.page.locator('.vishnucreator-shell')).toBeVisible();
+    await expect.poll(() => fixture!.page.evaluate(async () => (await window.vishnucreatorDesktop?.readBootstrapState())?.phase)).toBe('ready');
     await expect.poll(() => bootstrapRequests).toBe(1);
     await navigateToAppRoute(fixture.page, '#/chat');
     const input = fixture.page.getByRole('textbox', { name: '输入任务' });
@@ -222,15 +222,15 @@ test('@package-smoke 直连模型目录挂起时进入工作区，退出取消�
       gatewayCredentials: { ...bootstrap, accessToken: 'private-access-token', refreshToken: 'private-refresh-token',
         expiresIn: 900, accessExpiresAt: new Date(Date.now() + 900_000).toISOString() }
     });
-    await fixture.page.waitForURL(url => url.protocol === 'opencreator-app:' && url.hostname === 'app');
-    await expect(fixture.page.locator('.opencreator-shell')).toBeVisible();
+    await fixture.page.waitForURL(url => url.protocol === 'vishnucreator-app:' && url.hostname === 'app');
+    await expect(fixture.page.locator('.vishnucreator-shell')).toBeVisible();
     const workspaceReadyMs = Date.now() - startedAt;
-    const startupLog = readFileSync(join(fixture.root, '.opencreator', 'logs', 'desktop-main.log'), 'utf8')
+    const startupLog = readFileSync(join(fixture.root, '.vishnucreator', 'logs', 'desktop-main.log'), 'utf8')
       .split('\n').filter(line => /Desktop starting|Daemon Utility Process (starting|ready)|workspace ready/.test(line)).join('\n');
     const timingPath = testInfo.outputPath('direct-startup-timing.json');
     writeFileSync(timingPath, JSON.stringify({ workspaceReadyMs, startupLog }, null, 2));
     await testInfo.attach('direct-startup-timing.json', { path: timingPath, contentType: 'application/json' });
-    await expect.poll(() => fixture!.page.evaluate(async () => (await window.opencreatorDesktop?.readBootstrapState())?.phase)).toBe('ready');
+    await expect.poll(() => fixture!.page.evaluate(async () => (await window.vishnucreatorDesktop?.readBootstrapState())?.phase)).toBe('ready');
     // The first tunnel is exit detection; the second is the still-pending model catalog.
     await expect.poll(() => connections).toBeGreaterThanOrEqual(2);
     expect(tunnels.size).toBeGreaterThan(0);
@@ -309,7 +309,7 @@ test('@package-smoke 旧账号收到 gateway_migrated 后恢复新网关，个�
     await expect(fixture.page.getByText('网关返回错误，请稍后重试。', { exact: true })).toHaveCount(0);
     await expect(fixture.page.getByText('官方模型服务暂不可用', { exact: true })).toHaveCount(0);
     await fixture.page.screenshot({ path: testInfo.outputPath('migrated-account-ready.png') });
-    const saved = JSON.parse(readFileSync(join(fixture.root, '.opencreator', 'data', 'config', 'gateway-credentials.json'), 'utf8')) as GatewayCredentials;
+    const saved = JSON.parse(readFileSync(join(fixture.root, '.vishnucreator', 'data', 'config', 'gateway-credentials.json'), 'utf8')) as GatewayCredentials;
     expect(saved).toMatchObject({ schemaVersion: 3, transport: 'gateway', keyRotation: false });
     expect(saved).not.toHaveProperty('modelKey');
     await navigateToAppRoute(fixture.page, '#/chat');
@@ -352,7 +352,7 @@ test('@package-smoke 充值回跳进入个人中心并以网关订单确认到�
     await navigateToAppRoute(fixture.page, '#/account');
     await expect(fixture.page.getByRole('heading', { name: account.email })).toBeVisible();
     await navigateToAppRoute(fixture.page, '#/new');
-    await launchSecondInstance(fixture, ['opencreator://billing/return?orderId=order-a']);
+    await launchSecondInstance(fixture, ['vishnucreator://billing/return?orderId=order-a']);
     await expect(fixture.page).toHaveURL(/#\/account\?billing=return&orderId=order-a$/);
     await expect(fixture.page.getByText('待付款', { exact: true })).toBeVisible();
     await expect(fixture.page.getByText(/充值成功/)).toHaveCount(0);
@@ -414,18 +414,18 @@ test('@package-smoke 授权回调唤起个人中心，模型初始化期间立�
       if (fixture.process.pid === undefined) throw new Error('Desktop process ID is unavailable');
       execFileSync('powershell.exe', ['-NoProfile', '-NonInteractive', '-Command', `
         Add-Type -TypeDefinition 'using System; using System.Runtime.InteropServices;
-          public static class OpenCreatorE2EWindow {
+          public static class VishnuCreatorE2EWindow {
             [DllImport("user32.dll")] public static extern bool ShowWindowAsync(IntPtr window, int command);
             [DllImport("user32.dll")] public static extern bool IsIconic(IntPtr window);
           }';
         $windowHandle = (Get-Process -Id ${fixture.process.pid}).MainWindowHandle;
         if ($windowHandle -eq [IntPtr]::Zero) { throw 'Desktop native window is unavailable'; }
-        [OpenCreatorE2EWindow]::ShowWindowAsync($windowHandle, 6) | Out-Null;
+        [VishnuCreatorE2EWindow]::ShowWindowAsync($windowHandle, 6) | Out-Null;
         $deadline = [DateTime]::UtcNow.AddSeconds(5);
-        while (-not [OpenCreatorE2EWindow]::IsIconic($windowHandle) -and [DateTime]::UtcNow -lt $deadline) {
+        while (-not [VishnuCreatorE2EWindow]::IsIconic($windowHandle) -and [DateTime]::UtcNow -lt $deadline) {
           Start-Sleep -Milliseconds 50;
         }
-        if (-not [OpenCreatorE2EWindow]::IsIconic($windowHandle)) { throw 'Desktop native window did not minimize'; }
+        if (-not [VishnuCreatorE2EWindow]::IsIconic($windowHandle)) { throw 'Desktop native window did not minimize'; }
       `], { timeout: 10_000 });
     } else {
       await fixture.page.getByRole('button', { name: '最小化窗口', exact: true }).click();
@@ -433,11 +433,11 @@ test('@package-smoke 授权回调唤起个人中心，模型初始化期间立�
     approved = true;
     const checks: string[] = [];
     fixture.page.on('request', request => { if (request.url().endsWith('/gateway/auth/check')) checks.push(request.url()); });
-    await launchSecondInstance(fixture, ['opencreator://auth/complete']);
+    await launchSecondInstance(fixture, ['vishnucreator://auth/complete']);
     await expect(fixture.page).toHaveURL(/#\/account\?login=complete$/);
     await expect.poll(() => fixture!.page.evaluate(() => document.visibilityState)).toBe('visible');
     await expect.poll(() => checks.length).toBeGreaterThan(0);
-    await expect(fixture.page.getByRole('region', { name: 'OpenCreator 账户', exact: true }).getByRole('status')).toHaveText('已登录', { timeout: 10_000 });
+    await expect(fixture.page.getByRole('region', { name: 'VishnuCreator 账户', exact: true }).getByRole('status')).toHaveText('已登录', { timeout: 10_000 });
     await expect(fixture.page.getByText('官方模型服务正在连接', { exact: true })).toBeVisible();
     const state = await runtimeRequest<{ authState: string; activationState: string }>(fixture.page, 'GET', '/gateway/account');
     expect(state.body).toMatchObject({ authState: 'signed_in', activationState: 'loading' });
@@ -445,7 +445,7 @@ test('@package-smoke 授权回调唤起个人中心，模型初始化期间立�
     await fixture.page.screenshot({ path: testInfo.outputPath('login-models-loading.png') });
     releaseBootstrap();
     await expect(fixture.page.getByRole('heading', { name: account.email, exact: true })).toBeVisible();
-    await expect(fixture.page.getByRole('region', { name: 'OpenCreator 账户', exact: true }).getByRole('status')).toHaveText('已登录');
+    await expect(fixture.page.getByRole('region', { name: 'VishnuCreator 账户', exact: true }).getByRole('status')).toHaveText('已登录');
     await expect(fixture.page.getByText('官方模型服务暂不可用', { exact: true })).toBeVisible();
     await expect(fixture.page.getByRole('button', { name: '模型设置', exact: true })).toBeEnabled();
     const signedIn = await runtimeRequest(fixture.page, 'GET', '/gateway/account');
@@ -513,7 +513,7 @@ test('首次启动从本机 Codex 导入配置但不修改原目录', async () =
   try {
     await waitForRuntimeReady(fixture.page, false);
     const source = join(fixture.root, 'codex-home');
-    const state = await fixture.page.evaluate(() => window.opencreatorDesktop?.readBootstrapState());
+    const state = await fixture.page.evaluate(() => window.vishnucreatorDesktop?.readBootstrapState());
     const imported = state?.codexHome;
     expect(imported).toBeDefined();
     if (imported === undefined) throw new Error('Codex home is unavailable');
@@ -536,21 +536,21 @@ test('打包 App 将旧 Electron 数据当作无关数据且不迁移', async ()
   try {
     await waitForRuntimeReady(fixture.page);
     const state = await fixture.page.evaluate(
-      () => window.opencreatorDesktop?.readBootstrapState()
+      () => window.vishnucreatorDesktop?.readBootstrapState()
     );
     expect(state).toMatchObject({
       phase: 'ready',
       codexBin: packagedCodexExecutablePath(),
-      codexHome: join(fixture.root, '.opencreator', 'runtime', 'codex')
+      codexHome: join(fixture.root, '.vishnucreator', 'runtime', 'codex')
     });
     expect(existsSync(
-      join(fixture.root, '.opencreator', 'data', 'legacy-marker.txt')
+      join(fixture.root, '.vishnucreator', 'data', 'legacy-marker.txt')
     )).toBe(false);
     expect(existsSync(
-      join(fixture.root, '.opencreator', 'runtime', 'codex', 'legacy-codex-marker.txt')
+      join(fixture.root, '.vishnucreator', 'runtime', 'codex', 'legacy-codex-marker.txt')
     )).toBe(false);
     expect(readFileSync(
-      join(fixture.root, '.opencreator', 'config.toml'),
+      join(fixture.root, '.vishnucreator', 'config.toml'),
       'utf8'
     )).toContain('codex_mode = "bundled"');
   } finally {
@@ -602,7 +602,7 @@ test('实际 Desktop 包发送匿名日使用数据且不包含创作内容', as
       'usage_date'
     ]);
     expect(await fixture.page.evaluate(
-      () => window.opencreatorDesktop?.readDesktopPreferences()
+      () => window.vishnucreatorDesktop?.readDesktopPreferences()
     )).toMatchObject({ telemetryEnabled: true });
   } finally {
     if (fixture !== undefined) await closeFixture(fixture);
@@ -621,12 +621,12 @@ test('bundled 模式在最小 PATH 下忽略 nvm 安装的 Codex', async () => {
   try {
     await waitForRuntimeReady(fixture.page);
     const state = await fixture.page.evaluate(
-      () => window.opencreatorDesktop?.readBootstrapState()
+      () => window.vishnucreatorDesktop?.readBootstrapState()
     );
     expect(state).toMatchObject({
       phase: 'ready',
       codexBin: packagedCodexExecutablePath(),
-      codexHome: join(fixture.root, '.opencreator', 'runtime', 'codex')
+      codexHome: join(fixture.root, '.vishnucreator', 'runtime', 'codex')
     });
     expect(readCounter(fixture.stateDir, 'probe-count.txt')).toBe(0);
   } finally {
@@ -644,12 +644,12 @@ test('bundled 模式在最小 PATH 下忽略 ChatGPT 应用内置的 Codex', asy
   try {
     await waitForRuntimeReady(fixture.page);
     const state = await fixture.page.evaluate(
-      () => window.opencreatorDesktop?.readBootstrapState()
+      () => window.vishnucreatorDesktop?.readBootstrapState()
     );
     expect(state).toMatchObject({
       phase: 'ready',
       codexBin: packagedCodexExecutablePath(),
-      codexHome: join(fixture.root, '.opencreator', 'runtime', 'codex')
+      codexHome: join(fixture.root, '.vishnucreator', 'runtime', 'codex')
     });
     expect(readCounter(fixture.stateDir, 'probe-count.txt')).toBe(0);
   } finally {
@@ -673,7 +673,7 @@ test('@package-smoke 启动和刷新不触发付费 Probe，并代理 JSON、二
       .toMatchObject({ availabilityProbe: { status: 'skipped' } });
     expect(readCounter(fixture.stateDir, 'probe-count.txt')).toBe(0);
     const startupMetrics = await fixture.page.evaluate(async () => (
-      await window.opencreatorDesktop?.readBootstrapState()
+      await window.vishnucreatorDesktop?.readBootstrapState()
     )?.startupMetrics);
     expect(startupMetrics).toMatchObject({
       appEntryAt: expect.any(Number),
@@ -698,10 +698,10 @@ test('@package-smoke 启动和刷新不触发付费 Probe，并代理 JSON、二
     const security = await fixture.page.evaluate(async () => ({
       requireType: typeof (window as Window & { require?: unknown }).require,
       processType: typeof (window as Window & { process?: unknown }).process,
-      bridgeKind: window.opencreatorDesktop?.kind,
-      windowChrome: window.opencreatorDesktop?.windowChrome,
-      resolveDroppedFilePathType: typeof window.opencreatorDesktop?.resolveDroppedFilePath,
-      connection: await window.opencreatorDesktop?.readConnectionConfig()
+      bridgeKind: window.vishnucreatorDesktop?.kind,
+      windowChrome: window.vishnucreatorDesktop?.windowChrome,
+      resolveDroppedFilePathType: typeof window.vishnucreatorDesktop?.resolveDroppedFilePath,
+      connection: await window.vishnucreatorDesktop?.readConnectionConfig()
     }));
     expect(security).toMatchObject({
       requireType: 'undefined',
@@ -719,15 +719,15 @@ test('@package-smoke 启动和刷新不触发付费 Probe，并代理 JSON、二
       resolveDroppedFilePathType: 'function'
     });
     expect(security.connection).toEqual({
-      baseUrl: '/.opencreator/runtime'
+      baseUrl: '/.vishnucreator/runtime'
     });
     if (process.platform === 'darwin') {
       const titleBarLayout = await fixture.page.evaluate(() => {
         const dragRegion = document.querySelector<HTMLElement>(
           '.desktop-titlebar-drag-region'
         )!;
-        const sidebar = document.querySelector<HTMLElement>('.opencreator-sidebar')!;
-        const mainPane = document.querySelector<HTMLElement>('.opencreator-main-pane')!;
+        const sidebar = document.querySelector<HTMLElement>('.vishnucreator-sidebar')!;
+        const mainPane = document.querySelector<HTMLElement>('.vishnucreator-main-pane')!;
         const dragRect = dragRegion.getBoundingClientRect();
         return {
           shellCapability: document.querySelector('.app-drop-shell')
@@ -777,7 +777,7 @@ test('@package-smoke 启动和刷新不触发付费 Probe，并代理 JSON、二
 
     await expect.poll(async () => await fixture.page.evaluate(async () => {
       try {
-        const response = await fetch('/.opencreator/runtime/healthz', {
+        const response = await fetch('/.vishnucreator/runtime/healthz', {
           signal: AbortSignal.timeout(2_000)
         });
         const text = await response.text();
@@ -806,8 +806,8 @@ test('@package-smoke 启动和刷新不触发付费 Probe，并代理 JSON、二
         fileName: 'proxy.txt',
         mime: 'text/plain'
       });
-      const bytes = new TextEncoder().encode('opencreator desktop binary proxy');
-      const upload = await fetch(`/.opencreator/runtime/attachments?${query}`, {
+      const bytes = new TextEncoder().encode('vishnucreator desktop binary proxy');
+      const upload = await fetch(`/.vishnucreator/runtime/attachments?${query}`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/octet-stream' },
         body: bytes
@@ -816,10 +816,10 @@ test('@package-smoke 启动和刷新不触发付费 Probe，并代理 JSON、二
         attachment: { id: string };
       };
       const content = await fetch(
-        `/.opencreator/runtime/attachments/${encodeURIComponent(uploaded.attachment.id)}/content?draftId=${encodeURIComponent(draftId)}`
+        `/.vishnucreator/runtime/attachments/${encodeURIComponent(uploaded.attachment.id)}/content?draftId=${encodeURIComponent(draftId)}`
       );
 
-      const runResponse = await fetch('/.opencreator/runtime/runs', {
+      const runResponse = await fetch('/.vishnucreator/runtime/runs', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -830,14 +830,14 @@ test('@package-smoke 启动和刷新不触发付费 Probe，并代理 JSON、二
       const run = await runResponse.json() as { id: string };
       let status = '';
       for (let attempt = 0; attempt < 100; attempt += 1) {
-        const current = await fetch(`/.opencreator/runtime/runs/${encodeURIComponent(run.id)}`);
+        const current = await fetch(`/.vishnucreator/runtime/runs/${encodeURIComponent(run.id)}`);
         const payload = await current.json() as { status: string };
         status = payload.status;
         if (['succeeded', 'failed', 'canceled'].includes(status)) break;
         await new Promise(resolveWait => setTimeout(resolveWait, 50));
       }
       const events = await fetch(
-        `/.opencreator/runtime/runs/${encodeURIComponent(run.id)}/events?fromSeq=0`
+        `/.vishnucreator/runtime/runs/${encodeURIComponent(run.id)}/events?fromSeq=0`
       );
       return {
         uploadStatus: upload.status,
@@ -852,13 +852,13 @@ test('@package-smoke 启动和刷新不触发付费 Probe，并代理 JSON、二
     expect(proxyResult).toMatchObject({
       uploadStatus: 201,
       contentStatus: 200,
-      contentText: 'opencreator desktop binary proxy',
+      contentText: 'vishnucreator desktop binary proxy',
       runStatus: 'succeeded'
     });
     expect(proxyResult.eventContentType).toContain('text/event-stream');
     expect(proxyResult.eventText).toContain('event: done');
 
-    await launchSecondInstance(fixture, ['opencreator://tasks']);
+    await launchSecondInstance(fixture, ['vishnucreator://tasks']);
     await expect.poll(() => fixture.page.evaluate(() => window.location.hash))
       .toBe('#/tasks');
 
@@ -909,7 +909,7 @@ test('打包 App 将会话标题提升到 38px 原生标题栏且文件入口可
       const historyGate = new Promise<void>(resolve => {
         releaseHistory = resolve;
       });
-      Object.defineProperty(window, '__opencreatorReleaseHistoryLoad', {
+      Object.defineProperty(window, '__vishnucreatorReleaseHistoryLoad', {
         configurable: true,
         value: () => releaseHistory?.()
       });
@@ -936,8 +936,8 @@ test('打包 App 将会话标题提升到 38px 原生标题栏且文件入口可
     await expect(fixture.page.getByText('数据分析')).toHaveCount(0);
     await fixture.page.evaluate(() => {
       (
-        window as Window & { __opencreatorReleaseHistoryLoad?: () => void }
-      ).__opencreatorReleaseHistoryLoad?.();
+        window as Window & { __vishnucreatorReleaseHistoryLoad?: () => void }
+      ).__vishnucreatorReleaseHistoryLoad?.();
     });
     await expect(fixture.page.getByRole('status', {
       name: '正在加载会话历史'
@@ -947,7 +947,7 @@ test('打包 App 将会话标题提升到 38px 原生标题栏且文件入口可
     const title = fixture.page.getByRole('heading', { name: 'hello' });
     const conversationHeader = fixture.page.locator(
       process.platform === 'darwin'
-        ? '.opencreator-main-titlebar'
+        ? '.vishnucreator-main-titlebar'
         : '.conversation-page > .conversation-header'
     );
     const fileButton = conversationHeader.getByRole('button', {
@@ -960,8 +960,8 @@ test('打包 App 将会话标题提升到 38px 原生标题栏且文件入口可
 
     if (process.platform === 'darwin') {
       const titlebarLayout = await fixture.page.evaluate(() => {
-        const mainPane = document.querySelector<HTMLElement>('.opencreator-main-pane')!;
-        const titlebar = document.querySelector<HTMLElement>('.opencreator-main-titlebar')!;
+        const mainPane = document.querySelector<HTMLElement>('.vishnucreator-main-pane')!;
+        const titlebar = document.querySelector<HTMLElement>('.vishnucreator-main-titlebar')!;
         const title = titlebar.querySelector<HTMLElement>('h1')!;
         const fileButton = titlebar.querySelector<HTMLElement>('.conversation-file-button')!;
         const conversationPage = document.querySelector<HTMLElement>('.conversation-page')!;
@@ -1096,7 +1096,7 @@ test('打包 App 可稳定预览隐藏正文和本地图片，并阻止用户脚
     await expect(heading).toBeVisible({ timeout: 8_000 });
     await expect(frame.getByText('隐藏正文已经恢复，本地背景图已经内联。')).toBeVisible();
     await expect.poll(
-      () => frame.locator('html').getAttribute('data-opencreator-preview-state')
+      () => frame.locator('html').getAttribute('data-vishnucreator-preview-state')
     ).toBe('recovered');
 
     const frameRect = await preview.boundingBox();
@@ -1156,7 +1156,7 @@ test('打包 App 使用 Codex app-server 并持久化项目与会话', async ({}
     await navigateToAppRoute(fixture.page, '#/chat');
     await expect(fixture.page.getByRole('textbox', { name: '输入任务' })).toBeEnabled();
     expect(existsSync(
-      join(fixture.root, 'Documents', 'OpenCreator', 'Default Project')
+      join(fixture.root, 'Documents', 'VishnuCreator', 'Default Project')
     )).toBe(true);
 
     const initialProjects = await runtimeRequest<{
@@ -1284,7 +1284,7 @@ test('打包 App 首页 Skills 菜单保持在内容区内', async ({}, testInfo
   try {
     await waitForWorkspace(fixture.page);
     const codexHome = await fixture.page.evaluate(async () => (
-      await window.opencreatorDesktop?.readBootstrapState()
+      await window.vishnucreatorDesktop?.readBootstrapState()
     )?.codexHome);
     if (codexHome === undefined) throw new Error('桌面启动状态未返回隔离 Codex Home');
     const skillsDir = join(codexHome, 'skills');
@@ -1350,7 +1350,7 @@ test('未启用付费 Probe 时不执行失败探测，工作区保持可用', a
   try {
     await waitForWorkspace(fixture.page);
     await expect.poll(async () => await fixture.page.evaluate(async () => {
-      const response = await fetch('/.opencreator/runtime/codex/status');
+      const response = await fetch('/.vishnucreator/runtime/codex/status');
       const payload = await response.json() as {
         availabilityProbe?: { status?: string; errorCode?: string };
         diagnostics?: string[];
@@ -1368,7 +1368,7 @@ test('未启用付费 Probe 时不执行失败探测，工作区保持可用', a
       hasDiagnostic: false
     });
     expect(readCounter(fixture.stateDir, 'probe-count.txt')).toBe(0);
-    expect(fixture.page.url()).toContain('opencreator-app://app/');
+    expect(fixture.page.url()).toContain('vishnucreator-app://app/');
   } finally {
     await closeFixture(fixture);
   }
@@ -1414,8 +1414,8 @@ test('@package-smoke Daemon 连续退出保留 Creator 草稿，自动恢复耗�
     const replacementPid = await waitForDaemonUtilityPid(mainPid, firstDaemonPid);
     expect(replacementPid).not.toBe(firstDaemonPid);
     await expect.poll(async () => await fixture.page.evaluate(async () => {
-      const state = await window.opencreatorDesktop?.readBootstrapState();
-      const response = await fetch('/.opencreator/runtime/healthz').catch(() => undefined);
+      const state = await window.vishnucreatorDesktop?.readBootstrapState();
+      const response = await fetch('/.vishnucreator/runtime/healthz').catch(() => undefined);
       return {
         phase: state?.phase,
         health: response?.status
@@ -1430,12 +1430,12 @@ test('@package-smoke Daemon 连续退出保留 Creator 草稿，自动恢复耗�
     for (let attempt = 0; attempt < 2; attempt += 1) {
       process.kill(currentPid, 'SIGKILL');
       currentPid = await waitForDaemonUtilityPid(mainPid, currentPid);
-      await expect.poll(async () => (await fixture.page.evaluate(() => window.opencreatorDesktop?.readBootstrapState()))?.phase).toBe('ready');
+      await expect.poll(async () => (await fixture.page.evaluate(() => window.vishnucreatorDesktop?.readBootstrapState()))?.phase).toBe('ready');
       await expect(composer).toHaveValue('保留这段尚未提交的翻译要求');
     }
     process.kill(currentPid, 'SIGKILL');
     await expect.poll(async () => await fixture.page.evaluate(async () => {
-      const state = await window.opencreatorDesktop?.readBootstrapState();
+      const state = await window.vishnucreatorDesktop?.readBootstrapState();
       return {
         phase: state?.phase,
         code: state?.error?.code
@@ -1451,7 +1451,7 @@ test('@package-smoke Daemon 连续退出保留 Creator 草稿，自动恢复耗�
     await expect(fixture.page.getByRole('button', { name: '重启本地服务', exact: true })).toBeVisible();
     fixture.page.once('dialog', dialog => void dialog.accept());
     await fixture.page.getByRole('button', { name: '重启本地服务', exact: true }).click();
-    await expect.poll(async () => (await fixture.page.evaluate(() => window.opencreatorDesktop?.readBootstrapState()))?.phase).toBe('ready');
+    await expect.poll(async () => (await fixture.page.evaluate(() => window.vishnucreatorDesktop?.readBootstrapState()))?.phase).toBe('ready');
     await expect(composer).toHaveValue('保留这段尚未提交的翻译要求');
     expect(await fixture.page.evaluate(() => document.body.dataset.runtimeRecoveryMarker)).toBe('retain-renderer');
     expect(readCounter(fixture.stateDir, 'probe-count.txt')).toBe(0);
@@ -1460,15 +1460,15 @@ test('@package-smoke Daemon 连续退出保留 Creator 草稿，自动恢复耗�
   }
 });
 
-test('@package-smoke IPC 拒绝非 OpenCreator 页面来源', async () => {
+test('@package-smoke IPC 拒绝非 VishnuCreator 页面来源', async () => {
   const fixture = await launchPackagedDesktop('success');
   try {
     await waitForWorkspace(fixture.page);
     await fixture.page.goto('data:text/html,<title>untrusted</title>');
     const result = await fixture.page.evaluate(async () => {
-      if (!window.opencreatorDesktop) return 'bridge-missing';
+      if (!window.vishnucreatorDesktop) return 'bridge-missing';
       try {
-        await window.opencreatorDesktop.readConnectionConfig();
+        await window.vishnucreatorDesktop.readConnectionConfig();
         return 'unexpected-success';
       } catch (error) {
         return String(error instanceof Error ? error.message : error);
@@ -1480,22 +1480,22 @@ test('@package-smoke IPC 拒绝非 OpenCreator 页面来源', async () => {
   }
 });
 
-test('启动页使用 OpenCreator 文字品牌', async ({}, testInfo) => {
+test('启动页使用 VishnuCreator 文字品牌', async ({}, testInfo) => {
   const fixture = await launchPackagedDesktop('probe-hang');
   try {
     await fixture.page.waitForURL(url => (
-      url.protocol === 'opencreator-app:'
+      url.protocol === 'vishnucreator-app:'
       && url.hostname === 'bootstrap'
     ));
     const brandName = fixture.page.locator('.brand-name');
     await expect(brandName).toBeVisible();
-    await expect(brandName).toHaveText('OpenCreator');
+    await expect(brandName).toHaveText('VishnuCreator');
     await expect(brandName).toHaveCSS('font-size', '20px');
     await expect(brandName).toHaveCSS('font-weight', '600');
     await expect(fixture.page.locator('.bootstrap-panel img')).toHaveCount(0);
 
     await fixture.page.screenshot({
-      path: testInfo.outputPath('opencreator-startup-2026-08-21.png')
+      path: testInfo.outputPath('vishnucreator-startup-2026-08-21.png')
     });
   } finally {
     await closeFixture(fixture);
@@ -1550,7 +1550,7 @@ test('@package-smoke 关闭后隐藏保留本地服务，重新打开后可以�
   try {
     await waitForRuntimeReady(fixture.page, false);
     await fixture.page.evaluate(async () => {
-      await window.opencreatorDesktop?.updateDesktopPreferences({ closeBehavior: 'hide' });
+      await window.vishnucreatorDesktop?.updateDesktopPreferences({ closeBehavior: 'hide' });
     });
     await fixture.page.getByRole('button', { name: '关闭窗口', exact: true }).click();
     expect(fixture.process.exitCode).toBeNull();
@@ -1570,8 +1570,8 @@ test('@package-smoke 创作模块连接内嵌 Runtime 并使用默认项目', as
   const fixture = await launchPackagedDesktop('success');
   try {
     await waitForWorkspace(fixture.page);
-    expect(await fixture.page.evaluate(() => window.opencreatorDesktop?.readConnectionConfig()))
-      .toEqual({ baseUrl: '/.opencreator/runtime' });
+    expect(await fixture.page.evaluate(() => window.vishnucreatorDesktop?.readConnectionConfig()))
+      .toEqual({ baseUrl: '/.vishnucreator/runtime' });
     await expect.poll(async () => {
       const response = await runtimeRequest<{ projects: Array<{ name: string }> }>(
         fixture.page, 'GET', '/projects?status=all'
@@ -1615,14 +1615,14 @@ test('@package-smoke 字幕 Worker 和 WASM 在实际 App 的 CSP 下加载并�
     });
     expect(created.status).toBe(201);
     const jobId = created.body.job.id;
-    const videoPath = join(fixture.root, '.opencreator', 'creator', 'jobs', jobId, 'source.mp4');
+    const videoPath = join(fixture.root, '.vishnucreator', 'creator', 'jobs', jobId, 'source.mp4');
     mkdirSync(dirname(videoPath), { recursive: true });
     const resources = process.platform === 'darwin'
       ? resolve(dirname(packagedExecutable(desktopDir)), '../Resources')
       : join(dirname(packagedExecutable(desktopDir)), 'resources');
-    const ffmpeg = join(resources, 'creator-runtime', 'krillinai', 'bin', process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg');
+    const ffmpeg = join(resources, 'creator-runtime', 'vishnuai', 'bin', process.platform === 'win32' ? 'ffmpeg.exe' : 'ffmpeg');
     execFileSync(ffmpeg, ['-v', 'error', '-y', '-f', 'lavfi', '-i', 'color=c=0x202020:s=640x360:d=2:r=25', '-c:v', 'libx264', '-pix_fmt', 'yuv420p', videoPath], { windowsHide: true });
-    const database = new DatabaseSync(join(fixture.root, '.opencreator', 'data', 'app.sqlite'));
+    const database = new DatabaseSync(join(fixture.root, '.vishnucreator', 'data', 'app.sqlite'));
     try {
       const row = database.prepare('SELECT state_json, created_at FROM creator_jobs WHERE id = ?').get(jobId)!;
       const state = JSON.parse(String(row.state_json));
@@ -1699,7 +1699,7 @@ test('@package-smoke Windows YouTube 专用登录完成和取消，保存后重�
 });
 
 test('@package-smoke YouTube 连接复用已登录 Chrome 并自动保存登录态', async ({}, testInfo) => {
-  test.skip(process.platform !== 'darwin' || process.env.OPENCREATOR_E2E_REAL_YOUTUBE !== '1', 'Requires an existing signed-in local Chrome profile');
+  test.skip(process.platform !== 'darwin' || process.env.VISHNUCREATOR_E2E_REAL_YOUTUBE !== '1', 'Requires an existing signed-in local Chrome profile');
   let fixture = await launchPackagedDesktop('success');
   try {
     await waitForWorkspace(fixture.page);
@@ -1712,8 +1712,8 @@ test('@package-smoke YouTube 连接复用已登录 Chrome 并自动保存登录�
     expect(state.body.status).toBe('connected');
     expect(JSON.stringify(state.body)).not.toMatch(/SAPISID|secret|cookies|credentials/);
     await fixture.page.screenshot({ path: testInfo.outputPath('youtube-connected.png') });
-    if (process.env.OPENCREATOR_E2E_YOUTUBE_PROXY) {
-      expect((await runtimeRequest(fixture.page, 'PATCH', '/creator-services/network', { proxy: process.env.OPENCREATOR_E2E_YOUTUBE_PROXY })).status).toBe(200);
+    if (process.env.VISHNUCREATOR_E2E_YOUTUBE_PROXY) {
+      expect((await runtimeRequest(fixture.page, 'PATCH', '/creator-services/network', { proxy: process.env.VISHNUCREATOR_E2E_YOUTUBE_PROXY })).status).toBe(200);
     }
     for (let attempt = 0; attempt < 2; attempt++) {
       const metadata = await runtimeRequest<{ title: string }>(fixture.page, 'GET', '/video-metadata?url=' + encodeURIComponent('https://www.youtube.com/watch?v=m5yrQMnc_jQ'));
@@ -1740,7 +1740,7 @@ test('@package-smoke 设置关闭后退出时，关闭按钮结束实际 App', a
   try {
     await waitForRuntimeReady(fixture.page, false);
     await fixture.page.evaluate(async () => {
-      await window.opencreatorDesktop?.updateDesktopPreferences({ closeBehavior: 'quit' });
+      await window.vishnucreatorDesktop?.updateDesktopPreferences({ closeBehavior: 'quit' });
     });
     await fixture.page.getByRole('button', { name: '关闭窗口', exact: true }).click();
     expect(await waitForProcessExit(fixture.process, 3_000)).toBe(true);
@@ -1827,7 +1827,7 @@ async function launchPackagedDesktop(
     proxy?: string;
   } = {}
 ): Promise<DesktopFixture> {
-  const root = mkdtempSync(join(tmpdir(), 'opencreator-desktop-e2e-'));
+  const root = mkdtempSync(join(tmpdir(), 'vishnucreator-desktop-e2e-'));
   const binDir = options.codexLocation === 'nvm'
     ? join(root, '.nvm', 'versions', 'node', 'v22.14.0', 'bin')
     : options.codexLocation === 'chatgpt-app'
@@ -1854,12 +1854,12 @@ async function launchPackagedDesktop(
   }
   const userData = join(root, 'user-data');
   writeCodexShim(binDir, {
-    OPENCREATOR_E2E_FAKE_CODEX_STATE_DIR: stateDir,
-    OPENCREATOR_E2E_FAKE_CODEX_MODE: mode,
-    OPENCREATOR_E2E_FAKE_CODEX_SIGNED_OUT: options.signedOut ? '1' : '0',
-    OPENCREATOR_E2E_FAKE_CODEX_CUSTOM_PROVIDER: options.seedLocalCodexProvider ? '1' : '0',
-    OPENCREATOR_E2E_NODE_BINARY: process.execPath,
-    OPENCREATOR_E2E_FAKE_CODEX_SCRIPT: fakeCodexScript
+    VISHNUCREATOR_E2E_FAKE_CODEX_STATE_DIR: stateDir,
+    VISHNUCREATOR_E2E_FAKE_CODEX_MODE: mode,
+    VISHNUCREATOR_E2E_FAKE_CODEX_SIGNED_OUT: options.signedOut ? '1' : '0',
+    VISHNUCREATOR_E2E_FAKE_CODEX_CUSTOM_PROVIDER: options.seedLocalCodexProvider ? '1' : '0',
+    VISHNUCREATOR_E2E_NODE_BINARY: process.execPath,
+    VISHNUCREATOR_E2E_FAKE_CODEX_SCRIPT: fakeCodexScript
   });
   mkdirSync(userData, { recursive: true });
   if (options.seedLegacyData === true) {
@@ -1869,16 +1869,16 @@ async function launchPackagedDesktop(
     );
   }
   if (options.writeCurrentConfig !== false) {
-    writeOpenCreatorConfig(
-      join(root, '.opencreator'),
+    writeVishnuCreatorConfig(
+      join(root, '.vishnucreator'),
       join(binDir, process.platform === 'win32' ? 'codex.exe' : 'codex'),
       options.runtimeMode ?? 'external'
     );
   }
   if (options.proxy) {
-    const store = createOpenCreatorCreatorServicesConfigStore({
-      configFile: join(root, '.opencreator', 'config.toml'),
-      credentialsFile: join(root, '.opencreator', 'credentials.json')
+    const store = createVishnuCreatorCreatorServicesConfigStore({
+      configFile: join(root, '.vishnucreator', 'config.toml'),
+      credentialsFile: join(root, '.vishnucreator', 'credentials.json')
     });
     await store.write({ ...await store.read(), proxy: options.proxy });
   }
@@ -1886,7 +1886,7 @@ async function launchPackagedDesktop(
     writeMisleadingCodexWrapper(join(root, '.local', 'bin'));
   }
   if (options.gatewayCredentials) {
-    const configDir = join(root, '.opencreator', 'data', 'config');
+    const configDir = join(root, '.vishnucreator', 'data', 'config');
     mkdirSync(configDir, { recursive: true });
     writeFileSync(join(configDir, 'gateway-credentials.json'), JSON.stringify(options.gatewayCredentials));
     if (options.gatewaySelectedModels) {
@@ -1915,24 +1915,24 @@ async function launchPackagedDesktop(
             USERPROFILE: root
           }
         : {}),
-      OPENCREATOR_DEFAULT_PROJECT_ROOT: join(root, 'Documents'),
-      OPENCREATOR_HOME: join(root, '.opencreator'),
+      VISHNUCREATOR_DEFAULT_PROJECT_ROOT: join(root, 'Documents'),
+      VISHNUCREATOR_HOME: join(root, '.vishnucreator'),
       CODEX_HOME: codexHome,
-      OPENCREATOR_CODEX_APPLICATION_ROOTS: join(root, 'Applications'),
-      OPENCREATOR_E2E_FAKE_CODEX_STATE_DIR: stateDir,
-      OPENCREATOR_E2E_FAKE_CODEX_MODE: mode,
-      OPENCREATOR_E2E_FAKE_CODEX_SIGNED_OUT: options.signedOut ? '1' : '0',
-      OPENCREATOR_E2E_FAKE_CODEX_CUSTOM_PROVIDER: options.seedLocalCodexProvider ? '1' : '0',
-      OPENCREATOR_E2E_NODE_BINARY: process.execPath,
-      OPENCREATOR_E2E_FAKE_CODEX_SCRIPT: fakeCodexScript,
-      ...(options.gatewayOrigin ? { OPENCREATOR_GATEWAY_ORIGIN: options.gatewayOrigin } : {}),
+      VISHNUCREATOR_CODEX_APPLICATION_ROOTS: join(root, 'Applications'),
+      VISHNUCREATOR_E2E_FAKE_CODEX_STATE_DIR: stateDir,
+      VISHNUCREATOR_E2E_FAKE_CODEX_MODE: mode,
+      VISHNUCREATOR_E2E_FAKE_CODEX_SIGNED_OUT: options.signedOut ? '1' : '0',
+      VISHNUCREATOR_E2E_FAKE_CODEX_CUSTOM_PROVIDER: options.seedLocalCodexProvider ? '1' : '0',
+      VISHNUCREATOR_E2E_NODE_BINARY: process.execPath,
+      VISHNUCREATOR_E2E_FAKE_CODEX_SCRIPT: fakeCodexScript,
+      ...(options.gatewayOrigin ? { VISHNUCREATOR_GATEWAY_ORIGIN: options.gatewayOrigin } : {}),
       ...(options.telemetryUrl === undefined
         ? {}
-        : { OPENCREATOR_TELEMETRY_URL: options.telemetryUrl }),
+        : { VISHNUCREATOR_TELEMETRY_URL: options.telemetryUrl }),
       ...(mode === 'workspace-failure'
         ? {
-            OPENCREATOR_E2E_IGNORE_FIRST_WORKSPACE_READY: '1',
-            OPENCREATOR_E2E_WORKSPACE_READY_TIMEOUT_MS: '3000'
+            VISHNUCREATOR_E2E_IGNORE_FIRST_WORKSPACE_READY: '1',
+            VISHNUCREATOR_E2E_WORKSPACE_READY_TIMEOUT_MS: '3000'
           }
         : {})
     },
@@ -1941,7 +1941,7 @@ async function launchPackagedDesktop(
   return { ...app, root, stateDir };
 }
 
-function writeOpenCreatorConfig(
+function writeVishnuCreatorConfig(
   productHome: string,
   codexBin: string,
   runtimeMode: 'bundled' | 'external'
@@ -2006,7 +2006,7 @@ function packagedCodexExecutablePath(): string {
 
 async function waitForWorkspace(page: Page): Promise<void> {
   await waitForRuntimeReady(page);
-  await expect(page.locator('.opencreator-shell')).toBeVisible();
+  await expect(page.locator('.vishnucreator-shell')).toBeVisible();
 }
 
 async function navigateToAppRoute(page: Page, hash: string): Promise<void> {
@@ -2018,13 +2018,13 @@ async function navigateToAppRoute(page: Page, hash: string): Promise<void> {
 
 async function waitForRuntimeReady(page: Page, confirmSetup = true): Promise<void> {
   await page.waitForURL(url => (
-    url.protocol === 'opencreator-app:'
+    url.protocol === 'vishnucreator-app:'
     && url.hostname === 'app'
   ), { timeout: 45_000 });
   await expect.poll(async () => await page.evaluate(async () => {
-    return (await window.opencreatorDesktop?.readBootstrapState())?.phase;
+    return (await window.vishnucreatorDesktop?.readBootstrapState())?.phase;
   })).toBe('ready');
-  const confirmed = await page.evaluate(() => window.localStorage.getItem('opencreator.agent-setup-confirmed.v1') !== null);
+  const confirmed = await page.evaluate(() => window.localStorage.getItem('vishnucreator.agent-setup-confirmed.v1') !== null);
   if (confirmed) return;
   const setup = page.getByRole('region', { name: '开始使用 Agent' });
   await setup.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => undefined);
@@ -2045,7 +2045,7 @@ async function runtimeRequest<T>(
   body?: unknown
 ): Promise<{ status: number; body: T }> {
   return await page.evaluate(async ({ method, path, body }) => {
-    const response = await fetch(`/.opencreator/runtime${path}`, {
+    const response = await fetch(`/.vishnucreator/runtime${path}`, {
       method,
       headers: body === undefined ? undefined : { 'content-type': 'application/json' },
       ...(body === undefined ? {} : { body: JSON.stringify(body) })
@@ -2060,7 +2060,7 @@ async function runtimeRequest<T>(
 async function closeFixture(fixture: DesktopFixture): Promise<void> {
   try { await closePackagedApp(fixture); }
   finally { await fixture.closeGateway?.(); }
-  if (process.env.OPENCREATOR_E2E_KEEP_TEMP !== '1') {
+  if (process.env.VISHNUCREATOR_E2E_KEEP_TEMP !== '1') {
     rmSync(fixture.root, { recursive: true, force: true });
   }
 }
@@ -2279,6 +2279,6 @@ function requiredPid(pid: number | undefined): number {
 function withoutElectronRunAsNode(env: NodeJS.ProcessEnv): NodeJS.ProcessEnv {
   const next = { ...env };
   delete next.ELECTRON_RUN_AS_NODE;
-  delete next.OPENCREATOR_UPDATE_URL;
+  delete next.VISHNUCREATOR_UPDATE_URL;
   return next;
 }

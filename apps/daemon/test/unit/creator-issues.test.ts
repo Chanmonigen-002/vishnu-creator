@@ -204,7 +204,7 @@ describe('creator issues', () => {
     const failed = repository.createStageRun({
       jobId: 'job-1',
       stageId: 'subtitle',
-      executor: 'krillinai',
+      executor: 'vishnuai',
       status: 'failed',
       scopeKey: null
     });
@@ -230,7 +230,7 @@ describe('creator issues', () => {
     repository.createStageRun({
       jobId: 'job-1',
       stageId: 'subtitle',
-      executor: 'krillinai',
+      executor: 'vishnuai',
       status: 'succeeded',
       scopeKey: null
     });

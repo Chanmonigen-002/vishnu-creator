@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { AgentContextEnvelope } from '@opencreator/protocol';
+import type { AgentContextEnvelope } from '@vishnucreator/protocol';
 import type { CodexAppServerResult } from '../../src/codex/app-server-host-2026-07-28.js';
 import { createCodexCreatorAdapter } from '../../src/creator/agent/codex-adapter.js';
 import type { RuntimeThread } from '../../src/threads/types.js';
@@ -54,7 +54,7 @@ describe('creator codex adapter', () => {
         })
       } as never,
       threads: { getThread: () => thread(), setCodexThreadId() {} },
-      skillPath: '/runtime/skills/opencreator-runtime',
+      skillPath: '/runtime/skills/vishnucreator-runtime',
       guideVersion: 2, guideHash: 'hash', available: true
     });
     const error = await adapter.runTurn({
@@ -124,7 +124,7 @@ describe('creator codex adapter', () => {
         getThread: () => thread(),
         setCodexThreadId
       },
-      skillPath: 'D:\\runtime\\skills\\opencreator-runtime',
+      skillPath: 'D:\\runtime\\skills\\vishnucreator-runtime',
       guideVersion: 2,
       guideHash: 'guide-hash',
       available: true
@@ -154,14 +154,14 @@ describe('creator codex adapter', () => {
       jobId: 'job-1',
       projectId: 'project-1',
       capabilityScopes: ['creator:context', 'creator:artifact:read', 'creator:action'],
-      requiredSkillNames: ['opencreator-runtime'],
+      requiredSkillNames: ['vishnucreator-runtime'],
       readThreadBeforeResume: false,
       timeoutMs: 20 * 60_000,
       inactivityTimeoutMs: 5 * 60_000,
       spawnTimeoutMs: 15_000,
       skills: [{
-        name: 'opencreator-runtime',
-        path: 'D:\\runtime\\skills\\opencreator-runtime'
+        name: 'vishnucreator-runtime',
+        path: 'D:\\runtime\\skills\\vishnucreator-runtime'
       }]
     }));
     const call = startTurn.mock.calls[0]![0];
@@ -214,7 +214,7 @@ function failureFixture(recheckConfigurationAfterFailure: () => Promise<boolean>
   const adapter = createCodexCreatorAdapter({
     runtimeManager: { startTurn } as never,
     threads: { getThread: () => thread(), setCodexThreadId() {} },
-    skillPath: '/runtime/skills/opencreator-runtime', guideVersion: 2, guideHash: 'hash', available: true,
+    skillPath: '/runtime/skills/vishnucreator-runtime', guideVersion: 2, guideHash: 'hash', available: true,
     recheckConfigurationAfterFailure
   });
   return { adapter, startTurn };
@@ -284,7 +284,7 @@ function thread(): RuntimeThread {
     id: 'thread-1',
     title: 'Creator Agent',
     projectId: 'project-1',
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     codexThreadId: null,
     cwd: 'D:\\workspace',
     canonicalCwd: 'D:\\workspace',

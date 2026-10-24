@@ -110,8 +110,8 @@ export async function closePackagedApp(app: PackagedApp): Promise<void> {
 export async function requestPackagedAppQuit(app: PackagedApp): Promise<void> {
   try {
     await app.page.evaluate(() => {
-      if (!window.opencreatorDesktop) throw new Error('Desktop quit bridge is unavailable');
-      void window.opencreatorDesktop.quit();
+      if (!window.vishnucreatorDesktop) throw new Error('Desktop quit bridge is unavailable');
+      void window.vishnucreatorDesktop.quit();
     });
   } catch (error) {
     // A successful quit can close CDP before evaluate's response arrives.

@@ -1,13 +1,13 @@
-import { gatewayModelIdMatches } from '@opencreator/protocol';
+import { gatewayModelIdMatches } from '@vishnucreator/protocol';
 import { isDirectTransport } from './supplier.js';
-import { createDefaultCreatorServicesConfig, gatewayDefaultVoiceId, gatewayModelReady, gatewayTranslationFlashModel, type CreatorServicesConfig, type CreatorProviderRequest, type CreatorStageRun, type CreatorJob, type GatewayModel } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, gatewayDefaultVoiceId, gatewayModelReady, gatewayTranslationFlashModel, type CreatorServicesConfig, type CreatorProviderRequest, type CreatorStageRun, type CreatorJob, type GatewayModel } from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import { createHash, randomBytes, randomUUID } from 'node:crypto';
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { Readable } from 'node:stream';
 import { setTimeout as delay } from 'node:timers/promises';
 import type { CreatorServicesConfigStore } from '../creator-services/config-store.js';
-import { KRILLIN_LLM_ROUTE_PREFIX } from '../creator/krillin/codex-llm-gateway.js';
+import { VISHNU_LLM_ROUTE_PREFIX } from '../creator/vishnu/codex-llm-gateway.js';
 import type { GatewayAccountService } from './account-service.js';
 import { GatewayError } from './client.js';
 import type { CreatorServiceBinding } from '../creator/repository.js';
@@ -37,7 +37,7 @@ export function createGatewayCreatorSource(input: {
   const context = new AsyncLocalStorage<{ snapshot: CreatorServiceBinding; logicalId: string; stageRunId: string; jobId: string }>();
   const inFlight = new Map<AbortController, { stageRunId?: string; done: Promise<void> }>();
   const remoteTasks = new Set<string>();
-  const prefix = `${KRILLIN_LLM_ROUTE_PREFIX}/gateway/v1`;
+  const prefix = `${VISHNU_LLM_ROUTE_PREFIX}/gateway/v1`;
   const direct = input.directRequestsRoot ? createDirectTransport(input.directRequestsRoot,
     input.fetcher ?? createOfficialFetch({ readProxy: async () => (await input.manual.read()).proxy }),
     input.account.recoverModelCredentials ? async (accountId, failedKey, baseUrl) => {
@@ -124,7 +124,7 @@ export function createGatewayCreatorSource(input: {
   };
   async function queryProviderRequest(request: CreatorProviderRequest) {
       if (input.readJobBinding) assertSnapshot(input.readJobBinding(request.jobId), true);
-      if (!input.ledger || !request.gateway || !request.provider.startsWith('opencreator-gateway-')) throw new GatewayError('capability_unsupported', 400);
+      if (!input.ledger || !request.gateway || !request.provider.startsWith('vishnucreator-gateway-')) throw new GatewayError('capability_unsupported', 400);
       const use = await input.account.beginModelUse?.({ recovery: true });
       try {
         let credentials = use?.credentials ?? await input.account.modelCredentials();
@@ -180,7 +180,7 @@ export function createGatewayCreatorSource(input: {
         const provider = { lookupByRequestKey: true, lookup: () => lookupResult ??= lookup() };
         await input.ledger.recover(request.id, provider);
         for (const related of input.ledger.findByRemoteTaskId(request.jobId, requestId)) {
-          if (related.id !== request.id && related.gateway?.accountId === credentials.accountId && related.provider.startsWith('opencreator-gateway-')) await input.ledger.recover(related.id, provider);
+          if (related.id !== request.id && related.gateway?.accountId === credentials.accountId && related.provider.startsWith('vishnucreator-gateway-')) await input.ledger.recover(related.id, provider);
         }
       } finally { await use?.release(); }
   }
@@ -289,7 +289,7 @@ export function createGatewayCreatorSource(input: {
             if (error !== undefined) request.log.warn({ requestId: receipt?.remoteTaskId, code: error instanceof GatewayError ? error.code : 'gateway_status_lookup_failed' }, 'Gateway request status could not be confirmed');
           };
           try {
-            // 提前建立 SSE 连接，避免账号协调和上游准备耗尽 Krillin 的响应头等待时间。
+            // 提前建立 SSE 连接，避免账号协调和上游准备耗尽 Vishnu 的响应头等待时间。
             if (chatStream) {
               reply.hijack();
               reply.raw.writeHead(200, { 'Content-Type': 'text/event-stream; charset=utf-8', 'Cache-Control': 'no-cache, no-store, no-transform', connection: 'keep-alive', 'X-Accel-Buffering': 'no' });
@@ -316,7 +316,7 @@ export function createGatewayCreatorSource(input: {
               ? `creator:${createHash('sha256').update(JSON.stringify([original.logicalId, resource, digest])).digest('hex')}`
               : randomUUID();
             if (input.ledger && original.logicalId && original.jobId && digest && /^(chat\/completions|responses|images\/(generations|edits)|audio\/(speech|transcriptions))$/.test(resource)) {
-              const provider = `opencreator-gateway-${resource}`;
+              const provider = `vishnucreator-gateway-${resource}`;
               const requestKey = headers['Idempotency-Key']!;
               receipt = input.ledger.findLatest(provider, requestKey) ?? input.ledger.registerBeforeSubmit({ jobId: original.jobId, stageRunId: original.stageRunId ?? original.logicalId,
                 scopeKey: input.readStageRun?.(original.stageRunId ?? original.logicalId)?.scopeKey,
@@ -413,7 +413,7 @@ export function createGatewayCreatorSource(input: {
                 if (['succeeded','failed','canceled','outcome_unknown'].includes(value.state ?? '')) remoteTasks.delete(value.requestId);
                 else if (resource === 'video/jobs' || resource === 'videos/tasks' || remoteTasks.has(value.requestId)) remoteTasks.add(value.requestId);
                 if (request.method === 'GET' && original.jobId && input.ledger && /^requests\//.test(resource)) {
-                  for (const entry of input.ledger.findByRemoteTaskId(original.jobId, value.requestId).filter(item => item.provider.startsWith('opencreator-gateway-images/'))) {
+                  for (const entry of input.ledger.findByRemoteTaskId(original.jobId, value.requestId).filter(item => item.provider.startsWith('vishnucreator-gateway-images/'))) {
                     await input.ledger.recover(entry.id, { lookupByRequestKey: false, async lookup() {
                       if (value.state === 'succeeded') return { status: 'succeeded' };
                       if (value.state === 'failed') return { status: 'failed' };

@@ -99,4 +99,4 @@ Se o seu template adapta um prompt ou estilo publicado por outra pessoa:
 
 ---
 
-Dúvidas? [Abra uma issue](https://github.com/krillinai/OpenCreator/issues/new) com sua ideia de template e um exemplo de saída, e ajudaremos a delimitar o escopo.
+Dúvidas? [Abra uma issue](https://github.com/vishnuai/Vishnu Creator/issues/new) com sua ideia de template e um exemplo de saída, e ajudaremos a delimitar o escopo.

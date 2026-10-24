@@ -9,7 +9,7 @@ import type {
   CodexProviderConfigUpdateRequest,
   CodexRuntimeReadiness,
   CodexStatusResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { ApiClientError, type RuntimeClient } from '../runtime/client.js';
 import { createRequestDeadline } from '../runtime/request-deadline.js';
 

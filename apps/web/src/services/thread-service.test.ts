@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from 'vitest';
-import type { ThreadResponse } from '@opencreator/protocol';
+import type { ThreadResponse } from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 import { createThreadService } from './thread-service.js';
 
@@ -136,7 +136,7 @@ function createThreadResponse(overrides: Partial<ThreadResponse> = {}): ThreadRe
     id: 'thread-task',
     title: '每日总结',
     projectId: null,
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     codexThreadId: 'codex-thread-task',
     cwd: '/workspace/project',
     canonicalCwd: '/workspace/project',

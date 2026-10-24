@@ -69,14 +69,14 @@ jobs:
           cache: pnpm
       - uses: actions/setup-go@v5
         with:
-          go-version-file: runtime/krillinai/go.mod
-          cache-dependency-path: runtime/krillinai/go.sum
+          go-version-file: runtime/vishnuai/go.mod
+          cache-dependency-path: runtime/vishnuai/go.sum
       - run: pnpm install --frozen-lockfile
       - name: Validate release workflows
         run: go run github.com/rhysd/actionlint/cmd/actionlint@v1.7.7
       - name: Test release tooling
         run: >-
-          pnpm --filter @opencreator/desktop test --
+          pnpm --filter @vishnucreator/desktop test --
           test/release-assets.test.mjs
           test/release-build-input.test.mjs
           test/release-workflow.test.mjs
@@ -96,8 +96,8 @@ jobs:
           cache: pnpm
       - uses: actions/setup-go@v5
         with:
-          go-version-file: runtime/krillinai/go.mod
-          cache-dependency-path: runtime/krillinai/go.sum
+          go-version-file: runtime/vishnuai/go.mod
+          cache-dependency-path: runtime/vishnuai/go.sum
       - name: Install CJK fonts
         run: |
           sudo apt-get update
@@ -109,9 +109,9 @@ jobs:
         run: pnpm audit --audit-level high --ignore-registry-errors
         timeout-minutes: 5
       - run: pnpm templates:ci
-      - run: pnpm krillinai:test
+      - run: pnpm vishnuai:test
       - name: Prepare Electron for desktop tests
-        run: pnpm --filter @opencreator/desktop exec node -e "require('electron')"
+        run: pnpm --filter @vishnucreator/desktop exec node -e "require('electron')"
       - uses: actions/cache@v4
         with:
           path: apps/desktop/.cache/codex-runtime
@@ -135,14 +135,14 @@ jobs:
           cache: pnpm
       - uses: actions/setup-go@v5
         with:
-          go-version-file: runtime/krillinai/go.mod
-          cache-dependency-path: runtime/krillinai/go.sum
+          go-version-file: runtime/vishnuai/go.mod
+          cache-dependency-path: runtime/vishnuai/go.sum
       - run: pnpm install --frozen-lockfile
       - name: Prepare generated build inputs
         run: |
           pnpm templates:ci
-          pnpm --filter @opencreator/protocol build
-          pnpm --filter @opencreator/config build
+          pnpm --filter @vishnucreator/protocol build
+          pnpm --filter @vishnucreator/config build
       - run: pnpm typecheck
       - run: pnpm build
       - run: pnpm smoke:ci
@@ -161,13 +161,13 @@ jobs:
           cache: pnpm
       - run: pnpm install --frozen-lockfile
       - run: pnpm templates:ci
-      - run: pnpm --filter @opencreator/web build
+      - run: pnpm --filter @vishnucreator/web build
       - run: pnpm exec playwright install --with-deps chromium
       - run: pnpm e2e apps/web/e2e/web-desktop-parity.spec.ts --project=chromium-desktop
       - run: pnpm perf:measure
       - run: pnpm perf:check
         env:
-          OPENCREATOR_PERFORMANCE_RESULTS_REQUIRED: '1'
+          VISHNUCREATOR_PERFORMANCE_RESULTS_REQUIRED: '1'
 
   desktop-network-windows:
     if: needs.classify.outputs.release-only != 'true'
@@ -184,11 +184,11 @@ jobs:
       - run: pnpm install --frozen-lockfile
       - name: Build Desktop network test inputs
         run: |
-          pnpm --filter @opencreator/protocol build
-          pnpm --filter @opencreator/config build
-          pnpm --filter @opencreator/desktop build:main
+          pnpm --filter @vishnucreator/protocol build
+          pnpm --filter @vishnucreator/config build
+          pnpm --filter @vishnucreator/desktop build:main
       - name: Verify Electron networking on Windows
-        run: pnpm --filter @opencreator/desktop exec playwright test --config playwright.config.ts e2e/desktop-network.spec.ts
+        run: pnpm --filter @vishnucreator/desktop exec playwright test --config playwright.config.ts e2e/desktop-network.spec.ts
       - name: Preserve network test diagnostics
         if: always()
         uses: actions/upload-artifact@v4

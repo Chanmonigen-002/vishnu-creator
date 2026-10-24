@@ -21,15 +21,15 @@ Skill 是 [`skills/`](../../../skills/) 下的一个文件夹，根目录包含�
 ## 快速开始
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable && pnpm install
-cp -r skills/krillinai-tts skills/<your-skill>   # 从最接近的现有 Skill 开始
+cp -r skills/vishnuai-tts skills/<your-skill>   # 从最接近的现有 Skill 开始
 # 编辑 skills/<your-skill>/SKILL.md
 pnpm web:dev                                     # 在会话中验证 Agent 能识别它
 ```
 
-最快的路径是复制与你想法最接近的 Skill 然后改写——现有的 `krillinai-*` Skills 展示了期望的结构和语气。
+最快的路径是复制与你想法最接近的 Skill 然后改写——现有的 `vishnuai-*` Skills 展示了期望的结构和语气。
 
 ## Skill 结构
 
@@ -93,4 +93,4 @@ Reviewer 会逐项检查以下内容——把它贴进你的 PR 并逐项勾选�
 
 ---
 
-有问题？[提一个 Issue](https://github.com/krillinai/OpenCreator/issues/new) 并标注 skill 主题，我们会帮你明确范围。
+有问题？[提一个 Issue](https://github.com/vishnuai/Vishnu Creator/issues/new) 并标注 skill 主题，我们会帮你明确范围。

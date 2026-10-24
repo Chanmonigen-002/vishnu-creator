@@ -1,8 +1,8 @@
 import type {
   CodexSkillListResponse,
   CodexSkillMarketInstallRecordResponse,
-} from '@opencreator/protocol';
-import { skillMarketCatalog, type SkillMarketEntry } from '@opencreator/skill-market';
+} from '@vishnucreator/protocol';
+import { skillMarketCatalog, type SkillMarketEntry } from '@vishnucreator/skill-market';
 import {
   CheckCircle2,
   Loader2,

@@ -13,7 +13,7 @@ import {
   type ImageGenerationProvider,
   type ImageGenerationQuality,
   type ImageGenerationSize
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { OfficialModelField, useOfficialServices } from './official-services.js';
 import {
   Download,

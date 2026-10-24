@@ -14,19 +14,19 @@
 
 本轮处理音频与 VTT 输入。音频先转录，VTT 先解析，随后共用后续流程。原始 SRT 翻译暂不调整；配音、合成和下载也不作为本轮翻译算法改造的新增范围。
 
-依据为 OpenCreator `8b4bd9db` 默认 legacy 路径、VideoLingo `01f84349` 的代码比较，以及 `os0V5ADLVjM` 的同源同模型冷启动对照。证据位于工作区 `benchmarks/os0V5ADLVjM-audit-20261021`。该对照不含 ASR、配音、合成和完整 GUI 验收，不能当作原生入口的端到端复现或所有语言的质量结论。
+依据为 Vishnu Creator `8b4bd9db` 默认 legacy 路径、VideoLingo `01f84349` 的代码比较，以及 `os0V5ADLVjM` 的同源同模型冷启动对照。证据位于工作区 `benchmarks/os0V5ADLVjM-audit-20261021`。该对照不含 ASR、配音、合成和完整 GUI 验收，不能当作原生入口的端到端复现或所有语言的质量结论。
 
 | 来源 | 采用的机制 | 本轮取舍 |
 | --- | --- | --- |
-| OpenCreator | 来源位置、时间映射、覆盖检查、检查点、版本保存 | 保留，并贯通工作台恢复和最终状态 |
-| OpenCreator | 术语证据及语境 | 术语结合句意使用，失败允许跳过 |
+| Vishnu Creator | 来源位置、时间映射、覆盖检查、检查点、版本保存 | 保留，并贯通工作台恢复和最终状态 |
+| Vishnu Creator | 术语证据及语境 | 术语结合句意使用，失败允许跳过 |
 | VideoLingo | NLP/语义片段作为实际翻译单元，小批次附带前后文 | 采用；不要求每个单元都是完整语法句 |
 | VideoLingo | 忠实译文与可选表达优化分开，润色失败可回退 | 采用回退原则；不默认增加第二轮润色 |
 | 两者现有复杂链路 | 多轮切分、反复排版修复、全量模型审查 | 不作为新流程必经步骤 |
 
 源码参考：[VideoLingo NLP 入口](../../../VideoLingo/core/_3_1_split_nlp.py)、[长段语义切分](../../../VideoLingo/core/_3_2_split_meaning.py)、[批次和上下文](../../../VideoLingo/core/_4_2_translate.py)、[翻译和可选润色](../../../VideoLingo/core/translate_lines.py)。这些是相邻工作区参考，项目独立检出时不一定存在。
 
-仓库已有[意群实验路径](../../runtime/krillinai/docs/subtitle-segmented-translation.md)。实现时先复用可用模块并消除与本方案冲突的必经依赖，不另复制一整套流程，也不以打开实验开关代替验收。
+仓库已有[意群实验路径](../../runtime/vishnuai/docs/subtitle-segmented-translation.md)。实现时先复用可用模块并消除与本方案冲突的必经依赖，不另复制一整套流程，也不以打开实验开关代替验收。
 
 ## 2. 已确认的四段主流程
 

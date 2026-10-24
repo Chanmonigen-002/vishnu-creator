@@ -6,7 +6,7 @@
 - 原教程：[普通照片秒变复古手账插画](https://www.douyin.com/video/7624869691328485361)。
 - 整理日期：2026-09-18。
 - 范围：将教程中的三段提示词整理为两个图像预设和一个视频预设，复用现有图像/视频工作台及通用协作面板，不新增 Runtime（运行时）模板或生成引擎。
-- 预览素材为原教程画面的裁切或短片摘录，不是 OpenCreator 实际生成的验收结果。来源标注不等于取得再分发授权；本次仅用于本地参考，公开发布或商业分发前须确认作者及相关素材权利。
+- 预览素材为原教程画面的裁切或短片摘录，不是 Vishnu Creator 实际生成的验收结果。来源标注不等于取得再分发授权；本次仅用于本地参考，公开发布或商业分发前须确认作者及相关素材权利。
 
 ## 模板与输入
 
@@ -59,9 +59,9 @@
 ```bash
 pnpm templates:validate
 pnpm templates:compile
-pnpm --filter @opencreator/daemon exec vitest run test/unit/retro-illustration-presets.test.ts
-pnpm --filter @opencreator/daemon exec tsc -p tsconfig.test.json
-pnpm --filter @opencreator/web exec vitest run src/features/dashboard/CreatorCollaborationPanel.test.tsx src/features/dashboard/creator-workspace.test.ts
+pnpm --filter @vishnucreator/daemon exec vitest run test/unit/retro-illustration-presets.test.ts
+pnpm --filter @vishnucreator/daemon exec tsc -p tsconfig.test.json
+pnpm --filter @vishnucreator/web exec vitest run src/features/dashboard/CreatorCollaborationPanel.test.tsx src/features/dashboard/creator-workspace.test.ts
 ```
 
 2026-09-18 实际验证结果：

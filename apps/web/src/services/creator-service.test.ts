@@ -116,22 +116,22 @@ describe('creator web service', () => {
     expect(client.postBinary).toHaveBeenCalledWith(
       '/creator/jobs/job_1/source-video?expectedRevision=7&fileName=sample.webm&mime=video%2Fwebm&lastModified=123',
       expect.any(File),
-      'application/vnd.opencreator.creator-source'
+      'application/vnd.vishnucreator.creator-source'
     );
     expect(client.postBinary).toHaveBeenCalledWith(
       '/creator/jobs/job_1/reference-image?expectedRevision=8&fileName=reference.png&mime=image%2Fpng&lastModified=456',
       expect.any(File),
-      'application/vnd.opencreator.creator-reference-image'
+      'application/vnd.vishnucreator.creator-reference-image'
     );
     expect(client.postBinary).toHaveBeenCalledWith(
       '/creator/jobs/job_1/article-image?expectedRevision=9&fileName=article.png&mime=image%2Fpng&lastModified=654',
       expect.any(File),
-      'application/vnd.opencreator.creator-reference-image'
+      'application/vnd.vishnucreator.creator-reference-image'
     );
     expect(client.postBinary).toHaveBeenCalledWith(
       '/creator/jobs/job_1/source-document?expectedRevision=9&fileName=source.pdf&mime=application%2Fpdf&lastModified=789',
       expect.any(File),
-      'application/vnd.opencreator.creator-document'
+      'application/vnd.vishnucreator.creator-document'
     );
     expect(client.post).toHaveBeenNthCalledWith(
       9,

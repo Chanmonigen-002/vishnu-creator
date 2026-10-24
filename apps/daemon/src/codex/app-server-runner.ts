@@ -1,4 +1,4 @@
-import type { ReasoningEffort, SandboxMode } from '@opencreator/protocol';
+import type { ReasoningEffort, SandboxMode } from '@vishnucreator/protocol';
 import type { BuiltInToolPolicy, CodexMcpServerConfig } from './argv.js';
 import type { RuntimeThread } from '../threads/types.js';
 import { createCodexIsolatedHome, createCodexProbeHome } from './probe-home.js';
@@ -127,7 +127,7 @@ function oneShotThread(id: string, input: StartCodexAppServerInput): RuntimeThre
     id,
     title: id,
     projectId: null,
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     cwd: input.cwd,
     canonicalCwd: input.cwd,
     workspaceMode: 'external',

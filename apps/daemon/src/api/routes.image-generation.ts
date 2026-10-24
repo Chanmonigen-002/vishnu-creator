@@ -1,4 +1,4 @@
-import type { CreateImageGenerationRequest } from '@opencreator/protocol';
+import type { CreateImageGenerationRequest } from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import {
   ImageGenerationError,

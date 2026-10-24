@@ -2,7 +2,7 @@ import { act, fireEvent, render, screen, waitFor, within } from '@testing-librar
 import { userEvent } from '@testing-library/user-event';
 import { StrictMode, useState } from 'react';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import type { CodexModelResponse } from '@opencreator/protocol';
+import type { CodexModelResponse } from '@vishnucreator/protocol';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { Composer } from './Composer.js';
 
@@ -19,7 +19,7 @@ const projects = [
   {
     id: 'playground',
     name: 'Playground',
-    cwd: '~/develop/opencreator/playground',
+    cwd: '~/develop/vishnucreator/playground',
     sandbox: 'follow-global' as const,
     profile: 'default',
     model: null,
@@ -28,7 +28,7 @@ const projects = [
   {
     id: 'cover',
     name: 'cover',
-    cwd: '~/develop/opencreator/cover',
+    cwd: '~/develop/vishnucreator/cover',
     sandbox: 'follow-global' as const,
     profile: 'default',
     model: null,
@@ -134,7 +134,7 @@ describe('Composer', () => {
     expect(screen.getByRole('button', { name: '发送' })).toBeDisabled();
     expect(screen.queryByText('跟随全局配置')).not.toBeInTheDocument();
     expect(screen.queryByText('本地模式')).not.toBeInTheDocument();
-    expect(screen.queryByText('open-opencreator')).not.toBeInTheDocument();
+    expect(screen.queryByText('open-vishnucreator')).not.toBeInTheDocument();
     expect(screen.getByPlaceholderText('输入 / 调用插件')).toBeInTheDocument();
   });
 
@@ -168,7 +168,7 @@ describe('Composer', () => {
 
     expect(screen.queryByRole('button', { name: /选择项目/ })).not.toBeInTheDocument();
     expect(screen.queryByRole('dialog', { name: '选择项目' })).not.toBeInTheDocument();
-    expect(container.querySelector('.opencreator-composer')).toHaveClass('without-project-selector');
+    expect(container.querySelector('.vishnucreator-composer')).toHaveClass('without-project-selector');
     expect(screen.getByRole('button', { name: '选择访问权限 请求批准' })).toBeInTheDocument();
   });
 

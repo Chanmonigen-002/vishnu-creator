@@ -12,7 +12,7 @@ import { join, resolve } from 'node:path';
 import type {
   CreatorYtDlpStatus,
   RuntimeErrorCode
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   readPrivateJsonFile,
   writePrivateJsonFile
@@ -303,7 +303,7 @@ class DefaultYtDlpUpdateManager implements YtDlpUpdateManager {
       fetchImpl: this.input.fetchImpl,
       headers: {
         Accept: 'application/vnd.github+json',
-        'User-Agent': 'OpenCreator-yt-dlp-updater',
+        'User-Agent': 'VishnuCreator-yt-dlp-updater',
         'X-GitHub-Api-Version': '2022-11-28'
       }
     });
@@ -325,7 +325,7 @@ class DefaultYtDlpUpdateManager implements YtDlpUpdateManager {
         fetchImpl: this.input.fetchImpl,
         headers: {
           Accept: 'application/octet-stream',
-          'User-Agent': 'OpenCreator-yt-dlp-updater'
+          'User-Agent': 'VishnuCreator-yt-dlp-updater'
         }
       });
       if (!response.ok) {

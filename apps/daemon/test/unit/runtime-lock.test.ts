@@ -16,7 +16,7 @@ afterEach(() => {
 
 describe('Runtime data lock', () => {
   it('prevents two Runtime owners and releases cleanly', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-runtime-lock-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-runtime-lock-'));
     const release = acquireRuntimeLock(tempDir);
     let conflict: unknown;
     try {
@@ -40,8 +40,8 @@ describe('Runtime data lock', () => {
   });
 
   it('removes a stale lock', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-runtime-lock-'));
-    writeFileSync(join(tempDir, 'opencreator-runtime.lock'), '99999999\n');
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-runtime-lock-'));
+    writeFileSync(join(tempDir, 'vishnucreator-runtime.lock'), '99999999\n');
     const release = acquireRuntimeLock(tempDir);
     release();
   });

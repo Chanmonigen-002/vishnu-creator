@@ -7,9 +7,9 @@ import sharp from 'sharp';
 import { afterAll, describe, expect, it } from 'vitest';
 import { createStickmanRemotionExecutor } from '../../src/creator/stickman/remotion-executor.js';
 
-const runtimeRoot = process.env.OPENCREATOR_STICKMAN_RUNTIME_ROOT;
-const ffmpegPath = process.env.OPENCREATOR_FFMPEG_PATH;
-const ffprobePath = process.env.OPENCREATOR_FFPROBE_PATH;
+const runtimeRoot = process.env.VISHNUCREATOR_STICKMAN_RUNTIME_ROOT;
+const ffmpegPath = process.env.VISHNUCREATOR_FFMPEG_PATH;
+const ffprobePath = process.env.VISHNUCREATOR_FFPROBE_PATH;
 const enabled = Boolean(runtimeRoot && ffmpegPath && ffprobePath);
 const execFileAsync = promisify(execFile);
 let tempRoot = '';

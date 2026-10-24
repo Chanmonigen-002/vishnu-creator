@@ -8,7 +8,7 @@ import {
   type CreatorTtsProvider,
   type CreatorVisualAssetRef,
   type CreatorVisualAssetSummary
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   ArrowLeft,
   ArrowRight,

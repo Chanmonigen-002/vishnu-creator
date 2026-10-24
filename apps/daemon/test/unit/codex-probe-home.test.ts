@@ -27,7 +27,7 @@ afterEach(() => {
 
 describe('Codex Probe 临时 Home', () => {
   it('refreshes automatic model credentials only when local configuration changes', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-follow-local-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-follow-local-'));
     const source = join(tempDir, 'source');
     const isolated = join(tempDir, 'isolated');
     mkdirSync(source);
@@ -47,7 +47,7 @@ describe('Codex Probe 临时 Home', () => {
     expect(existsSync(join(isolated, 'auth.json'))).toBe(false);
   });
   it('checks an existing runtime copy on every startup even when the source did not change', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-startup-sync-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-startup-sync-'));
     const source = join(tempDir, 'source');
     const runtime = join(tempDir, 'runtime');
     mkdirSync(source); mkdirSync(runtime);
@@ -66,7 +66,7 @@ describe('Codex Probe 临时 Home', () => {
   });
 
   it('repairs runtime drift after a failure and changes the host version without changing the local source', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-error-sync-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-error-sync-'));
     const source = join(tempDir, 'source');
     const runtime = join(tempDir, 'runtime');
     mkdirSync(source);
@@ -82,7 +82,7 @@ describe('Codex Probe 临时 Home', () => {
   });
 
   it('validates local files before changing the runtime and never rewrites the source home', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-invalid-sync-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-invalid-sync-'));
     const source = join(tempDir, 'source');
     const runtime = join(tempDir, 'runtime');
     mkdirSync(source); mkdirSync(runtime);
@@ -95,8 +95,8 @@ describe('Codex Probe 临时 Home', () => {
     expect(synchronizeLocalCodexConfiguration(source, source)).toBe(false);
     expect(readFileSync(join(source, 'config.toml'), 'utf8')).toBe('invalid = [');
   });
-  it('imports a local login once and does not overwrite an existing OpenCreator selection', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-codex-import-test-'));
+  it('imports a local login once and does not overwrite an existing VishnuCreator selection', () => {
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-codex-import-test-'));
     const sourceHome = join(tempDir, 'source');
     const isolatedHome = join(tempDir, 'isolated');
     mkdirSync(sourceHome);
@@ -110,7 +110,7 @@ describe('Codex Probe 临时 Home', () => {
   });
 
   it('refreshes the isolated provider from the local Codex home', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-isolated-provider-test-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-isolated-provider-test-'));
     const sourceHome = join(tempDir, 'source');
     const isolatedPath = join(tempDir, 'isolated');
     mkdirSync(sourceHome, { recursive: true });
@@ -145,7 +145,7 @@ describe('Codex Probe 临时 Home', () => {
   });
 
   it('为知识会话保留隔离 Home 中的 Codex rollout', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-isolated-home-test-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-isolated-home-test-'));
     const sourceHome = join(tempDir, 'source');
     const isolatedPath = join(tempDir, 'knowledge', 'codex-home');
     mkdirSync(sourceHome, { recursive: true });
@@ -164,7 +164,7 @@ describe('Codex Probe 临时 Home', () => {
   });
 
   it('只保留模型调用所需配置，不复制 Skills、Plugins 或 MCP 凭据', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-probe-home-test-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-probe-home-test-'));
     const sourceHome = join(tempDir, 'source');
     const temporaryRoot = join(tempDir, 'temporary');
     mkdirSync(join(sourceHome, 'model-catalogs'), { recursive: true });
@@ -248,7 +248,7 @@ describe('Codex Probe 临时 Home', () => {
   });
 
   it('没有 config.toml 时仍创建可用的空 Probe Home', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-probe-home-empty-test-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-probe-home-empty-test-'));
     const sourceHome = join(tempDir, 'source');
     const temporaryRoot = join(tempDir, 'temporary');
     mkdirSync(sourceHome, { recursive: true });
@@ -266,7 +266,7 @@ describe('Codex Probe 临时 Home', () => {
   });
 
   it('忽略 Codex 已废弃的顶层 profile 选择器和内联 profile', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-probe-home-profile-test-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-probe-home-profile-test-'));
     const sourceHome = join(tempDir, 'source');
     const temporaryRoot = join(tempDir, 'temporary');
     mkdirSync(sourceHome, { recursive: true });

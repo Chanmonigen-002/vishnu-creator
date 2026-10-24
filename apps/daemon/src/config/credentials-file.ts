@@ -3,7 +3,7 @@ import {
   writePrivateJsonFile
 } from './private-json-file.js';
 
-export type OpenCreatorCredentialsDocument = {
+export type VishnuCreatorCredentialsDocument = {
   version: 1;
   creatorServices?: Record<string, string>;
   codexProvider?: {
@@ -14,9 +14,9 @@ export type OpenCreatorCredentialsDocument = {
 
 const updateQueues = new Map<string, Promise<void>>();
 
-export async function readOpenCreatorCredentials(
+export async function readVishnuCreatorCredentials(
   path: string
-): Promise<OpenCreatorCredentialsDocument> {
+): Promise<VishnuCreatorCredentialsDocument> {
   const value = await readPrivateJsonFile(path);
   if (!isRecord(value) || value.version !== 1) return { version: 1 };
   return {
@@ -35,16 +35,16 @@ export async function readOpenCreatorCredentials(
   };
 }
 
-export function updateOpenCreatorCredentials(
+export function updateVishnuCreatorCredentials(
   path: string,
   update: (
-    document: OpenCreatorCredentialsDocument
-  ) => OpenCreatorCredentialsDocument
-): Promise<OpenCreatorCredentialsDocument> {
-  let result: OpenCreatorCredentialsDocument | undefined;
+    document: VishnuCreatorCredentialsDocument
+  ) => VishnuCreatorCredentialsDocument
+): Promise<VishnuCreatorCredentialsDocument> {
+  let result: VishnuCreatorCredentialsDocument | undefined;
   const queued = (updateQueues.get(path) ?? Promise.resolve())
     .then(async () => {
-      result = update(await readOpenCreatorCredentials(path));
+      result = update(await readVishnuCreatorCredentials(path));
       await writePrivateJsonFile(path, result);
     });
   updateQueues.set(path, queued.then(() => undefined, () => undefined));

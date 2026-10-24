@@ -11,11 +11,11 @@ import type {
   ScheduleDetailResponse,
   ScheduleResponse,
   UpdateScheduleRequest,
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { Check, Clock3, LoaderCircle, Save, X } from 'lucide-react';
 import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { useConfirmDialog } from '../../components/dialogs/ConfirmDialogProvider.js';
-import type { OpenCreatorProject } from '../projects/project-model.js';
+import type { VishnuCreatorProject } from '../projects/project-model.js';
 import {
   cronToScheduleFrequency,
   scheduleFrequencyToCron,
@@ -53,7 +53,7 @@ export type ScheduleEditorErrors = Partial<
 export function ScheduleEditor(props: {
   mode: 'create' | 'edit';
   initialValues: ScheduleEditorValues;
-  projects: OpenCreatorProject[];
+  projects: VishnuCreatorProject[];
   loading?: boolean;
   saving?: boolean;
   errors?: ScheduleEditorErrors;

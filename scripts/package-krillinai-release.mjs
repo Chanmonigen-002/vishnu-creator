@@ -14,61 +14,61 @@ import {
 import { tmpdir } from 'node:os';
 import { basename, dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import { krillinReleaseAssetNames } from '../apps/desktop/scripts/release-assets.mjs';
+import { vishnuReleaseAssetNames } from '../apps/desktop/scripts/release-assets.mjs';
 
 const scriptPath = fileURLToPath(import.meta.url);
 const defaultRootDir = resolve(dirname(scriptPath), '..');
 
-export function packageKrillinRelease(options = {}) {
+export function packageVishnuRelease(options = {}) {
   const rootDir = resolve(options.rootDir ?? defaultRootDir);
   const platform = normalizePlatform(
     options.platform
-      ?? process.env.OPENCREATOR_KRILLINAI_TARGET_PLATFORM
+      ?? process.env.VISHNUCREATOR_VISHNUAI_TARGET_PLATFORM
       ?? process.platform
   );
   const arch = normalizeArch(
     options.arch
-      ?? process.env.OPENCREATOR_KRILLINAI_TARGET_ARCH
+      ?? process.env.VISHNUCREATOR_VISHNUAI_TARGET_ARCH
       ?? process.arch
   );
   const version = options.version
-    ?? process.env.OPENCREATOR_VERSION?.trim()
+    ?? process.env.VISHNUCREATOR_VERSION?.trim()
     ?? JSON.parse(
       readFileSync(join(rootDir, 'apps', 'desktop', 'package.json'), 'utf8')
     ).version;
   const target = `${platform}-${arch}`;
   const buildRoot = resolve(
     options.buildRoot
-      ?? process.env.OPENCREATOR_KRILLINAI_BUILD_OUTPUT
-      ?? join(rootDir, '.runtime', 'build', 'krillinai', target)
+      ?? process.env.VISHNUCREATOR_VISHNUAI_BUILD_OUTPUT
+      ?? join(rootDir, '.runtime', 'build', 'vishnuai', target)
   );
   const outputDir = resolve(
     options.outputDir
-      ?? process.env.OPENCREATOR_KRILLINAI_RELEASE_OUTPUT
-      ?? join(rootDir, '.runtime', 'release', 'krillinai')
+      ?? process.env.VISHNUCREATOR_VISHNUAI_RELEASE_OUTPUT
+      ?? join(rootDir, '.runtime', 'release', 'vishnuai')
   );
 
   if (options.build !== false) {
-    execFileSync(process.execPath, [join(rootDir, 'scripts', 'build-krillinai.mjs')], {
+    execFileSync(process.execPath, [join(rootDir, 'scripts', 'build-vishnuai.mjs')], {
       cwd: rootDir,
       env: {
         ...process.env,
-        OPENCREATOR_VERSION: version,
-        OPENCREATOR_KRILLINAI_TARGET_PLATFORM: platform,
-        OPENCREATOR_KRILLINAI_TARGET_ARCH: arch,
-        OPENCREATOR_KRILLINAI_BUILD_OUTPUT: buildRoot
+        VISHNUCREATOR_VERSION: version,
+        VISHNUCREATOR_VISHNUAI_TARGET_PLATFORM: platform,
+        VISHNUCREATOR_VISHNUAI_TARGET_ARCH: arch,
+        VISHNUCREATOR_VISHNUAI_BUILD_OUTPUT: buildRoot
       },
       stdio: 'inherit'
     });
   }
 
   const manifest = readBuildManifest(buildRoot, version, platform, arch);
-  const assetNames = krillinReleaseAssetNames(version, platform, arch);
+  const assetNames = vishnuReleaseAssetNames(version, platform, arch);
   const specifications = [
-    { assetName: assetNames[0], binaryName: 'krillinai-server' },
-    { assetName: assetNames[1], binaryName: 'krillinai-cli' }
+    { assetName: assetNames[0], binaryName: 'vishnuai-server' },
+    { assetName: assetNames[1], binaryName: 'vishnuai-cli' }
   ];
-  const stagingRoot = mkdtempSync(join(tmpdir(), 'krillinai-release-'));
+  const stagingRoot = mkdtempSync(join(tmpdir(), 'vishnuai-release-'));
   mkdirSync(outputDir, { recursive: true });
 
   try {
@@ -76,10 +76,10 @@ export function packageKrillinRelease(options = {}) {
       const binary = manifest.binaries[specification.binaryName];
       const source = resolve(buildRoot, binary.path);
       if (!existsSync(source) || !statSync(source).isFile()) {
-        throw new Error(`KrillinAI release binary is missing: ${source}`);
+        throw new Error(`VishnuAI release binary is missing: ${source}`);
       }
       if (hashFile(source) !== binary.sha256) {
-        throw new Error(`KrillinAI release binary hash mismatch: ${source}`);
+        throw new Error(`VishnuAI release binary hash mismatch: ${source}`);
       }
 
       const packageName = stripArchiveExtension(specification.assetName);
@@ -92,15 +92,15 @@ export function packageKrillinRelease(options = {}) {
         chmodSync(join(packageRoot, executableName), 0o755);
       }
       copyRequiredFile(
-        join(rootDir, 'runtime', 'krillinai', 'config', 'config-example.toml'),
+        join(rootDir, 'runtime', 'vishnuai', 'config', 'config-example.toml'),
         join(packageRoot, 'config', 'config-example.toml')
       );
       copyRequiredFile(
-        join(rootDir, 'runtime', 'krillinai', 'config', 'subtitle-style-default.json'),
+        join(rootDir, 'runtime', 'vishnuai', 'config', 'subtitle-style-default.json'),
         join(packageRoot, 'config', 'subtitle-style-default.json')
       );
       copyRequiredFile(
-        join(rootDir, 'runtime', 'krillinai', 'LICENSE'),
+        join(rootDir, 'runtime', 'vishnuai', 'LICENSE'),
         join(packageRoot, 'LICENSE')
       );
 
@@ -113,7 +113,7 @@ export function packageKrillinRelease(options = {}) {
         windowsZip: platform === 'win32'
       });
       if (!existsSync(archivePath) || statSync(archivePath).size === 0) {
-        throw new Error(`KrillinAI release archive was not created: ${archivePath}`);
+        throw new Error(`VishnuAI release archive was not created: ${archivePath}`);
       }
       return archivePath;
     });
@@ -121,7 +121,7 @@ export function packageKrillinRelease(options = {}) {
     if (process.env.GITHUB_ENV) {
       appendFileSync(
         process.env.GITHUB_ENV,
-        `OPENCREATOR_KRILLINAI_RELEASE_ASSETS=${outputDir}\n`
+        `VISHNUCREATOR_VISHNUAI_RELEASE_ASSETS=${outputDir}\n`
       );
     }
     return {
@@ -144,26 +144,26 @@ export function packageKrillinRelease(options = {}) {
 function readBuildManifest(buildRoot, version, platform, arch) {
   const path = join(buildRoot, 'manifest.json');
   if (!existsSync(path)) {
-    throw new Error(`KrillinAI build manifest is missing: ${path}`);
+    throw new Error(`VishnuAI build manifest is missing: ${path}`);
   }
   const manifest = JSON.parse(readFileSync(path, 'utf8'));
   if (
     manifest.version !== 1
-    || manifest.component !== 'opencreator-krillinai'
+    || manifest.component !== 'vishnucreator-vishnuai'
     || manifest.componentVersion !== version
     || manifest.platform !== platform
     || manifest.arch !== arch
     || manifest.buildVcs !== false
   ) {
-    throw new Error('KrillinAI build manifest does not match the release target');
+    throw new Error('VishnuAI build manifest does not match the release target');
   }
-  for (const name of ['krillinai-server', 'krillinai-cli']) {
+  for (const name of ['vishnuai-server', 'vishnuai-cli']) {
     const binary = manifest.binaries?.[name];
     if (
       typeof binary?.path !== 'string'
       || !/^[a-f0-9]{64}$/i.test(binary.sha256 ?? '')
     ) {
-      throw new Error(`KrillinAI build manifest is missing ${name}`);
+      throw new Error(`VishnuAI build manifest is missing ${name}`);
     }
   }
   return manifest;
@@ -181,14 +181,14 @@ function createArchive({ archivePath, packageName, stagingRoot, windowsZip }) {
       '-NoProfile',
       '-NonInteractive',
       '-Command',
-      'Compress-Archive -LiteralPath $env:KRILLIN_PACKAGE_SOURCE '
-        + '-DestinationPath $env:KRILLIN_PACKAGE_ARCHIVE '
+      'Compress-Archive -LiteralPath $env:VISHNU_PACKAGE_SOURCE '
+        + '-DestinationPath $env:VISHNU_PACKAGE_ARCHIVE '
         + '-CompressionLevel Optimal -Force'
     ], {
       env: {
         ...process.env,
-        KRILLIN_PACKAGE_SOURCE: join(stagingRoot, packageName),
-        KRILLIN_PACKAGE_ARCHIVE: archivePath
+        VISHNU_PACKAGE_SOURCE: join(stagingRoot, packageName),
+        VISHNU_PACKAGE_ARCHIVE: archivePath
       },
       stdio: 'inherit'
     });
@@ -202,7 +202,7 @@ function createArchive({ archivePath, packageName, stagingRoot, windowsZip }) {
 
 function copyRequiredFile(source, destination) {
   if (!existsSync(source) || !statSync(source).isFile()) {
-    throw new Error(`KrillinAI release resource is missing: ${source}`);
+    throw new Error(`VishnuAI release resource is missing: ${source}`);
   }
   copyFileSync(source, destination);
 }
@@ -221,13 +221,13 @@ function normalizePlatform(value) {
   if (value === 'mac') return 'darwin';
   if (value === 'win' || value === 'windows') return 'win32';
   if (['darwin', 'win32', 'linux'].includes(value)) return value;
-  throw new Error(`Unsupported KrillinAI release platform: ${value}`);
+  throw new Error(`Unsupported VishnuAI release platform: ${value}`);
 }
 
 function normalizeArch(value) {
   if (value === 'amd64') return 'x64';
   if (['x64', 'arm64'].includes(value)) return value;
-  throw new Error(`Unsupported KrillinAI release architecture: ${value}`);
+  throw new Error(`Unsupported VishnuAI release architecture: ${value}`);
 }
 
 const invokedDirectly = process.argv[1] !== undefined
@@ -235,7 +235,7 @@ const invokedDirectly = process.argv[1] !== undefined
 
 if (invokedDirectly) {
   try {
-    process.stdout.write(`${JSON.stringify(packageKrillinRelease())}\n`);
+    process.stdout.write(`${JSON.stringify(packageVishnuRelease())}\n`);
   } catch (error) {
     process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
     process.exitCode = 1;

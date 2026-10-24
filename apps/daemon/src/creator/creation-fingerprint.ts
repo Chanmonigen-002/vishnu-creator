@@ -2,7 +2,7 @@ import { createHash } from 'node:crypto';
 import type {
   CreatorJson,
   CreatorPresetRef
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export type BlankCreationFingerprint = {
   mode: 'blank';

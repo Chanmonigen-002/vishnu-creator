@@ -1,4 +1,4 @@
-import type { CreatorArtifact, CreatorJob } from '@opencreator/protocol';
+import type { CreatorArtifact, CreatorJob } from '@vishnucreator/protocol';
 import Fastify, { type FastifyInstance } from 'fastify';
 import sharp from 'sharp';
 import { afterEach, describe, expect, it, vi } from 'vitest';

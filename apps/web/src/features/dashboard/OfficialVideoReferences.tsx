@@ -1,6 +1,6 @@
 import { LoaderCircle, Plus, X } from 'lucide-react';
 import { useState } from 'react';
-import type { GatewayModel, VideoGenerationReference } from '@opencreator/protocol';
+import type { GatewayModel, VideoGenerationReference } from '@vishnucreator/protocol';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import { useOptionalCreatorSession } from './creator-session-store.js';
 

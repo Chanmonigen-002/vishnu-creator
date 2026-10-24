@@ -1,6 +1,6 @@
 import { selectListbox } from '../../test/select-option.js';
 import { changeControl } from '../../test/select-option.js';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import {
   readCreatorResultSnapshots,
@@ -8,7 +8,7 @@ import {
   type CreatorJob,
   type CreatorJson,
   type CreatorStageRun
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { appLanguageOptions } from '../../i18n/language.js';
@@ -299,7 +299,7 @@ describe('VideoTranslationWorkspace task controls', () => {
       return { job: current };
     });
     if (action === 'saved') {
-      window.localStorage.setItem('opencreator.videoTranslation.savedSubtitleStyles', JSON.stringify([
+      window.localStorage.setItem('vishnucreator.videoTranslation.savedSubtitleStyles', JSON.stringify([
         { id: 'saved-test-style', name: 'Saved test style', style: {} }
       ]));
     }
@@ -311,7 +311,7 @@ describe('VideoTranslationWorkspace task controls', () => {
         getTtsVoices: async () => ({ voices: [{ id: 'marin', name: 'Marin', provider: 'openai', kind: 'builtin' }] })
       } as never} />
     </CreatorSessionProvider></LanguageProvider>);
-    if (action === 'saved') window.localStorage.removeItem('opencreator.videoTranslation.savedSubtitleStyles');
+    if (action === 'saved') window.localStorage.removeItem('vishnucreator.videoTranslation.savedSubtitleStyles');
     fireEvent.click(screen.getByRole('button', { name: panel }));
     const dialog = screen.getByRole('complementary', { name: panel });
     expect(dialog.querySelector('video, .video-translation-subtitle-preview, .video-translation-subtitle-rendered-preview')).toBeNull();
@@ -1072,7 +1072,7 @@ describe('VideoTranslationWorkspace task controls', () => {
   });
 
   it('saves the current subtitle style as a local template and deletes it', () => {
-    window.localStorage.removeItem('opencreator.videoTranslation.savedSubtitleStyles');
+    window.localStorage.removeItem('vishnucreator.videoTranslation.savedSubtitleStyles');
     const renderWorkspace = () => render(
       <LanguageProvider initialPreference="zh-CN">
         <CreatorSessionProvider
@@ -1106,7 +1106,7 @@ describe('VideoTranslationWorkspace task controls', () => {
     expect(screen.getByRole('tab', { name: '我的样式' })).toHaveAttribute('aria-selected', 'true');
     expect(screen.queryByRole('radio', { name: '经典' })).not.toBeInTheDocument();
     expect(screen.getByRole('radio', { name: '口播粗描边' })).toHaveAttribute('aria-checked', 'true');
-    expect(JSON.parse(window.localStorage.getItem('opencreator.videoTranslation.savedSubtitleStyles') ?? '[]')).toEqual([
+    expect(JSON.parse(window.localStorage.getItem('vishnucreator.videoTranslation.savedSubtitleStyles') ?? '[]')).toEqual([
       expect.objectContaining({ name: '口播粗描边', style: expect.objectContaining({ subtitleOutlineWidth: 6, subtitleShadowBlur: 3 }) })
     ]);
 
@@ -1119,11 +1119,11 @@ describe('VideoTranslationWorkspace task controls', () => {
     fireEvent.click(screen.getByRole('button', { name: '删除模版 口播粗描边' }));
     expect(screen.queryByRole('radio', { name: '口播粗描边' })).not.toBeInTheDocument();
     expect(screen.getByRole('tab', { name: '推荐' })).toHaveAttribute('aria-selected', 'true');
-    expect(window.localStorage.getItem('opencreator.videoTranslation.savedSubtitleStyles')).toBe('[]');
+    expect(window.localStorage.getItem('vishnucreator.videoTranslation.savedSubtitleStyles')).toBe('[]');
   });
 
   it('edits a saved subtitle template and restores the active style on cancel', () => {
-    window.localStorage.setItem('opencreator.videoTranslation.savedSubtitleStyles', JSON.stringify([{
+    window.localStorage.setItem('vishnucreator.videoTranslation.savedSubtitleStyles', JSON.stringify([{
       id: 'saved-test',
       name: '口播',
       style: { subtitleFont: 'serif', subtitleWeight: 'bold', subtitleSize: 'large', subtitleColor: '#FFE45C', subtitleSecondaryColor: '#FFFFFF', subtitleOutlineColor: '#000000', subtitleOutlineWidth: 3, subtitleShadowEnabled: true, subtitleShadowColor: '#000000', subtitleShadowOpacity: 0.6, subtitleShadowOffsetX: 1.5, subtitleShadowOffsetY: 1.5, subtitleShadowBlur: 0.5 }
@@ -1147,7 +1147,7 @@ describe('VideoTranslationWorkspace task controls', () => {
     changeControl(within(drawer).getByRole('combobox', { name: '字幕大小' }), { target: { value: 'small' } });
     fireEvent.click(within(drawer).getByRole('button', { name: '取消' }));
     expect(screen.getByRole('radio', { name: '口播' })).toHaveAttribute('aria-checked', 'false');
-    expect(JSON.parse(window.localStorage.getItem('opencreator.videoTranslation.savedSubtitleStyles') ?? '[]')[0].style.subtitleSize).toBe('large');
+    expect(JSON.parse(window.localStorage.getItem('vishnucreator.videoTranslation.savedSubtitleStyles') ?? '[]')[0].style.subtitleSize).toBe('large');
 
     fireEvent.click(screen.getByRole('button', { name: '编辑模版 口播' }));
     fireEvent.change(screen.getByRole('textbox', { name: '模版名称' }), { target: { value: '口播小字' } });
@@ -1156,10 +1156,10 @@ describe('VideoTranslationWorkspace task controls', () => {
 
     expect(screen.queryByRole('dialog', { name: '编辑模版' })).not.toBeInTheDocument();
     expect(screen.getByRole('radio', { name: '口播小字' })).toHaveAttribute('aria-checked', 'true');
-    expect(JSON.parse(window.localStorage.getItem('opencreator.videoTranslation.savedSubtitleStyles') ?? '[]')).toEqual([
+    expect(JSON.parse(window.localStorage.getItem('vishnucreator.videoTranslation.savedSubtitleStyles') ?? '[]')).toEqual([
       expect.objectContaining({ id: 'saved-test', name: '口播小字', style: expect.objectContaining({ subtitleSize: 'small', subtitleFont: 'serif' }) })
     ]);
-    window.localStorage.removeItem('opencreator.videoTranslation.savedSubtitleStyles');
+    window.localStorage.removeItem('vishnucreator.videoTranslation.savedSubtitleStyles');
   });
 
   it('uses the same preset and custom color controls for original, outline, and shadow', () => {
@@ -1830,7 +1830,7 @@ describe('VideoTranslationWorkspace task controls', () => {
       progress: {
         workflow: true,
         percent: 4,
-        krillinEventPayload: {
+        vishnuEventPayload: {
           phase: 'translating_subtitles',
           percent: 4,
           message: '正在翻译字幕'
@@ -2211,7 +2211,7 @@ function stage(input: {
     id: input.id,
     jobId: 'job_control',
     stageId: 'subtitle',
-    executor: 'krillinai',
+    executor: 'vishnuai',
     status: input.status,
     dispatchStatus: input.dispatchStatus,
     claimOwner: input.dispatchStatus === 'claimed' ? 'scheduler_1' : null,

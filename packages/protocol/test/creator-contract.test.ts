@@ -127,12 +127,12 @@ describe('creator protocol contract', () => {
       futureField: 'allowed'
     };
 
-    expect(protocol.isOpenCreatorIssue(issue)).toBe(true);
-    expect(protocol.isOpenCreatorIssue({
+    expect(protocol.isVishnuCreatorIssue(issue)).toBe(true);
+    expect(protocol.isVishnuCreatorIssue({
       ...issue,
       repairActions: [{ kind: 'shell-command', command: 'rm -rf' }]
     })).toBe(false);
-    expect(protocol.isOpenCreatorIssue({ ...issue, source: 'executor-private' })).toBe(false);
+    expect(protocol.isVishnuCreatorIssue({ ...issue, source: 'executor-private' })).toBe(false);
     expect(protocol.issueRetryResults).toContain('interrupted');
   });
 

@@ -1,7 +1,7 @@
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { createDefaultCreatorServicesConfig, readCreatorResultSnapshots } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, readCreatorResultSnapshots } from '@vishnucreator/protocol';
 import { describe, expect, it, vi } from 'vitest';
 import { createCreatorAgentRepository } from '../../src/creator/agent/repository.js';
 import { createCreatorCommandDispatcher } from '../../src/creator/command-dispatcher.js';
@@ -35,7 +35,7 @@ describe('translation with parallel source download', () => {
     let subtitleStarted = false; let downloadStarted = false;
     const source = join(fixture.dir, 'source.mp4'); writeFileSync(source, 'media');
     const runner = createCreatorStageRunner({ repository: fixture.repository, templates: fixture.service.templates, workRoot: join(fixture.dir, 'work'),
-      executors: [{ id: 'krillinai', async run() { subtitleStarted = true; await subtitleGate.promise; return { outputs: [{ kind: 'target_subtitle', status: 'completed', path: null }] }; } },
+      executors: [{ id: 'vishnuai', async run() { subtitleStarted = true; await subtitleGate.promise; return { outputs: [{ kind: 'target_subtitle', status: 'completed', path: null }] }; } },
         { id: 'download', async run(stage) { downloadStarted = true; await downloadGate.promise;
           if (order === 'download-failed') throw new Error('Download unavailable');
           return { outputs: [{ kind: 'source_video', status: 'completed', path: source, metadata: { sourceUrl: stage.stageRun.progress.previewSourceUrl! } }] }; } }],
@@ -84,7 +84,7 @@ describe('translation with parallel source download', () => {
     fixture.repository.insertArtifact({ jobId: fixture.jobId, kind: 'source_video', status: 'completed', path: source, sourceArtifactIds: [],
       metadata: { sourceUrl: `https://www.bilibili.com/video/BV18E421w7bf?p=${cache === 'other-part' ? 2 : 3}`, playbackCompatible: cache !== 'incompatible' } });
     const runner = createCreatorStageRunner({ repository: fixture.repository, templates: fixture.service.templates,
-      workRoot: join(fixture.dir, 'work'), executors: [{ id: 'krillinai', async run() { return {
+      workRoot: join(fixture.dir, 'work'), executors: [{ id: 'vishnuai', async run() { return {
         outputs: [{ kind: 'target_subtitle', status: 'completed', path: null }]
       }; } }] });
     try {
@@ -104,7 +104,7 @@ describe('translation with parallel source download', () => {
         : [{ kind: 'horizontal_video', status: 'completed' as const, path: null }]
     }));
     const runner = createCreatorStageRunner({ repository: fixture.repository, templates: fixture.service.templates,
-      workRoot: join(fixture.dir, 'work'), executors: [{ id: 'krillinai', run }, { id: 'download', async run() { return {
+      workRoot: join(fixture.dir, 'work'), executors: [{ id: 'vishnuai', run }, { id: 'download', async run() { return {
         outputs: [{ kind: 'source_video', status: 'completed', path: source, metadata: { sourceUrl: 'https://youtu.be/parallel' } }]
       }; } }], onStageChanged(stage) { void fixture.workflow.handleStageChanged(stage); },
       onStageSucceeded(stage) { void fixture.workflow.handleStageChanged(stage); } });
@@ -128,7 +128,7 @@ describe('translation with parallel source download', () => {
     const fixture = setup({ composeVideo: true, dubbing: true });
     let downloadStarted = false;
     const runner = createCreatorStageRunner({ repository: fixture.repository, templates: fixture.service.templates,
-      workRoot: join(fixture.dir, 'work'), executors: [{ id: 'krillinai', async run() { return {
+      workRoot: join(fixture.dir, 'work'), executors: [{ id: 'vishnuai', async run() { return {
         outputs: [{ kind: 'target_subtitle', status: 'completed', path: null }]
       }; } }, { id: 'download', async run(stage) { downloadStarted = true;
         await new Promise<void>(resolve => stage.signal.addEventListener('abort', () => resolve(), { once: true })); return { outputs: [] };
@@ -147,7 +147,7 @@ describe('translation with parallel source download', () => {
     const fixture = setup(); let count = 0;
     const run = vi.fn(async (stage: { signal: AbortSignal }) => { count++; await new Promise<void>(resolve => stage.signal.addEventListener('abort', () => resolve(), { once: true })); return { outputs: [] }; });
     const runner = createCreatorStageRunner({ repository: fixture.repository, templates: fixture.service.templates, workRoot: join(fixture.dir, 'work'),
-      executors: [{ id: 'krillinai', run }, { id: 'download', run }], onStageChanged(stage) { void fixture.workflow.handleStageChanged(stage); } });
+      executors: [{ id: 'vishnuai', run }, { id: 'download', run }], onStageChanged(stage) { void fixture.workflow.handleStageChanged(stage); } });
     try {
       const first = runner.runStageRun(fixture.start()); await vi.waitFor(() => expect(count).toBe(1));
       const second = runner.runStageRun(fixture.service.getJob(fixture.jobId)!.stages.at(-1)!.id);

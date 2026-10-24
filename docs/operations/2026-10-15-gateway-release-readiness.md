@@ -11,11 +11,11 @@
 ### P1：图片异步请求编号协议不一致，已扣积分却没有客户端产物
 
 - 客户端 `apps/daemon/src/image-generation/provider.ts:267` 只接受 `ocdir_` 加 48 位十六进制的异步回执。
-- 正式网关 `open-creator-gateway/internal/modelproxy/service.go:217` 使用 `ocreq_` 加 48 位十六进制。
+- 正式网关 `vishnu-creator-gateway/internal/modelproxy/service.go:217` 使用 `ocreq_` 加 48 位十六进制。
 - 当前官方图片请求主动携带 `Prefer: respond-async`，因此会进入这个校验分支。
 - 实测任务 `creator_job_IMgYeZNH7IWn4EMFF-gT7`，模型 `gpt-image-2.5-flare`，一张 1024×1024 图片：客户端约三秒后报 `Invalid image generation receipt`，任务失败，产物为空，并留下 `creator_provider_resolution_required`。
 - 对应网关请求 `ocreq_eddce76e924a388b6d87891e0c0fbac78f2533008fb27135` 最终为 `succeeded / settled`，实际扣除 100 积分；客户端回执仍为 `waiting_remote`。
-- 已通过同一请求的只读结果接口取回 PNG，734366 字节，1024×1024，像素非空且内容符合测试提示词。文件位于 `/tmp/opencreator-release-image-20261015.png`。没有重新生成或重复扣费。
+- 已通过同一请求的只读结果接口取回 PNG，734366 字节，1024×1024，像素非空且内容符合测试提示词。文件位于 `/tmp/vishnucreator-release-image-20261015.png`。没有重新生成或重复扣费。
 
 发布前应统一异步回执协议，并覆盖完整的 Creator 图片任务：提交、轮询、下载、产物保存、账本终态、异常恢复。验证时优先取回这次已付费结果，避免重新提交。
 
@@ -23,7 +23,7 @@
 
 生产只读查询结果：用户 169 个，网关钱包 20 个，已有旧绑定或旧额度记录但没有新钱包的用户 149 个；其中 4 个账户有历史已付款订单。
 
-`open-creator-gateway/internal/credits/service.go:37` 的 `EnsureTx` 对上述用户返回 `409 credits_migration_required`。此门禁会阻断模型初始化、余额获取和新充值下单：
+`vishnu-creator-gateway/internal/credits/service.go:37` 的 `EnsureTx` 对上述用户返回 `409 credits_migration_required`。此门禁会阻断模型初始化、余额获取和新充值下单：
 
 - `internal/server/device.go:21`：登录后 bootstrap 初始化。
 - `internal/credits/service.go:115`、`:131`：查询余额和请求冻结。
@@ -40,7 +40,7 @@
 | 充值套餐 | 配置与公开接口一致 | $5/2500、$10/5000、$20/10000 积分；微信对应 HKD39/78/156。Stripe live 已启用。 |
 | 支付入账与防重复 | 数据库测试通过 | 真实隔离 PostgreSQL 测试覆盖 webhook、主动补查和只入账一次；新网关启用后没有实际充值入账记录，尚不能认定真实支付闭环已验收。 |
 | 积分消费 | 核心核算通过 | 请求冻结、按用量结算、失败释放、并发防透支测试通过；线上钱包账实校验无异常。 |
-| 国内与海外配置 | 网关入口一致 | 两个地区 bootstrap 均返回 `https://www.open-creator.ai/v1`，供应商为 ChatAnywhere，客户端没有收到上游密钥。未在实际海外网络出口测试连通性。 |
+| 国内与海外配置 | 网关入口一致 | 两个地区 bootstrap 均返回 `https://www.vishnu-creator.ai/v1`，供应商为 ChatAnywhere，客户端没有收到上游密钥。未在实际海外网络出口测试连通性。 |
 | 视频转录与翻译 | 真实调用成功 | `whisper-1` 转录和 `gpt-6.1-sol` 翻译均成功，客户端回执全部终结，无遗留 issue。 |
 | 字幕合成视频 | 本地短片成功 | 输出 H.264/AAC、640×360、2.554 秒 MP4；已解码抽帧检查双语字幕。此项不代表长视频、平台下载或所有字幕对齐场景已覆盖。 |
 | 图片生成 | 上游成功，Creator 流程失败 | 详见 P1，不能认定图片功能通过。 |
@@ -76,7 +76,7 @@
 | Web 11 个相关测试文件 | 310 通过。 |
 | Daemon、Web 类型检查 | 通过。 |
 | 官网授权和支付相关 4 个测试文件 | 14 通过。 |
-| KrillinAI 翻译及 OpenAI 相关定向 Go 测试 | 通过。 |
+| VishnuAI 翻译及 OpenAI 相关定向 Go 测试 | 通过。 |
 | Web 账户与 Web/Desktop parity E2E | 2 失败、2 跳过；旧导航文案和小数积分断言未更新，不能算门禁通过。 |
 | macOS arm64 本地 Desktop 打包 | 成功，版本仍为 3.2.6，未签名；内嵌 Web 资源、构建清单、fuses 和隐私声明校验通过。 |
 | 真实打包 App 定向 E2E | 3 通过、1 失败；通过任务重启恢复、充值回跳、授权回调。启动 Probe 测试在旧计数断言处失败，后续代理断言未执行。 |
@@ -106,4 +106,4 @@
 4. 处理上述失败的回归检查，重新执行受影响的发布门禁。
 5. 使用目标正式版本完成签名、公证及全部目标平台的发布候选验证。本轮仅验证了本机未签名 macOS arm64 包，未验证 Windows、macOS x64、正式升级包或真实海外网络。
 
-本报告是本轮检查快照，不是发布批准，也不替代 `opencreator-desktop-release-runbook.md` 中的正式候选门禁。
+本报告是本轮检查快照，不是发布批准，也不替代 `vishnucreator-desktop-release-runbook.md` 中的正式候选门禁。

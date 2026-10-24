@@ -63,7 +63,7 @@ describe('writing template catalog', () => {
     const template = getWritingTemplate('community.research-paper-writing');
     expect(template).toMatchObject({
       name: 'Research Paper Writing',
-      author: 'Master-cai / OpenCreator adapted',
+      author: 'Master-cai / VishnuCreator adapted',
       domains: ['research'],
       source: {
         type: 'github',

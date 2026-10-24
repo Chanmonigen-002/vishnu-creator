@@ -1,4 +1,4 @@
-import type { AttachmentResponse, RunRequest, RunResponse } from '@opencreator/protocol';
+import type { AttachmentResponse, RunRequest, RunResponse } from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { realpathSync } from 'node:fs';
 import {

@@ -4,7 +4,7 @@ import type {
   CreatorProviderRequest,
   CreatorServicesConfig,
   CreatorStageRun
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { readFile } from 'node:fs/promises';
 import type { CreatorServicesConfigStore } from '../../creator-services/config-store.js';
 import type { CreatorCommandDispatcher } from '../command-dispatcher.js';
@@ -611,7 +611,7 @@ function hasRemoteSideEffect(
   stage: CreatorStageRun,
   requests: CreatorProviderRequest[]
 ): boolean {
-  return typeof stage.progress.krillinTaskId === 'string'
+  return typeof stage.progress.vishnuTaskId === 'string'
     || requests.some(request => (
       request.status === 'submitting'
       || request.status === 'waiting_remote'

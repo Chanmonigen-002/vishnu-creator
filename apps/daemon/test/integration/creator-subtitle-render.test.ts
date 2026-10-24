@@ -13,20 +13,20 @@ import {
 import { tmpdir } from 'node:os';
 import { delimiter, dirname, join, resolve } from 'node:path';
 import { afterAll, describe, expect, it } from 'vitest';
-import { buildKrillinSubtitleStyle } from '../../src/creator/krillin/adapter.js';
-import { createSubtitlePreviewService } from '../../src/creator/krillin/subtitle-preview.js';
-import { createSubtitleRenderService } from '../../src/creator/krillin/subtitle-render.js';
-import { readKrillinRuntimeManifest } from '../../src/creator/krillin/manifest.js';
+import { buildVishnuSubtitleStyle } from '../../src/creator/vishnu/adapter.js';
+import { createSubtitlePreviewService } from '../../src/creator/vishnu/subtitle-preview.js';
+import { createSubtitleRenderService } from '../../src/creator/vishnu/subtitle-render.js';
+import { readVishnuRuntimeManifest } from '../../src/creator/vishnu/manifest.js';
 import { resolveYtDlpRuntime } from '../../src/creator/yt-dlp/runtime.js';
 import sharp from 'sharp';
 
 const repoRoot = resolve(process.cwd(), '../..');
 const runtimeRoot = resolve(
-  process.env.OPENCREATOR_CREATOR_RUNTIME_ROOT
-    ?? join(repoRoot, 'apps/desktop/.pack/creator-runtime/krillinai')
+  process.env.VISHNUCREATOR_CREATOR_RUNTIME_ROOT
+    ?? join(repoRoot, 'apps/desktop/.pack/creator-runtime/vishnuai')
 );
 const suffix = process.platform === 'win32' ? '.exe' : '';
-const cliPath = join(runtimeRoot, 'bin', `krillinai-cli${suffix}`);
+const cliPath = join(runtimeRoot, 'bin', `vishnuai-cli${suffix}`);
 const ffmpegPath = join(runtimeRoot, 'bin', `ffmpeg${suffix}`);
 const fontManifestPath = join(runtimeRoot, 'fonts', 'manifest.json');
 const hasPackagedRuntime = [cliPath, ffmpegPath, fontManifestPath].every(existsSync);
@@ -38,7 +38,7 @@ afterAll(() => {
 
 describe.runIf(hasPackagedRuntime)('Creator packaged subtitle rendering', () => {
   it('compiles complete documents without model configuration and returns verified packaged fonts', async () => {
-    const root = mkdtempSync(join(tmpdir(), 'opencreator-subtitle-document-'));
+    const root = mkdtempSync(join(tmpdir(), 'vishnucreator-subtitle-document-'));
     roots.push(root);
     const service = createSubtitleRenderService({ resourceRoot: runtimeRoot, workRoot: root, ensureRuntimeReady: async () => {} });
     const input = { width: 640, height: 360, horizontal: true, bilingual: true, subtitlePosition: 'bottom' as const,
@@ -60,7 +60,7 @@ describe.runIf(hasPackagedRuntime)('Creator packaged subtitle rendering', () => 
   });
 
   it('keeps bilingual glyphs sharp with a soft shadow and zero outline', async () => {
-    const root = mkdtempSync(join(tmpdir(), 'opencreator-soft-shadow-'));
+    const root = mkdtempSync(join(tmpdir(), 'vishnucreator-soft-shadow-'));
     roots.push(root);
     const service = createSubtitleRenderService({ resourceRoot: runtimeRoot, workRoot: root, ensureRuntimeReady: async () => {} });
     const input = { width: 1920, height: 1080, horizontal: true, bilingual: true, subtitlePosition: 'top' as const,
@@ -101,7 +101,7 @@ describe.runIf(hasPackagedRuntime)('Creator packaged subtitle rendering', () => 
     const service = createSubtitlePreviewService({
       resourceRoot: runtimeRoot, workRoot: result.paths.workdir,
       ensureRuntimeReady: async () => {},
-      getYtDlpRuntime: () => resolveYtDlpRuntime({ resourceRoot: runtimeRoot, manifest: readKrillinRuntimeManifest(runtimeRoot) })
+      getYtDlpRuntime: () => resolveYtDlpRuntime({ resourceRoot: runtimeRoot, manifest: readVishnuRuntimeManifest(runtimeRoot) })
     });
     const png = await service.render({ width, height, subtitleStyle: style, bilingual: true, subtitlePosition: position, translationText: 'Creator subtitle test', originalText: '创作字幕测试' });
     const rgba = await sharp(png).ensureAlpha().raw().toBuffer();
@@ -169,10 +169,10 @@ describe.runIf(hasPackagedRuntime)('Creator packaged subtitle rendering', () => 
       }
     });
 
-    expect(first.ass).toContain('Style: Major,OpenCreator Sans Regular,14,&H00FFFFFF');
-    expect(first.ass).toContain('Style: Minor,OpenCreator Sans Regular,10,&H005CD4FF');
-    expect(second.ass).toContain('Style: Major,OpenCreator Serif Bold,22,&H00FFE77E');
-    expect(second.ass).toContain('Style: Minor,OpenCreator Serif Bold,15,&H006B6BFF');
+    expect(first.ass).toContain('Style: Major,VishnuCreator Sans Regular,14,&H00FFFFFF');
+    expect(first.ass).toContain('Style: Minor,VishnuCreator Sans Regular,10,&H005CD4FF');
+    expect(second.ass).toContain('Style: Major,VishnuCreator Serif Bold,22,&H00FFE77E');
+    expect(second.ass).toContain('Style: Minor,VishnuCreator Serif Bold,15,&H006B6BFF');
     expect(second.ass).toContain('&H99000000');
     expect(second.ass).toContain(',5,6,2,10,10,20,1');
     expect(second.ass).toContain('\\xshad-4\\yshad6\\blur2.5');
@@ -180,17 +180,17 @@ describe.runIf(hasPackagedRuntime)('Creator packaged subtitle rendering', () => 
     expect(second.frame.changedPixels).toBeGreaterThan(first.frame.changedPixels);
     expect(second.frame.sha256).not.toBe(first.frame.sha256);
 
-    const missingRuntime = createMissingFontRuntime('OpenCreatorSerif-Bold.ttf');
+    const missingRuntime = createMissingFontRuntime('VishnuCreatorSerif-Bold.ttf');
     const failed = runCli(second.paths, second.stylePath, missingRuntime);
     expect(failed.status).not.toBe(0);
     expect(`${failed.stdout}\n${failed.stderr}`).toContain(
-      'creator subtitle font unavailable: fonts/OpenCreatorSerif-Bold.ttf'
+      'creator subtitle font unavailable: fonts/VishnuCreatorSerif-Bold.ttf'
     );
   });
 });
 
-function renderStyle(style: Parameters<typeof buildKrillinSubtitleStyle>[0], options: { width: number; height: number; position: string; mixed?: boolean } = { width: 640, height: 360, position: 'top' }) {
-  const root = mkdtempSync(join(tmpdir(), 'opencreator-subtitle-render-'));
+function renderStyle(style: Parameters<typeof buildVishnuSubtitleStyle>[0], options: { width: number; height: number; position: string; mixed?: boolean } = { width: 640, height: 360, position: 'top' }) {
+  const root = mkdtempSync(join(tmpdir(), 'vishnucreator-subtitle-render-'));
   roots.push(root);
   const launcher = join(root, 'launcher');
   const workdir = join(root, 'workdir');
@@ -209,7 +209,7 @@ function renderStyle(style: Parameters<typeof buildKrillinSubtitleStyle>[0], opt
       ? `1\n${timeline}\nCreator subtitle test\n\n2\n${timeline}\n创作字幕测试\n\n`
       : `1\n${timeline}\n${(options.position === 'top' ? ['Creator subtitle test', '创作字幕测试'] : ['创作字幕测试', 'Creator subtitle test']).join('\n')}\n\n`
   );
-  writeFileSync(stylePath, `${JSON.stringify(buildKrillinSubtitleStyle(style), null, 2)}\n`);
+  writeFileSync(stylePath, `${JSON.stringify(buildVishnuSubtitleStyle(style), null, 2)}\n`);
   run(ffmpegPath, [
     '-v', 'error',
     '-y',
@@ -250,12 +250,12 @@ function runCli(
     ...process.env,
     PATH: [join(resourceRoot, 'bin'), process.env.PATH ?? ''].join(delimiter),
     Path: [join(resourceRoot, 'bin'), process.env.Path ?? process.env.PATH ?? ''].join(delimiter),
-    KRILLINAI_RESOURCE_ROOT: resourceRoot,
-    KRILLINAI_OFFLINE_DEPENDENCIES: '1',
-    OPENCREATOR_KRILLINAI_CLI: '1',
+    VISHNUAI_RESOURCE_ROOT: resourceRoot,
+    VISHNUAI_OFFLINE_DEPENDENCIES: '1',
+    VISHNUCREATOR_VISHNUAI_CLI: '1',
     ...(manifest.ytDlp?.mode === 'python'
       ? {
-          OPENCREATOR_YT_DLP_COMMAND: JSON.stringify([
+          VISHNUCREATOR_YT_DLP_COMMAND: JSON.stringify([
             join(runtimeRoot, manifest.ytDlp.executable),
             join(runtimeRoot, manifest.ytDlp.script)
           ])
@@ -309,7 +309,7 @@ function rawFrame(video: string): Buffer {
 }
 
 function createMissingFontRuntime(fileName: string): string {
-  const root = mkdtempSync(join(tmpdir(), 'opencreator-missing-font-runtime-'));
+  const root = mkdtempSync(join(tmpdir(), 'vishnucreator-missing-font-runtime-'));
   roots.push(root);
   if (process.platform === 'win32') {
     cpSync(join(runtimeRoot, 'bin'), join(root, 'bin'), { recursive: true });

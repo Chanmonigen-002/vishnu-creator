@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { mkdtemp } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -6,11 +6,11 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import type { CreatorServicesConfigStore } from '../../src/creator-services/config-store.js';
 import { createGatewayCreatorSource } from '../../src/gateway/creator-service-source.js';
 import {
-  createKrillinTtsService,
-  KrillinTtsServiceError
-} from '../../src/creator/krillin/tts-service.js';
+  createVishnuTtsService,
+  VishnuTtsServiceError
+} from '../../src/creator/vishnu/tts-service.js';
 
-describe('KrillinTtsService', () => {
+describe('VishnuTtsService', () => {
   const roots: string[] = [];
 
   afterEach(async () => {
@@ -27,7 +27,7 @@ describe('KrillinTtsService', () => {
       manual: createConfigStore(createDefaultCreatorServicesConfig()), getLocalOrigin: () => 'http://127.0.0.1:39999'
     });
     const officialPreviewLanguages = vi.fn(async () => ({ 'second-voice': ['en'], 'first-voice': ['en', 'zh'] }));
-    const service = createKrillinTtsService({ resourceRoot: join(root, 'runtime'), workRoot: join(root, 'work'), configStore: source.store, executeUtility, officialPreviewLanguages });
+    const service = createVishnuTtsService({ resourceRoot: join(root, 'runtime'), workRoot: join(root, 'work'), configStore: source.store, executeUtility, officialPreviewLanguages });
     await expect(service.listVoices('aliyun', 'personal-model')).rejects.toMatchObject({ code: 'VALIDATION_FAILED' });
     const result = await service.listVoices('openai', 'official-second');
     expect(result).toMatchObject({ provider: 'openai', model: 'official-second', voices: [{ id: 'second-voice', provider: 'openai', previewLanguages: ['en'] }] });
@@ -62,7 +62,7 @@ describe('KrillinTtsService', () => {
           models: [{ id: 'speech', modality: 'speech', capabilities: [], voices: ['known', 'unknown'], voiceProfiles: { known: profile, unadmitted: profile } }] }) },
       manual: createConfigStore(createDefaultCreatorServicesConfig()), getLocalOrigin: () => 'http://127.0.0.1:39999'
     });
-    const service = createKrillinTtsService({ resourceRoot: join(root, 'runtime'), workRoot: join(root, 'work'), configStore: source.store, executeUtility: vi.fn() });
+    const service = createVishnuTtsService({ resourceRoot: join(root, 'runtime'), workRoot: join(root, 'work'), configStore: source.store, executeUtility: vi.fn() });
     const result = await service.listVoices('openai', 'speech');
     expect(result.voices.map(voice => voice.id)).toEqual(['known', 'unknown']);
     expect(result.voices[0]).toMatchObject({ ...profile, id: 'known', name: 'known' });
@@ -75,7 +75,7 @@ describe('KrillinTtsService', () => {
     const config = createDefaultCreatorServicesConfig();
     config.tts.aliyun.apiKey = 'dashscope-key';
     const executeUtility = vi.fn();
-    const service = createKrillinTtsService({
+    const service = createVishnuTtsService({
       resourceRoot: join(root, 'runtime'),
       workRoot: join(root, 'work'),
       configStore: createConfigStore(config),
@@ -112,7 +112,7 @@ describe('KrillinTtsService', () => {
   it('lists the static OpenAI voice catalog without scanning or launching the Runtime', async () => {
     const root = await temporaryRoot();
     const executeUtility = vi.fn();
-    const service = createKrillinTtsService({
+    const service = createVishnuTtsService({
       resourceRoot: join(root, 'runtime'),
       workRoot: join(root, 'work'),
       configStore: createConfigStore(createDefaultCreatorServicesConfig()),
@@ -150,7 +150,7 @@ describe('KrillinTtsService', () => {
     const config = createDefaultCreatorServicesConfig();
     config.tts.aliyun.model = 'qwen3-tts-flash-2025-09-18';
     const executeUtility = vi.fn();
-    const service = createKrillinTtsService({
+    const service = createVishnuTtsService({
       resourceRoot: join(root, 'runtime'),
       workRoot: join(root, 'work'),
       configStore: createConfigStore(config),
@@ -191,7 +191,7 @@ describe('KrillinTtsService', () => {
         ]
       };
     });
-    const service = createKrillinTtsService({
+    const service = createVishnuTtsService({
       resourceRoot: join(root, 'runtime'),
       workRoot: join(root, 'work'),
       configStore: createConfigStore(config),
@@ -216,7 +216,7 @@ describe('KrillinTtsService', () => {
       releaseVerification = resolve;
     }));
     const executeUtility = vi.fn(async () => ({ ok: true, voices: [] }));
-    const service = createKrillinTtsService({
+    const service = createVishnuTtsService({
       resourceRoot: join(root, 'runtime'),
       workRoot: join(root, 'work'),
       configStore: createConfigStore(config),
@@ -241,7 +241,7 @@ describe('KrillinTtsService', () => {
       content: Buffer.from('speech-audio'),
       format: 'mp3' as const
     }));
-    const service = createKrillinTtsService({
+    const service = createVishnuTtsService({
       resourceRoot: join(root, 'runtime'),
       workRoot: join(root, 'work'),
       configStore: createConfigStore(config),
@@ -291,7 +291,7 @@ describe('KrillinTtsService', () => {
         headers: { 'content-type': 'audio/wav' }
       }));
     vi.stubGlobal('fetch', fetchMock);
-    const service = createKrillinTtsService({
+    const service = createVishnuTtsService({
       resourceRoot: join(root, 'runtime'),
       workRoot: join(root, 'work'),
       configStore: createConfigStore(config)
@@ -340,7 +340,7 @@ describe('KrillinTtsService', () => {
     }), { status: 200, headers: { 'content-type': 'application/json' } }));
     vi.stubGlobal('fetch', fetchMock);
     const executeUtility = vi.fn();
-    const service = createKrillinTtsService({
+    const service = createVishnuTtsService({
       resourceRoot: join(root, 'runtime'),
       workRoot: join(root, 'work'),
       configStore: createConfigStore(config),
@@ -392,7 +392,7 @@ describe('KrillinTtsService', () => {
       new Response(ndjson, { status: 200 })
     ));
     vi.stubGlobal('fetch', fetchMock);
-    const service = createKrillinTtsService({
+    const service = createVishnuTtsService({
       resourceRoot: join(root, 'runtime'),
       workRoot: join(root, 'work'),
       configStore: createConfigStore(config),
@@ -441,7 +441,7 @@ describe('KrillinTtsService', () => {
 
   it('requires the configured provider API key before synthesis', async () => {
     const root = await temporaryRoot();
-    const service = createKrillinTtsService({
+    const service = createVishnuTtsService({
       resourceRoot: join(root, 'runtime'),
       workRoot: join(root, 'work'),
       configStore: createConfigStore(createDefaultCreatorServicesConfig()),
@@ -455,11 +455,11 @@ describe('KrillinTtsService', () => {
     })).rejects.toMatchObject({
       code: 'creator_tts_config_missing',
       statusCode: 409
-    } satisfies Partial<KrillinTtsServiceError>);
+    } satisfies Partial<VishnuTtsServiceError>);
   });
 
   async function temporaryRoot() {
-    const root = await mkdtemp(join(tmpdir(), 'opencreator-tts-service-'));
+    const root = await mkdtemp(join(tmpdir(), 'vishnucreator-tts-service-'));
     roots.push(root);
     return root;
   }

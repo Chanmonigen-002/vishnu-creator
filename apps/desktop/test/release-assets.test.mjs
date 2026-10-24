@@ -7,7 +7,7 @@ import { createRequire } from 'node:module';
 import { afterEach, describe, expect, it } from 'vitest';
 import {
   finalizeReleaseAssets,
-  krillinReleaseAssetNames,
+  vishnuReleaseAssetNames,
   releaseAssetNames,
   renderReleaseNotes,
   refreshUpdaterMetadata,
@@ -48,7 +48,7 @@ afterEach(() => {
 });
 
 function fixture(platform = 'darwin', arch = 'arm64') {
-  const directory = mkdtempSync(join(tmpdir(), 'opencreator-release-assets-'));
+  const directory = mkdtempSync(join(tmpdir(), 'vishnucreator-release-assets-'));
   directories.push(directory);
   const assetsDir = join(directory, 'publish');
   const names = releaseAssetNames(version, platform, arch);
@@ -71,8 +71,8 @@ describe('Desktop release assets', () => {
   it('publishes only verified installers and required updater files, without stale assets', () => {
     const data = fixture();
     const extraNames = [
-      'krillinai-cli-darwin-arm64', 'krillinai-build-manifest-darwin-arm64.json',
-      'builder-effective-config.yaml', 'OpenCreator-3.0.0-mac-arm64.dmg.blockmap'
+      'vishnuai-cli-darwin-arm64', 'vishnuai-build-manifest-darwin-arm64.json',
+      'builder-effective-config.yaml', 'VishnuCreator-3.0.0-mac-arm64.dmg.blockmap'
     ];
     for (const name of extraNames) {
       const path = join(data.directory, name);
@@ -106,15 +106,15 @@ describe('Desktop release assets', () => {
     expect(releaseAssetNames(version, 'darwin', 'arm64')).toContain('latest-mac.yml');
     expect(() => releaseAssetNames(version, 'linux', 'x64')).toThrow('Unsupported');
     expect(() => releaseAssetNames('../3.0.0', 'win32', 'x64')).toThrow('Invalid release version');
-    expect(krillinReleaseAssetNames(version, 'linux', 'arm64')).toEqual([
-      'KrillinAI-Server-3.0.0-linux-arm64.tar.gz',
-      'KrillinAI-CLI-3.0.0-linux-arm64.tar.gz'
+    expect(vishnuReleaseAssetNames(version, 'linux', 'arm64')).toEqual([
+      'VishnuAI-Server-3.0.0-linux-arm64.tar.gz',
+      'VishnuAI-CLI-3.0.0-linux-arm64.tar.gz'
     ]);
-    expect(krillinReleaseAssetNames(version, 'win32', 'x64')).toEqual([
-      'KrillinAI-Server-3.0.0-win-x64.zip',
-      'KrillinAI-CLI-3.0.0-win-x64.zip'
+    expect(vishnuReleaseAssetNames(version, 'win32', 'x64')).toEqual([
+      'VishnuAI-Server-3.0.0-win-x64.zip',
+      'VishnuAI-CLI-3.0.0-win-x64.zip'
     ]);
-    expect(() => krillinReleaseAssetNames(version, 'win32', 'arm64')).toThrow('Unsupported');
+    expect(() => vishnuReleaseAssetNames(version, 'win32', 'arm64')).toThrow('Unsupported');
   });
 
   it('finalizes desktop, server, and CLI assets with download links and checksums', () => {
@@ -134,25 +134,25 @@ describe('Desktop release assets', () => {
       ['linux', 'x64'],
       ['linux', 'arm64']
     ]) {
-      for (const name of krillinReleaseAssetNames(version, platform, arch)) {
+      for (const name of vishnuReleaseAssetNames(version, platform, arch)) {
         writeFileSync(join(data.directory, name), name);
       }
     }
     const notes = finalizeReleaseAssets({
       directory: data.directory,
       version,
-      repository: 'krillinai/OpenCreator',
+      repository: 'vishnuai/VishnuCreator',
       highlights
     });
     expect(readdirSync(data.directory)).toHaveLength(24);
     expect(readFileSync(join(data.directory, 'SHA256SUMS.txt'), 'utf8').trim().split('\n')).toHaveLength(23);
-    expect(notes).toContain('https://github.com/krillinai/OpenCreator/releases/download/v3.0.0/OpenCreator-3.0.0-win-x64.exe');
-    expect(notes).toContain('KrillinAI-Server-3.0.0-linux-x64.tar.gz');
-    expect(notes).toContain('KrillinAI-CLI-3.0.0-mac-arm64.tar.gz');
+    expect(notes).toContain('https://github.com/vishnuai/VishnuCreator/releases/download/v3.0.0/VishnuCreator-3.0.0-win-x64.exe');
+    expect(notes).toContain('VishnuAI-Server-3.0.0-linux-x64.tar.gz');
+    expect(notes).toContain('VishnuAI-CLI-3.0.0-mac-arm64.tar.gz');
     expect(notes).toContain('macOS Apple Silicon');
     expect(notes).toContain('Authenticode');
     expect(notes).toContain('## What\'s New\n\n- Added Creator workflows.');
-    expect(notes).toContain('## OpenCreator Desktop');
+    expect(notes).toContain('## VishnuCreator Desktop');
     expect(notes).toContain('| Platform | Installer |');
     expect(notes).toContain('[SHA-256 Checksums]');
     expect(notes).toContain('<summary>Automatic Update Assets</summary>');
@@ -167,7 +167,7 @@ describe('Desktop release assets', () => {
     expect(() => finalizeReleaseAssets({
       directory: data.directory,
       version,
-      repository: 'krillinai/OpenCreator',
+      repository: 'vishnuai/VishnuCreator',
       highlights
     })).toThrow('Unexpected public release asset');
     rmSync(join(data.directory, 'builder-debug.yml'));
@@ -175,16 +175,16 @@ describe('Desktop release assets', () => {
     expect(() => finalizeReleaseAssets({
       directory: data.directory,
       version,
-      repository: 'krillinai/OpenCreator',
+      repository: 'vishnuai/VishnuCreator',
       highlights
     })).toThrow('Missing release asset');
   });
 
   it('uses versioned platform filenames and the new repository for automatic updates', () => {
     const config = readFileSync(resolve(process.cwd(), 'electron-builder.yml'), 'utf8');
-    expect(config).toContain('artifactName: OpenCreator-${version}-${os}-${arch}.${ext}');
-    expect(config).toContain('repo: OpenCreator');
-    expect(config).not.toContain('repo: KrillinAI');
+    expect(config).toContain('artifactName: VishnuCreator-${version}-${os}-${arch}.${ext}');
+    expect(config).toContain('repo: VishnuCreator');
+    expect(config).not.toContain('repo: VishnuAI');
   });
 
   it('runs the release finalizer through the same CLI used by the promotion workflow', () => {
@@ -206,11 +206,11 @@ describe('Desktop release assets', () => {
       ['linux', 'x64'],
       ['linux', 'arm64']
     ]) {
-      for (const name of krillinReleaseAssetNames(version, platform, arch)) {
+      for (const name of vishnuReleaseAssetNames(version, platform, arch)) {
         writeFileSync(join(data.directory, name), name);
       }
     }
-    const notesDir = mkdtempSync(join(tmpdir(), 'opencreator-release-notes-'));
+    const notesDir = mkdtempSync(join(tmpdir(), 'vishnucreator-release-notes-'));
     directories.push(notesDir);
     const notesPath = join(notesDir, 'release-notes.md');
     const highlightsPath = join(notesDir, 'highlights.md');
@@ -219,14 +219,14 @@ describe('Desktop release assets', () => {
       resolve(process.cwd(), 'scripts/release-assets.mjs'),
       data.directory,
       `v${version}`,
-      'krillinai/OpenCreator',
+      'vishnuai/VishnuCreator',
       notesPath,
       highlightsPath
     ], { encoding: 'utf8' });
 
     expect(result.status, result.stderr).toBe(0);
     expect(result.stdout).toContain(`Verified 24 public release assets for v${version}`);
-    expect(readFileSync(notesPath, 'utf8')).toContain(`# OpenCreator v${version}`);
+    expect(readFileSync(notesPath, 'utf8')).toContain(`# VishnuCreator v${version}`);
     expect(readFileSync(notesPath, 'utf8')).toContain(highlights);
     rmSync(notesPath);
   });
@@ -237,7 +237,7 @@ describe('Release notes language gate', () => {
     undefined,
     '',
     '  \n',
-    '# OpenCreator v3.0.0',
+    '# VishnuCreator v3.0.0',
     '## 更新内容\n\n- 改进视频下载。',
     '## What\'s New\n\n- Improved 视频下载.',
     '## 更新内容\n\n- Improved video downloads.'
@@ -245,13 +245,13 @@ describe('Release notes language gate', () => {
     const data = fixture();
     const snapshot = () => readdirSync(data.directory).sort().map(name => [name, readFileSync(join(data.directory, name), 'utf8')]);
     const before = snapshot();
-    expect(() => renderReleaseNotes({ version, repository: 'krillinai/OpenCreator', highlights: invalidHighlights })).toThrow(/English/);
-    expect(() => finalizeReleaseAssets({ directory: data.directory, version, repository: 'krillinai/OpenCreator', highlights: invalidHighlights })).toThrow(/English/);
+    expect(() => renderReleaseNotes({ version, repository: 'vishnuai/VishnuCreator', highlights: invalidHighlights })).toThrow(/English/);
+    expect(() => finalizeReleaseAssets({ directory: data.directory, version, repository: 'vishnuai/VishnuCreator', highlights: invalidHighlights })).toThrow(/English/);
     expect(snapshot()).toEqual(before);
   });
 
   it.each(['missing', 'empty', 'chinese', 'mixed'])('fails the promotion CLI for %s source notes without writing output', problem => {
-    const directory = mkdtempSync(join(tmpdir(), 'opencreator-invalid-notes-'));
+    const directory = mkdtempSync(join(tmpdir(), 'vishnucreator-invalid-notes-'));
     directories.push(directory);
     const highlightsPath = join(directory, 'highlights.md');
     const notesPath = join(directory, 'release-notes.md');
@@ -261,7 +261,7 @@ describe('Release notes language gate', () => {
       resolve(process.cwd(), 'scripts/release-assets.mjs'),
       join(directory, 'assets-not-yet-read'),
       `v${version}`,
-      'krillinai/OpenCreator',
+      'vishnuai/VishnuCreator',
       notesPath,
       highlightsPath
     ], { encoding: 'utf8' });
@@ -298,7 +298,7 @@ describe('Updater metadata after notarization', () => {
     const metadata = parseYaml(readFileSync(path, 'utf8'));
     if (problem === 'payload') writeFileSync(join(directory, metadata.path), 'changed ZIP');
     if (problem === 'primary-checksum') metadata.sha512 = 'incorrect';
-    if (problem === 'architecture') metadata.path = `OpenCreator-${version}-mac-arm64.zip`;
+    if (problem === 'architecture') metadata.path = `VishnuCreator-${version}-mac-arm64.zip`;
     if (problem === 'unsafe-url') metadata.files[0].url = '../unverified.dmg';
     writeFileSync(path, JSON.stringify(metadata));
     const before = targets.map(([platform, arch]) => readFileSync(join(directory, releaseAssetNames(version, platform, arch).find(name => name.endsWith('.yml'))), 'utf8'));

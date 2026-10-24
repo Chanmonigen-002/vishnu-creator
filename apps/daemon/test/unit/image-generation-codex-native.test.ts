@@ -2,7 +2,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { generateImageContents } from '../../src/image-generation/provider.js';
 
 const png = Buffer.from([
@@ -19,7 +19,7 @@ describe('codex-native provider dispatch', () => {
   });
 
   it('uses the local Codex provider with no image-service configuration', async () => {
-    root = await mkdtemp(join(tmpdir(), 'opencreator-native-dispatch-'));
+    root = await mkdtemp(join(tmpdir(), 'vishnucreator-native-dispatch-'));
     const fetchImpl = vi.fn(async () => new Response(JSON.stringify({
       data: [{ b64_json: png.toString('base64') }]
     }), { status: 200 })) as typeof fetch;

@@ -11,7 +11,7 @@ describe('public error kind for business code', () => {
     ['UNSUPPORTED_FILE_TYPE', 'unsupported'],
     ['CODEX_IMAGE_INPUT_UNSUPPORTED', 'unsupported'],
     ['IMAGE_GENERATION_STORAGE_FAILED', 'storage'],
-    ['krillin_auth_failed', 'unauthorized'],
+    ['vishnu_auth_failed', 'unauthorized'],
     ['ENOTFOUND', 'dns'],
     ['ERR_FS_FILE_TOO_LARGE', 'storage'],
     ['audio_no_speech', 'validation'],

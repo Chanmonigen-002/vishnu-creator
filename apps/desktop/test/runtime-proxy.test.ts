@@ -57,15 +57,15 @@ describe('Desktop Runtime proxy', () => {
   });
 
   it('matches only the exact runtime route prefix', () => {
-    expect(isRuntimeRequestUrl(new URL('opencreator-app://app/.opencreator/runtime'))).toBe(true);
-    expect(isRuntimeRequestUrl(new URL('opencreator-app://app/.opencreator/runtime/healthz'))).toBe(true);
-    expect(isRuntimeRequestUrl(new URL('opencreator-app://app/.opencreator/runtimeevil'))).toBe(false);
-    expect(isRuntimeRequestUrl(new URL('opencreator-app://bootstrap/.opencreator/runtime'))).toBe(false);
+    expect(isRuntimeRequestUrl(new URL('vishnucreator-app://app/.vishnucreator/runtime'))).toBe(true);
+    expect(isRuntimeRequestUrl(new URL('vishnucreator-app://app/.vishnucreator/runtime/healthz'))).toBe(true);
+    expect(isRuntimeRequestUrl(new URL('vishnucreator-app://app/.vishnucreator/runtimeevil'))).toBe(false);
+    expect(isRuntimeRequestUrl(new URL('vishnucreator-app://bootstrap/.vishnucreator/runtime'))).toBe(false);
   });
 
   it('accepts only an explicit loopback daemon origin', () => {
     expect(createRuntimeProxyTarget(
-      new URL('opencreator-app://app/.opencreator/runtime/healthz?full=1'),
+      new URL('vishnucreator-app://app/.vishnucreator/runtime/healthz?full=1'),
       'http://127.0.0.1:60764'
     ).toString()).toBe('http://127.0.0.1:60764/healthz?full=1');
 
@@ -80,7 +80,7 @@ describe('Desktop Runtime proxy', () => {
       'http://127.0.0.1:70000'
     ]) {
       expect(() => createRuntimeProxyTarget(
-        new URL('opencreator-app://app/.opencreator/runtime/healthz'),
+        new URL('vishnucreator-app://app/.vishnucreator/runtime/healthz'),
         address
       ), address).toThrow();
     }
@@ -88,12 +88,12 @@ describe('Desktop Runtime proxy', () => {
 
   it('rejects encoded and unencoded network paths before URL construction', () => {
     for (const requestUrl of [
-      'opencreator-app://app/.opencreator/runtime//attacker.example/path',
-      'opencreator-app://app/.opencreator/runtime/%2f%2fattacker.example/path',
-      'opencreator-app://app/.opencreator/runtime/%2F%5cattacker.example/path',
-      'opencreator-app://app/.opencreator/runtime/%5c%5cattacker.example/path',
-      'opencreator-app://app/.opencreator/runtime/%00healthz',
-      'opencreator-app://app/.opencreator/runtime/%'
+      'vishnucreator-app://app/.vishnucreator/runtime//attacker.example/path',
+      'vishnucreator-app://app/.vishnucreator/runtime/%2f%2fattacker.example/path',
+      'vishnucreator-app://app/.vishnucreator/runtime/%2F%5cattacker.example/path',
+      'vishnucreator-app://app/.vishnucreator/runtime/%5c%5cattacker.example/path',
+      'vishnucreator-app://app/.vishnucreator/runtime/%00healthz',
+      'vishnucreator-app://app/.vishnucreator/runtime/%'
     ]) {
       expect(() => createRuntimeProxyTarget(
         new URL(requestUrl),
@@ -147,7 +147,7 @@ describe('Desktop Runtime proxy', () => {
     expect(isStreamingRuntimeUploadRequest(target, {
       method: 'POST',
       headers: new Headers({
-        'content-type': 'application/vnd.opencreator.creator-source; charset=binary'
+        'content-type': 'application/vnd.vishnucreator.creator-source; charset=binary'
       })
     })).toBe(true);
 
@@ -155,21 +155,21 @@ describe('Desktop Runtime proxy', () => {
       {
         target,
         method: 'PUT',
-        contentType: 'application/vnd.opencreator.creator-source'
+        contentType: 'application/vnd.vishnucreator.creator-source'
       },
       {
         target: new URL(
           'http://127.0.0.1:60764/creator/jobs/creator_job_abc-123/actions'
         ),
         method: 'POST',
-        contentType: 'application/vnd.opencreator.creator-source'
+        contentType: 'application/vnd.vishnucreator.creator-source'
       },
       {
         target: new URL(
           'http://127.0.0.1:60764/creator/jobs/not-a-creator-job/source-video'
         ),
         method: 'POST',
-        contentType: 'application/vnd.opencreator.creator-source'
+        contentType: 'application/vnd.vishnucreator.creator-source'
       },
       {
         target,

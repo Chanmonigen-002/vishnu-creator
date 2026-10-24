@@ -3,7 +3,7 @@ import type {
   NotificationAcknowledgeResponse,
   NotificationOutboxListResponse,
   RunRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { writeFileSync } from 'node:fs';
 import { setTimeout as delay } from 'node:timers/promises';
 import { consumeNotificationBatch, notificationRoute } from './notification-host.js';
@@ -133,13 +133,13 @@ function parseArgs(raw: string[]): ParsedArgs {
 }
 
 function requestOptions(flags: Record<string, string | boolean>): RequestOptions {
-  const baseUrl = stringFlag(flags, 'base-url') ?? process.env.OPENCREATOR_DAEMON_URL;
-  const token = stringFlag(flags, 'token') ?? process.env.OPENCREATOR_DAEMON_TOKEN;
+  const baseUrl = stringFlag(flags, 'base-url') ?? process.env.VISHNUCREATOR_DAEMON_URL;
+  const token = stringFlag(flags, 'token') ?? process.env.VISHNUCREATOR_DAEMON_TOKEN;
   if (baseUrl === undefined || baseUrl.length === 0) {
-    throw new Error('Missing --base-url or OPENCREATOR_DAEMON_URL');
+    throw new Error('Missing --base-url or VISHNUCREATOR_DAEMON_URL');
   }
   if (token === undefined || token.length === 0) {
-    throw new Error('Missing --token or OPENCREATOR_DAEMON_TOKEN');
+    throw new Error('Missing --token or VISHNUCREATOR_DAEMON_TOKEN');
   }
   return { baseUrl: baseUrl.replace(/\/$/, ''), token };
 }
@@ -329,6 +329,6 @@ function printUsage(): void {
   pnpm harness notifications --base-url <url> --token <token> [--after <cursor>] [--watch]
 
 Environment:
-  OPENCREATOR_DAEMON_URL, OPENCREATOR_DAEMON_TOKEN
+  VISHNUCREATOR_DAEMON_URL, VISHNUCREATOR_DAEMON_TOKEN
 `);
 }

@@ -1,5 +1,5 @@
-import type { TaskItem } from '@opencreator/protocol';
-import type { ThreadResponse } from '@opencreator/protocol';
+import type { TaskItem } from '@vishnucreator/protocol';
+import type { ThreadResponse } from '@vishnucreator/protocol';
 import { describe, expect, it } from 'vitest';
 import { createLocalizedCopy } from '../../i18n/localized-copy.js';
 import type { ScheduleTaskSummary } from '../schedules/schedule-task-model.js';
@@ -188,7 +188,7 @@ function createDraft(overrides: Partial<ThreadResponse> = {}): ThreadResponse {
     id: 'draft-1',
     title: '任务草稿',
     projectId: null,
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     codexThreadId: null,
     cwd: '/workspace',
     canonicalCwd: '/workspace',

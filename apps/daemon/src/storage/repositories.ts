@@ -5,7 +5,7 @@ import type {
   RunSubmissionMode,
   ThreadOrigin,
   ThreadPurpose
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type Database from 'better-sqlite3';
 import { normalizeDatabaseTimestamp } from './database.js';
 
@@ -226,7 +226,7 @@ export type ThreadRepository = {
     assignment?: 'assigned' | 'unassigned';
     limit?: number;
   }): ThreadRow[];
-  listUnassignedOpenCreatorConversationThreads(): ThreadRow[];
+  listUnassignedVishnuCreatorConversationThreads(): ThreadRow[];
   listProfileReferences(profile: string): Array<{ id: string; title: string | null }>;
   archiveLegacyScheduleThreads(): void;
   archiveThread(id: string): void;
@@ -617,7 +617,7 @@ export function createThreadRepository(db: Database.Database): ThreadRepository 
           AND (
             threads.purpose <> 'conversation'
             OR (
-              threads.origin = 'opencreator_created'
+              threads.origin = 'vishnucreator_created'
               AND threads.project_id IS NOT NULL
             )
           )
@@ -625,17 +625,17 @@ export function createThreadRepository(db: Database.Database): ThreadRepository 
         OR (
           @assignment = 'unassigned'
           AND threads.purpose = 'conversation'
-          AND threads.origin = 'opencreator_created'
+          AND threads.origin = 'vishnucreator_created'
           AND threads.project_id IS NULL
         )
       )
     ORDER BY threads.updated_at DESC, threads.id DESC
     LIMIT @limit
   `);
-  const listUnassignedOpenCreatorConversationThreads = db.prepare(`
+  const listUnassignedVishnuCreatorConversationThreads = db.prepare(`
     ${threadSelect}
     WHERE threads.purpose = 'conversation'
-      AND threads.origin = 'opencreator_created'
+      AND threads.origin = 'vishnucreator_created'
       AND threads.project_id IS NULL
     ORDER BY threads.id ASC
   `);
@@ -658,7 +658,7 @@ export function createThreadRepository(db: Database.Database): ThreadRepository 
         updated_at = CURRENT_TIMESTAMP
     WHERE id = @id
       AND purpose = 'conversation'
-      AND origin = 'opencreator_created'
+      AND origin = 'vishnucreator_created'
       AND project_id IS NULL
   `);
   const archiveLegacyScheduleThreadsStatement = db.prepare(`
@@ -771,7 +771,7 @@ export function createThreadRepository(db: Database.Database): ThreadRepository 
         updated_at = CURRENT_TIMESTAMP
     WHERE project_id = @projectId
       AND purpose = 'conversation'
-      AND origin = 'opencreator_created'
+      AND origin = 'vishnucreator_created'
   `);
   const touch = db.prepare(`
     UPDATE threads
@@ -785,7 +785,7 @@ export function createThreadRepository(db: Database.Database): ThreadRepository 
         title: null,
         codexThreadId: null,
         projectId: null,
-        origin: 'opencreator_created',
+        origin: 'vishnucreator_created',
         model: null,
         reasoning: null,
         purpose: 'conversation',
@@ -817,8 +817,8 @@ export function createThreadRepository(db: Database.Database): ThreadRepository 
         limit: input.limit ?? 50
       }) as ThreadRow[];
     },
-    listUnassignedOpenCreatorConversationThreads(): ThreadRow[] {
-      return listUnassignedOpenCreatorConversationThreads.all() as ThreadRow[];
+    listUnassignedVishnuCreatorConversationThreads(): ThreadRow[] {
+      return listUnassignedVishnuCreatorConversationThreads.all() as ThreadRow[];
     },
     listProfileReferences(profile: string): Array<{ id: string; title: string | null }> {
       return listProfileReferences.all(profile) as Array<{ id: string; title: string | null }>;

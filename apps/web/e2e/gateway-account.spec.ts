@@ -1,5 +1,5 @@
 import { test, expect } from './fixtures/runtime.js';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 
 test('独立订阅页面支持游客选套餐、登录后继续购买并返回账户页面', async ({ page, runtime }, testInfo) => {
   const guest: GatewayAccountState = { source: 'manual', authState: 'signed_out', activationState: 'inactive', account: null, bindingVersion: null, models: [], activationError: null };
@@ -33,11 +33,11 @@ test('独立订阅页面支持游客选套餐、登录后继续购买并返回�
     await route.fulfill({ contentType: 'application/json', body: JSON.stringify(value) });
   });
   await runtime.openApp(page);
-  const navigation = page.getByRole('navigation', { name: 'OpenCreator', exact: true });
+  const navigation = page.getByRole('navigation', { name: 'VishnuCreator', exact: true });
   const openNavigation = page.getByRole('button', { name: 'Open navigation', exact: true });
   if (await openNavigation.isVisible()) await openNavigation.click();
   await navigation.getByRole('button', { name: '账户', exact: true }).click();
-  if (await openNavigation.isVisible()) await expect(page.getByLabel('OpenCreator navigation', { exact: true })).toHaveCSS('visibility', 'hidden');
+  if (await openNavigation.isVisible()) await expect(page.getByLabel('VishnuCreator navigation', { exact: true })).toHaveCSS('visibility', 'hidden');
   const center = page.getByRole('main', { name: '账户', exact: true });
   await expect(center.getByRole('button', { name: '登录 / 注册' })).toBeVisible();
   await expect(center.getByRole('heading', { name: '订阅套餐', exact: true })).toHaveCount(0);
@@ -100,7 +100,7 @@ test('独立订阅页面支持游客选套餐、登录后继续购买并返回�
   await subscriptionPage.getByRole('button', { name: '返回', exact: true }).click();
   await center.getByRole('button', { name: '返回', exact: true }).click();
   await expect(page).toHaveURL(/#\/new$/);
-  await page.evaluate(() => localStorage.removeItem('opencreator.agent-setup-confirmed.v1'));
+  await page.evaluate(() => localStorage.removeItem('vishnucreator.agent-setup-confirmed.v1'));
   await page.goto(`${runtime.origin}/#/subscription`);
   await expect(subscriptionPage).toBeVisible();
   await expect(subscription.getByRole('button', { name: '登录并订阅' })).toHaveCount(2);
@@ -110,8 +110,8 @@ test('独立订阅页面支持游客选套餐、登录后继续购买并返回�
 test('浏览器完成真实网关设备授权，缺少模型配置时保留登录并准确显示未就绪', async ({ page, runtime }, testInfo) => {
   test.skip(!process.env.GATEWAY_BROWSER_TEST_ORIGIN || !process.env.GATEWAY_DEMO_PASSWORD, 'Requires isolated local Go gateway');
   await page.addInitScript(() => {
-    localStorage.setItem('opencreator.preferences.language', 'zh-CN');
-    localStorage.setItem('opencreator.preferences.dynamicBackground', 'false');
+    localStorage.setItem('vishnucreator.preferences.language', 'zh-CN');
+    localStorage.setItem('vishnucreator.preferences.dynamicBackground', 'false');
   });
   await page.goto(`${runtime.origin}/#/new`);
   const setup = page.getByRole('region', { name: '开始使用 Agent' });
@@ -121,8 +121,8 @@ test('浏览器完成真实网关设备授权，缺少模型配置时保留登�
   await setup.getByRole('button', { name: '登录模式', exact: true }).click();
   await expect(setup.getByLabel('API Key')).toHaveCount(0);
   await expect(setup.getByLabel('Base URL')).toHaveCount(0);
-  const account = page.getByRole('region', { name: 'OpenCreator 账户' });
-  await account.getByRole('button', { name: '登录 OpenCreator' }).click();
+  const account = page.getByRole('region', { name: 'VishnuCreator 账户' });
+  await account.getByRole('button', { name: '登录 VishnuCreator' }).click();
   const link = account.getByRole('link', { name: '打开登录页面' });
   await expect(link).toBeVisible();
   const device = await page.context().newPage();
@@ -136,11 +136,11 @@ test('浏览器完成真实网关设备授权，缺少模型配置时保留登�
   await page.bringToFront();
   await expect.poll(async () => (await runtime.api<{ authState: string }>('GET', '/gateway/account')).authState).toBe('signed_in');
   await expect(setup).not.toBeVisible();
-  const navigation = page.getByRole('navigation', { name: 'OpenCreator', exact: true });
+  const navigation = page.getByRole('navigation', { name: 'VishnuCreator', exact: true });
   const openNavigation = page.getByRole('button', { name: 'Open navigation', exact: true });
   if (await openNavigation.isVisible()) await openNavigation.click();
   await navigation.getByRole('button', { name: '账户', exact: true }).click();
-  if (await openNavigation.isVisible()) await expect(page.getByLabel('OpenCreator navigation', { exact: true })).toHaveCSS('visibility', 'hidden');
+  if (await openNavigation.isVisible()) await expect(page.getByLabel('VishnuCreator navigation', { exact: true })).toHaveCSS('visibility', 'hidden');
   await expect(page).toHaveURL(/#\/account$/);
   await expect(navigation.getByRole('button', { name: '账户', exact: true })).toHaveAttribute('aria-current', 'page');
   await expect(navigation.getByRole('button', { name: '模版', exact: true })).not.toHaveAttribute('aria-current', 'page');

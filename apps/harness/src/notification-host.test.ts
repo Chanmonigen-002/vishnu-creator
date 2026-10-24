@@ -2,7 +2,7 @@ import type {
   NotificationAcknowledgeResponse,
   NotificationOutboxItem,
   NotificationOutboxListResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { describe, expect, it, vi } from 'vitest';
 import {
   consumeNotificationBatch,

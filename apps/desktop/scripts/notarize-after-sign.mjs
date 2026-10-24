@@ -14,21 +14,21 @@ import { resolveNotarizationCredentials } from './mac-signing.mjs';
 import { runStapler, submitAndWaitForNotarization } from './apple-notarization.mjs';
 
 export async function afterSign(context) {
-  if (process.env.OPENCREATOR_NOTARIZE_MAC_APP !== '1') return;
+  if (process.env.VISHNUCREATOR_NOTARIZE_MAC_APP !== '1') return;
   if (context.electronPlatformName !== 'darwin') {
-    throw new Error('OpenCreator App notarization requires a macOS package');
+    throw new Error('VishnuCreator App notarization requires a macOS package');
   }
 
   const productFilename = context.packager.appInfo.productFilename;
   const appPath = join(context.appOutDir, `${productFilename}.app`);
   if (!existsSync(appPath)) {
-    throw new Error(`Signed OpenCreator App is missing: ${appPath}`);
+    throw new Error(`Signed VishnuCreator App is missing: ${appPath}`);
   }
 
-  const teamId = process.env.OPENCREATOR_APPLE_TEAM_ID;
+  const teamId = process.env.VISHNUCREATOR_APPLE_TEAM_ID;
   const credentials = resolveNotarizationCredentials(process.env, teamId);
   const temporaryDirectory = mkdtempSync(
-    join(tmpdir(), 'opencreator-notary-')
+    join(tmpdir(), 'vishnucreator-notary-')
   );
   const archivePath = join(
     temporaryDirectory,

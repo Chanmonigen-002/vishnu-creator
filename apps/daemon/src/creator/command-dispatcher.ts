@@ -1,5 +1,5 @@
 import { createHash } from 'node:crypto';
-import { videoSourceIdentity } from '@opencreator/protocol';
+import { videoSourceIdentity } from '@vishnucreator/protocol';
 import type {
   CreatorActionResponse,
   CreatorActor,
@@ -8,7 +8,7 @@ import type {
   CreatorJob,
   CreatorJson,
   CreatorProviderRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CreatorAgentRepository } from './agent/repository.js';
 import type { CreatorRepository } from './repository.js';
 import {
@@ -164,7 +164,7 @@ export function createCreatorCommandDispatcher(input: {
               && previous.scopeKey === (typeof request.input.scopeKey === 'string' ? request.input.scopeKey : null)
               && ['failed', 'interrupted', 'canceled'].includes(previous.status)) : undefined;
           const rejectedVideo = previousMediaStage && actionResponse.job.templateId === 'video-generation'
-            && (previousMediaStage.errorCode === 'creator_video_generation_failed' || actionResponse.job.providerRequests.some(receipt => receipt.stageRunId === previousMediaStage.id && receipt.provider === 'opencreator-gateway-video' && receipt.status === 'failed'));
+            && (previousMediaStage.errorCode === 'creator_video_generation_failed' || actionResponse.job.providerRequests.some(receipt => receipt.stageRunId === previousMediaStage.id && receipt.provider === 'vishnucreator-gateway-video' && receipt.status === 'failed'));
           const resumedMediaStage = rejectedVideo ? undefined : previousMediaStage;
           const stageRun = input.repository.createStageRun({
             jobId,

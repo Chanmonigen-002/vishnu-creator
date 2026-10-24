@@ -40,8 +40,8 @@ import type {
   CodexModelResponse,
   ReasoningEffort,
   RunSubmissionMode
-} from '@opencreator/protocol';
-import type { OpenCreatorProject, ProjectPermission } from '../projects/project-model.js';
+} from '@vishnucreator/protocol';
+import type { VishnuCreatorProject, ProjectPermission } from '../projects/project-model.js';
 import { ConfirmDialog } from '../../components/dialogs/ConfirmDialog.js';
 import { useAppLanguage, type Translate } from '../../i18n/LanguageProvider.js';
 import {
@@ -123,7 +123,7 @@ export function Composer(props: {
   permissionChangeDisabled?: boolean;
   projectId: string;
   projectName: string;
-  projects: OpenCreatorProject[];
+  projects: VishnuCreatorProject[];
   showProjectSelector?: boolean;
   permission: ProjectPermission;
   profile: string;
@@ -1139,7 +1139,7 @@ export function Composer(props: {
       ) : null}
       <form
         ref={composerRef}
-        className={`opencreator-composer${props.showProjectSelector === false ? ' without-project-selector' : ''}`}
+        className={`vishnucreator-composer${props.showProjectSelector === false ? ' without-project-selector' : ''}`}
         onSubmit={(event) => {
           event.preventDefault();
           void submitPrompt();

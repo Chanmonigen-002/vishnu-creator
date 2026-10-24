@@ -2,7 +2,7 @@ import { lstat, mkdir, mkdtemp, readFile, realpath, rm, writeFile } from 'node:f
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, expect, it } from 'vitest';
-import { prepareCliResourceRoot } from '../../src/creator/krillin/cli-runner.js';
+import { prepareCliResourceRoot } from '../../src/creator/vishnu/cli-runner.js';
 
 let root = '';
 afterEach(async () => {
@@ -11,10 +11,10 @@ afterEach(async () => {
 });
 
 it('prepares executable resources without requiring Windows file symlink privileges', async () => {
-  root = await mkdtemp(join(tmpdir(), 'krillin-resources-'));
+  root = await mkdtemp(join(tmpdir(), 'vishnu-resources-'));
   const resourceRoot = join(root, 'installed runtime');
   const dependencyRoot = join(root, 'dependencies');
-  const launcherRoot = join(root, 'job', '.krillin-cli');
+  const launcherRoot = join(root, 'job', '.vishnu-cli');
   const suffix = process.platform === 'win32' ? '.exe' : '';
   await mkdir(join(resourceRoot, 'bin'), { recursive: true });
   await mkdir(join(dependencyRoot, 'bin'), { recursive: true });

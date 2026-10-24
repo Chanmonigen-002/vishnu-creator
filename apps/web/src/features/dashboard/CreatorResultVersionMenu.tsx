@@ -1,7 +1,7 @@
 import { useEffect, useId, useRef, useState } from 'react';
 import { Check, ChevronDown, CircleCheck } from 'lucide-react';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
-import { readCreatorResultSnapshots } from '@opencreator/protocol';
+import { readCreatorResultSnapshots } from '@vishnucreator/protocol';
 import { useOptionalCreatorSession } from './creator-session-store.js';
 
 export type CreatorResultVersionItem = {

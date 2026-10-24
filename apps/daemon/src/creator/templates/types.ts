@@ -2,9 +2,9 @@ import type {
   CreatorArtifactStatus,
   CreatorJobStatus,
   CreatorJson
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { ZodType } from 'zod/v3';
-import type { CreatorArtifact, CreatorJob, CreatorStageRun } from '@opencreator/protocol';
+import type { CreatorArtifact, CreatorJob, CreatorStageRun } from '@vishnucreator/protocol';
 import type { CreatorExecutorOutput } from '../executor.js';
 
 export type CreatorOutputValidationFinding = {

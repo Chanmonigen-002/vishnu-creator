@@ -1,7 +1,7 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { describe, expect, it, vi } from 'vitest';
-import { translationResumeStage } from '../../src/creator/krillin/translation-resume.js';
-import { krillinTranslationReport } from '../../src/creator/krillin/cli-runner.js';
+import { translationResumeStage } from '../../src/creator/vishnu/translation-resume.js';
+import { vishnuTranslationReport } from '../../src/creator/vishnu/cli-runner.js';
 import type { CreatorExecutorInput } from '../../src/creator/executor.js';
 
 function fixture(id: string): CreatorExecutorInput {
@@ -51,11 +51,11 @@ describe('translation recovery and result report', () => {
   });
 
   it('retains untranslated items and layout notices as persistent artifact metadata', () => {
-    expect(krillinTranslationReport({ translation_failures: [{ sentence_id: '2', source_text: 'Second.', reason: 'missing' }] }))
+    expect(vishnuTranslationReport({ translation_failures: [{ sentence_id: '2', source_text: 'Second.', reason: 'missing' }] }))
       .toMatchObject({ translationStatus: 'partial', translationFailedCount: 1,
         translationFailures: [{ sentenceId: '2', sourceText: 'Second.', reason: 'missing' }] });
-    expect(krillinTranslationReport({ warnings: ['字幕排版待调整：1条已保留完整译文与时间区间'] }))
+    expect(vishnuTranslationReport({ warnings: ['字幕排版待调整：1条已保留完整译文与时间区间'] }))
       .toMatchObject({ translationStatus: 'layout_pending', translationFailedCount: 0 });
-    expect(krillinTranslationReport({})).toMatchObject({ translationStatus: 'complete', translationWarnings: [] });
+    expect(vishnuTranslationReport({})).toMatchObject({ translationStatus: 'complete', translationWarnings: [] });
   });
 });

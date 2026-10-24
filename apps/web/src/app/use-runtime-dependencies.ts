@@ -1,4 +1,4 @@
-import type { CreatorRuntimeComponent, CreatorRuntimeComponentsResponse, CreatorYtDlpStatus, OpenCreatorIssue } from '@opencreator/protocol';
+import type { CreatorRuntimeComponent, CreatorRuntimeComponentsResponse, CreatorYtDlpStatus, VishnuCreatorIssue } from '@vishnucreator/protocol';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePageIssueState } from '../features/issues/page-issue-state.js';
 import type { RuntimeDependencyService } from '../services/runtime-dependency-service.js';
@@ -18,7 +18,7 @@ export type RuntimeDependenciesController = {
   phase: RuntimeDependencyPhase;
   /** @deprecated Runtime failures are exposed through issues. */
   error?: string;
-  issues?: OpenCreatorIssue[];
+  issues?: VishnuCreatorIssue[];
   dismissIssue?(issueId: string): void;
   checkYtDlpUpdate(force?: boolean): Promise<CreatorYtDlpStatus>;
   updateYtDlp(): Promise<CreatorYtDlpStatus>;

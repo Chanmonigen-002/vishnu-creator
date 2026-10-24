@@ -1,16 +1,16 @@
 ---
-name: krillinai-tts
-description: Use when generating target-language dubbing with KrillinAI CLI from SRT subtitles, including TTS audio creation and optional dubbed video generation.
+name: vishnuai-tts
+description: Use when generating target-language dubbing with VishnuAI CLI from SRT subtitles, including TTS audio creation and optional dubbed video generation.
 ---
 
-# KrillinAI TTS
+# VishnuAI TTS
 
-Use this skill for the `tts` stage. Read `skills/krillinai-cli/references/cli-contract.md` first for binary location, execution working directory, configuration, and JSON behavior.
+Use this skill for the `tts` stage. Read `skills/vishnuai-cli/references/cli-contract.md` first for binary location, execution working directory, configuration, and JSON behavior.
 
 ## Command
 
 ```bash
-(cd "$KRILLINAI_CWD" && "$KRILLINAI_CLI" tts \
+(cd "$VISHNUAI_CWD" && "$VISHNUAI_CLI" tts \
   --workdir "$WORKDIR" \
   --input-srt "$WORKDIR/target_language_srt.srt" \
   --line-mode target-only \
@@ -47,4 +47,4 @@ Read paths from manifest:
 - Require terminal JSON with `"ok": true`.
 - Confirm `tts_final_audio.wav` exists and has non-zero size.
 - If `video_with_tts.mp4` is produced, inspect duration and audio stream with `ffprobe`.
-- For JSON/error contract, read `skills/krillinai-cli/references/cli-contract.md`.
+- For JSON/error contract, read `skills/vishnuai-cli/references/cli-contract.md`.

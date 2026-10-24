@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import Fastify, { type FastifyInstance } from 'fastify';
 import { mkdir, mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -17,7 +17,7 @@ describe('image generation API', () => {
 
   beforeEach(async () => {
     server = Fastify({ logger: false });
-    dataDir = await mkdtemp(join(tmpdir(), 'opencreator-image-generation-'));
+    dataDir = await mkdtemp(join(tmpdir(), 'vishnucreator-image-generation-'));
   });
 
   afterEach(async () => {
@@ -275,7 +275,7 @@ describe('image generation API', () => {
   it('keeps configured OpenAI endpoints on the OpenAI edit protocol', async () => {
     const config = createDefaultCreatorServicesConfig();
     config.image.openai.apiKey = 'openai-compatible-test';
-    config.image.openai.baseUrl = 'https://forward.krillinai.com/v1/images/generations';
+    config.image.openai.baseUrl = 'https://forward.vishnuai.com/v1/images/generations';
     config.image.openai.model = 'gpt-image-2';
     const image = Buffer.concat([
       Buffer.from([0x89, 0x50, 0x4e, 0x47, 0x0d, 0x0a, 0x1a, 0x0a]),
@@ -313,7 +313,7 @@ describe('image generation API', () => {
     expect(result).toMatchObject({ model: 'gpt-image-2' });
     expect(result.contents[0]?.content).toEqual(image);
     expect(String(fetchImpl.mock.calls[0]?.[0]))
-      .toBe('https://forward.krillinai.com/v1/images/edits');
+      .toBe('https://forward.vishnuai.com/v1/images/edits');
     expect(fetchImpl.mock.calls[0]?.[1]?.headers).toMatchObject({
       Authorization: 'Bearer openai-compatible-test',
       'Content-Type': expect.stringContaining('multipart/form-data; boundary=')

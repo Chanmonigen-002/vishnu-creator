@@ -8,7 +8,7 @@ const issue = normalizePageIssue('runtime', 'creator.prepare', new Error(raw), r
 describe('localized issue copy', () => {
   it.each(['zh-CN', 'en-US', 'sv-SE'] as const)('describes uncertain acceptance without reporting a final failure in %s', language => {
     const pending = { ...issue, code: 'creator_provider_resolution_required', summaryKey: 'issue.provider',
-      source: 'provider' as const, publicFacts: { kind: 'unknown' as const, provider: 'opencreator-gateway-chat/completions' } };
+      source: 'provider' as const, publicFacts: { kind: 'unknown' as const, provider: 'vishnucreator-gateway-chat/completions' } };
     const copy = issueConversationText(pending, language);
     expect(copy.message).not.toMatch(/外部服务失败|Provider failed|错误码|Error code|Felkod|尚未确认更细/);
     expect(copy.nextStep).toMatch(/重复扣费|duplicate charges|dubbla avgifter/);

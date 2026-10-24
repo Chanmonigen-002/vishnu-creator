@@ -17,8 +17,8 @@ export class RuntimeDataInUseError extends Error {
   ) {
     super(
       ownerPid === undefined
-        ? `OpenCreator Runtime data directory is already locked: ${dataDir}`
-        : `OpenCreator Runtime data directory is already used by process ${ownerPid}: ${dataDir}`
+        ? `VishnuCreator Runtime data directory is already locked: ${dataDir}`
+        : `VishnuCreator Runtime data directory is already used by process ${ownerPid}: ${dataDir}`
     );
     this.name = 'RuntimeDataInUseError';
   }
@@ -32,7 +32,7 @@ export class RuntimeDataInUseError extends Error {
 }
 
 export function acquireRuntimeLock(dataDir: string): () => void {
-  const path = join(dataDir, 'opencreator-runtime.lock');
+  const path = join(dataDir, 'vishnucreator-runtime.lock');
   removeStaleLock(path);
   let fd: number;
   try {

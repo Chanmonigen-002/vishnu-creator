@@ -1,4 +1,4 @@
-import type { GatewayAccountState, GatewayAuthorization, GatewayBalanceSnapshot, GatewayBalanceState, GatewayModelProbeOptions, ServiceSource } from '@opencreator/protocol';
+import type { GatewayAccountState, GatewayAuthorization, GatewayBalanceSnapshot, GatewayBalanceState, GatewayModelProbeOptions, ServiceSource } from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 export type GatewayPlan = { id: string; name: string; currency: string; amountUnits: string; creditUnits: string; wechatAmountUnits?: string };
 export type GatewayBillingAvailability = {
@@ -88,8 +88,8 @@ export function createGatewayAccountService(client: Pick<RuntimeClient, 'get' | 
     activate(): Promise<GatewayAccountState> { return client.post('/gateway/auth/activate', {}); },
     setSource(source: ServiceSource): Promise<GatewayAccountState> { return client.patch('/gateway/source', { source }); },
     setRegion(region: 'auto' | 'domestic' | 'overseas'): Promise<GatewayAccountState> { return client.patch('/gateway/supplier-region', { region }); },
-    selectModel(modality: import('@opencreator/protocol').GatewayModelPurpose, model: string): Promise<GatewayAccountState> { return client.patch('/gateway/model', { modality, model }); },
-    probeModel(modality: import('@opencreator/protocol').GatewayModel['modality'], model: string, options?: GatewayModelProbeOptions): Promise<{ model: string; modality: import('@opencreator/protocol').GatewayModel['modality']; costBearer: 'customer' }> {
+    selectModel(modality: import('@vishnucreator/protocol').GatewayModelPurpose, model: string): Promise<GatewayAccountState> { return client.patch('/gateway/model', { modality, model }); },
+    probeModel(modality: import('@vishnucreator/protocol').GatewayModel['modality'], model: string, options?: GatewayModelProbeOptions): Promise<{ model: string; modality: import('@vishnucreator/protocol').GatewayModel['modality']; costBearer: 'customer' }> {
       return client.post('/gateway/model/probe', { modality, model, ...options });
     },
     getBalance(): Promise<GatewayBalanceState> { return client.get('/gateway/billing'); },

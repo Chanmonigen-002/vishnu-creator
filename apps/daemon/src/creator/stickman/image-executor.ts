@@ -5,7 +5,7 @@ import {
   type ImageGenerationProvider,
   type ImageGenerationQuality,
   type StickmanCanvas
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { execFile } from 'node:child_process';
 import { createHash } from 'node:crypto';
 import { copyFile, readFile, writeFile } from 'node:fs/promises';

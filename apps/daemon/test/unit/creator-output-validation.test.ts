@@ -25,8 +25,8 @@ afterEach(() => {
 describe('creator output validation', () => {
   it('rejects unchanged English for a Chinese target and accepts Chinese mixed with proper nouns', async () => {
     tempDir = mkdtempSync(join(tmpdir(), 'creator-output-validation-'));
-    const english = subtitle('OpenCreator keeps the original English subtitle unchanged.');
-    const chinese = subtitle('OpenCreator 可以保留 YouTube 等专有名词，同时输出正确的中文翻译。');
+    const english = subtitle('VishnuCreator keeps the original English subtitle unchanged.');
+    const chinese = subtitle('VishnuCreator 可以保留 YouTube 等专有名词，同时输出正确的中文翻译。');
     const shortChinese = subtitle('你好 OpenAI');
 
     await expect(validate(english)).resolves.toMatchObject([{
@@ -93,7 +93,7 @@ describe('creator output validation', () => {
       templates,
       issueService,
       executors: [{
-        id: 'krillinai',
+        id: 'vishnuai',
         async run() {
           writeFileSync(outputPath, srt(outputText));
           return {
@@ -125,7 +125,7 @@ describe('creator output validation', () => {
     expect(afterFailure.state).not.toHaveProperty('resultSnapshots');
     expect(issue).toMatchObject({ status: 'open', source: 'output-validator' });
 
-    outputText = '这是正确的中文翻译，同时保留 OpenCreator 这个专有名词。';
+    outputText = '这是正确的中文翻译，同时保留 VishnuCreator 这个专有名词。';
     const beforeRetry = service.getJob(job.id)!;
     const second = dispatcher.dispatch(job.id, {
       action: 'run-stage',

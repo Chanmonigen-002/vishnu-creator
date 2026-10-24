@@ -4,7 +4,7 @@ import {
   type AgentContextEnvelope,
   type CreatorJob,
   type CreatorSelection
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CreatorTemplateRegistry } from '../templates/types.js';
 
 export type AgentContextBuilder = ReturnType<typeof createAgentContextBuilder>;

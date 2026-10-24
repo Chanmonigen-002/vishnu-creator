@@ -25,10 +25,10 @@
   "tags": ["观点先行", "行业观察", "层层论证"],
   "structure": ["核心判断", "背景与问题", "分层论证", "行动建议"],
   "instructions": "以清晰的问题意识开篇，先给结论再展开论证。使用二到四个层次分明的小标题，结合来源中的事实、数据和案例，避免空泛判断。结尾给出可执行的观察或建议。",
-  "author": "OpenCreator",
+  "author": "VishnuCreator",
   "status": "verified",
   "sortOrder": 10,
-  "source": { "type": "official", "license": "OpenCreator project" },
+  "source": { "type": "official", "license": "VishnuCreator project" },
   "skill": {
     "stageResources": {
       "topics": ["skill/SKILL.md"],

@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import { gatewayPublicModelId, type GatewayModel } from '@opencreator/protocol';
+import { gatewayPublicModelId, type GatewayModel } from '@vishnucreator/protocol';
 import { migrateModelPreferences, resolveModelPreferences } from '../../src/gateway/model-preferences.js';
 
 const text = (id: string): GatewayModel => ({ id, modality: 'text', capabilities: ['responses', 'chat', 'tools'], status: 'ready' });

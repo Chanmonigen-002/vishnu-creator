@@ -1,4 +1,4 @@
-import type { SmartDubbingStyle } from '@opencreator/protocol';
+import type { SmartDubbingStyle } from '@vishnucreator/protocol';
 
 const styleInstructions: Record<SmartDubbingStyle, string> = {
   natural: 'Speak naturally with clear articulation and balanced pacing.',

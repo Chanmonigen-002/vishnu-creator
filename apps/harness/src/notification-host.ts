@@ -2,7 +2,7 @@ import type {
   NotificationAcknowledgeResponse,
   NotificationOutboxItem,
   NotificationOutboxListResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export type NotificationOutboxClient = {
   list(after: string, limit: number): Promise<NotificationOutboxListResponse>;

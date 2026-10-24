@@ -55,12 +55,12 @@ describe('creator provider request ledger', () => {
     try {
       const issue = issues.capture({ jobId: job.id, source: 'provider', code: 'creator_provider_request_failed',
         stageId: stage.stageId, stageRunId: stage.id, scopeKey: stage.scopeKey!,
-        publicFacts: { kind: 'unknown', provider: 'opencreator-gateway-chat/completions' } });
+        publicFacts: { kind: 'unknown', provider: 'vishnucreator-gateway-chat/completions' } });
       issues.beginResolution({ jobId: job.id, issueId: issue.id, stageRunId: stage.id,
         resolutionAttemptId: stage.id, associationKind: 'stage-run', associationId: stage.id });
       for (const status of ['failed', 'succeeded'] as const) {
         const request = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: stage.id, scopeKey: stage.scopeKey,
-          provider: 'opencreator-gateway-chat/completions', requestKey: status, request: {},
+          provider: 'vishnucreator-gateway-chat/completions', requestKey: status, request: {},
           gateway: { accountId: 'a', bindingVersion: 'a:1', logicalId: status } });
         ledger.markSubmitting(request.id);
         if (status === 'failed') ledger.markFailed(request.id);
@@ -78,7 +78,7 @@ describe('creator provider request ledger', () => {
     const { db, repository, job, stage } = setup();
     const issues = createCreatorIssueService(repository);
     const ledger = new CreatorProviderRequestLedger(repository, issues);
-    const provider = 'opencreator-gateway-chat/completions';
+    const provider = 'vishnucreator-gateway-chat/completions';
     const register = (requestKey: string) => {
       const request = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: stage.id, scopeKey: stage.scopeKey,
         provider, requestKey, request: {}, gateway: { accountId: 'a', bindingVersion: 'a:1', logicalId: requestKey } });
@@ -129,7 +129,7 @@ describe('creator provider request ledger', () => {
     try {
       const requests = ['first', 'second'].map(requestKey => {
         const request = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: stage.id, scopeKey: stage.scopeKey,
-          provider: 'opencreator-gateway-chat/completions', requestKey, request: { prompt: requestKey } });
+          provider: 'vishnucreator-gateway-chat/completions', requestKey, request: { prompt: requestKey } });
         ledger.markSubmitting(request.id); ledger.markWaitingRemote(request.id, 'remote-' + requestKey);
         return ledger.markUnknownRemoteAcceptance(request.id);
       });
@@ -154,7 +154,7 @@ describe('creator provider request ledger', () => {
     const job = service.createJob({ projectId: 'project', templateId: 'image-generation', state: { prompt: 'test' } });
     const stage = repository.createStageRun({ jobId: job.id, stageId: 'generate', executor: 'image', status: 'failed' });
     const ledger = new CreatorProviderRequestLedger(repository);
-    const request = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: stage.id, provider: 'opencreator-gateway-image', requestKey: 'paid-image', request: { prompt: 'test' } });
+    const request = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: stage.id, provider: 'vishnucreator-gateway-image', requestKey: 'paid-image', request: { prompt: 'test' } });
     ledger.markSubmitting(request.id); ledger.markUnknownRemoteAcceptance(request.id);
     try {
       for (const action of ['run-stage', 'retry-stage']) {
@@ -183,7 +183,7 @@ describe('creator provider request ledger', () => {
     tempDir = mkdtempSync(join(tmpdir(), 'creator-gateway-ledger-'));
     const { db, job, stage, repository, ledger } = setup();
     const gateway = { accountId:'account-a', bindingVersion:'account-a:1', logicalId:'stable-stage-image' };
-    const original = ledger.registerBeforeSubmit({jobId:job.id,provider:'opencreator-gateway',stageRunId:stage.id,requestKey:gateway.logicalId,request:{prompt:'draw'},gateway});
+    const original = ledger.registerBeforeSubmit({jobId:job.id,provider:'vishnucreator-gateway',stageRunId:stage.id,requestKey:gateway.logicalId,request:{prompt:'draw'},gateway});
     ledger.markSubmitting(original.id); ledger.markWaitingRemote(original.id,'gateway-original-request');
     expect(repository.getProviderRequest(original.id)).toMatchObject({gateway,remoteTaskId:'gateway-original-request'});
     expect(JSON.stringify(repository.getProviderRequest(original.id))).not.toMatch(/modelKey|apiKey|accessToken/);

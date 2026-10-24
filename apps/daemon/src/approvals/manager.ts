@@ -5,7 +5,7 @@ import type {
   ApprovalRisk,
   ApprovalStatus,
   RuntimeApproval
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type Database from 'better-sqlite3';
 import { nanoid } from 'nanoid';
 

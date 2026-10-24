@@ -99,4 +99,4 @@ template/<module>/<id>/1/
 
 ---
 
-질문이 있으신가요? 템플릿 아이디어와 샘플 출력을 첨부해 [이슈를 열어](https://github.com/krillinai/OpenCreator/issues/new) 주시면 범위 조정을 도와드리겠습니다.
+질문이 있으신가요? 템플릿 아이디어와 샘플 출력을 첨부해 [이슈를 열어](https://github.com/vishnuai/Vishnu Creator/issues/new) 주시면 범위 조정을 도와드리겠습니다.

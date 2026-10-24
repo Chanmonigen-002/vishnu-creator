@@ -1,7 +1,7 @@
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import type { CreatorJob, ProjectResponse } from '@opencreator/protocol';
+import type { CreatorJob, ProjectResponse } from '@vishnucreator/protocol';
 import { afterEach, describe, expect, it } from 'vitest';
 import { publishCreatorArtifacts } from '../../src/creator/artifact-publisher.js';
 
@@ -14,7 +14,7 @@ afterEach(async () => {
 
 describe('creator artifact publisher', () => {
   it('copies completed deliverables by project, job and result version', async () => {
-    root = await mkdtemp(join(tmpdir(), 'opencreator-publisher-'));
+    root = await mkdtemp(join(tmpdir(), 'vishnucreator-publisher-'));
     const sourceDir = join(root, 'internal');
     await mkdir(sourceDir);
     const source = join(sourceDir, 'video.mp4');
@@ -53,7 +53,7 @@ describe('creator artifact publisher', () => {
   });
 
   it('does not publish source or stale artifacts', async () => {
-    root = await mkdtemp(join(tmpdir(), 'opencreator-publisher-'));
+    root = await mkdtemp(join(tmpdir(), 'vishnucreator-publisher-'));
     const job = {
       id: 'job_1',
       projectId: 'project_1',

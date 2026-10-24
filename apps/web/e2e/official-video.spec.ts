@@ -1,5 +1,5 @@
 import { test, expect } from './fixtures/runtime.js';
-import type { CreatorJob, GatewayAccountState } from '@opencreator/protocol';
+import type { CreatorJob, GatewayAccountState } from '@vishnucreator/protocol';
 
 test('official video references and integer quote fit the workspace', async ({ page, runtime }, testInfo) => {
   const model = { id: 'seedance-2.5官方版', modality: 'video' as const, name: 'Seedance 2.5', capabilities: ['generate', 'image_to_video'], status: 'ready' as const,
@@ -10,7 +10,7 @@ test('official video references and integer quote fit the workspace', async ({ p
     bindingVersion: 'video:1', selectedModels: { video: model.id }, models: [model], activationError: null };
   await page.route('**/gateway/account', route => route.fulfill({ json: state }));
   await page.route('**/gateway/billing/summary', route => route.fulfill({ json: { balance: { availableUnits: '1000000000', reservedUnits: '0', periodEnd: null, asOf: '2026-10-15T00:00:00Z' }, subscription: null, billingAvailable: false } }));
-  await page.addInitScript(() => localStorage.setItem('opencreator.agent-setup-confirmed.v1', '1'));
+  await page.addInitScript(() => localStorage.setItem('vishnucreator.agent-setup-confirmed.v1', '1'));
   const { job } = await runtime.api<{ job: CreatorJob }>('POST', '/creator/jobs', {
     projectId: runtime.projectId, templateId: 'video-generation', state: { officialModels: { video: model.id }, prompt: '海边的一段连续镜头', provider: 'seedance', size: '720p@16:9', duration: 4, currentStep: 1, furthestStep: 1 }
   });

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useState } from 'react';
 import { beforeEach, expect, it, vi } from 'vitest';
-import type { GatewayAccountState, GatewayModel } from '@opencreator/protocol';
+import type { GatewayAccountState, GatewayModel } from '@vishnucreator/protocol';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { OfficialModelField, OfficialServicesContext, useOfficialServices } from './official-services.js';
 

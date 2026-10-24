@@ -3,7 +3,7 @@ import {
   type CreatorJob,
   type CreatorStageRun,
   type ImageGenerationProvider
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { access, copyFile, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -277,7 +277,7 @@ describe('creator image executor', () => {
     expect(normalizeCoverImage).toHaveBeenCalledWith(expect.objectContaining({
       ratio: '16:9',
       sourcePath: expect.stringContaining('-source.png'),
-      outputPath: expect.stringMatching(/OpenCreator-image-1\.png$/),
+      outputPath: expect.stringMatching(/VishnuCreator-image-1\.png$/),
       signal: expect.any(AbortSignal)
     }));
     expect(result.outputs[0]).toMatchObject({

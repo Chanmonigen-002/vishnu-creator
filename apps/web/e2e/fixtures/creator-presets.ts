@@ -24,7 +24,7 @@ const repositoryRoot = resolve(
 );
 
 export function prepareCreatorPresetE2E(): CreatorPresetE2EEnvironment {
-  const root = mkdtempSync(join(tmpdir(), 'opencreator-presets-e2e-'));
+  const root = mkdtempSync(join(tmpdir(), 'vishnucreator-presets-e2e-'));
   const initialSourceRoot = join(root, 'template-initial');
   const upgradedSourceRoot = join(root, 'template-upgraded');
   const initialCatalogRoot = join(root, 'catalog-initial');
@@ -43,17 +43,17 @@ export function prepareCreatorPresetE2E(): CreatorPresetE2EEnvironment {
   compile(initialSourceRoot, initialCatalogRoot);
   compile(upgradedSourceRoot, upgradedCatalogRoot);
 
-  const previous = process.env.OPENCREATOR_E2E_PRESET_CATALOG_ROOT;
-  process.env.OPENCREATOR_E2E_PRESET_CATALOG_ROOT = initialCatalogRoot;
+  const previous = process.env.VISHNUCREATOR_E2E_PRESET_CATALOG_ROOT;
+  process.env.VISHNUCREATOR_E2E_PRESET_CATALOG_ROOT = initialCatalogRoot;
   return {
     root,
     initialCatalogRoot,
     upgradedCatalogRoot,
     dispose() {
       if (previous === undefined) {
-        delete process.env.OPENCREATOR_E2E_PRESET_CATALOG_ROOT;
+        delete process.env.VISHNUCREATOR_E2E_PRESET_CATALOG_ROOT;
       } else {
-        process.env.OPENCREATOR_E2E_PRESET_CATALOG_ROOT = previous;
+        process.env.VISHNUCREATOR_E2E_PRESET_CATALOG_ROOT = previous;
       }
       rmSync(root, {
         recursive: true,
@@ -267,8 +267,8 @@ function compile(sourceRoot: string, outputRoot: string): void {
     cwd: repositoryRoot,
     env: {
       ...process.env,
-      OPENCREATOR_PRESET_SOURCE_ROOT: sourceRoot,
-      OPENCREATOR_PRESET_CATALOG_ROOT: outputRoot
+      VISHNUCREATOR_PRESET_SOURCE_ROOT: sourceRoot,
+      VISHNUCREATOR_PRESET_CATALOG_ROOT: outputRoot
     },
     stdio: 'pipe'
   });

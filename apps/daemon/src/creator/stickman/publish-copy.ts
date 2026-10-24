@@ -1,4 +1,4 @@
-import type { StickmanRatio } from '@opencreator/protocol';
+import type { StickmanRatio } from '@vishnucreator/protocol';
 
 export function renderStickmanPublishCopy(input: {
   title: string;

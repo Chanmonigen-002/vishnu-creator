@@ -5,8 +5,8 @@ import {
   writeFile
 } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
-import { readOpenCreatorConfig } from '@opencreator/config';
-import type { CodexAvailabilityProbe } from '@opencreator/protocol';
+import { readVishnuCreatorConfig } from '@vishnucreator/config';
+import type { CodexAvailabilityProbe } from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import {
   applyCapabilityMatrix,
@@ -73,7 +73,7 @@ async function main(): Promise<void> {
   const environment = resolveProductionServerEnvironment();
   const paths = resolveProductionRuntimePaths(environment, {
     runtimeChannel: parseRuntimeChannel(
-      process.env.OPENCREATOR_RUNTIME_CHANNEL
+      process.env.VISHNUCREATOR_RUNTIME_CHANNEL
     )
   });
   const {
@@ -89,7 +89,7 @@ async function main(): Promise<void> {
   const localCodexHome = environment.localCodexHome === undefined
     ? environment.codexHome === undefined ? resolveCodexHome().path : codexHome
     : resolveCodexHome({ isolatedHome: environment.localCodexHome }).path;
-  readOpenCreatorConfig(configFile);
+  readVishnuCreatorConfig(configFile);
   mkdirSync(dataDir, { recursive: true });
   mkdirSync(codexHome, { recursive: true });
   releaseRuntimeLock = acquireRuntimeLock(dataDir);
@@ -102,7 +102,7 @@ async function main(): Promise<void> {
   }
   stopManagedParentWatch = installManagedParentWatch({
     parentPid: parseManagedParentPid(
-      process.env.OPENCREATOR_MANAGED_PARENT_PID
+      process.env.VISHNUCREATOR_MANAGED_PARENT_PID
     ),
     close: closeServer,
     exit: code => process.exit(code),
@@ -116,9 +116,9 @@ async function main(): Promise<void> {
   });
 
   const bundledStartup = resolveBundledCodexStartupSnapshot({
-    mode: process.env.OPENCREATOR_CODEX_RUNTIME_MODE,
-    version: process.env.OPENCREATOR_CODEX_VERSION,
-    commit: process.env.OPENCREATOR_CODEX_COMMIT
+    mode: process.env.VISHNUCREATOR_CODEX_RUNTIME_MODE,
+    version: process.env.VISHNUCREATOR_CODEX_VERSION,
+    commit: process.env.VISHNUCREATOR_CODEX_COMMIT
   });
   const versionProbe = bundledStartup === undefined
     ? await probeCodexVersionAsync({
@@ -171,14 +171,14 @@ async function main(): Promise<void> {
     getCodexAvailabilityProbe: () => availabilityProbe,
     onPrepareAvailabilityProbe(prepare) { prepareAvailabilityProbe = prepare; },
     persistentAppServerEnabled:
-      process.env.OPENCREATOR_PERSISTENT_APP_SERVER !== '0',
-    ...(process.env.OPENCREATOR_E2E_FAKE_CODEX_CONFIG !== undefined
-      && process.env.OPENCREATOR_E2E_CREATOR_RUNTIME_PLATFORM !== undefined
-      && process.env.OPENCREATOR_E2E_CREATOR_RUNTIME_ARCH !== undefined
+      process.env.VISHNUCREATOR_PERSISTENT_APP_SERVER !== '0',
+    ...(process.env.VISHNUCREATOR_E2E_FAKE_CODEX_CONFIG !== undefined
+      && process.env.VISHNUCREATOR_E2E_CREATOR_RUNTIME_PLATFORM !== undefined
+      && process.env.VISHNUCREATOR_E2E_CREATOR_RUNTIME_ARCH !== undefined
       ? {
           creatorRuntimePlatform:
-            process.env.OPENCREATOR_E2E_CREATOR_RUNTIME_PLATFORM as NodeJS.Platform,
-          creatorRuntimeArch: process.env.OPENCREATOR_E2E_CREATOR_RUNTIME_ARCH
+            process.env.VISHNUCREATOR_E2E_CREATOR_RUNTIME_PLATFORM as NodeJS.Platform,
+          creatorRuntimeArch: process.env.VISHNUCREATOR_E2E_CREATOR_RUNTIME_ARCH
         }
       : {}),
     ...environment,
@@ -209,7 +209,7 @@ async function main(): Promise<void> {
     }
   });
   emitParentMessage({
-    type: 'opencreator_daemon_ready',
+    type: 'vishnucreator_daemon_ready',
     address,
     token
   });
@@ -347,7 +347,7 @@ function emitBootstrap(
   extra: Record<string, unknown> = {}
 ): void {
   const event = {
-    type: 'opencreator_daemon_bootstrap',
+    type: 'vishnucreator_daemon_bootstrap',
     phase,
     at: new Date().toISOString(),
     ...extra
@@ -363,7 +363,7 @@ function emitBootstrapError(input: {
   details?: Record<string, unknown>;
 }): void {
   const event = {
-    type: 'opencreator_daemon_bootstrap_error',
+    type: 'vishnucreator_daemon_bootstrap_error',
     at: new Date().toISOString(),
     ...input
   };

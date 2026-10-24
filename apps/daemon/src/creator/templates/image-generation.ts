@@ -1,4 +1,4 @@
-import { creatorPromptMaxLength } from '@opencreator/protocol';
+import { creatorPromptMaxLength } from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 import type { CreatorTemplateDefinition } from './types.js';
 

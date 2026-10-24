@@ -37,7 +37,7 @@ describe('codex app-server runner', () => {
   });
 
   it('responds to a real command approval request and completes the turn', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-'));
     const fake = createFakeAppServer(tempDir, 'accept');
     const seen: unknown[] = [];
     const process = startCodexAppServer({
@@ -71,7 +71,7 @@ describe('codex app-server runner', () => {
   });
 
   it('maps rejection to the official decline response', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-'));
     const fake = createFakeAppServer(tempDir, 'decline');
     const process = startCodexAppServer({
       codexBin: fake,
@@ -92,7 +92,7 @@ describe('codex app-server runner', () => {
   });
 
   it('uses never approval policy and auto-approves fallback requests for full access', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-'));
     const fake = createFakeAppServer(tempDir, 'accept');
     let approvalRequested = false;
     const process = startCodexAppServer({
@@ -131,7 +131,7 @@ describe('codex app-server runner', () => {
   });
 
   it('uses never approval policy when resuming a full-access thread', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-'));
     const fake = createFakeAppServer(tempDir, 'accept');
     const process = startCodexAppServer({
       codexBin: fake,
@@ -166,7 +166,7 @@ describe('codex app-server runner', () => {
   });
 
   it('responds to an MCP elicitation approval with the official accept payload', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-'));
     const fake = createFakeMcpElicitationAppServer(tempDir, 'accept');
     const process = startCodexAppServer({
       codexBin: fake,
@@ -180,7 +180,7 @@ describe('codex app-server runner', () => {
         expect(request).toMatchObject({
           method: 'mcpServer/elicitation/request',
           params: {
-            serverName: 'opencreator_schedule',
+            serverName: 'vishnucreator_schedule',
             mode: 'form'
           }
         });
@@ -195,7 +195,7 @@ describe('codex app-server runner', () => {
   });
 
   it('auto-accepts MCP tool elicitation without creating an approval in full-access mode', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-'));
     const fake = createFakeMcpElicitationAppServer(tempDir, 'accept');
     let approvalRequested = false;
     const process = startCodexAppServer({
@@ -220,7 +220,7 @@ describe('codex app-server runner', () => {
   });
 
   it('recognizes the current MCP approval request type metadata', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-'));
     const fake = createFakeMcpElicitationAppServer(tempDir, 'accept', 'request-type');
     const process = startCodexAppServer({
       codexBin: fake,
@@ -239,7 +239,7 @@ describe('codex app-server runner', () => {
   });
 
   it('recognizes the official empty-form MCP tool approval fallback shape', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-'));
     const fake = createFakeMcpElicitationAppServer(tempDir, 'accept', 'fallback');
     let approvalRequested = false;
     const process = startCodexAppServer({
@@ -261,7 +261,7 @@ describe('codex app-server runner', () => {
   });
 
   it('maps MCP elicitation rejection to the official decline payload', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-'));
     const fake = createFakeMcpElicitationAppServer(tempDir, 'decline');
     const process = startCodexAppServer({
       codexBin: fake,
@@ -283,7 +283,7 @@ describe('codex app-server runner', () => {
   });
 
   it('cancels unsupported MCP form elicitation without treating it as an approval', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-'));
     const fake = createFakeMcpElicitationAppServer(tempDir, 'cancel', 'none');
     let approvalRequested = false;
     const process = startCodexAppServer({
@@ -308,7 +308,7 @@ describe('codex app-server runner', () => {
   });
 
   it('passes MCP config in argv and capability secrets only in the child environment', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-'));
     const fake = createFakeAppServer(tempDir, 'decline');
     const token = 'occap_AppServerSecret';
     const process = startCodexAppServer({
@@ -319,14 +319,14 @@ describe('codex app-server runner', () => {
       sandbox: 'read-only',
       prompt: 'inspect environment',
       mcpServers: [{
-        name: 'opencreator_schedule',
+        name: 'vishnucreator_schedule',
         url: 'http://127.0.0.1:43123/internal/agent-tools/mcp',
-        bearerTokenEnvVar: 'OPENCREATOR_AGENT_CAPABILITY_TOKEN',
-        enabledTools: ['opencreator_schedule_get'],
+        bearerTokenEnvVar: 'VISHNUCREATOR_AGENT_CAPABILITY_TOKEN',
+        enabledTools: ['vishnucreator_schedule_get'],
         required: true
       }],
       env: {
-        OPENCREATOR_AGENT_CAPABILITY_TOKEN: token
+        VISHNUCREATOR_AGENT_CAPABILITY_TOKEN: token
       },
       async onApprovalRequest() {
         return 'rejected';
@@ -345,17 +345,17 @@ describe('codex app-server runner', () => {
 
     expect(argv).toEqual(expect.arrayContaining([
       '-c',
-      'mcp_servers.opencreator_schedule.url="http://127.0.0.1:43123/internal/agent-tools/mcp"',
+      'mcp_servers.vishnucreator_schedule.url="http://127.0.0.1:43123/internal/agent-tools/mcp"',
       '-c',
-      'mcp_servers.opencreator_schedule.bearer_token_env_var="OPENCREATOR_AGENT_CAPABILITY_TOKEN"',
+      'mcp_servers.vishnucreator_schedule.bearer_token_env_var="VISHNUCREATOR_AGENT_CAPABILITY_TOKEN"',
       '-c',
-      'mcp_servers.opencreator_schedule.enabled_tools=["opencreator_schedule_get"]',
+      'mcp_servers.vishnucreator_schedule.enabled_tools=["vishnucreator_schedule_get"]',
       'app-server',
       '--stdio'
     ]));
     expect(JSON.stringify(argv)).not.toContain(token);
     expect(env).toEqual({
-      OPENCREATOR_AGENT_CAPABILITY_TOKEN: token
+      VISHNUCREATOR_AGENT_CAPABILITY_TOKEN: token
     });
   });
 });
@@ -367,7 +367,7 @@ const readline = require('node:readline');
 const fs = require('node:fs');
 fs.writeFileSync(${JSON.stringify(join(dir, 'app-server-argv.json'))}, JSON.stringify(process.argv.slice(2)));
 fs.writeFileSync(${JSON.stringify(join(dir, 'app-server-env.json'))}, JSON.stringify({
-  OPENCREATOR_AGENT_CAPABILITY_TOKEN: process.env.OPENCREATOR_AGENT_CAPABILITY_TOKEN
+  VISHNUCREATOR_AGENT_CAPABILITY_TOKEN: process.env.VISHNUCREATOR_AGENT_CAPABILITY_TOKEN
 }));
 const rl = readline.createInterface({ input: process.stdin });
 let approvalRequestId = 'approval-rpc-1';
@@ -458,19 +458,19 @@ rl.on('line', line => {
       params: {
         threadId: 'codex-thread-mcp',
         turnId: 'turn-mcp',
-        serverName: 'opencreator_schedule',
+        serverName: 'vishnucreator_schedule',
         mode: 'form',
         _meta: {
           ${approvalMetadata === 'kind' ? "codex_approval_kind: 'mcp_tool_call'," : ''}
           ${approvalMetadata === 'request-type' ? "codex_request_type: 'approval_request'," : ''}
-          message: 'Allow the opencreator_schedule MCP server to run tool "opencreator_schedule_create"?',
-          tool_description: '创建一个 OpenCreator 定时任务。',
+          message: 'Allow the vishnucreator_schedule MCP server to run tool "vishnucreator_schedule_create"?',
+          tool_description: '创建一个 VishnuCreator 定时任务。',
           tool_params: {
             name: '武汉天气每5分钟简报'
           }
         },
         ${approvalMetadata === 'fallback'
-          ? "message: 'Allow the opencreator_schedule MCP server to run tool \\\"opencreator_schedule_create\\\"?',"
+          ? "message: 'Allow the vishnucreator_schedule MCP server to run tool \\\"vishnucreator_schedule_create\\\"?',"
           : ''}
         requestedSchema: {
           type: 'object',

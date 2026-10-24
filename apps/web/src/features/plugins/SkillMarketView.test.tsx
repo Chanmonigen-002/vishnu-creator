@@ -2,11 +2,11 @@ import type {
   CodexSkillListResponse,
   CodexSkillMarketInstallRecordResponse,
   CodexSkillResponse,
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   skillMarketCandidateCatalog as skillMarketCatalog,
   type SkillMarketEntry
-} from '@opencreator/skill-market';
+} from '@vishnucreator/skill-market';
 import { act, fireEvent, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -430,8 +430,8 @@ describe('SkillMarketView', () => {
     const card = getSkillCard('test-skill');
     expect(within(card).queryByLabelText('标签')).not.toBeInTheDocument();
     expect(card.querySelector('.skill-market-card__cover')).not.toBeInTheDocument();
-    expect(within(card).getByAltText('OpenCreator')).toBeInTheDocument();
-    expect(within(card).getByText('OpenCreator')).toHaveClass('skill-market-card__author');
+    expect(within(card).getByAltText('VishnuCreator')).toBeInTheDocument();
+    expect(within(card).getByText('VishnuCreator')).toHaveClass('skill-market-card__author');
     expect(within(card).queryByRole('button', { name: /收藏/ })).not.toBeInTheDocument();
     expect(within(card).queryByLabelText('使用人数')).not.toBeInTheDocument();
 
@@ -857,7 +857,7 @@ function createProps({
   useError,
   projects = [
     { id: 'content-design', name: 'content-design', cwd: '~/develop/content-design' },
-    { id: 'bili', name: 'bili', cwd: '~/develop/opencreator/bili' },
+    { id: 'bili', name: 'bili', cwd: '~/develop/vishnucreator/bili' },
   ],
   currentProjectId = 'content-design',
   onInstall = vi.fn(),
@@ -954,7 +954,7 @@ function createMarketEntry(overrides: Partial<SkillMarketEntry> = {}): SkillMark
     platforms: ['Web'],
     tasks: ['测试任务'],
     creator: {
-      name: 'OpenCreator',
+      name: 'VishnuCreator',
       avatarUrl: 'https://example.com/avatar.png',
     },
     examples: [],

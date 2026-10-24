@@ -1,5 +1,5 @@
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
-import type { WorkspaceFileNode } from '@opencreator/protocol';
+import type { WorkspaceFileNode } from '@vishnucreator/protocol';
 import {
   ChevronRight,
   File,

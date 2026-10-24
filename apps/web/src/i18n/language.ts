@@ -1,7 +1,7 @@
-import { openCreatorLanguagePreferences, openCreatorLanguages, type OpenCreatorLanguage, type OpenCreatorLanguagePreference } from '@opencreator/protocol';
+import { vishnuCreatorLanguagePreferences, vishnuCreatorLanguages, type VishnuCreatorLanguage, type VishnuCreatorLanguagePreference } from '@vishnucreator/protocol';
 
-export type AppLanguagePreference = OpenCreatorLanguagePreference;
-export type AppLanguage = OpenCreatorLanguage;
+export type AppLanguagePreference = VishnuCreatorLanguagePreference;
+export type AppLanguage = VishnuCreatorLanguage;
 
 export type AppLanguageOption = { value: AppLanguage; label: string; englishName: string };
 
@@ -51,7 +51,7 @@ export const appLanguageOptions: ReadonlyArray<AppLanguageOption> = ([
   { value: 'pa-IN', label: 'ਪੰਜਾਬੀ', englishName: 'Punjabi' }
 ] satisfies AppLanguageOption[]).sort((a, b) => a.englishName.localeCompare(b.englishName, 'en'));
 
-export const languagePreferenceStorageKey = 'opencreator.preferences.language';
+export const languagePreferenceStorageKey = 'vishnucreator.preferences.language';
 export const defaultLanguagePreference: AppLanguagePreference = 'system';
 
 export function readLanguagePreference(): AppLanguagePreference {
@@ -85,7 +85,7 @@ export function resolveSystemLanguage(languages?: readonly string[]): AppLanguag
     if (base === 'iw') return 'he-IL';
     // This Punjabi catalog uses Gurmukhi, not Pakistan's Shahmukhi script.
     if (base === 'pa' && (parts.includes('arab') || parts.includes('pk'))) continue;
-    const language = openCreatorLanguages.find(locale => locale.split('-')[0] === base);
+    const language = vishnuCreatorLanguages.find(locale => locale.split('-')[0] === base);
     if (language) return language;
   }
   return 'en-US';
@@ -117,5 +117,5 @@ function readBrowserLanguages(): readonly string[] {
 }
 
 function isLanguagePreference(value: string | null): value is AppLanguagePreference {
-  return openCreatorLanguagePreferences.includes(value as AppLanguagePreference);
+  return vishnuCreatorLanguagePreferences.includes(value as AppLanguagePreference);
 }

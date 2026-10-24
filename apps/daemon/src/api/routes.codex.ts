@@ -3,7 +3,7 @@ import type {
   CodexAvailabilityProbe,
   CodexLoginStartRequest,
   CodexProviderConfigUpdateRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { RuntimeCapabilityMatrix } from '../codex/capabilities.js';
 import type { ResolvedCodexHome } from '../codex/home.js';
 import type { CodexModelCatalog } from '../codex/model-catalog-2026-08-05.js';

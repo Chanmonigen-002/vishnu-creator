@@ -1,72 +1,72 @@
 @import "../../../../../assets/creator-subtitle-fonts/fallback-fonts.css";
 
 @font-face {
-  font-family: "OpenCreator Sans Regular";
-  src: url("/fonts/opencreator/OpenCreatorSans-Regular.woff2") format("woff2");
+  font-family: "VishnuCreator Sans Regular";
+  src: url("/fonts/vishnucreator/VishnuCreatorSans-Regular.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
 }
 
 @font-face {
-  font-family: "OpenCreator Sans Medium";
-  src: url("/fonts/opencreator/OpenCreatorSans-Medium.woff2") format("woff2");
+  font-family: "VishnuCreator Sans Medium";
+  src: url("/fonts/vishnucreator/VishnuCreatorSans-Medium.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 500;
 }
 
 @font-face {
-  font-family: "OpenCreator Sans Bold";
-  src: url("/fonts/opencreator/OpenCreatorSans-Bold.woff2") format("woff2");
+  font-family: "VishnuCreator Sans Bold";
+  src: url("/fonts/vishnucreator/VishnuCreatorSans-Bold.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 700;
 }
 
 @font-face {
-  font-family: "OpenCreator Serif Regular";
-  src: url("/fonts/opencreator/OpenCreatorSerif-Regular.woff2") format("woff2");
+  font-family: "VishnuCreator Serif Regular";
+  src: url("/fonts/vishnucreator/VishnuCreatorSerif-Regular.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
 }
 
 @font-face {
-  font-family: "OpenCreator Serif Medium";
-  src: url("/fonts/opencreator/OpenCreatorSerif-Medium.woff2") format("woff2");
+  font-family: "VishnuCreator Serif Medium";
+  src: url("/fonts/vishnucreator/VishnuCreatorSerif-Medium.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 500;
 }
 
 @font-face {
-  font-family: "OpenCreator Serif Bold";
-  src: url("/fonts/opencreator/OpenCreatorSerif-Bold.woff2") format("woff2");
+  font-family: "VishnuCreator Serif Bold";
+  src: url("/fonts/vishnucreator/VishnuCreatorSerif-Bold.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 700;
 }
 
 @font-face {
-  font-family: "OpenCreator Rounded Regular";
-  src: url("/fonts/opencreator/OpenCreatorRounded-Regular.woff2") format("woff2");
+  font-family: "VishnuCreator Rounded Regular";
+  src: url("/fonts/vishnucreator/VishnuCreatorRounded-Regular.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 400;
 }
 
 @font-face {
-  font-family: "OpenCreator Rounded Medium";
-  src: url("/fonts/opencreator/OpenCreatorRounded-Medium.woff2") format("woff2");
+  font-family: "VishnuCreator Rounded Medium";
+  src: url("/fonts/vishnucreator/VishnuCreatorRounded-Medium.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 500;
 }
 
 @font-face {
-  font-family: "OpenCreator Rounded Bold";
-  src: url("/fonts/opencreator/OpenCreatorRounded-Bold.woff2") format("woff2");
+  font-family: "VishnuCreator Rounded Bold";
+  src: url("/fonts/vishnucreator/VishnuCreatorRounded-Bold.woff2") format("woff2");
   font-display: swap;
   font-style: normal;
   font-weight: 700;
@@ -2069,7 +2069,7 @@
   overflow: hidden;
   background: #000;
   color: #ffff00;
-  font-family: "OpenCreator Sans Bold", system-ui, sans-serif;
+  font-family: "VishnuCreator Sans Bold", system-ui, sans-serif;
   line-height: 1.2;
 }
 

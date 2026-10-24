@@ -1,6 +1,6 @@
 import { Box } from 'lucide-react';
 import { useState } from 'react';
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 import './model-brand-icon.css';
 
 type ModelIdentity = Pick<GatewayModel, 'id' | 'name'>;

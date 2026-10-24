@@ -5,7 +5,7 @@ import { join } from 'node:path';
 import Fastify from 'fastify';
 import { afterEach, describe, expect, it } from 'vitest';
 import sharp from 'sharp';
-import { readCreatorResultSnapshots } from '@opencreator/protocol';
+import { readCreatorResultSnapshots } from '@vishnucreator/protocol';
 import { registerCreatorRoutes } from '../../src/api/routes.creator.js';
 import { createCreatorAgentRepository } from '../../src/creator/agent/repository.js';
 import { createCreatorCommandDispatcher } from '../../src/creator/command-dispatcher.js';

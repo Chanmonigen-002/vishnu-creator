@@ -181,8 +181,8 @@ export function createCodexAppServerClient(
 
     state.initialize = sendRequest(state, 'initialize', {
       clientInfo: {
-        name: 'opencreator-agent',
-        title: 'OpenCreator Agent',
+        name: 'vishnucreator-agent',
+        title: 'VishnuCreator Agent',
         version: '0.1.0'
       },
       capabilities: {
@@ -203,7 +203,7 @@ export function createCodexAppServerClient(
     if (state.settled || state.child.stdin.destroyed) {
       return Promise.reject(new Error('Codex app-server is not running'));
     }
-    const id = `opencreator_sessions_${++state.nextRequestId}`;
+    const id = `vishnucreator_sessions_${++state.nextRequestId}`;
     return new Promise((resolve, reject) => {
       const timer = setTimeout(() => {
         failProcess(

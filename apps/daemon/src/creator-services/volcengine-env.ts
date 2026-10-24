@@ -1,4 +1,4 @@
-import type { CreatorServicesConfig } from '@opencreator/protocol';
+import type { CreatorServicesConfig } from '@vishnucreator/protocol';
 import {
   loadVolcengineEnvironment,
   type VolcengineEnvironment

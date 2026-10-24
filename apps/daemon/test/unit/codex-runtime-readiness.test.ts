@@ -17,7 +17,7 @@ describe('Codex Runtime Readiness', () => {
       version: '0.149.0',
       commit: '758ef40f50c1a458425c7cfbf1eb12cbc07af0b0',
       binaryPath: 'D:/runtime/bin/codex.exe',
-      codexHome: 'D:/user/.opencreator/runtime/codex',
+      codexHome: 'D:/user/.vishnucreator/runtime/codex',
       cwd: 'D:/creator',
       checkToolServer: () => ({ status: 'ready' }),
       now: () => '2026-08-21T00:00:00.000Z'
@@ -50,7 +50,7 @@ describe('Codex Runtime Readiness', () => {
       version: '0.149.0',
       commit: '758ef40f50c1a458425c7cfbf1eb12cbc07af0b0',
       binaryPath: 'D:/runtime/bin/codex.exe',
-      codexHome: 'D:/user/.opencreator/runtime/codex',
+      codexHome: 'D:/user/.vishnucreator/runtime/codex',
       cwd: 'D:/creator',
       checkToolServer: () => ({ status: 'ready' })
     });
@@ -85,7 +85,7 @@ describe('Codex Runtime Readiness', () => {
       version: '0.149.0',
       commit: '758ef40f50c1a458425c7cfbf1eb12cbc07af0b0',
       binaryPath: 'D:/runtime/bin/codex.exe',
-      codexHome: 'D:/user/.opencreator/runtime/codex',
+      codexHome: 'D:/user/.vishnucreator/runtime/codex',
       cwd: 'D:/creator'
     });
 

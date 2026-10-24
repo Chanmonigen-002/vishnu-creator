@@ -1,4 +1,4 @@
-import type { WorkspaceFileKind } from '@opencreator/protocol';
+import type { WorkspaceFileKind } from '@vishnucreator/protocol';
 import {
   MAX_IMAGE_BYTES,
   MAX_JSON_FORMAT_BYTES,

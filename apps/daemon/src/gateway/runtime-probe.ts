@@ -16,7 +16,7 @@ export async function prepareOfficialRuntimeProbe(input: {
   if (!model) return undefined;
   const use = await input.account.beginModelUse();
   let home: string;
-  try { home = await mkdtemp(join(tmpdir(), 'opencreator-runtime-probe-')); }
+  try { home = await mkdtemp(join(tmpdir(), 'vishnucreator-runtime-probe-')); }
   catch (error) { await use.release(); throw error; }
   const credentials = use.credentials;
   const bindings = createGatewayRuntimeBindings({

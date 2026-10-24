@@ -1,4 +1,4 @@
-import type { OpenCreatorIssue, PublicErrorFacts } from '@opencreator/protocol';
+import type { VishnuCreatorIssue, PublicErrorFacts } from '@vishnucreator/protocol';
 
 export type ConnectionConfig = {
   baseUrl: string;
@@ -11,6 +11,6 @@ export type ApiErrorPayload = {
     message: string;
     details?: Record<string, unknown>;
     publicFacts?: PublicErrorFacts;
-    issue?: OpenCreatorIssue;
+    issue?: VishnuCreatorIssue;
   };
 };

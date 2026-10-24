@@ -1,5 +1,5 @@
-import { gatewayRelayIdentity } from '@opencreator/protocol';
-import { safePublicErrorCode, safePublicErrorMessage, sanitizePublicErrorFacts, type OpenCreatorIssue, type PublicErrorFacts } from '@opencreator/protocol';
+import { gatewayRelayIdentity } from '@vishnucreator/protocol';
+import { safePublicErrorCode, safePublicErrorMessage, sanitizePublicErrorFacts, type VishnuCreatorIssue, type PublicErrorFacts } from '@vishnucreator/protocol';
 import type { AppLanguage } from '../../i18n/language.js';
 import { createLocalizedCopy, type LocalizeCopy } from '../../i18n/localized-copy.js';
 
@@ -25,7 +25,7 @@ const catalog: Record<string, { zh: string; en: string }> = {
 };
 
 export function presentIssue(
-  issue: OpenCreatorIssue,
+  issue: VishnuCreatorIssue,
   language: AppLanguage = 'zh-CN'
 ): IssuePresentation {
   const entry = issue.code === 'creator_provider_resolution_required'
@@ -42,7 +42,7 @@ export function presentIssue(
   };
 }
 
-function issueDescription(issue: OpenCreatorIssue, language: AppLanguage): string {
+function issueDescription(issue: VishnuCreatorIssue, language: AppLanguage): string {
   const localize = createLocalizedCopy(language);
   if (recoveredProviderIssue(issue)) return localize('请求状态已核对，任务已恢复。', 'The request status was confirmed and the task recovered.', 'Begäransstatusen har bekräftats och uppgiften har återhämtats.');
   if (issue.code === 'creator_provider_resolution_required') return localize(
@@ -59,13 +59,13 @@ function issueDescription(issue: OpenCreatorIssue, language: AppLanguage): strin
   return localize(`${summary} 错误码：${code}。${reason}`, `${summary} Error code: ${code}. ${reason}`, `${summary} Felkod: ${code}. ${reason}`);
 }
 
-function recoveredProviderIssue(issue: OpenCreatorIssue): boolean {
+function recoveredProviderIssue(issue: VishnuCreatorIssue): boolean {
   return issue.status === 'resolved' && issue.source === 'provider'
     && ['creator_provider_resolution_required', 'creator_provider_request_failed'].includes(issue.code)
-    && issue.publicFacts?.provider?.startsWith('opencreator-gateway-') === true;
+    && issue.publicFacts?.provider?.startsWith('vishnucreator-gateway-') === true;
 }
 
-function issuePublicFacts(issue: OpenCreatorIssue): PublicErrorFacts | undefined {
+function issuePublicFacts(issue: VishnuCreatorIssue): PublicErrorFacts | undefined {
   const historicalReason = issue.source === 'stage' || issue.source === 'preflight'
     ? safePublicErrorMessage(issue.technicalDetail) : undefined;
   let facts = (issue.publicFacts === undefined || issue.publicFacts.kind === 'unknown')
@@ -80,7 +80,7 @@ function issuePublicFacts(issue: OpenCreatorIssue): PublicErrorFacts | undefined
   return facts;
 }
 
-function localizedIssueSummary(issue: OpenCreatorIssue, localize: LocalizeCopy): string {
+function localizedIssueSummary(issue: VishnuCreatorIssue, localize: LocalizeCopy): string {
   if (issue.code === 'creator_codex_config_resynced') return localize('已重新同步本机 Codex 配置，请重试本次操作。', 'Local Codex configuration has been re-synchronized. Retry this operation.', 'Konfigurationen för lokala Codex har synkroniserats igen. Försök igen.');
   if (issue.code === 'creator_codex_config_check_failed') return localize('本机 Codex 配置检查失败，请检查配置文件和登录信息。', 'Local Codex configuration could not be checked. Check the configuration files and sign-in details.', 'Konfigurationen för lokala Codex kunde inte kontrolleras. Kontrollera konfigurationsfilerna och inloggningsuppgifterna.');
   if (issue.code === 'platform_request_signature_required') return localize('当前下载器尚未兼容抖音的请求签名校验。', 'The current downloader does not support Douyin request signature verification.', 'Den nuvarande nedladdaren stöder inte Douyins verifiering av begäranssignaturer.');
@@ -200,7 +200,7 @@ function safeIdentifier(value: string): string {
 }
 
 export function issueConversationText(
-  issue: OpenCreatorIssue,
+  issue: VishnuCreatorIssue,
   language: AppLanguage = 'zh-CN'
 ): { message: string; nextStep: string } {
   const detail = presentIssue(issue, language).description;
@@ -254,7 +254,7 @@ export function issueConversationText(
 }
 
 export function buildIssueAgentPrompt(
-  issue: OpenCreatorIssue,
+  issue: VishnuCreatorIssue,
   question: string,
   language: AppLanguage = 'zh-CN'
 ): string {
@@ -268,7 +268,7 @@ export function buildIssueAgentPrompt(
   );
 }
 
-export function issueDiagnosticText(issue: OpenCreatorIssue, language: AppLanguage = 'zh-CN'): string {
+export function issueDiagnosticText(issue: VishnuCreatorIssue, language: AppLanguage = 'zh-CN'): string {
   return safeFallback(safePublicErrorMessage(issue.technicalDetail) ?? issue.fallbackMessage, language);
 }
 

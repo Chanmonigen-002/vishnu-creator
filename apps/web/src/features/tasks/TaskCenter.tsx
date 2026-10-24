@@ -7,7 +7,7 @@ import type {
   TaskItem,
   TaskListResponse,
   TaskStatusFilter
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   Bell,
   BellOff,

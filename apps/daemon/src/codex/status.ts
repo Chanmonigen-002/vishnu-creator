@@ -1,7 +1,7 @@
 import type {
   CodexAvailabilityProbe,
   CodexStatusResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { RuntimeCapabilityMatrix } from './capabilities.js';
 import type { ResolvedCodexHome } from './home.js';
 

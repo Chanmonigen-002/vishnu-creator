@@ -5,7 +5,7 @@ import {
   type CreatorServicesCapabilitiesResponse,
   type CreatorServicesCredentialField,
   type CreatorTtsProvider
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -419,7 +419,7 @@ describe('CreatorServicesSettingsView', () => {
     await user.click(screen.getByRole('button', { name: '保存配置' }));
 
     expect(await screen.findByRole('heading', { name: '启用本地语音识别' })).toBeInTheDocument();
-    expect(screen.getByText(/KrillinAI 下次启动时会检查并按需下载 WhisperKit large-v2/))
+    expect(screen.getByText(/VishnuAI 下次启动时会检查并按需下载 WhisperKit large-v2/))
       .toBeInTheDocument();
     expect(service.saveConfig).not.toHaveBeenCalled();
 

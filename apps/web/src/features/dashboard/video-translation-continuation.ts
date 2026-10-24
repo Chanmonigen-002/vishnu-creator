@@ -1,6 +1,6 @@
-import type { CreatorServicesConfigResponse, CreatorTtsProvider } from '@opencreator/protocol';
+import type { CreatorServicesConfigResponse, CreatorTtsProvider } from '@vishnucreator/protocol';
 
-const key = 'opencreator.video-translation.pending-composition';
+const key = 'vishnucreator.video-translation.pending-composition';
 export type TranslationEditorContext = { panel?: 'language' | 'style' | 'voice' | 'output'; time: number; cueId?: number };
 export type PendingTranslationComposition = {
   jobId: string; version: number; type: 'video' | 'voice'; returnPath: string;

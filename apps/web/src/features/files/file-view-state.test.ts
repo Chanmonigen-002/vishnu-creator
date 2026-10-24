@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { WorkspaceDirectoryResponse, WorkspaceFileNode } from '@opencreator/protocol';
+import type { WorkspaceDirectoryResponse, WorkspaceFileNode } from '@vishnucreator/protocol';
 import {
   chooseSuggestedPath,
   mergeDirectoryNodes,

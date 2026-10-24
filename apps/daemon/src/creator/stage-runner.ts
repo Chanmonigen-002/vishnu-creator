@@ -9,7 +9,7 @@ import {
   type CreatorJob,
   type CreatorJson,
   type CreatorStageRun
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CreatorExecutor } from './executor.js';
 import { CreatorExecutorError } from './executor.js';
 import type { CreatorRepository } from './repository.js';
@@ -541,7 +541,7 @@ export function createCreatorStageRunner(input: {
       candidate.status === 'resolving' && candidate.stageRunId === stageRunId
       && !(result === 'succeeded' && candidate.source === 'provider'
         && ['creator_provider_request_failed', 'creator_provider_resolution_required'].includes(candidate.code)
-        && candidate.publicFacts?.provider?.startsWith('opencreator-gateway-'))
+        && candidate.publicFacts?.provider?.startsWith('vishnucreator-gateway-'))
       && input.repository.getIssueResolutionAttemptId(jobId, candidate.id) === stageRunId
     ));
     if (issue === undefined) return undefined;

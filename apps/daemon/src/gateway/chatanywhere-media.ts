@@ -1,4 +1,4 @@
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 import { GatewayError } from './client.js';
 
 const unsupported = () => new GatewayError('capability_unsupported', 400);

@@ -131,7 +131,7 @@ describe('scheduler service', () => {
       threadId: schedule.threadId,
       prompt: 'Summarize project status',
       executionPrompt: expect.stringMatching(
-        /OpenCreator 已经触发[\s\S]*任务名称：daily status[\s\S]*本次触发时间：2026-07-06T00:00:00.000Z[\s\S]*Summarize project status/
+        /VishnuCreator 已经触发[\s\S]*任务名称：daily status[\s\S]*本次触发时间：2026-07-06T00:00:00.000Z[\s\S]*Summarize project status/
       ),
       publicPrompt: 'Summarize project status',
       triggeredAt: '2026-07-06T00:00:00.000Z',
@@ -763,7 +763,7 @@ describe('scheduler service', () => {
 });
 
 function createFixture(options: { autostart?: boolean; warn?(message: string): void } = {}) {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-scheduler-service-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-scheduler-service-'));
   db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
   const repository = new ScheduleRepository(db, {
     idFactory: (() => {

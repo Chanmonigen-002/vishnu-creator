@@ -2,14 +2,14 @@ import { chromium } from '@playwright/test';
 import { readFileSync, writeFileSync, mkdirSync } from 'node:fs';
 import { execFileSync } from 'node:child_process';
 import { createRequire } from 'node:module';
-import { createSubtitleRenderService } from '../apps/daemon/src/creator/krillin/subtitle-render.ts';
-import { buildKrillinSubtitleStyle } from '../apps/daemon/src/creator/krillin/adapter.ts';
+import { createSubtitleRenderService } from '../apps/daemon/src/creator/vishnu/subtitle-render.ts';
+import { buildVishnuSubtitleStyle } from '../apps/daemon/src/creator/vishnu/adapter.ts';
 const sharp = createRequire(process.cwd()+'/apps/daemon/package.json')('sharp');
 // Run from the repository root with the Web dev server running. No model API is used.
 const root=process.cwd(), out=root+'/.runtime/subtitle-parity/matrix'; mkdirSync(out,{recursive:true});
-const runtime=root+'/apps/desktop/.pack/creator-runtime/krillinai';
+const runtime=root+'/apps/desktop/.pack/creator-runtime/vishnuai';
 const manifest=JSON.parse(readFileSync(runtime+'/manifest.json','utf8'));
-const env={...process.env,PATH:runtime+'/bin:'+process.env.PATH,KRILLINAI_RESOURCE_ROOT:runtime,KRILLINAI_OFFLINE_DEPENDENCIES:'1',OPENCREATOR_KRILLINAI_CLI:'1',OPENCREATOR_YT_DLP_COMMAND:JSON.stringify([runtime+'/'+manifest.ytDlp.executable,runtime+'/'+manifest.ytDlp.script])};
+const env={...process.env,PATH:runtime+'/bin:'+process.env.PATH,VISHNUAI_RESOURCE_ROOT:runtime,VISHNUAI_OFFLINE_DEPENDENCIES:'1',VISHNUCREATOR_VISHNUAI_CLI:'1',VISHNUCREATOR_YT_DLP_COMMAND:JSON.stringify([runtime+'/'+manifest.ytDlp.executable,runtime+'/'+manifest.ytDlp.script])};
 const service=createSubtitleRenderService({resourceRoot:runtime,workRoot:out,ensureRuntimeReady:async()=>{}});
 const cases=[
  {id:'sans-bilingual',w:640,h:360,text:'保留标点！\n手动换行。',source:'Hello, subtitle preview!'},
@@ -35,14 +35,14 @@ for(const c of cases){
  const input={width:c.w,height:c.h,horizontal:!c.converted && c.w>=c.h,bilingual:true,subtitlePosition:'top',subtitleStyle,majorTitle:c.title??'',minorTitle:c.minor??'',cues:[{startMs:200,endMs:1800,text:c.text,sourceText:c.source},...(c.overlap?[{startMs:300,endMs:1600,text:'Overlapping event',sourceText:'独立重叠字幕'}]:[])]};
  const started=performance.now();const bundle=await service.compile(input); const compileMs=performance.now()-started;
  const fonts={}; for(const f of bundle.fonts)fonts[f.id]=(await service.font(f.id))!.toString('base64');
- writeFileSync(dir+'/document.json',JSON.stringify(input));writeFileSync(dir+'/style.json',JSON.stringify(buildKrillinSubtitleStyle(subtitleStyle)));
+ writeFileSync(dir+'/document.json',JSON.stringify(input));writeFileSync(dir+'/style.json',JSON.stringify(buildVishnuSubtitleStyle(subtitleStyle)));
  writeFileSync(dir+'/input.srt','1\n00:00:00,200 --> 00:00:01,800\nUnused structured source\n\n');
  const ff=(args)=>execFileSync(runtime+'/bin/ffmpeg',['-v','error','-y',...args],{maxBuffer:24*1024*1024});
  const sw=c.converted?640:c.w,sh=c.converted?360:c.h;
  const backgroundColor=c.soft?'0xB0B0B0':'0x202020'; // Expose shadow differences on a light background.
  ff(['-f','lavfi','-i',`color=c=${backgroundColor}:s=${sw}x${sh}:d=2:r=25`,'-c:v','libx264','-pix_fmt','yuv420p',dir+'/source.mp4']);
  const renderStart=performance.now();
- execFileSync(runtime+'/bin/krillinai-cli',[input.horizontal?'render-horizontal':'render-vertical','--workdir',dir,'--task-id','parity','--video',dir+'/source.mp4','--subtitle',dir+'/input.srt','--subtitle-document',dir+'/document.json','--subtitle-style-file',dir+'/style.json'],{cwd:dir+'/launcher',env,maxBuffer:4*1024*1024,stdio:['ignore','pipe','pipe']});
+ execFileSync(runtime+'/bin/vishnuai-cli',[input.horizontal?'render-horizontal':'render-vertical','--workdir',dir,'--task-id','parity','--video',dir+'/source.mp4','--subtitle',dir+'/input.srt','--subtitle-document',dir+'/document.json','--subtitle-style-file',dir+'/style.json'],{cwd:dir+'/launcher',env,maxBuffer:4*1024*1024,stdio:['ignore','pipe','pipe']});
  const renderMs=performance.now()-renderStart;
  const assPath=dir+'/formatted_'+(input.horizontal?'horizontal':'vertical')+'_bilingual.ass';
  const nativeASS=readFileSync(assPath,'utf8');if(nativeASS!==bundle.ass)throw Error('ASS mismatch '+c.id);
@@ -51,7 +51,7 @@ for(const c of cases){
  ff(['-ss','0.5','-i',dir+'/'+(input.horizontal?'horizontal':'vertical')+'_bilingual.mp4','-frames:v','1',dir+'/encoded.png']);
  ff(['-f','lavfi','-i',`color=c=${backgroundColor}:s=${sw}x${sh}:d=1,format=rgb24`,...(c.converted?['-vf','scale=720:406,pad=720:1280:0:250:black']:[]),'-frames:v','1',dir+'/background.png']);
  const page=await browser.newPage({viewport:{width:c.w,height:c.h},deviceScaleFactor:1});const errors=[];page.on('pageerror',e=>errors.push(e.message));
- await page.goto((process.env.OPENCREATOR_SUBTITLE_TEST_ORIGIN ?? 'http://127.0.0.1:19861')+'/e2e/fixtures/subtitle-renderer.html');await page.waitForFunction(()=>typeof window.mountComposition==='function');
+ await page.goto((process.env.VISHNUCREATOR_SUBTITLE_TEST_ORIGIN ?? 'http://127.0.0.1:19861')+'/e2e/fixtures/subtitle-renderer.html');await page.waitForFunction(()=>typeof window.mountComposition==='function');
  const loadStart=performance.now();await page.evaluate(data=>window.mountComposition(data),{input,bundle,fonts,converted:!!c.converted,background:c.soft?readFileSync(dir+'/background.png').toString('base64'):undefined});
  await page.locator('.subtitle-composition-preview[data-status=ready]').waitFor();
  await page.waitForTimeout(300); const loadMs=performance.now()-loadStart;

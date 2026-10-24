@@ -1,6 +1,6 @@
-# OpenCreator Code of Conduct
+# Vishnu Creator Code of Conduct
 
-OpenCreator welcomes people contributing code, Skills, templates, design, documentation, translations, bug reports, and ideas. We want these spaces to be useful and respectful for everyone, regardless of background or experience.
+Vishnu Creator welcomes people contributing code, Skills, templates, design, documentation, translations, bug reports, and ideas. We want these spaces to be useful and respectful for everyone, regardless of background or experience.
 
 ## Our standards
 
@@ -22,11 +22,11 @@ The following behavior is unacceptable:
 
 ## Scope
 
-This code applies to OpenCreator's repositories, issues, pull requests, discussions, and project-operated community spaces. It also applies when someone represents OpenCreator in a public project event or channel.
+This code applies to Vishnu Creator's repositories, issues, pull requests, discussions, and project-operated community spaces. It also applies when someone represents Vishnu Creator in a public project event or channel.
 
 ## Reporting and response
 
-If you experience or witness a violation, contact an OpenCreator community moderator by direct message in the [Discord community](https://discord.gg/3GwBGsjs8). For content hosted on GitHub, you can also use GitHub's **Report content** action. Please do not include sensitive personal details in a public issue or pull request.
+If you experience or witness a violation, contact an Vishnu Creator community moderator by direct message in the [Discord community](https://discord.gg/3GwBGsjs8). For content hosted on GitHub, you can also use GitHub's **Report content** action. Please do not include sensitive personal details in a public issue or pull request.
 
 Share links, screenshots, and relevant context when possible. Maintainers will review reports as promptly as practical, limit access to the information to people handling the report, and avoid sharing the reporter's identity without consent except where necessary for safety or legal reasons. We cannot promise absolute confidentiality.
 

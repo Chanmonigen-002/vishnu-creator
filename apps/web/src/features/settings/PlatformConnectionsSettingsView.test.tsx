@@ -2,7 +2,7 @@ import { selectOption } from '../../test/select-option.js';
 import { render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { expect, it, vi } from 'vitest';
-import type { PlatformConnectionState, YouTubeConnectionState } from '@opencreator/protocol';
+import type { PlatformConnectionState, YouTubeConnectionState } from '@vishnucreator/protocol';
 import { PlatformConnectionsSettingsView } from './PlatformConnectionsSettingsView.js';
 
 const windowsState: YouTubeConnectionState = { platform: 'youtube', status: 'disconnected', connectionMethod: 'browser-login' };

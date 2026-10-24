@@ -5,7 +5,7 @@ import type {
   CreatorJob,
   CreatorProviderRequest,
   CreatorStageRun
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { Page, Route } from '@playwright/test';
 
 export type FakeStickmanMutation = {
@@ -82,7 +82,7 @@ export class FakeStickmanDaemon {
   }
 
   async attach(page: Page): Promise<void> {
-    await page.route('**/.opencreator/runtime/creator/**', route => this.handle(route));
+    await page.route('**/.vishnucreator/runtime/creator/**', route => this.handle(route));
   }
 
   reset(): void {
@@ -133,7 +133,7 @@ export class FakeStickmanDaemon {
     const request = route.request();
     const method = request.method();
     const url = new URL(request.url());
-    const marker = '/.opencreator/runtime';
+    const marker = '/.vishnucreator/runtime';
     const path = `${url.pathname.slice(url.pathname.indexOf(marker) + marker.length)}${url.search}`;
     const pathWithoutQuery = path.split('?')[0]!;
 
@@ -511,7 +511,7 @@ function initialJob(projectId: string): CreatorJob {
     revision: 3,
     state: {
       sourceType: 'url',
-      sourceUrl: 'https://www.youtube.com/watch?v=OpenCreatorStickmanE2E',
+      sourceUrl: 'https://www.youtube.com/watch?v=VishnuCreatorStickmanE2E',
       characterAsset: { assetId: 'stickman.character.default', revision: 1 },
       styleAsset: { assetId: 'stickman.style.paper-pencil', revision: 1 },
       ratio: '16:9',

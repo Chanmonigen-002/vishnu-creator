@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { CreatorArtifact } from '@opencreator/protocol';
+import type { CreatorArtifact } from '@vishnucreator/protocol';
 import {
   latestArtifactForResultVersion,
   resultVersionsFromArtifacts,

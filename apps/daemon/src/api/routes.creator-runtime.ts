@@ -3,8 +3,8 @@ import { z } from 'zod/v3';
 import type { YtDlpUpdateManager } from '../creator/yt-dlp/update-manager.js';
 import { YtDlpUpdateError } from '../creator/yt-dlp/update-manager.js';
 import { apiError } from './errors.js';
-import type { CreatorServicesConfig } from '@opencreator/protocol';
-import type { createKrillinDependencyLoader } from '../creator/krillin/dependency-loader.js';
+import type { CreatorServicesConfig } from '@vishnucreator/protocol';
+import type { createVishnuDependencyLoader } from '../creator/vishnu/dependency-loader.js';
 import type { RemotionComponentManager } from '../creator/stickman/remotion-component.js';
 
 const componentDownloadSchema = z.object({
@@ -14,7 +14,7 @@ const componentDownloadSchema = z.object({
 export async function registerCreatorRuntimeRoutes(
   server: FastifyInstance,
   ytDlp: YtDlpUpdateManager | undefined,
-  local?: { loader: ReturnType<typeof createKrillinDependencyLoader>; readConfig(): Promise<CreatorServicesConfig>; remotion?: RemotionComponentManager }
+  local?: { loader: ReturnType<typeof createVishnuDependencyLoader>; readConfig(): Promise<CreatorServicesConfig>; remotion?: RemotionComponentManager }
 ): Promise<void> {
   server.addHook('preClose', () => {
     ytDlp?.close();

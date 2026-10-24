@@ -8,12 +8,12 @@ import {
   type WechatArticleLayoutStyleId,
   type WechatArticleSourceLink,
   type WechatArticleTopic
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   getWritingTemplate,
   getWritingTemplateStagePrompt,
   type WritingTemplateStage
-} from '@opencreator/writing-templates';
+} from '@vishnucreator/writing-templates';
 import { createHash } from 'node:crypto';
 import { readFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';

@@ -18,9 +18,9 @@ afterEach(() => {
 });
 
 describe('project manager', () => {
-  it('ensures one default project inside the managed OpenCreator directory', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-default-project-'));
-    const managedProjectRoot = join(tempDir, 'Documents', 'OpenCreator');
+  it('ensures one default project inside the managed VishnuCreator directory', () => {
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-default-project-'));
+    const managedProjectRoot = join(tempDir, 'Documents', 'VishnuCreator');
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     let nextId = 0;
     const manager = createProjectManager({
@@ -46,9 +46,9 @@ describe('project manager', () => {
     ).toEqual({ count: 1 });
   });
 
-  it('creates named projects with generated directories inside the managed OpenCreator directory', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-managed-project-'));
-    const managedProjectRoot = join(tempDir, 'Documents', 'OpenCreator');
+  it('creates named projects with generated directories inside the managed VishnuCreator directory', () => {
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-managed-project-'));
+    const managedProjectRoot = join(tempDir, 'Documents', 'VishnuCreator');
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const manager = createProjectManager({
       db,
@@ -68,7 +68,7 @@ describe('project manager', () => {
   });
 
   it('uses the latest configured root for newly managed projects', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-managed-project-root-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-managed-project-root-'));
     const firstRoot = join(tempDir, 'first');
     const secondRoot = join(tempDir, 'second');
     let currentRoot = firstRoot;
@@ -89,8 +89,8 @@ describe('project manager', () => {
   });
 
   it('removes a newly created empty directory when registration fails', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-managed-project-'));
-    const managedProjectRoot = join(tempDir, 'Documents', 'OpenCreator');
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-managed-project-'));
+    const managedProjectRoot = join(tempDir, 'Documents', 'VishnuCreator');
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const manager = createProjectManager({
       db,
@@ -104,8 +104,8 @@ describe('project manager', () => {
   });
 
   it('rejects invalid managed project names and generates unique directories for duplicates', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-managed-project-'));
-    const managedProjectRoot = join(tempDir, 'Documents', 'OpenCreator');
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-managed-project-'));
+    const managedProjectRoot = join(tempDir, 'Documents', 'VishnuCreator');
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const manager = createProjectManager({ db, managedProjectRoot });
 
@@ -126,7 +126,7 @@ describe('project manager', () => {
   });
 
   it('persists projects and preserves a missing migrated directory', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-project-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-project-'));
     const projectDir = join(tempDir, 'workspace');
     mkdirSync(projectDir);
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
@@ -177,7 +177,7 @@ describe('project manager', () => {
   });
 
   it('rejects duplicate active canonical directories and detects a removed directory', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-project-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-project-'));
     const projectDir = join(tempDir, 'workspace');
     mkdirSync(projectDir);
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
@@ -202,7 +202,7 @@ describe('project manager', () => {
   });
 
   it('returns SQLite UTC timestamps as timezone-qualified ISO values', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-project-timestamp-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-project-timestamp-'));
     const projectDir = join(tempDir, 'workspace');
     mkdirSync(projectDir);
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));

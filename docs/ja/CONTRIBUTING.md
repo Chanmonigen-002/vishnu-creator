@@ -2,7 +2,7 @@
 
 > [English](../../CONTRIBUTING.md) | [简体中文](../zh/CONTRIBUTING.md) | **日本語** | [한국어](../ko/CONTRIBUTING.md) | [Bahasa Indonesia](../id/CONTRIBUTING.md) | [Español](../es/CONTRIBUTING.md) | [Français](../fr/CONTRIBUTING.md) | [Deutsch](../de/CONTRIBUTING.md) | [Português](../pt/CONTRIBUTING.md) | [Русский](../ru/CONTRIBUTING.md) | [العربية](../ar/CONTRIBUTING.md)
 
-OpenCreator への貢献を検討していただきありがとうございます。OpenCreator は Codex エージェントループを基盤としたローカルファーストのクリエイターワークスペースであり、その価値の多くは小さく焦点の絞られた追加——1 つの Skill フォルダ、1 つの作成テンプレート、1 つの範囲の明確な修正——から生まれます。このガイドでは、各種類の貢献をどこに置くべきか、そして PR がマージまでに満たすべき基準を説明します。
+Vishnu Creator への貢献を検討していただきありがとうございます。Vishnu Creator は Codex エージェントループを基盤としたローカルファーストのクリエイターワークスペースであり、その価値の多くは小さく焦点の絞られた追加——1 つの Skill フォルダ、1 つの作成テンプレート、1 つの範囲の明確な修正——から生まれます。このガイドでは、各種類の貢献をどこに置くべきか、そして PR がマージまでに満たすべき基準を説明します。
 
 ---
 
@@ -19,7 +19,7 @@ OpenCreator への貢献を検討していただきありがとうございま�
 
 ## 質問先とレビュー担当
 
-アイデアの相談や担当領域が不明な場合は [Issue](https://github.com/krillinai/OpenCreator/issues/new) を作成してください。PR 提出時にはコードとバグ修正、制作テンプレート、デザインと素材、Skills と文書に応じて[チーム](../../README.md#the-crew)の担当者に知らせてください。チームは貢献基準、レビュー、コミュニティの質問に対応します。マージはリポジトリの権限と必須チェックに従います。
+アイデアの相談や担当領域が不明な場合は [Issue](https://github.com/vishnuai/Vishnu Creator/issues/new) を作成してください。PR 提出時にはコードとバグ修正、制作テンプレート、デザインと素材、Skills と文書に応じて[チーム](../../README.md#the-crew)の担当者に知らせてください。チームは貢献基準、レビュー、コミュニティの質問に対応します。マージはリポジトリの権限と必須チェックに従います。
 
 ---
 
@@ -28,8 +28,8 @@ OpenCreator への貢献を検討していただきありがとうございま�
 完全なセットアップは [README のクイックスタート](../../README.md#quick-start) にあります。コントリビューター向けの要約：
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable          # packageManager で固定された pnpm を選択
 pnpm install
 pnpm web:dev             # Web + 必要時にローカル daemon を起動
@@ -43,7 +43,7 @@ Node.js 22 以上と Codex CLI 実行ファイルが必要です。`pnpm web:dev
 
 ## 貢献の手順
 
-1. [Issue](https://github.com/krillinai/OpenCreator/issues) で問題、ユースケース、期待される動作を説明する。
+1. [Issue](https://github.com/vishnuai/Vishnu Creator/issues) で問題、ユースケース、期待される動作を説明する。
 2. 最新の開発ブランチから、焦点を絞った機能・修正ブランチを作成する。
 3. 既存のアーキテクチャに従う：汎用的なプロダクト機能は Web と Daemon で**一度だけ**実装し、Desktop ネイティブの差異は明示的な capability（例：`canSelectDirectory`）で隔離する。
 4. 動作変更には適切なユニット・統合・E2E テストを追加し、PR には実行した検証とスキップした検証の両方を記載する。
@@ -66,4 +66,4 @@ Node.js 22 以上と Codex CLI 実行ファイルが必要です。`pnpm web:dev
 
 ---
 
-OpenCreator · Create locally, work continuously.
+Vishnu Creator · Create locally, work continuously.

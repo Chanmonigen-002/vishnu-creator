@@ -48,7 +48,7 @@
 - 新增本地 SRT 与平台 VTT 集成测试，使用真实 HTTP 客户端和本地模拟 LLM，验证轻微超长、分段兜底、最终文件导出，以及更改长度后的检查点复用。
 - `go test ./internal/pipeline ./internal/cli ./internal/types -count=1 -timeout=90s` 通过。
 - 相关恢复、进度与并发测试的 `go test -race` 通过。
-- `node scripts/build-krillinai.mjs` 通过，重新构建本机 CLI 和 Server。
+- `node scripts/build-vishnuai.mjs` 通过，重新构建本机 CLI 和 Server。
 
 上述自动化回归使用模拟模型响应，不代表真实模型语义质量或最终成片验收。本次未执行 Desktop 打包、替换已安装 App 或真实配音及视频渲染。
 
@@ -61,8 +61,8 @@
 - 第 24 句分段纠错后仍未达到意群排版要求，保留完整有效译文继续处理，任务成功结束。该句仍存在不自然的分段边界，属于可继续改善的排版质量问题。
 - 审计确认全片原文覆盖完整、检查点完整译文全部导出、双语配对与时间一致、无空字幕及非法换行、无时间重叠；首尾时间范围保持 0–272.6 秒。
 - 同一工作目录复跑仅耗时 0.041 秒，模型请求为 0。测试网关在复跑阶段会拒绝所有新增模型请求，因此验证了检查点直接复用。
-- 4 份实际导出的 SRT 均通过 OpenCreator 的 `validateSrtFile`，并记录文件 SHA-256。
+- 4 份实际导出的 SRT 均通过 Vishnu Creator 的 `validateSrtFile`，并记录文件 SHA-256。
 
-新增可选的 `TestSubtitleRecoverySRTAuditLive`：设置 `KRILLINAI_RECOVERY_AUDIT_INPUT` 为原始 SRT，`KRILLINAI_RECOVERY_AUDIT_OUTPUT` 为 CLI 任务工作目录后运行。该测试只读取实际产物并输出审计 JSON，不调用模型、不改写字幕。
+新增可选的 `TestSubtitleRecoverySRTAuditLive`：设置 `VISHNUAI_RECOVERY_AUDIT_INPUT` 为原始 SRT，`VISHNUAI_RECOVERY_AUDIT_OUTPUT` 为 CLI 任务工作目录后运行。该测试只读取实际产物并输出审计 JSON，不调用模型、不改写字幕。
 
 这次实测覆盖完整 SRT 翻译、自然触发的分段容错及检查点复用；未人为注入模型断连、限流或格式损坏，也未执行语音转录、配音或视频渲染。文件覆盖检查不能代替逐片段语义对齐和翻译质量审阅。

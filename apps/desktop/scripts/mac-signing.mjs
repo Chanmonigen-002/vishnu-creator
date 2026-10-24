@@ -5,7 +5,7 @@ import { createRequire } from 'node:module';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 
-export const DEFAULT_OPENCREATOR_APPLE_TEAM_ID = 'NVRH5R5DJ5';
+export const DEFAULT_VISHNUCREATOR_APPLE_TEAM_ID = 'NVRH5R5DJ5';
 export const DEFAULT_NOTARY_KEYCHAIN_PROFILE = 'clawee-notary';
 
 // Prepare one keychain before standalone component signing and keep it alive
@@ -20,7 +20,7 @@ export async function withMacSigningKeychain(env, action, options = {}) {
 
   const tools = options.keychainTools ?? loadKeychainTools();
   const temporaryFiles = new tools.TmpDir();
-  const currentDir = mkdtempSync(join(tmpdir(), 'opencreator-component-signing-'));
+  const currentDir = mkdtempSync(join(tmpdir(), 'vishnucreator-component-signing-'));
   const keychainFile = join(currentDir, 'signing.keychain');
   const keychainPassword = randomBytes(32).toString('hex');
   const security = options.runSecurity ?? (args => runSecurity(args, [
@@ -125,7 +125,7 @@ export function configureMacDirectorySigning(input) {
   }
 
   const teamId = input.teamId?.trim()
-    || DEFAULT_OPENCREATOR_APPLE_TEAM_ID;
+    || DEFAULT_VISHNUCREATOR_APPLE_TEAM_ID;
   const identity = findDeveloperIdIdentity(teamId, input.findIdentities);
   builderEnv.CSC_NAME = identity.replace(
     /^Developer ID Application:\s*/,
@@ -148,7 +148,7 @@ export function configureMacReleaseSigning(input) {
 
   const builderEnv = { ...input.env };
   const teamId = input.teamId?.trim()
-    || DEFAULT_OPENCREATOR_APPLE_TEAM_ID;
+    || DEFAULT_VISHNUCREATOR_APPLE_TEAM_ID;
   let identity;
 
   if (hasValue(builderEnv.CSC_LINK)) {
@@ -186,7 +186,7 @@ export function configureMacReleaseSigning(input) {
 
 export function resolveNotarizationCredentials(
   env,
-  teamId = DEFAULT_OPENCREATOR_APPLE_TEAM_ID
+  teamId = DEFAULT_VISHNUCREATOR_APPLE_TEAM_ID
 ) {
   const passwordCredentials = [
     env.APPLE_ID,
@@ -203,7 +203,7 @@ export function resolveNotarizationCredentials(
     if (env.APPLE_TEAM_ID.trim() !== teamId) {
       throw new Error(
         `APPLE_TEAM_ID ${env.APPLE_TEAM_ID.trim()} does not match `
-        + `the OpenCreator release Team ID ${teamId}`
+        + `the VishnuCreator release Team ID ${teamId}`
       );
     }
     return {

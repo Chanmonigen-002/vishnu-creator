@@ -3,7 +3,7 @@ import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { createDefaultCreatorServicesConfig, type CreatorArtifact } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type CreatorArtifact } from '@vishnucreator/protocol';
 import { CreatorProviderRequestLedger } from '../../src/creator/provider-requests.js';
 import { createCreatorRepository } from '../../src/creator/repository.js';
 import { createCreatorService } from '../../src/creator/service.js';
@@ -250,7 +250,7 @@ describe('stickman audio executor', () => {
         ttsService: { synthesize: synthesize as never },
         ledger: new CreatorProviderRequestLedger(repository),
         ffprobePath: 'ffprobe-test',
-        edgeTtsCommand: 'missing-opencreator-edge-tts-command',
+        edgeTtsCommand: 'missing-vishnucreator-edge-tts-command',
         synthesize: synthesize as never,
         probe: async () => ({ duration: 1, hasVideo: false, hasAudio: true })
       })]

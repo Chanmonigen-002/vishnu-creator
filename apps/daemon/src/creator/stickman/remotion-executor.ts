@@ -3,7 +3,7 @@ import { createRequire } from 'node:module';
 import { dirname, extname, join } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { Worker } from 'node:worker_threads';
-import { readStickmanRatio, stickmanCanvasForRatio } from '@opencreator/protocol';
+import { readStickmanRatio, stickmanCanvasForRatio } from '@vishnucreator/protocol';
 import type { CreatorExecutor } from '../executor.js';
 import { CreatorExecutorError } from '../executor.js';
 import { validateMediaFile } from '../validators/media.js';

@@ -2,7 +2,7 @@ import type {
   CodexProviderAuthentication,
   CodexProviderConfig,
   CodexProviderConfigUpdateRequest
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type {
   GetAccountParams,
   GetAccountResponse,

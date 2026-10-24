@@ -5,7 +5,7 @@ import type {
   CreatorServicesConfig,
   CreatorTtsPreviewRequest,
   CreatorTtsProvider
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { ZodError } from 'zod/v3';
 import {
@@ -15,11 +15,11 @@ import {
   retainCreatorServicesCredentials,
   type CreatorServicesConfigStore
 } from '../creator-services/config-store.js';
-import { createKrillinCreatorServicesCapabilities } from '../creator/krillin/capabilities.js';
+import { createVishnuCreatorServicesCapabilities } from '../creator/vishnu/capabilities.js';
 import {
-  KrillinTtsServiceError,
-  type KrillinTtsService
-} from '../creator/krillin/tts-service.js';
+  VishnuTtsServiceError,
+  type VishnuTtsService
+} from '../creator/vishnu/tts-service.js';
 import { apiError } from './errors.js';
 import { gatewayCreatorBinding } from '../gateway/creator-service-source.js';
 
@@ -27,8 +27,8 @@ export async function registerCreatorServicesRoutes(
   server: FastifyInstance,
   store: CreatorServicesConfigStore,
   readCapabilities: () => CreatorServicesCapabilitiesResponse =
-    createKrillinCreatorServicesCapabilities,
-  ttsService?: Pick<KrillinTtsService, 'listVoices' | 'preview'>,
+    createVishnuCreatorServicesCapabilities,
+  ttsService?: Pick<VishnuTtsService, 'listVoices' | 'preview'>,
   onConfigurationChanged?: () => Promise<void> | void,
   readCodexImageStatus?: () => Promise<CodexImageStatus>,
   readCodexModelStatus?: () => Promise<CodexProviderConfig>,
@@ -240,7 +240,7 @@ function sendStoreError(reply: FastifyReply, error: unknown) {
 }
 
 function sendTtsError(reply: FastifyReply, error: unknown) {
-  if (error instanceof KrillinTtsServiceError) {
+  if (error instanceof VishnuTtsServiceError) {
     return reply.code(error.statusCode).send(apiError(error.code, error.message, undefined, undefined, error.publicFacts));
   }
   throw error;

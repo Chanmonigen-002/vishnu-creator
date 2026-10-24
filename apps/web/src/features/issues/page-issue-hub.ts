@@ -1,8 +1,8 @@
-import type { OpenCreatorIssue } from '@opencreator/protocol';
+import type { VishnuCreatorIssue } from '@vishnucreator/protocol';
 
 type Listener = () => void;
 
-let snapshot: OpenCreatorIssue[] = [];
+let snapshot: VishnuCreatorIssue[] = [];
 const listeners = new Set<Listener>();
 
 export function subscribePageIssues(listener: Listener): () => void {
@@ -10,11 +10,11 @@ export function subscribePageIssues(listener: Listener): () => void {
   return () => listeners.delete(listener);
 }
 
-export function getPageIssues(): OpenCreatorIssue[] {
+export function getPageIssues(): VishnuCreatorIssue[] {
   return snapshot;
 }
 
-export function publishPageIssue(issue: OpenCreatorIssue): void {
+export function publishPageIssue(issue: VishnuCreatorIssue): void {
   const existing = snapshot.find(candidate => candidate.fingerprint === issue.fingerprint);
   const next = existing === undefined ? issue : {
     ...issue,

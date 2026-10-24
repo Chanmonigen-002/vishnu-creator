@@ -4,7 +4,7 @@ import { createHash } from 'node:crypto';
 import { mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
 import { stringify } from '@iarna/toml';
-import { createDefaultCreatorServicesConfig, type GatewayModel } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type GatewayModel } from '@vishnucreator/protocol';
 import { createGatewayCreatorSource } from '../src/gateway/creator-service-source.js';
 import { createDirectTransport, DIRECT_MEDIA_ADAPTER_VERSION } from '../src/gateway/direct-transport.js';
 import { generateImageContents } from '../src/image-generation/provider.js';
@@ -21,7 +21,7 @@ for await (const chunk of process.stdin) {
 if (chunks.length === 0) throw new Error('Supply a dedicated platform verification credential through stdin');
 const credential = JSON.parse(Buffer.concat(chunks).toString('utf8')) as { key?: string; costBearer?: string; name?: string };
 const key = credential.key;
-if (!key || !key.startsWith('sk-or-') || credential.costBearer !== 'platform' || !credential.name?.startsWith('OpenCreator platform media verification')) throw new Error('An independently provisioned platform verification key is required');
+if (!key || !key.startsWith('sk-or-') || credential.costBearer !== 'platform' || !credential.name?.startsWith('VishnuCreator platform media verification')) throw new Error('An independently provisioned platform verification key is required');
 const outputRoot = resolve(process.argv[2] ?? '.state/media-verification');
 await mkdir(outputRoot, { recursive: true, mode: 0o700 });
 const keyInfo = async () => {

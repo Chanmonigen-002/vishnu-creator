@@ -68,11 +68,11 @@ function readWhitelistedVolcengineEnvFile(
 
 function resolveVolcengineEnvFile(options: LocalEnvironmentLoadOptions): string | undefined {
   const env = options.env ?? process.env;
-  const explicit = env.OPENCREATOR_ENV_FILE?.trim();
+  const explicit = env.VISHNUCREATOR_ENV_FILE?.trim();
   if (explicit) {
     return existsSync(explicit) ? resolve(explicit) : undefined;
   }
   if (options.homeDir === null) return undefined;
-  const homeFile = join(options.homeDir ?? homedir(), '.opencreator', '.env.local');
+  const homeFile = join(options.homeDir ?? homedir(), '.vishnucreator', '.env.local');
   return existsSync(homeFile) ? homeFile : undefined;
 }

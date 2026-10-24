@@ -3,7 +3,7 @@ import Fastify from 'fastify';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { gatewayVideoSizes } from '@opencreator/protocol';
+import { gatewayVideoSizes } from '@vishnucreator/protocol';
 import { createDirectTransport } from '../src/gateway/direct-transport.js';
 import { mediaProfile, profileOperations, type MediaCatalogItem } from './openrouter-media-profiles.js';
 

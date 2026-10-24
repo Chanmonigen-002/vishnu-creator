@@ -1,4 +1,4 @@
-import type { CreatorJob } from '@opencreator/protocol';
+import type { CreatorJob } from '@vishnucreator/protocol';
 import { readFileSync } from 'node:fs';
 import { expect, test } from './fixtures/runtime.js';
 

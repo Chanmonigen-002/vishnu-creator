@@ -1,4 +1,4 @@
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 
 export type MediaCatalogItem = {
   id: string;

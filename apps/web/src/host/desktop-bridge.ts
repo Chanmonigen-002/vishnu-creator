@@ -48,7 +48,7 @@ type DesktopApi = {
 
 declare global {
   interface Window {
-    opencreatorDesktop?: DesktopApi;
+    vishnucreatorDesktop?: DesktopApi;
   }
 }
 
@@ -61,7 +61,7 @@ export type DesktopHostBridge = HostBridge & {
 };
 
 export function readDesktopHostBridge(): DesktopHostBridge | undefined {
-  const api = window.opencreatorDesktop;
+  const api = window.vishnucreatorDesktop;
   if (api?.kind !== 'desktop') return undefined;
   const windowChrome = api.windowChrome?.integratedTitleBar === true
     && typeof api.windowChrome.titleBarHeight === 'number'
@@ -74,8 +74,8 @@ export function readDesktopHostBridge(): DesktopHostBridge | undefined {
     : undefined;
   return {
     kind: 'desktop',
-    authorizationReturnUrl: 'opencreator://auth/complete',
-    billingReturnUrl: 'opencreator://billing/return',
+    authorizationReturnUrl: 'vishnucreator://auth/complete',
+    billingReturnUrl: 'vishnucreator://billing/return',
     ...(windowChrome === undefined ? {} : { windowChrome }),
     readAppVersion: () => api.readAppVersion(),
     readConnectionConfig: () => api.readConnectionConfig(),
@@ -102,9 +102,9 @@ export function readDesktopHostBridge(): DesktopHostBridge | undefined {
 }
 
 export function subscribeDesktopNavigation(listener: (route: string) => void): () => void {
-  return window.opencreatorDesktop?.subscribeNavigation(listener) ?? (() => undefined);
+  return window.vishnucreatorDesktop?.subscribeNavigation(listener) ?? (() => undefined);
 }
 
 export function signalDesktopWorkspaceReady(): void {
-  window.opencreatorDesktop?.workspaceReady();
+  window.vishnucreatorDesktop?.workspaceReady();
 }

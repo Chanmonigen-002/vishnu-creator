@@ -7,8 +7,8 @@ import type {
   CreatorJson,
   DownloadOption,
   DownloadProbe
-} from '@opencreator/protocol';
-import { extractDouyinShareUrl, normalizeVideoSourceUrl, supportedVideoSourcePlatform, parseBilibiliVideoSource, videoSourceIdentity, sanitizePublicErrorFacts } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { extractDouyinShareUrl, normalizeVideoSourceUrl, supportedVideoSourcePlatform, parseBilibiliVideoSource, videoSourceIdentity, sanitizePublicErrorFacts } from '@vishnucreator/protocol';
 import { creatorResultSnapshotForVersion } from '../result-snapshots.js';
 import type {
   CreatorExecutor,
@@ -222,7 +222,7 @@ async function downloadSelectedOption(
   });
   const outputTemplate = join(
     stage.workdir,
-    'OpenCreator-%(title).120B-%(id)s.%(ext)s'
+    'VishnuCreator-%(title).120B-%(id)s.%(ext)s'
   );
   const downloadUrl = normalizeSourceUrl(url);
   const args = option.mediaType === 'audio'
@@ -328,7 +328,7 @@ async function downloadSubtitle(
       '--sub-langs', languagePattern,
       '--sub-format', 'srt/vtt/ttml', '--convert-subs', 'srt',
       '--ffmpeg-location', input.ffmpegPath,
-      '-o', join(outputDir, 'OpenCreator-%(title).120B-%(id)s.%(ext)s'),
+      '-o', join(outputDir, 'VishnuCreator-%(title).120B-%(id)s.%(ext)s'),
       normalizeSourceUrl(url)
     ], proxy)
   ], stage, undefined, ytDlp.env);

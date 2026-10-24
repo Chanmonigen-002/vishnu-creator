@@ -63,7 +63,7 @@ const api: DesktopApi = {
   quit: () => ipcRenderer.invoke(desktopIpc.quit)
 };
 
-contextBridge.exposeInMainWorld('opencreatorDesktop', api);
+contextBridge.exposeInMainWorld('vishnucreatorDesktop', api);
 
 function subscribe<T>(
   channel: string,

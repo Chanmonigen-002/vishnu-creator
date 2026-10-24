@@ -12,7 +12,7 @@ describe('skill market runtime exports', () => {
   it('builds from a clean dist, loads natively, and boots the workspace daemon', () => {
     rmSync(join(packageDir, 'dist'), { recursive: true, force: true });
 
-    const packageManagerArgs = ['--filter', '@opencreator/daemon', 'build'];
+    const packageManagerArgs = ['--filter', '@vishnucreator/daemon', 'build'];
     const packageManagerScript = [
       process.env.npm_execpath,
       process.platform === 'win32' && process.env.APPDATA !== undefined
@@ -38,7 +38,7 @@ describe('skill market runtime exports', () => {
         '--input-type=module',
         '-e',
         [
-          "const market = await import('@opencreator/skill-market');",
+          "const market = await import('@vishnucreator/skill-market');",
           "if (market.skillMarketCatalog.length !== 0) throw new Error('published catalog should be empty');",
           "if (market.skillMarketCandidateCatalog.length !== 52) throw new Error('candidate catalog import failed');",
           "process.stdout.write('runtime-import-ok');"
@@ -63,7 +63,7 @@ describe('skill market runtime exports', () => {
           "const { mkdtempSync, rmSync } = await import('node:fs');",
           "const { tmpdir } = await import('node:os');",
           "const { join } = await import('node:path');",
-          "const smokeRoot = mkdtempSync(join(tmpdir(), 'opencreator-daemon-runtime-smoke-'));",
+          "const smokeRoot = mkdtempSync(join(tmpdir(), 'vishnucreator-daemon-runtime-smoke-'));",
           "const server = await buildServer({",
           "  token: 'runtime-smoke-token',",
           "  dataDir: join(smokeRoot, 'data'),",

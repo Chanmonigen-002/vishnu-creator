@@ -2,7 +2,7 @@ import type {
   AgentContextEnvelope,
   CreatorActionRequest,
   CreatorSelection
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type {
   AppServerApprovalDecision,
   AppServerRequest

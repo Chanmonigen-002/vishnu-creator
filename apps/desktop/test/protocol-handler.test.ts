@@ -69,7 +69,7 @@ describe('Desktop protocol network lifecycle', () => {
     const fixture = await setup();
     const request = new Request(runtimeUrl('/creator/jobs/creator_job_test/source-video'), {
       method: 'POST',
-      headers: { 'Content-Type': 'application/vnd.opencreator.creator-source' },
+      headers: { 'Content-Type': 'application/vnd.vishnucreator.creator-source' },
       body: new ReadableStream({ start: controller => controller.close() }),
       duplex: 'half'
     } as RequestInit);
@@ -170,7 +170,7 @@ describe('Desktop protocol network lifecycle', () => {
     expect(response.status).toBe(502);
     expect(await response.json()).toMatchObject({ error: { code: 'RUNTIME_PROXY_FAILED' } });
     expect(fixture.logger.warn).toHaveBeenCalledWith('Runtime proxy request failed', expect.objectContaining({
-      path: '/.opencreator/runtime/healthz',
+      path: '/.vishnucreator/runtime/healthz',
       method: 'GET',
       phase: 'fetch',
       errors: [{ name: 'Error' }]
@@ -188,7 +188,7 @@ describe('Desktop protocol network lifecycle', () => {
 });
 
 function runtimeUrl(path: string): string {
-  return `opencreator-app://app/.opencreator/runtime${path}`;
+  return `vishnucreator-app://app/.vishnucreator/runtime${path}`;
 }
 
 async function setup() {

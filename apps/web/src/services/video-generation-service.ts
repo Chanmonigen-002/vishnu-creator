@@ -1,7 +1,7 @@
 import type {
   CreateVideoGenerationRequest,
   VideoGenerationResultResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 type VideoGenerationClient = Pick<RuntimeClient, 'post' | 'get' | 'rawGet'>;

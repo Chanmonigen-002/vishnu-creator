@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { createDefaultCreatorServicesConfig, type GatewayModel } from '@opencreator/protocol';
-import { assessKrillinTranscription, resolveKrillinTranscription } from '../../src/creator/krillin/transcription-language.js';
+import { createDefaultCreatorServicesConfig, type GatewayModel } from '@vishnucreator/protocol';
+import { assessVishnuTranscription, resolveVishnuTranscription } from '../../src/creator/vishnu/transcription-language.js';
 import { createGatewayCreatorSource } from '../../src/gateway/creator-service-source.js';
 
 describe('actual transcription model and language capability', () => {
@@ -8,12 +8,12 @@ describe('actual transcription model and language capability', () => {
     const config = createDefaultCreatorServicesConfig();
     config.transcription.provider = 'whisper.cpp';
     config.transcription.whisperCpp.model = 'tiny';
-    expect(assessKrillinTranscription(config, 'zh-TW')).toMatchObject({
+    expect(assessVishnuTranscription(config, 'zh-TW')).toMatchObject({
       model: 'tiny', executionModel: 'large-v2', productLanguage: 'zh_tw', backendLanguage: 'zh', support: 'supported'
     });
-    expect(assessKrillinTranscription(config, 'yue').support).toBe('unsupported');
+    expect(assessVishnuTranscription(config, 'yue').support).toBe('unsupported');
     config.transcription.whisperCpp.model = 'large-v3-turbo';
-    expect(assessKrillinTranscription(config, 'yue')).toMatchObject({
+    expect(assessVishnuTranscription(config, 'yue')).toMatchObject({
       model: 'large-v3-turbo', executionModel: 'large-v3-turbo', support: 'supported'
     });
   });
@@ -35,9 +35,9 @@ describe('actual transcription model and language capability', () => {
       getLocalOrigin: () => 'http://127.0.0.1:39999'
     });
     const effective = await source.store.read();
-    expect(resolveKrillinTranscription(effective, selected)).toMatchObject({
+    expect(resolveVishnuTranscription(effective, selected)).toMatchObject({
       model: selected, capability: { coverage: 'unknown', timestamps }
     });
-    expect(assessKrillinTranscription(effective, 'hi', selected).support).toBe('unknown');
+    expect(assessVishnuTranscription(effective, 'hi', selected).support).toBe('unknown');
   });
 });

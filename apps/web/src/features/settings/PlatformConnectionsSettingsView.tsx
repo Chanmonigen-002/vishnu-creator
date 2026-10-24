@@ -1,7 +1,7 @@
 import AppSelect from '../../components/forms/Select.js';
 import { useEffect, useRef, useState } from 'react';
 import { CheckCircle2, Link2, Loader2, RefreshCw, Unlink, Upload, X } from 'lucide-react';
-import type { ConnectionPlatform, PlatformConnectionState } from '@opencreator/protocol';
+import type { ConnectionPlatform, PlatformConnectionState } from '@vishnucreator/protocol';
 import type { PlatformConnectionsService } from '../../services/platform-connections-service.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import './platform-connections.css';

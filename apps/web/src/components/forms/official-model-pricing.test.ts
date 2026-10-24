@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest';
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 import { officialModelPrice, officialModelPriceDescription } from './official-model-pricing.js';
 
 const zh = (value: string) => value;

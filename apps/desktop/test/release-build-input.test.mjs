@@ -27,7 +27,7 @@ const releaseEntry = {
 
 describe('release build input identity', () => {
   it('promotes an existing tag only when the workflow changes are release-only', () => {
-    const cwd = mkdtempSync(join(tmpdir(), 'opencreator-promotion-'));
+    const cwd = mkdtempSync(join(tmpdir(), 'vishnucreator-promotion-'));
     const git = (...args) => execFileSync('git', ['-c', 'user.name=Release Test', '-c', 'user.email=release@example.test', ...args], { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
     const commit = message => {
       git('add', '.');
@@ -38,7 +38,7 @@ describe('release build input identity', () => {
       mkdirSync(join(cwd, 'apps/desktop'), { recursive: true });
       writeFileSync(join(cwd, 'apps/desktop/package.json'), JSON.stringify({ version: '3.0.0' }));
       commit('Prepare release');
-      git('tag', '-a', 'v3.0.0', '-m', 'OpenCreator v3.0.0');
+      git('tag', '-a', 'v3.0.0', '-m', 'VishnuCreator v3.0.0');
       const sha = git('rev-parse', 'HEAD');
       mkdirSync(join(cwd, '.github/workflows'), { recursive: true });
       writeFileSync(join(cwd, '.github/workflows/desktop-release.yml'), 'name: Release');
@@ -87,7 +87,7 @@ describe('release build input identity', () => {
   });
 
   it('runs full checks when the successful baseline is missing or no longer an ancestor', () => {
-    const cwd = mkdtempSync(join(tmpdir(), 'opencreator-ci-baseline-'));
+    const cwd = mkdtempSync(join(tmpdir(), 'vishnucreator-ci-baseline-'));
     const git = (...args) => execFileSync('git', args, { cwd, encoding: 'utf8', stdio: ['ignore', 'pipe', 'pipe'] }).trim();
     const commit = message => git('-c', 'user.name=Release Test', '-c', 'user.email=release@example.test', 'commit', '--allow-empty', '-m', message);
     try {

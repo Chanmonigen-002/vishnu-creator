@@ -1,16 +1,16 @@
 ---
-name: krillinai-pipeline
-description: Use when validating or documenting a multi-stage KrillinAI CLI output plan; the current pipeline command supports dry-run planning only, not end-to-end execution.
+name: vishnuai-pipeline
+description: Use when validating or documenting a multi-stage VishnuAI CLI output plan; the current pipeline command supports dry-run planning only, not end-to-end execution.
 ---
 
-# KrillinAI Pipeline
+# VishnuAI Pipeline
 
 Use this skill to validate a requested stage plan. Run real work through the individual stage commands because non-dry-run `pipeline` execution returns `unsupported_command`.
 
 ## Plan Validation
 
 ```bash
-(cd "$KRILLINAI_CWD" && "$KRILLINAI_CLI" pipeline \
+(cd "$VISHNUAI_CWD" && "$VISHNUAI_CLI" pipeline \
   --outputs "subtitle,tts,vertical-bilingual" \
   --dry-run)
 ```
@@ -37,7 +37,7 @@ Map the validated outputs to `subtitle`, `tts`, `render-horizontal`, `render-ver
 
 - If `subtitle` succeeds and render fails, rerun only render with the same `--workdir`.
 - If TTS fails, keep subtitle outputs and rerun `tts` after fixing provider config.
-- Read `krillinai_manifest.json` before rerunning to avoid repeating expensive work.
+- Read `vishnuai_manifest.json` before rerunning to avoid repeating expensive work.
 
 ## Verification
 
@@ -45,4 +45,4 @@ Map the validated outputs to `subtitle`, `tts`, `render-horizontal`, `render-ver
 - For real work, confirm every independently executed stage succeeded.
 - Confirm manifest stages and requested output files, not just the plan response.
 - Inspect final requested media/cover files, not only intermediate outputs.
-- For shared CLI details, read `skills/krillinai-cli/references/cli-contract.md`.
+- For shared CLI details, read `skills/vishnuai-cli/references/cli-contract.md`.

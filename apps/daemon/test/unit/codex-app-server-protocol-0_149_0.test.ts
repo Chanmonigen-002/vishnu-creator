@@ -41,11 +41,11 @@ describe('Codex app-server protocol rust-v0.149.0', () => {
   it('compiles the critical request shapes without widening to any', () => {
     const threadStart = {
       cwd: 'D:/creator/job',
-      developerInstructions: 'Use the OpenCreator tool contract.'
+      developerInstructions: 'Use the VishnuCreator tool contract.'
     } satisfies ThreadStartParams;
     const threadResume = {
       threadId: 'thread-1',
-      developerInstructions: 'Use the OpenCreator tool contract.'
+      developerInstructions: 'Use the VishnuCreator tool contract.'
     } satisfies ThreadResumeParams;
     const turnStart = {
       threadId: 'thread-1',

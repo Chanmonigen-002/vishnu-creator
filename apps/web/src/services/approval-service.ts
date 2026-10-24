@@ -2,7 +2,7 @@ import type {
   ApprovalDecisionResponse,
   ApprovalListQuery,
   ApprovalListResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'post'>;

@@ -2,7 +2,7 @@ import {
   createDefaultCreatorServicesConfig,
   type CreatorJson,
   type CreatorServicesConfig
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { mkdtempSync, rmSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';

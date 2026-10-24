@@ -6,7 +6,7 @@ import type {
   CreatorCommandRequest,
   CreatorArtifact,
   CreatorJob
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CreatorService } from '../creator/service.js';
 import type { AgentContextBuilder } from '../creator/agent/context-builder.js';
 import type {
@@ -133,7 +133,7 @@ export function createCreatorToolDefinitions(input: {
 }) {
   return {
     creator_get_context: {
-      description: '读取当前 OpenCreator 创作任务的最小上下文和最新 revision。修改前必须先调用。',
+      description: '读取当前 VishnuCreator 创作任务的最小上下文和最新 revision。修改前必须先调用。',
       inputSchema: z.object({}).strict(),
       execute: async () => input.request({ method: 'GET', path: '/internal/agent-tools/creator/context' })
     },

@@ -1,4 +1,4 @@
-import type { CreatorJob } from '@opencreator/protocol';
+import type { CreatorJob } from '@vishnucreator/protocol';
 import { expect, test } from './fixtures/runtime.js';
 
 test('standalone SRT uses two steps and opens an editable result without video', async ({ page, runtime }, testInfo) => {
@@ -7,9 +7,9 @@ test('standalone SRT uses two steps and opens an editable result without video',
     creationKey: 'standalone-srt', state: { sourceLanguage: 'en', targetLanguage: 'zh_cn' }
   });
   await page.addInitScript(({ projectId, threadId }) => {
-    localStorage.setItem('opencreator.preferences.dynamicBackground', 'false');
-    localStorage.setItem('opencreator.preferences.language', 'zh-CN');
-    localStorage.setItem('opencreator.navigation.v3', JSON.stringify({ currentProjectId: projectId, selectedThreadId: threadId }));
+    localStorage.setItem('vishnucreator.preferences.dynamicBackground', 'false');
+    localStorage.setItem('vishnucreator.preferences.language', 'zh-CN');
+    localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({ currentProjectId: projectId, selectedThreadId: threadId }));
   }, { projectId: runtime.projectId, threadId: runtime.ordinaryThreadId });
   await page.goto(`${runtime.origin}/#/workbench?tool=video-translation&jobId=${encodeURIComponent(job.id)}`);
   await page.getByRole('button', { name: '稍后配置，进入本地模式' }).click();
@@ -20,11 +20,11 @@ test('standalone SRT uses two steps and opens an editable result without video',
   await expect(workspace.getByRole('navigation', { name: '翻译流程' }).locator('li')).toHaveCount(2);
   await workspace.getByLabel('UTF-8 SRT 文件').setInputFiles({
     name: 'lecture.en.srt', mimeType: 'application/x-subrip',
-    buffer: Buffer.from('1\n00:00:02,250 --> 00:00:04,750\nWelcome to OpenCreator.\n\n2\n00:00:05,000 --> 00:00:07,500\nKeep the original timeline.\n')
+    buffer: Buffer.from('1\n00:00:02,250 --> 00:00:04,750\nWelcome to VishnuCreator.\n\n2\n00:00:05,000 --> 00:00:07,500\nKeep the original timeline.\n')
   });
   await expect(workspace.getByText(/本地导入 · lecture.en.srt/)).toBeVisible();
   await expect(workspace.locator('.video-translation-subtitle-import pre')).toBeVisible();
-  await expect(workspace.locator('.video-translation-subtitle-import pre')).toContainText('Welcome to OpenCreator.');
+  await expect(workspace.locator('.video-translation-subtitle-import pre')).toContainText('Welcome to VishnuCreator.');
   await expect(workspace.locator('.video-translation-subtitle-import pre')).toContainText('00:00:02,250');
   await workspace.getByRole('button', { name: '继续', exact: true }).click();
   await expect(workspace.getByRole('button', { name: '开始翻译', exact: true })).toBeVisible();
@@ -43,7 +43,7 @@ test('standalone SRT uses two steps and opens an editable result without video',
   const source = saved.artifacts.find(artifact => artifact.id === saved.state.importedSourceSubtitleId)!;
   const target = { ...source, id: 'translated-srt', kind: 'target_subtitle', metadata: {
     resultVersion: 2, fileName: 'lecture.zh.srt', cues: [
-      { id: 1, start: '00:00:02,250', end: '00:00:04,750', text: '欢迎使用 OpenCreator。' },
+      { id: 1, start: '00:00:02,250', end: '00:00:04,750', text: '欢迎使用 VishnuCreator。' },
       { id: 2, start: '00:00:05,000', end: '00:00:07,500', text: '保留原始时间轴。' }
     ]
   } };
@@ -58,14 +58,14 @@ test('standalone SRT uses two steps and opens an editable result without video',
   await page.route(`**/creator/jobs/${job.id}`, route => route.request().method() === 'GET'
     ? route.fulfill({ json: { job: completed } }) : route.continue());
   await page.route(`**/creator/jobs/${job.id}/artifacts/${target.id}/content`, route => route.fulfill({
-    contentType: 'application/x-subrip', body: '1\n00:00:02,250 --> 00:00:04,750\n欢迎使用 OpenCreator。\n'
+    contentType: 'application/x-subrip', body: '1\n00:00:02,250 --> 00:00:04,750\n欢迎使用 VishnuCreator。\n'
   }));
   await page.reload();
   await page.getByRole('button', { name: '稍后配置，进入本地模式' }).click();
   if (await creatorTab.isVisible()) await creatorTab.click();
   await expect(workspace.getByRole('tab', { name: '字幕', exact: true })).toHaveAttribute('aria-selected', 'true');
-  await expect(workspace.getByRole('textbox', { name: '字幕原文 1', exact: true })).toHaveValue('Welcome to OpenCreator.');
-  await expect(workspace.getByRole('textbox', { name: '字幕 1', exact: true })).toHaveValue('欢迎使用 OpenCreator。');
+  await expect(workspace.getByRole('textbox', { name: '字幕原文 1', exact: true })).toHaveValue('Welcome to VishnuCreator.');
+  await expect(workspace.getByRole('textbox', { name: '字幕 1', exact: true })).toHaveValue('欢迎使用 VishnuCreator。');
   await expect(workspace.locator('video')).toHaveCount(0);
   await expect(workspace.getByRole('tab', { name: '作品', exact: true })).toHaveCount(0);
   await expect(workspace.getByRole('tab', { name: '配音', exact: true })).toHaveCount(0);
@@ -73,7 +73,7 @@ test('standalone SRT uses two steps and opens an editable result without video',
   const downloadEvent = page.waitForEvent('download');
   await workspace.getByRole('button', { name: '译文 SRT' }).click();
   expect((await downloadEvent).suggestedFilename()).toBe('lecture.zh.srt');
-  await workspace.getByRole('textbox', { name: '字幕 1', exact: true }).fill('欢迎使用 OpenCreator 字幕翻译。');
+  await workspace.getByRole('textbox', { name: '字幕 1', exact: true }).fill('欢迎使用 VishnuCreator 字幕翻译。');
   await expect(workspace.getByRole('button', { name: '保存字幕', exact: true })).toBeEnabled();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(true);
   await page.screenshot({ path: testInfo.outputPath('subtitle-only-editor.png'), fullPage: true, animations: 'disabled' });

@@ -1,5 +1,5 @@
 import { changeControl } from '../../test/select-option.js';
-import type { VideoMetadataResponse } from '@opencreator/protocol';
+import type { VideoMetadataResponse } from '@vishnucreator/protocol';
 import { fireEvent, render, screen } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';

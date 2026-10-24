@@ -1,10 +1,10 @@
 import { realpath, readFile, writeFile } from 'node:fs/promises';
 import { dirname, isAbsolute, join, relative, resolve } from 'node:path';
-import type { CreatorArtifact } from '@opencreator/protocol';
+import type { CreatorArtifact } from '@vishnucreator/protocol';
 import {
   readStickmanRatio,
   stickmanCanvasForRatio
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CreatorExecutor, CreatorExecutorOutput } from '../executor.js';
 import { CreatorExecutorError } from '../executor.js';
 import {

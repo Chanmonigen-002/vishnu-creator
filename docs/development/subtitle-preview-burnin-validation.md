@@ -1,4 +1,4 @@
-OpenCreator 字幕预览与烧录：实施与验收
+Vishnu Creator 字幕预览与烧录：实施与验收
 
 日期：2026-10-20。验收环境：macOS / Apple Silicon，Chromium 与实际打包的 Electron App。本次全部使用本地字幕、字体、视频和渲染程序，没有转录、翻译或模型 API 调用。
 
@@ -45,7 +45,7 @@ OpenCreator 字幕预览与烧录：实施与验收
 
 [完整矩阵数据](assets/subtitle-preview/matrix-results.json)包含字体数量、边界、编译时间、截图等待时间和编码时间。CLI 编译约 40–557ms；含中文分词冷启动的样例约 0.5 秒。从内存夹具装载至截图约 0.59–0.74 秒，**其中包含固定 300ms 呈现稳定等待**，不代表完整网络加载时间，也不是整体产品性能评分。
 
-复现矩阵：先准备本机 Creator Runtime 并运行 Web 开发服务，再执行 `node --import tsx scripts/verify-subtitle-render-parity.ts`。可用 `OPENCREATOR_SUBTITLE_TEST_ORIGIN` 指定开发服务地址。脚本只访问本机服务，产物输出到 `.runtime/subtitle-parity/matrix`。
+复现矩阵：先准备本机 Creator Runtime 并运行 Web 开发服务，再执行 `node --import tsx scripts/verify-subtitle-render-parity.ts`。可用 `VISHNUCREATOR_SUBTITLE_TEST_ORIGIN` 指定开发服务地址。脚本只访问本机服务，产物输出到 `.runtime/subtitle-parity/matrix`。
 
 **验证范围**
 

@@ -16,7 +16,7 @@
   },
   "description": {
     "zh-CN": "上传原照片，将主体转绘为粗黑轮廓、半色调网点与有限配色的复古插画。预览取自原教程，非本工具生成结果。",
-    "en-US": "Turn an uploaded photo into a bold, limited-color retro halftone illustration. The preview comes from the source tutorial, not an OpenCreator generation."
+    "en-US": "Turn an uploaded photo into a bold, limited-color retro halftone illustration. The preview comes from the source tutorial, not an VishnuCreator generation."
   },
   "cover": "cover.jpg",
   "preview": "preview.jpg",

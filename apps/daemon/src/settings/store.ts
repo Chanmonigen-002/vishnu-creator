@@ -1,51 +1,51 @@
 import {
-  readOpenCreatorConfig,
+  readVishnuCreatorConfig,
   resolveStorageSettings,
   resolveUiSettings,
-  updateOpenCreatorStorageSettings,
-  updateOpenCreatorUiSettings
-} from '@opencreator/config';
+  updateVishnuCreatorStorageSettings,
+  updateVishnuCreatorUiSettings
+} from '@vishnucreator/config';
 import type {
-  OpenCreatorStorageSettings,
-  OpenCreatorStorageSettingsResponse,
-  OpenCreatorUiSettingsResponse,
-  UpdateOpenCreatorStorageSettingsRequest,
-  UpdateOpenCreatorUiSettingsRequest
-} from '@opencreator/protocol';
+  VishnuCreatorStorageSettings,
+  VishnuCreatorStorageSettingsResponse,
+  VishnuCreatorUiSettingsResponse,
+  UpdateVishnuCreatorStorageSettingsRequest,
+  UpdateVishnuCreatorUiSettingsRequest
+} from '@vishnucreator/protocol';
 
-export type OpenCreatorSettingsStore = ReturnType<typeof createOpenCreatorSettingsStore>;
+export type VishnuCreatorSettingsStore = ReturnType<typeof createVishnuCreatorSettingsStore>;
 
-export function createOpenCreatorSettingsStore(
+export function createVishnuCreatorSettingsStore(
   configFile: string,
-  storageDefaults: OpenCreatorStorageSettings
+  storageDefaults: VishnuCreatorStorageSettings
 ) {
   return {
-    readUi(): OpenCreatorUiSettingsResponse {
-      const snapshot = readOpenCreatorConfig(configFile);
+    readUi(): VishnuCreatorUiSettingsResponse {
+      const snapshot = readVishnuCreatorConfig(configFile);
       return {
         settings: resolveUiSettings(snapshot),
         configured: snapshot.configured.ui
       };
     },
-    updateUi(update: UpdateOpenCreatorUiSettingsRequest): OpenCreatorUiSettingsResponse {
-      const snapshot = updateOpenCreatorUiSettings(configFile, update);
+    updateUi(update: UpdateVishnuCreatorUiSettingsRequest): VishnuCreatorUiSettingsResponse {
+      const snapshot = updateVishnuCreatorUiSettings(configFile, update);
       return {
         settings: resolveUiSettings(snapshot),
         configured: true
       };
     },
-    readStorage(): OpenCreatorStorageSettingsResponse {
-      const snapshot = readOpenCreatorConfig(configFile);
+    readStorage(): VishnuCreatorStorageSettingsResponse {
+      const snapshot = readVishnuCreatorConfig(configFile);
       return {
         settings: resolveStorageSettings(snapshot, storageDefaults),
         configured: snapshot.configured.storage
       };
     },
     updateStorage(
-      update: UpdateOpenCreatorStorageSettingsRequest
-    ): OpenCreatorStorageSettingsResponse {
-      const current = resolveStorageSettings(readOpenCreatorConfig(configFile), storageDefaults);
-      const snapshot = updateOpenCreatorStorageSettings(configFile, { ...current, ...update });
+      update: UpdateVishnuCreatorStorageSettingsRequest
+    ): VishnuCreatorStorageSettingsResponse {
+      const current = resolveStorageSettings(readVishnuCreatorConfig(configFile), storageDefaults);
+      const snapshot = updateVishnuCreatorStorageSettings(configFile, { ...current, ...update });
       return {
         settings: resolveStorageSettings(snapshot, storageDefaults),
         configured: true

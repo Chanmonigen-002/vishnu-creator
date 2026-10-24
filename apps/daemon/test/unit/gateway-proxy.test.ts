@@ -8,7 +8,7 @@ import { createGatewayConfigStore } from '../../src/gateway/config-store.js';
 import { createDirectRuntime } from '../../src/gateway/direct-runtime.js';
 import Fastify from 'fastify';
 import { createGatewayCreatorSource } from '../../src/gateway/creator-service-source.js';
-import { createDefaultCreatorServicesConfig, gatewayRecommendedModelId } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, gatewayRecommendedModelId } from '@vishnucreator/protocol';
 import { openRuntimeDatabase } from '../../src/storage/database.js';
 import { createCreatorRepository } from '../../src/creator/repository.js';
 import { CreatorProviderRequestLedger } from '../../src/creator/provider-requests.js';
@@ -98,7 +98,7 @@ it.each([400, 422, 429])('records a definitive gateway %s rejection despite a tr
   const db = openRuntimeDatabase(join(root, 'runtime.sqlite'));
   const repository = createCreatorRepository(db);
   const job = repository.createJob({ projectId: 'project_test', templateId: 'video-translation', templateVersion: 2, status: 'running', state: {} });
-  const stage = repository.createStageRun({ jobId: job.id, stageId: 'subtitle', executor: 'krillin', status: 'running' });
+  const stage = repository.createStageRun({ jobId: job.id, stageId: 'subtitle', executor: 'vishnu', status: 'running' });
   const ledger = new CreatorProviderRequestLedger(repository);
   const fetcher = vi.fn<typeof fetch>(async () => Response.json({ error: { code: 'output_too_large', message: 'Requested output exceeds the gateway limit of 4096 tokens' } },
     { status, headers: { 'X-Request-ID': 'trace_admission_rejected' } }));
@@ -115,7 +115,7 @@ it.each([400, 422, 429])('records a definitive gateway %s rejection despite a tr
     await source.register(app);
     await source.runForJob(job.id, stage.id, async () => {
       const config = await source.store.read();
-      const result = await app.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/chat/completions',
+      const result = await app.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/chat/completions',
         headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: config.llm.model, messages: [{ role: 'user', content: 'Translate' }], max_tokens: 6500 } });
       expect(result.statusCode).toBe(status);
     });
@@ -164,12 +164,12 @@ it('forwards Creator text, image, speech and subtitles through the gateway with 
       ['images/generations', { model: 'gpt-image-2', prompt: 'Circle', aspect_ratio: '3:2', resolution: '1K' }, { prefer: 'respond-async' }, 202],
       ['audio/speech', { model: 'tts-1', input: 'Hello', voice: 'alloy' }, {}, 200]
     ] as const) {
-      const result = await app.inject({ method: 'POST', url: `/internal/krillin-llm/gateway/v1/${operation}`, headers: { Authorization: `Bearer ${config.llm.apiKey}`, ...extra }, payload });
+      const result = await app.inject({ method: 'POST', url: `/internal/vishnu-llm/gateway/v1/${operation}`, headers: { Authorization: `Bearer ${config.llm.apiKey}`, ...extra }, payload });
       expect(result.statusCode).toBe(status);
     }
     const form = new FormData(); form.set('model', 'whisper-1'); form.set('response_format', 'verbose_json'); form.set('file', new Blob(['fixture'], { type: 'audio/wav' }), 'sample.wav');
     const request = new Request('http://localhost', { method: 'POST', body: form });
-    const result = await app.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/audio/transcriptions', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Content-Type': request.headers.get('content-type')! }, payload: Buffer.from(await request.arrayBuffer()) });
+    const result = await app.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/audio/transcriptions', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Content-Type': request.headers.get('content-type')! }, payload: Buffer.from(await request.arrayBuffer()) });
     expect(result.statusCode).toBe(200); expect(result.json().segments[0]).toMatchObject({ start: 0, end: 1 });
     expect(fetcher).toHaveBeenCalledTimes(4);
   } finally { await source.revoke(); await app.close(); }

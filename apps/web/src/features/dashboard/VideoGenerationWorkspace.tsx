@@ -1,4 +1,4 @@
-import { gatewayModelDisplayName, gatewayModelIdMatches } from '@opencreator/protocol';
+import { gatewayModelDisplayName, gatewayModelIdMatches } from '@vishnucreator/protocol';
 import {
   creatorPromptMaxLength,
   defaultVideoGenerationModels,
@@ -13,7 +13,7 @@ import {
   type VideoGenerationDuration,
   type VideoGenerationProvider,
   type VideoGenerationSize
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   Clapperboard,
   Clock3,

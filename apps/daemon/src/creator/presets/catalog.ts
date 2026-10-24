@@ -1,8 +1,8 @@
 import type {
   CreatorPresetRef,
   CreatorPresetSummary
-} from '@opencreator/protocol';
-import { verifyFileIntegrityWithCache } from '@opencreator/config';
+} from '@vishnucreator/protocol';
+import { verifyFileIntegrityWithCache } from '@vishnucreator/config';
 import { existsSync } from 'node:fs';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
@@ -144,7 +144,7 @@ export function normalizeCreatorPresetLocale(value: unknown): CreatorPresetLocal
 }
 
 export function resolveCreatorPresetCatalogRoot(): string {
-  const configured = process.env.OPENCREATOR_PRESET_CATALOG_ROOT?.trim();
+  const configured = process.env.VISHNUCREATOR_PRESET_CATALOG_ROOT?.trim();
   if (configured) return path.resolve(configured);
 
   const moduleDirectory = path.dirname(fileURLToPath(import.meta.url));

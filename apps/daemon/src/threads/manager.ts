@@ -1,4 +1,4 @@
-import type { ThreadPurpose } from '@opencreator/protocol';
+import type { ThreadPurpose } from '@vishnucreator/protocol';
 import type Database from 'better-sqlite3';
 import { existsSync, mkdirSync, realpathSync } from 'node:fs';
 import { homedir } from 'node:os';
@@ -68,7 +68,7 @@ export function createThreadManager(input: CreateThreadManagerInput): ThreadMana
         ),
         purpose: 'conversation',
         projectId: project.id,
-        origin: 'opencreator_created'
+        origin: 'vishnucreator_created'
       });
     },
 
@@ -76,7 +76,7 @@ export function createThreadManager(input: CreateThreadManagerInput): ThreadMana
       return createRuntimeThread({
         ...request,
         projectId: null,
-        origin: 'opencreator_created'
+        origin: 'vishnucreator_created'
       });
     },
 
@@ -84,7 +84,7 @@ export function createThreadManager(input: CreateThreadManagerInput): ThreadMana
       return createRuntimeThread({
         ...request,
         projectId: null,
-        origin: 'opencreator_created'
+        origin: 'vishnucreator_created'
       });
     },
 
@@ -149,7 +149,7 @@ export function createThreadManager(input: CreateThreadManagerInput): ThreadMana
       const existing = threads.getThread(id);
       if (
         existing === undefined
-        || existing.origin !== 'opencreator_created'
+        || existing.origin !== 'vishnucreator_created'
         || existing.purpose !== 'conversation'
       ) {
         throw new ThreadManagerError('THREAD_NOT_FOUND', 'Thread not found');

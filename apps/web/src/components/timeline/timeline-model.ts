@@ -4,7 +4,7 @@ import type {
   PublicRunStatus,
   RuntimeApproval,
   RunSubmissionMode
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export type TimelineItem =
   | {

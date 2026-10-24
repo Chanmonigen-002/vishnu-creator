@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { resolveOpenCreatorPaths } from '@opencreator/config';
+import { resolveVishnuCreatorPaths } from '@vishnucreator/config';
 import {
   app,
   dialog,
@@ -46,11 +46,11 @@ import type {
 } from '../shared/types.js';
 
 registerPrivilegedSchemes();
-app.setName('OpenCreator');
+app.setName('VishnuCreator');
 app.commandLine.appendSwitch('lang', 'zh-CN');
 const APP_ENTRY_AT = Date.now();
 const DEVELOPMENT =
-  process.env.OPENCREATOR_DESKTOP_DEV === '1' || !app.isPackaged;
+  process.env.VISHNUCREATOR_DESKTOP_DEV === '1' || !app.isPackaged;
 if (DEVELOPMENT) {
   app.setPath(
     'userData',
@@ -64,7 +64,7 @@ if (!hasSingleInstanceLock) {
 } else {
   void launchDesktop().catch(error => {
     console.error(
-      `OpenCreator Desktop failed to start: ${error instanceof Error ? error.stack ?? error.message : String(error)}`
+      `VishnuCreator Desktop failed to start: ${error instanceof Error ? error.stack ?? error.message : String(error)}`
     );
     app.exit(1);
   });
@@ -106,12 +106,12 @@ async function launchDesktop(): Promise<void> {
   const appReadyAt = Date.now();
   const development = DEVELOPMENT;
   const appRoot = app.getAppPath();
-  const paths = resolveOpenCreatorPaths({
+  const paths = resolveVishnuCreatorPaths({
     homeDir: app.getPath('home'),
     runtimeChannel: development ? 'development' : 'production'
   });
   const dataDir = paths.dataDir;
-  const defaultProjectRoot = process.env.OPENCREATOR_DEFAULT_PROJECT_ROOT
+  const defaultProjectRoot = process.env.VISHNUCREATOR_DEFAULT_PROJECT_ROOT
     ?? app.getPath('documents');
   const logDir = paths.logsDir;
   const logger = createDesktopLogger(join(logDir, 'desktop-main.log'));
@@ -129,18 +129,18 @@ async function launchDesktop(): Promise<void> {
   const resourceRoot = development
     ? join(appRoot, 'resources')
     : join(process.resourcesPath, 'desktop-resources');
-  const creatorRuntimeRoot = process.env.OPENCREATOR_CREATOR_RUNTIME_ROOT
+  const creatorRuntimeRoot = process.env.VISHNUCREATOR_CREATOR_RUNTIME_ROOT
     ?? (development
-      ? join(appRoot, '.pack', 'creator-runtime', 'krillinai')
-      : join(process.resourcesPath, 'creator-runtime', 'krillinai'));
-  const codexRuntimeRoot = process.env.OPENCREATOR_CODEX_RUNTIME_ROOT
+      ? join(appRoot, '.pack', 'creator-runtime', 'vishnuai')
+      : join(process.resourcesPath, 'creator-runtime', 'vishnuai'));
+  const codexRuntimeRoot = process.env.VISHNUCREATOR_CODEX_RUNTIME_ROOT
     ?? (development
       ? join(appRoot, '.pack', 'codex-runtime')
       : join(process.resourcesPath, 'codex-runtime'));
-  const stickmanRuntimeRoot = process.env.OPENCREATOR_STICKMAN_RUNTIME_ROOT
+  const stickmanRuntimeRoot = process.env.VISHNUCREATOR_STICKMAN_RUNTIME_ROOT
     ?? join(dataDir, 'creator-runtime', 'stickman');
 
-  logger.info('OpenCreator Desktop starting', {
+  logger.info('VishnuCreator Desktop starting', {
     development,
     appRoot,
     dataDir,
@@ -166,7 +166,7 @@ async function launchDesktop(): Promise<void> {
     development,
     appEntryAt: APP_ENTRY_AT,
     workspaceReadyTimeoutMs: parsePositiveInteger(
-      process.env.OPENCREATOR_E2E_WORKSPACE_READY_TIMEOUT_MS
+      process.env.VISHNUCREATOR_E2E_WORKSPACE_READY_TIMEOUT_MS
     ),
     requestQuit: () => app.quit()
   });
@@ -178,7 +178,7 @@ async function launchDesktop(): Promise<void> {
     isOfficialBuild: app.isPackaged && readOfficialBuildMarker(process.resourcesPath),
     isWindowActive: () => windowManager?.isActive() === true,
     fetchImpl: fetchDesktopRequest,
-    endpointOverride: process.env.OPENCREATOR_TELEMETRY_URL
+    endpointOverride: process.env.VISHNUCREATOR_TELEMETRY_URL
   });
   const navigate = (route: string) => {
     if (!workspaceLoaded) {
@@ -204,7 +204,7 @@ async function launchDesktop(): Promise<void> {
         await windowManager?.loadWorkspace();
         workspaceLoaded = true;
         bootstrap?.markWorkspaceReady();
-        logger.info('OpenCreator workspace ready', {
+        logger.info('VishnuCreator workspace ready', {
           durationMs: Date.now() - APP_ENTRY_AT
         });
         windowManager?.show();
@@ -213,7 +213,7 @@ async function launchDesktop(): Promise<void> {
         }
         notifications.start();
       } catch (error) {
-        logger.error('Failed to load the OpenCreator workspace', {
+        logger.error('Failed to load the VishnuCreator workspace', {
           message: error instanceof Error ? error.message : String(error)
         });
         bootstrap?.markWorkspaceFailed(error);
@@ -249,7 +249,7 @@ async function launchDesktop(): Promise<void> {
     development,
     windowManager,
     ignoreFirstReady:
-      process.env.OPENCREATOR_E2E_IGNORE_FIRST_WORKSPACE_READY === '1'
+      process.env.VISHNUCREATOR_E2E_IGNORE_FIRST_WORKSPACE_READY === '1'
   });
 
   bootstrap.on('state', state => {
@@ -322,7 +322,7 @@ async function launchDesktop(): Promise<void> {
     event.preventDefault();
     if (shutdownStarted) return;
     shutdownStarted = true;
-    logger.info('OpenCreator Desktop quitting');
+    logger.info('VishnuCreator Desktop quitting');
     windowManager?.beginQuit();
     protocolController.suspendRuntime();
     notifications.stop();
@@ -542,7 +542,7 @@ function assertTrustedSender(event: IpcMainInvokeEvent, development: boolean): v
     throw new Error('IPC sender URL is invalid');
   }
   if (
-    url.protocol === 'opencreator-app:'
+    url.protocol === 'vishnucreator-app:'
     && (url.hostname === 'app' || url.hostname === 'bootstrap')
   ) {
     return;
@@ -569,7 +569,7 @@ function assertTrustedWorkspaceSender(
   } catch {
     throw new Error('Workspace IPC sender URL is invalid');
   }
-  if (url.protocol === 'opencreator-app:' && url.hostname === 'app') return;
+  if (url.protocol === 'vishnucreator-app:' && url.hostname === 'app') return;
   if (
     development
     && url.protocol === 'http:'
@@ -604,9 +604,9 @@ function registerApplicationProtocol(
   logger: ReturnType<typeof createDesktopLogger>
 ): void {
   const result = development
-    ? app.setAsDefaultProtocolClient('opencreator', process.execPath, [appRoot])
-    : app.setAsDefaultProtocolClient('opencreator');
-  if (!result) logger.warn('Failed to register opencreator:// protocol');
+    ? app.setAsDefaultProtocolClient('vishnucreator', process.execPath, [appRoot])
+    : app.setAsDefaultProtocolClient('vishnucreator');
+  if (!result) logger.warn('Failed to register vishnucreator:// protocol');
 }
 
 function ok(): DesktopHostResult {

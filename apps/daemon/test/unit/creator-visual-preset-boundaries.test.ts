@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { createDefaultCreatorServicesConfig, videoGenerationModelIds } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, videoGenerationModelIds } from '@vishnucreator/protocol';
 import { describe, expect, it } from 'vitest';
 import { createCreatorPresetRegistry } from '../../src/creator/presets/catalog.js';
 import { canonicalJson, sha256, validateCreatorPresets } from '../../src/creator/presets/compiler.js';

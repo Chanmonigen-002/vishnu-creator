@@ -1,9 +1,9 @@
 import SuggestedInput from '../../components/forms/SuggestedInput.js';
 import AppSelect from '../../components/forms/Select.js';
-import { creatorProviderCatalogById } from '@opencreator/protocol';
+import { creatorProviderCatalogById } from '@vishnucreator/protocol';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowLeft, LogIn, Monitor } from 'lucide-react';
-import OpenCreatorMark from '../../components/brand/OpenCreatorMark.js';
+import VishnuCreatorMark from '../../components/brand/VishnuCreatorMark.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import type { ConnectionService } from '../../services/connection-service.js';
 import { inferLlmProviderId, llmProviderOptions } from './llm-provider-selection.js';
@@ -12,7 +12,7 @@ import './startup-agent-shell.css';
 import './startup-agent-setup.css';
 import { GatewayAccountSettingsView } from './GatewayAccountSettingsView.js';
 import type { GatewayAccountSettingsService } from '../../services/gateway-account-service.js';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 
 type AgentSetupMode = 'codex' | 'custom';
 
@@ -164,7 +164,7 @@ export function StartupAgentSetup(props: {
   return (
     <main className="startup-agent-setup">
       <section className="startup-agent-setup__card" aria-label={l('开始使用 Agent', 'Get started with Agent')}>
-        <OpenCreatorMark size={48} aria-hidden="true" />
+        <VishnuCreatorMark size={48} aria-hidden="true" />
         <h1>Vishnu Creator</h1>
         {entry === 'choose' ? <div className="startup-agent-setup__entry">
           <button type="button" className="startup-agent-setup__primary" disabled={busy} onClick={() => void login()}><LogIn size={18}/>{l('登录模式', 'Sign-in mode')}</button>

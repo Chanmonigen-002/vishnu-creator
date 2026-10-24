@@ -1,4 +1,4 @@
-import type { ThreadResponse } from '@opencreator/protocol';
+import type { ThreadResponse } from '@vishnucreator/protocol';
 import { describe, expect, it } from 'vitest';
 import {
   findProjectById,
@@ -80,7 +80,7 @@ function createThread(overrides: Partial<ThreadResponse> = {}): ThreadResponse {
     id: 'thread-1',
     title: '会话',
     projectId: 'project-one',
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     codexThreadId: null,
     cwd: '/workspace/project',
     canonicalCwd: '/workspace/project',

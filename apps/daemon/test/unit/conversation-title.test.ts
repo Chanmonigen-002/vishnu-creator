@@ -11,7 +11,7 @@ describe('createConversationTitle', () => {
 
   it('extracts the actual request from a schedule assistant prompt', () => {
     expect(createConversationTitle([
-      '你是 OpenCreator 的计划任务配置助手。',
+      '你是 VishnuCreator 的计划任务配置助手。',
       '不要调用工具，不要修改文件，只根据用户描述生成一个计划任务草稿。',
       '用户所在时区：Asia/Shanghai',
       '只输出一个 JSON 对象，不要输出 Markdown 或解释。',
@@ -21,7 +21,7 @@ describe('createConversationTitle', () => {
 
   it('uses a concise compatibility title for truncated legacy assistant prompts', () => {
     expect(createConversationTitle(
-      '你是 OpenCreator 的计划任务配置助手。 不要调用工具，不要修改文件，只根据用户描述生成一个计划任务草稿。 用户所在时区：Asia/Shanghai 只输出一…'
+      '你是 VishnuCreator 的计划任务配置助手。 不要调用工具，不要修改文件，只根据用户描述生成一个计划任务草稿。 用户所在时区：Asia/Shanghai 只输出一…'
     )).toBe('Create scheduled task');
   });
 
@@ -57,9 +57,9 @@ describe('createConversationTitle', () => {
     )).toBe('Use the r4_smoke_skill_17838…');
   });
 
-  it('extracts only the public request from OpenCreator-managed context wrappers', () => {
+  it('extracts only the public request from VishnuCreator-managed context wrappers', () => {
     expect(extractPublicConversationInput([
-      '[OpenCreator 用户显式管理的上下文]',
+      '[VishnuCreator 用户显式管理的上下文]',
       '- 会话摘要：内部摘要',
       '[上下文结束]',
       '',
@@ -68,7 +68,7 @@ describe('createConversationTitle', () => {
     ].join('\n'))).toBe('修复重复请求');
 
     expect(extractPublicConversationInput([
-      '[OpenCreator 执行上下文恢复摘要]',
+      '[VishnuCreator 执行上下文恢复摘要]',
       '- 已完成：内部恢复信息',
       '',
       '本次公开任务输入：',
@@ -76,12 +76,12 @@ describe('createConversationTitle', () => {
     ].join('\n'))).toBe('继续运行测试');
   });
 
-  it('hides malformed or empty OpenCreator context wrappers instead of exposing internal text', () => {
+  it('hides malformed or empty VishnuCreator context wrappers instead of exposing internal text', () => {
     expect(extractPublicConversationInput(
-      '[OpenCreator 用户显式管理的上下文]\n- 会话摘要：内部摘要'
+      '[VishnuCreator 用户显式管理的上下文]\n- 会话摘要：内部摘要'
     )).toBeUndefined();
     expect(extractPublicConversationInput([
-      '[OpenCreator 执行上下文恢复摘要]',
+      '[VishnuCreator 执行上下文恢复摘要]',
       '本次公开任务输入：',
       '   '
     ].join('\n'))).toBeUndefined();

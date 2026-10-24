@@ -1,7 +1,7 @@
 import {
-  isOpenCreatorIssue,
+  isVishnuCreatorIssue,
   creatorPreflightFailure,
-  type OpenCreatorIssue,
+  type VishnuCreatorIssue,
   type PublicErrorFacts,
   CreatorActionRequest,
   CreatorActivity,
@@ -17,7 +17,7 @@ import {
   CreatorJson,
   CreatorPreflightResponse,
   CreatorStageRun
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   useCallback,
   useContext,
@@ -43,8 +43,8 @@ export type CreatorSessionContextValue = {
   state: Record<string, CreatorJson>;
   conflictedFields: string[];
   error: CreatorSessionError | null;
-  issues: OpenCreatorIssue[];
-  focusedIssue: OpenCreatorIssue | null;
+  issues: VishnuCreatorIssue[];
+  focusedIssue: VishnuCreatorIssue | null;
   preflight: CreatorPreflightResponse | null;
   runPreflight(stageId: string, options?: { inputResultVersion?: number }): Promise<CreatorPreflightResponse>;
   updateDraft(
@@ -58,10 +58,10 @@ export type CreatorSessionContextValue = {
     cause: unknown,
     fallbackMessage?: string,
     source?: 'upload' | 'preflight' | 'agent' | 'client'
-  ): OpenCreatorIssue;
-  repairIssue(issue: OpenCreatorIssue): Promise<void>;
-  focusIssue(issue: OpenCreatorIssue | null): void;
-  askPendingIssue(question: string, issue: OpenCreatorIssue): void;
+  ): VishnuCreatorIssue;
+  repairIssue(issue: VishnuCreatorIssue): Promise<void>;
+  focusIssue(issue: VishnuCreatorIssue | null): void;
+  askPendingIssue(question: string, issue: VishnuCreatorIssue): void;
   applyRemoteSnapshot(job: CreatorJob): void;
   applyAction(request: Omit<CreatorActionRequest, 'expectedRevision'>): Promise<CreatorJob>;
   cancelJob(): Promise<void>;
@@ -159,8 +159,8 @@ export function CreatorSessionProvider(props: {
   initialJob: CreatorJob;
   ensureJob?: (state: Record<string, CreatorJson>) => Promise<CreatorJob>;
   onPreJobFailure?(operation: string, cause: unknown, fallbackMessage: string): void;
-  onAskPendingIssue?(issue: OpenCreatorIssue, question: string): void;
-  externalIssues?: OpenCreatorIssue[];
+  onAskPendingIssue?(issue: VishnuCreatorIssue, question: string): void;
+  externalIssues?: VishnuCreatorIssue[];
   service: Pick<CreatorWebService, 'applyAction' | 'runAgentTurn'> & Partial<Pick<CreatorWebService,
     | 'startAgentTurn'
     | 'steerAgentTurn'
@@ -198,7 +198,7 @@ export function CreatorSessionProvider(props: {
   const [dirtyFields, setDirtyFields] = useState<Set<string>>(() => new Set());
   const [conflictedFields, setConflictedFields] = useState<string[]>([]);
   const [error, setError] = useState<CreatorSessionError | null>(null);
-  const [localIssues, setLocalIssues] = useState<OpenCreatorIssue[]>([]);
+  const [localIssues, setLocalIssues] = useState<VishnuCreatorIssue[]>([]);
   const [focusedIssueId, setFocusedIssueId] = useState<string | null>(null);
   const [preflight, setPreflight] = useState<CreatorPreflightResponse | null>(null);
   const [agentSession, setAgentSession] = useState<CreatorAgentSession | null>(null);
@@ -215,7 +215,7 @@ export function CreatorSessionProvider(props: {
   const timelineReloadRequestedRef = useRef(false);
   const artifactJsonCacheRef = useRef(new Map<string, Promise<unknown>>());
   const localIssuesRef = useRef(localIssues);
-  const capturedIssueByCauseRef = useRef(new WeakMap<object, OpenCreatorIssue>());
+  const capturedIssueByCauseRef = useRef(new WeakMap<object, VishnuCreatorIssue>());
   const captureFailureRef = useRef<CreatorSessionContextValue['captureCreatorFailure'] | null>(null);
   confirmedRef.current = confirmedJob;
   draftRef.current = draft;
@@ -372,7 +372,7 @@ export function CreatorSessionProvider(props: {
 
   const clearError = useCallback(() => setError(null), []);
 
-  const acceptAuthoritativeIssue = useCallback((issue: OpenCreatorIssue) => {
+  const acceptAuthoritativeIssue = useCallback((issue: VishnuCreatorIssue) => {
     if (issue.scope.kind !== 'creator-job' || issue.scope.jobId !== confirmedRef.current.id) return;
     const replacedIds = new Set(localIssuesRef.current
       .filter(candidate => candidate.fingerprint === issue.fingerprint)
@@ -384,7 +384,7 @@ export function CreatorSessionProvider(props: {
     setFocusedIssueId(current => current !== null && replacedIds.has(current) ? issue.id : current);
   }, []);
 
-  const reportLocalIssue = useCallback((issue: OpenCreatorIssue) => {
+  const reportLocalIssue = useCallback((issue: VishnuCreatorIssue) => {
     if (
       props.service.reportClientIssue === undefined
       || isPendingCreatorJob(confirmedRef.current)
@@ -412,7 +412,7 @@ export function CreatorSessionProvider(props: {
     cause: unknown,
     fallbackMessage = 'The operation did not complete. Check diagnostics in the Agent panel.',
     source: 'upload' | 'preflight' | 'agent' | 'client' = 'client'
-  ): OpenCreatorIssue => {
+  ): VishnuCreatorIssue => {
     const causeObject = typeof cause === 'object' && cause !== null ? cause : undefined;
     const captured = causeObject === undefined
       ? undefined
@@ -426,7 +426,7 @@ export function CreatorSessionProvider(props: {
     }
     const candidate = (cause as { issue?: unknown } | null)?.issue;
     if (
-      isOpenCreatorIssue(candidate)
+      isVishnuCreatorIssue(candidate)
       && candidate.scope.kind === 'creator-job'
       && candidate.scope.jobId === confirmedRef.current.id
     ) {
@@ -437,12 +437,12 @@ export function CreatorSessionProvider(props: {
     const pageIssue = normalizePageIssue(
       'creator-session',
       operation,
-      isOpenCreatorIssue(candidate) && candidate.scope.kind === 'creator-job'
+      isVishnuCreatorIssue(candidate) && candidate.scope.kind === 'creator-job'
         ? new Error('Creator issue scope mismatch')
         : cause,
       fallbackMessage
     );
-    const issue: OpenCreatorIssue = {
+    const issue: VishnuCreatorIssue = {
       ...pageIssue,
       id: pageIssue.id.replace(/^page:/, 'local:'),
       scope: { kind: 'creator-job', jobId: confirmedRef.current.id },
@@ -466,11 +466,11 @@ export function CreatorSessionProvider(props: {
   }, [acceptAuthoritativeIssue, props.onPreJobFailure, reportLocalIssue]);
   captureFailureRef.current = captureCreatorFailure;
 
-  const focusIssue = useCallback((issue: OpenCreatorIssue | null) => {
+  const focusIssue = useCallback((issue: VishnuCreatorIssue | null) => {
     setFocusedIssueId(issue?.id ?? '');
   }, []);
 
-  const askPendingIssue = useCallback((question: string, issue: OpenCreatorIssue) => {
+  const askPendingIssue = useCallback((question: string, issue: VishnuCreatorIssue) => {
     if (props.onAskPendingIssue === undefined) throw new Error('Agent inquiry is unavailable before task creation');
     props.onAskPendingIssue(issue, question);
   }, [props.onAskPendingIssue]);
@@ -562,7 +562,7 @@ export function CreatorSessionProvider(props: {
   }, [loadAgentTimeline]);
 
   const applyLiveEvent = useCallback((event: CreatorEventEnvelope) => {
-    if (event.kind === 'issue_changed' && isOpenCreatorIssue(event.payload.issue)) {
+    if (event.kind === 'issue_changed' && isVishnuCreatorIssue(event.payload.issue)) {
       acceptAuthoritativeIssue(event.payload.issue);
       return;
     }
@@ -670,7 +670,7 @@ export function CreatorSessionProvider(props: {
     }
   }, [applyRemoteSnapshot, captureCreatorFailure, ensurePersistedJob, flush, props.service, runPreflight]);
 
-  const repairIssue = useCallback(async (issue: OpenCreatorIssue) => {
+  const repairIssue = useCallback(async (issue: VishnuCreatorIssue) => {
     const action = issue.repairActions.find(candidate => (
       candidate.kind === 'retry-operation'
       && candidate.operationId === 'creator.retry-stage'
@@ -1099,7 +1099,7 @@ function mergeCreatorEvent(job: CreatorJob, event: CreatorEventEnvelope): Creato
   }
   if (event.kind === 'issue_changed') {
     const issue = event.payload.issue;
-    if (!isOpenCreatorIssue(issue)) return job;
+    if (!isVishnuCreatorIssue(issue)) return job;
     if (issue.scope.kind !== 'creator-job' || issue.scope.jobId !== job.id) return job;
     return mergeIssueIntoJob(job, issue);
   }
@@ -1115,7 +1115,7 @@ function olderDownloadProgress(incoming: CreatorStageRun, current: CreatorStageR
     && (Number(incoming.progress.downloadProgressSequence) || 0) < (Number(current.progress.downloadProgressSequence) || 0);
 }
 
-function mergeIssueIntoJob(job: CreatorJob, issue: OpenCreatorIssue): CreatorJob {
+function mergeIssueIntoJob(job: CreatorJob, issue: VishnuCreatorIssue): CreatorJob {
   const current = job.issues ?? [];
   return {
     ...job,
@@ -1127,10 +1127,10 @@ function mergeIssueIntoJob(job: CreatorJob, issue: OpenCreatorIssue): CreatorJob
 }
 
 function mergeVisibleIssues(
-  authoritative: OpenCreatorIssue[],
-  local: OpenCreatorIssue[]
-): OpenCreatorIssue[] {
-  const unique = new Map<string, OpenCreatorIssue>();
+  authoritative: VishnuCreatorIssue[],
+  local: VishnuCreatorIssue[]
+): VishnuCreatorIssue[] {
+  const unique = new Map<string, VishnuCreatorIssue>();
   for (const issue of [...authoritative, ...local]) {
     if (!unique.has(issue.fingerprint)) unique.set(issue.fingerprint, issue);
   }

@@ -7,7 +7,7 @@ import {
   type CreatorArtifact,
   type CreatorJob,
   type CreatorStageRun
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { CreatorSessionProvider, useCreatorSession } from './creator-session-store.js';
@@ -211,7 +211,7 @@ describe('StickmanVideoWorkspace', () => {
     expect(creatorServicesService.getTtsVoices).not.toHaveBeenCalled();
   });
 
-  it('passes a YouTube URL directly to the KrillinAI transcript stage', async () => {
+  it('passes a YouTube URL directly to the VishnuAI transcript stage', async () => {
     const initialJob = job();
     const applyAction = vi.fn(async (_jobId: string, request: Record<string, unknown>) => ({
       job: initialJob,

@@ -1,4 +1,4 @@
-import type { CreateSmartDubbingRequest } from '@opencreator/protocol';
+import type { CreateSmartDubbingRequest } from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import {
   SmartDubbingError,

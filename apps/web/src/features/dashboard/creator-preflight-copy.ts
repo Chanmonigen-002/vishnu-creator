@@ -13,7 +13,7 @@ const messages: Record<string, [string, string, string]> = {
   'input-file': ['输入文件尚未就绪，请重新选择并上传文件。', 'The input file is not ready. Select and upload the file again.', 'Indatafilen är inte redo. Välj och ladda upp filen igen.'],
   'executor': ['当前任务执行器不可用，请检查 Runtime 连接和组件状态。', 'The task executor is unavailable. Check the Runtime connection and component status.', 'Uppgiftsköraren är inte tillgänglig. Kontrollera Runtime-anslutningen och komponentstatusen.'],
   'yt-dlp': ['视频下载组件尚未就绪，请前往组件页面检查。', 'The video download component is not ready. Check the component page.', 'Videonedladdningskomponenten är inte redo. Kontrollera komponentsidan.'],
-  'krillin-runtime': ['视频处理运行组件尚未就绪，请检查组件和诊断信息。', 'Video processing runtime components are not ready. Check components and diagnostics.', 'Runtime-komponenterna för videobearbetning är inte redo. Kontrollera komponenterna och diagnostiken.']
+  'vishnu-runtime': ['视频处理运行组件尚未就绪，请检查组件和诊断信息。', 'Video processing runtime components are not ready. Check components and diagnostics.', 'Runtime-komponenterna för videobearbetning är inte redo. Kontrollera komponenterna och diagnostiken.']
 };
 
 export function creatorPreflightMessage(id: string, localize: LocalizeCopy): string {

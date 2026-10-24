@@ -1,16 +1,16 @@
 ---
-name: krillinai-cover
-description: Use when generating a cover image with the KrillinAI CLI from a complete image prompt, including validating image-provider configuration and inspecting the generated image and saved prompt.
+name: vishnuai-cover
+description: Use when generating a cover image with the VishnuAI CLI from a complete image prompt, including validating image-provider configuration and inspecting the generated image and saved prompt.
 ---
 
-# KrillinAI Cover
+# VishnuAI Cover
 
-Use this skill for the implemented `cover` command. Read `skills/krillinai-cli/references/cli-contract.md` first for binary location, execution working directory, configuration, and JSON behavior.
+Use this skill for the implemented `cover` command. Read `skills/vishnuai-cli/references/cli-contract.md` first for binary location, execution working directory, configuration, and JSON behavior.
 
 ## Command
 
 ```bash
-(cd "$KRILLINAI_CWD" && "$KRILLINAI_CLI" cover \
+(cd "$VISHNUAI_CWD" && "$VISHNUAI_CLI" cover \
   --workdir "$WORKDIR" \
   --prompt "$COVER_PROMPT" \
   --size 1536x1024)
@@ -29,7 +29,7 @@ The prompt must already contain the desired title text, language, composition, v
 
 - `generated_cover.png`
 - `cover_prompt.final.txt`
-- `krillinai_manifest.json`
+- `vishnuai_manifest.json`
 
 ## Dry Run
 

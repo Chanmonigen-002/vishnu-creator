@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import type { CreatorPresetSummary } from '@opencreator/protocol';
+import type { CreatorPresetSummary } from '@vishnucreator/protocol';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import {
@@ -791,7 +791,7 @@ describe('CreatorDashboard', () => {
     fireEvent.click(screen.getByRole('button', { name: '查看B站双语精翻模板详情' }));
     fireEvent.click(screen.getByRole('button', { name: '使用此模板' }));
     await waitFor(() => expect(window.localStorage.getItem(
-      'opencreator.creator-presets.recent.v1'
+      'vishnucreator.creator-presets.recent.v1'
     )).toContain('video-translation/bilibili-bilingual/1'));
     firstRender.unmount();
 

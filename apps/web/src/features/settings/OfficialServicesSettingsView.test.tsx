@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { expect, it, vi } from 'vitest';
-import { gatewayRecommendedModelId, type GatewayAccountState } from '@opencreator/protocol';
+import { gatewayRecommendedModelId, type GatewayAccountState } from '@vishnucreator/protocol';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { createGatewayAccountService } from '../../services/gateway-account-service.js';
 import { OfficialServicesSettingsView } from './OfficialServicesSettingsView.js';

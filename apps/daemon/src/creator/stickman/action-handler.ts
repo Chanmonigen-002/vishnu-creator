@@ -7,12 +7,12 @@ import type {
   CreatorJob,
   CreatorJobStatus,
   CreatorJson
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   stickmanOutputPresetDefaults,
   stickmanOutputPresets,
   stickmanRatios
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CreatorRepository } from '../repository.js';
 import { CreatorServiceError } from '../service.js';
 import {

@@ -19,7 +19,7 @@ afterEach(async () => {
 });
 
 function createDataDir(): string {
-  const path = mkdtempSync(join(tmpdir(), 'opencreator-cleanup-test-'));
+  const path = mkdtempSync(join(tmpdir(), 'vishnucreator-cleanup-test-'));
   directories.push(path);
   return path;
 }
@@ -33,7 +33,7 @@ describe('E2E runtime process cleanup', () => {
       import { writeFileSync } from 'node:fs';
       import { join } from 'node:path';
       const dataDir = process.argv[1];
-      writeFileSync(join(dataDir, 'opencreator-runtime.lock'), String(process.pid));
+      writeFileSync(join(dataDir, 'vishnucreator-runtime.lock'), String(process.pid));
       process.on('SIGTERM', () => {});
       setInterval(() => writeFileSync(join(dataDir, 'state.json'), String(Date.now())), 5);
       console.log('ready');
@@ -83,7 +83,7 @@ describe('E2E runtime process cleanup', () => {
     const dataDir = createDataDir();
     expect(readRuntimePid(dataDir)).toBeUndefined();
     for (const value of ['0', '1', '-2', String(process.pid), '123junk', '9007199254740992']) {
-      writeFileSync(join(dataDir, 'opencreator-runtime.lock'), value);
+      writeFileSync(join(dataDir, 'vishnucreator-runtime.lock'), value);
       expect(() => readRuntimePid(dataDir)).toThrow('Invalid E2E process PID');
     }
     await expect(stopRecordedProcess(process.pid)).rejects.toThrow('Invalid E2E process PID');

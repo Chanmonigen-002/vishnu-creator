@@ -1,7 +1,7 @@
 import {
   sha256Text,
   verifyFileIntegrityWithCache
-} from '@opencreator/config';
+} from '@vishnucreator/config';
 import { spawnSync } from 'node:child_process';
 import {
   existsSync,
@@ -77,7 +77,7 @@ export async function resolveCodexEnvironment(input: {
   const platform = input.platform ?? process.platform;
   const arch = input.arch ?? process.arch;
   const processEnv = { ...(input.processEnv ?? process.env) };
-  const userDataDir = resolve(input.userDataDir ?? processEnv.OPENCREATOR_DESKTOP_USER_DATA ?? join(process.cwd(), '.runtime', 'desktop-user-data'));
+  const userDataDir = resolve(input.userDataDir ?? processEnv.VISHNUCREATOR_DESKTOP_USER_DATA ?? join(process.cwd(), '.runtime', 'desktop-user-data'));
   const diagnostics: CodexResolutionDiagnostics = { platform, arch, mode };
 
   try {
@@ -145,7 +145,7 @@ function resolveBundled(input: {
   diagnostics: CodexResolutionDiagnostics;
 }): ResolvedCodexEnvironment {
   if (input.runtimeRoot === undefined) {
-    throw failure('codex_runtime_missing', 'The bundled OpenCreator Codex Runtime path was not provided', input.diagnostics);
+    throw failure('codex_runtime_missing', 'The bundled VishnuCreator Codex Runtime path was not provided', input.diagnostics);
   }
   const runtimeRoot = resolve(input.runtimeRoot);
   const manifestPath = join(runtimeRoot, 'manifest.json');
@@ -163,7 +163,7 @@ function resolveBundled(input: {
   ) {
     throw failure(
       'codex_runtime_version_mismatch',
-      `The bundled Codex Runtime is incompatible with OpenCreator (requires ${BUNDLED_VERSION})`,
+      `The bundled Codex Runtime is incompatible with VishnuCreator (requires ${BUNDLED_VERSION})`,
       input.diagnostics
     );
   }

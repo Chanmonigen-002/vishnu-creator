@@ -5,12 +5,12 @@ import {
 } from './schedule-timing.js';
 
 export const AGENT_SCHEDULE_TOOL_NAMES = [
-  'opencreator_schedule_create',
-  'opencreator_schedule_update',
-  'opencreator_schedule_pause',
-  'opencreator_schedule_resume',
-  'opencreator_schedule_run_now',
-  'opencreator_schedule_get'
+  'vishnucreator_schedule_create',
+  'vishnucreator_schedule_update',
+  'vishnucreator_schedule_pause',
+  'vishnucreator_schedule_resume',
+  'vishnucreator_schedule_run_now',
+  'vishnucreator_schedule_get'
 ] as const;
 
 export type AgentScheduleToolName = typeof AGENT_SCHEDULE_TOOL_NAMES[number];
@@ -100,8 +100,8 @@ export function createAgentScheduleToolDefinitions(input: {
 }): AgentScheduleToolDefinitions {
   const request = input.request;
   return {
-    opencreator_schedule_create: {
-      description: '创建一个 OpenCreator 定时任务。时间必须使用结构化 timing，不要要求用户填写 cron。',
+    vishnucreator_schedule_create: {
+      description: '创建一个 VishnuCreator 定时任务。时间必须使用结构化 timing，不要要求用户填写 cron。',
       inputSchema: createSchema,
       async execute(value) {
         const parsed = createSchema.parse(value);
@@ -121,7 +121,7 @@ export function createAgentScheduleToolDefinitions(input: {
         return scheduleSummary(response);
       }
     },
-    opencreator_schedule_update: {
+    vishnucreator_schedule_update: {
       description: '更新当前任务会话绑定的定时任务，或更新明确指定的 scheduleId。',
       inputSchema: updateSchema,
       async execute(value) {
@@ -143,7 +143,7 @@ export function createAgentScheduleToolDefinitions(input: {
         return scheduleSummary(response);
       }
     },
-    opencreator_schedule_pause: {
+    vishnucreator_schedule_pause: {
       description: '暂停当前任务会话绑定的定时任务，或暂停明确指定的 scheduleId。',
       inputSchema: scheduleReferenceSchema,
       async execute(value) {
@@ -154,7 +154,7 @@ export function createAgentScheduleToolDefinitions(input: {
         }));
       }
     },
-    opencreator_schedule_resume: {
+    vishnucreator_schedule_resume: {
       description: '恢复当前任务会话绑定的定时任务，或恢复明确指定的 scheduleId。',
       inputSchema: scheduleReferenceSchema,
       async execute(value) {
@@ -165,7 +165,7 @@ export function createAgentScheduleToolDefinitions(input: {
         }));
       }
     },
-    opencreator_schedule_run_now: {
+    vishnucreator_schedule_run_now: {
       description: '立即触发当前任务会话绑定的定时任务，或触发明确指定的 scheduleId。',
       inputSchema: scheduleReferenceSchema,
       async execute(value) {
@@ -176,7 +176,7 @@ export function createAgentScheduleToolDefinitions(input: {
         }));
       }
     },
-    opencreator_schedule_get: {
+    vishnucreator_schedule_get: {
       description: '读取当前任务会话绑定的定时任务，或读取明确指定的 scheduleId。',
       inputSchema: scheduleReferenceSchema,
       async execute(value) {
@@ -231,7 +231,7 @@ export function createAgentScheduleHttpClient(input: {
             throw new AgentScheduleToolError(
               apiError?.code ?? 'AGENT_TOOL_REQUEST_FAILED',
               apiError === undefined
-                ? `OpenCreator schedule tool request failed with status ${response.status}`
+                ? `VishnuCreator schedule tool request failed with status ${response.status}`
                 : `${apiError.code}: ${apiError.message}`
             );
           }
@@ -243,7 +243,7 @@ export function createAgentScheduleHttpClient(input: {
             timeout = setTimeout(() => {
               reject(new AgentScheduleToolError(
                 'AGENT_TOOL_TIMEOUT',
-                `OpenCreator schedule tool timed out after ${timeoutMs}ms`
+                `VishnuCreator schedule tool timed out after ${timeoutMs}ms`
               ));
               controller.abort();
             }, timeoutMs);
@@ -253,7 +253,7 @@ export function createAgentScheduleHttpClient(input: {
         if (error instanceof AgentScheduleToolError) throw error;
         throw new AgentScheduleToolError(
           'AGENT_TOOL_DAEMON_UNREACHABLE',
-          'OpenCreator daemon is unreachable'
+          'VishnuCreator daemon is unreachable'
         );
       } finally {
         if (timeout !== undefined) clearTimeout(timeout);
@@ -370,7 +370,7 @@ async function readJsonResponse(response: Response): Promise<unknown> {
   } catch {
     throw new AgentScheduleToolError(
       'AGENT_TOOL_INVALID_RESPONSE',
-      'OpenCreator daemon returned an invalid response'
+      'VishnuCreator daemon returned an invalid response'
     );
   }
 }
@@ -393,7 +393,7 @@ function requireRecord(
   if (!isRecord(value)) {
     throw new AgentScheduleToolError(
       'AGENT_TOOL_INVALID_RESPONSE',
-      `OpenCreator daemon returned an invalid ${name}`
+      `VishnuCreator daemon returned an invalid ${name}`
     );
   }
   return value;
@@ -407,7 +407,7 @@ function requireString(
   if (typeof result !== 'string') {
     throw new AgentScheduleToolError(
       'AGENT_TOOL_INVALID_RESPONSE',
-      `OpenCreator daemon response is missing ${field}`
+      `VishnuCreator daemon response is missing ${field}`
     );
   }
   return result;

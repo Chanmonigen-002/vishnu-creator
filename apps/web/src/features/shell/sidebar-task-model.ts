@@ -1,4 +1,4 @@
-import type { TaskItem, ThreadResponse } from '@opencreator/protocol';
+import type { TaskItem, ThreadResponse } from '@vishnucreator/protocol';
 import type { AppLanguage } from '../../i18n/language.js';
 import { createLocalizedCopy } from '../../i18n/localized-copy.js';
 import type { ScheduleTaskSummary } from '../schedules/schedule-task-model.js';

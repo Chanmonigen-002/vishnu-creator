@@ -1,4 +1,4 @@
-# OpenCreator Project Agent Rules
+# Vishnu Creator Project Agent Rules
 
 ## Language Requirements for Git Commit Messages and Release Materials
 
@@ -33,7 +33,7 @@
 
 ### Fast Validation Path for Web Changes
 
-- When changes affect only pages, template Workspaces, styles, or local frontend state in `apps/web`, without touching Host Bridge, Desktop capabilities, Preload/IPC, Daemon/Runtime, protocols, persistence, or build assets, completion requires relevant targeted Web tests, the `@opencreator/web` typecheck, and any necessary browser interaction checks.
+- When changes affect only pages, template Workspaces, styles, or local frontend state in `apps/web`, without touching Host Bridge, Desktop capabilities, Preload/IPC, Daemon/Runtime, protocols, persistence, or build assets, completion requires relevant targeted Web tests, the `@vishnucreator/web` typecheck, and any necessary browser interaction checks.
 - These Web-only changes can be delivered once those checks pass. By default, do not run production builds, Browser/Desktop parity specifications in both contexts, `desktop:package`, or packaged App E2E tests. Desktop's reuse of the same Web assets alone does not justify broader validation.
 - Add Browser/Desktop specifications in both contexts only when changes depend on platform capabilities, Electron's content viewport could affect responsive behavior, or the user explicitly requests a Web/Desktop comparison. Passing these specifications does not itself require actual App packaging.
 - Perform actual App packaging and packaged App E2E tests only when changes touch `apps/desktop`, Host Bridge, Preload/IPC, window or native system capabilities, Daemon startup and proxying, packaging assets/scripts, or when the task targets Desktop delivery, release candidate validation, or publishing.
@@ -56,10 +56,10 @@
 - Report only validation actually performed. Do not imply that the entire project is free of regressions based on comprehensive checks that were not run.
 - Deliver promptly once the minimum validation set covers the change. Do not continue running low-value checks merely to appear more thorough.
 
-## Mandatory Rules for Using `opencreator-bug-fix`
+## Mandatory Rules for Using `vishnucreator-bug-fix`
 
-- Mandatory: Do not enable or append the `opencreator-bug-fix` workflow by default for regular development, code fixes, experience improvements, or direct user requests.
-- Use `opencreator-bug-fix` only when the user explicitly asks to read, process, or write back to the OpenCreator Feishu bug document.
+- Mandatory: Do not enable or append the `vishnucreator-bug-fix` workflow by default for regular development, code fixes, experience improvements, or direct user requests.
+- Use `vishnucreator-bug-fix` only when the user explicitly asks to read, process, or write back to the Vishnu Creator Feishu bug document.
 - Without that explicit request, do not read Feishu documents, carry out the document feedback workflow, or automatically create Git commits through that workflow merely because a task resembles a bug. Complete the requested code changes and necessary validation directly.
 
 ## Mandatory Architecture Rules for Creator Template Collaboration Panels
@@ -68,7 +68,7 @@
 - The shared Panel owns Agent messages, the Activity timeline, Stage status cards, actual progress, approvals, the Composer, permissions, and task termination and continuation. Template Workspaces must not maintain separate message, approval, SSE, or Stage presentation logic.
 - Express template differences only through `CreatorPanelAdapter`, configuration, callbacks, or local slots. Adapters handle only Stage/Phase/field copy, meaningful Activity descriptions, progress normalization, default Composer prompts, and template context summaries. They must not duplicate the shared interaction framework.
 - Workspaces provide only the current step, business context, issue state, and quick actions to the shared Panel. Truly template-specific capabilities may use local slots, but slots must not be used to duplicate the entire Panel.
-- The shared Panel must not read `krillinEventPayload` or other executor-private fields. Runtime progress exposed externally must use `phase`, `percent`, `message`, `completed`, `failed`, and `total`. Compatibility with legacy fields belongs only in the corresponding Adapter or Runtime normalizer.
+- The shared Panel must not read `vishnuEventPayload` or other executor-private fields. Runtime progress exposed externally must use `phase`, `percent`, `message`, `completed`, `failed`, and `total`. Compatibility with legacy fields belongs only in the corresponding Adapter or Runtime normalizer.
 - Do not write UI-only state to user-visible creation activity, including step indices, the furthest step reached, Workspace tabs, result tabs, and draft versions. Convert Activity updates into meaningful descriptions, filter them, and merge consecutive updates of the same kind before displaying them.
 - Unknown templates must use a fallback adapter with stable, generic copy. Do not expose internal Stage IDs, executor names, or raw event fields directly.
 - Every new Creator template must include Adapter tests, Activity filtering and deduplication tests, Stage status tests, and actual progress tests. Delivering an independent Panel is prohibited.
@@ -77,7 +77,7 @@
 
 ### Core Definitions
 
-- Mandatory: `apps/web` is OpenCreator's only frontend implementation and primary development environment. Desktop must directly use the same Web frontend build assets. Do not maintain a second set of pages, components, styles, or shared interaction logic.
+- Mandatory: `apps/web` is Vishnu Creator's only frontend implementation and primary development environment. Desktop must directly use the same Web frontend build assets. Do not maintain a second set of pages, components, styles, or shared interaction logic.
 - Mandatory: Given the same business data, user preferences, and frontend content area dimensions, Web and Desktop must have identical shared interfaces, copy, layouts, states, interaction results, and Runtime requests.
 - Parity means consistency of shared product capabilities. It does not require the browser to emulate system capabilities such as operating system windows, directory pickers, menu bars, trays, or native notifications.
 - Shared React code alone does not establish parity at platform boundaries. Validate changes limited to shared Web code through the Fast Validation Path for Web Changes. Require actual packaged App validation only when Desktop boundaries or deliverable packages are involved.
@@ -130,7 +130,7 @@ When changes explicitly affect shared Web/Desktop behavior or platform capabilit
 6. Verify that native actions under Desktop Bridge actually invoke the corresponding Bridge capabilities. Checking only that buttons exist is insufficient.
 Perform actual App packaging only when the escalation conditions in the Fast Validation Path for Web Changes apply. In that case, also complete:
 
-7. Run E2E tests against the actual packaged App to verify Preload Bridge, the `opencreator-app://` page, Runtime proxying, the default project, the core input flow, and native capabilities.
+7. Run E2E tests against the actual packaged App to verify Preload Bridge, the `vishnucreator-app://` page, Runtime proxying, the default project, the core input flow, and native capabilities.
 8. Verify that the file lists and content hashes in `apps/web/dist` exactly match the App's embedded Web directory.
 
 ### Required Decisions Before Making Changes

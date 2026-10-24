@@ -1,6 +1,6 @@
-const RUNTIME_PREFIX = '/.opencreator/runtime';
+const RUNTIME_PREFIX = '/.vishnucreator/runtime';
 const CREATOR_SOURCE_UPLOAD_CONTENT_TYPE =
-  'application/vnd.opencreator.creator-source';
+  'application/vnd.vishnucreator.creator-source';
 const CREATOR_SOURCE_UPLOAD_PATH =
   /^\/creator\/jobs\/creator_job_[A-Za-z0-9_-]+\/source-video$/;
 

@@ -325,7 +325,7 @@ describe('creator template registry', () => {
     ))).toHaveLength(1);
     expect(template.stages.some(stage => stage.id === 'acquire-source')).toBe(false);
     expect(template.stages.find(stage => stage.id === 'source-transcript')).toMatchObject({
-      executor: 'krillinai',
+      executor: 'vishnuai',
       inputArtifacts: []
     });
   });

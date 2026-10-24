@@ -2,7 +2,7 @@ import { fireEvent, render, screen, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { expect, it, vi } from 'vitest';
 import OfficialModelSelect from './OfficialModelSelect.js';
-import { gatewayRecommendedModelId, type GatewayModel } from '@opencreator/protocol';
+import { gatewayRecommendedModelId, type GatewayModel } from '@vishnucreator/protocol';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 
 function catalog() {

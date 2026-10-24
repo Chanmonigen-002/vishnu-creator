@@ -10,7 +10,7 @@ import {
 import { join, resolve } from 'node:path';
 import { promisify } from 'node:util';
 import { fileURLToPath } from 'node:url';
-import type { CreatorArtifact, CreatorJob, CreatorServicesConfig } from '@opencreator/protocol';
+import type { CreatorArtifact, CreatorJob, CreatorServicesConfig } from '@vishnucreator/protocol';
 import type { FastifyInstance } from 'fastify';
 import sharp from 'sharp';
 import { afterEach, describe, expect, it } from 'vitest';
@@ -18,8 +18,8 @@ import { buildServer } from '../../src/api/server.js';
 import { parseCreatorServicesConfig } from '../../src/creator-services/config-store.js';
 
 const repoRoot = resolve(fileURLToPath(new URL('../../../../', import.meta.url)));
-const enabled = process.env.OPENCREATOR_RUN_REAL_STICKMAN_E2E === '1';
-const configPath = process.env.OPENCREATOR_STICKMAN_E2E_CONFIG;
+const enabled = process.env.VISHNUCREATOR_RUN_REAL_STICKMAN_E2E === '1';
+const configPath = process.env.VISHNUCREATOR_STICKMAN_E2E_CONFIG;
 const acceptanceSourceText = [
   '学习复杂主题可以分成三步。',
   '第一步，先明确要解决的问题。',
@@ -27,12 +27,12 @@ const acceptanceSourceText = [
   '第三步，复盘结果并记录下一次改进。',
   '这样做能把模糊目标转化为可执行行动。'
 ].join('');
-const krillinRuntimeRoot = resolve(
-  process.env.OPENCREATOR_CREATOR_RUNTIME_ROOT
-    ?? join(repoRoot, 'apps', 'desktop', '.pack', 'creator-runtime', 'krillinai')
+const vishnuRuntimeRoot = resolve(
+  process.env.VISHNUCREATOR_CREATOR_RUNTIME_ROOT
+    ?? join(repoRoot, 'apps', 'desktop', '.pack', 'creator-runtime', 'vishnuai')
 );
 const stickmanRuntimeRoot = resolve(
-  process.env.OPENCREATOR_STICKMAN_RUNTIME_ROOT
+  process.env.VISHNUCREATOR_STICKMAN_RUNTIME_ROOT
     ?? join(repoRoot, 'apps', 'desktop', '.pack', 'stickman-runtime')
 );
 const execFileAsync = promisify(execFile);
@@ -43,8 +43,8 @@ let previousStickmanRuntimeRoot: string | undefined;
 afterEach(async () => {
   await server?.close();
   server = undefined;
-  restoreEnvironment('OPENCREATOR_CREATOR_RUNTIME_ROOT', previousCreatorRuntimeRoot);
-  restoreEnvironment('OPENCREATOR_STICKMAN_RUNTIME_ROOT', previousStickmanRuntimeRoot);
+  restoreEnvironment('VISHNUCREATOR_CREATOR_RUNTIME_ROOT', previousCreatorRuntimeRoot);
+  restoreEnvironment('VISHNUCREATOR_STICKMAN_RUNTIME_ROOT', previousStickmanRuntimeRoot);
 });
 
 describe('stickman real provider pipeline', () => {
@@ -52,9 +52,9 @@ describe('stickman real provider pipeline', () => {
     '通过公开 Creator API 生成并验证火柴人视频与旁白字幕',
     async () => {
       if (configPath === undefined) {
-        throw new Error('真实火柴人 E2E 需要 OPENCREATOR_STICKMAN_E2E_CONFIG');
+        throw new Error('真实火柴人 E2E 需要 VISHNUCREATOR_STICKMAN_E2E_CONFIG');
       }
-      for (const path of [configPath, krillinRuntimeRoot, stickmanRuntimeRoot]) {
+      for (const path of [configPath, vishnuRuntimeRoot, stickmanRuntimeRoot]) {
         if (!existsSync(path)) throw new Error(`真实火柴人 E2E 依赖不存在：${path}`);
       }
 
@@ -62,10 +62,10 @@ describe('stickman real provider pipeline', () => {
       const tts = configuredTts(config);
       const imageConfig = configuredImage(config);
       const evidenceRoot = createEvidenceRoot();
-      previousCreatorRuntimeRoot = process.env.OPENCREATOR_CREATOR_RUNTIME_ROOT;
-      previousStickmanRuntimeRoot = process.env.OPENCREATOR_STICKMAN_RUNTIME_ROOT;
-      process.env.OPENCREATOR_CREATOR_RUNTIME_ROOT = krillinRuntimeRoot;
-      process.env.OPENCREATOR_STICKMAN_RUNTIME_ROOT = stickmanRuntimeRoot;
+      previousCreatorRuntimeRoot = process.env.VISHNUCREATOR_CREATOR_RUNTIME_ROOT;
+      previousStickmanRuntimeRoot = process.env.VISHNUCREATOR_STICKMAN_RUNTIME_ROOT;
+      process.env.VISHNUCREATOR_CREATOR_RUNTIME_ROOT = vishnuRuntimeRoot;
+      process.env.VISHNUCREATOR_STICKMAN_RUNTIME_ROOT = stickmanRuntimeRoot;
       server = await buildServer({
         token: 'stickman-real-e2e',
         dataDir: join(evidenceRoot, 'runtime'),
@@ -118,7 +118,7 @@ describe('stickman real provider pipeline', () => {
       await continueAfterArtifact(jobId, visualsReady, 'visual_validation', 'continue-after-visuals');
       const completed = await waitForJob(jobId, job => job.status === 'completed', 45 * 60_000);
 
-      const ffprobePath = findRuntimeExecutable(krillinRuntimeRoot, /(?:^|\/)ffprobe(?:\.exe)?$/i);
+      const ffprobePath = findRuntimeExecutable(vishnuRuntimeRoot, /(?:^|\/)ffprobe(?:\.exe)?$/i);
       const stageById = new Map(completed.stages.map(stage => [stage.id, stage]));
       expect(completed.activities.filter(activity => activity.action === 'approve-script')).toHaveLength(1);
       expect(completed.activities.some(activity => activity.action === 'approve-visuals')).toBe(false);
@@ -796,7 +796,7 @@ function findRuntimeExecutable(runtimeRoot: string, pattern: RegExp): string {
 function createEvidenceRoot(): string {
   const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
   const root = resolve(
-    process.env.OPENCREATOR_STICKMAN_E2E_EVIDENCE_DIR
+    process.env.VISHNUCREATOR_STICKMAN_E2E_EVIDENCE_DIR
       ?? join(repoRoot, 'test-results', 'stickman-real-pipeline', timestamp)
   );
   mkdirSync(root, { recursive: true });

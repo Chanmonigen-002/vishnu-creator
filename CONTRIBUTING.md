@@ -1,8 +1,8 @@
-# Contributing to OpenCreator
+# Contributing to Vishnu Creator
 
 > English | [简体中文](./docs/zh/CONTRIBUTING.md) | [日本語](./docs/ja/CONTRIBUTING.md) | [한국어](./docs/ko/CONTRIBUTING.md) | [Bahasa Indonesia](./docs/id/CONTRIBUTING.md) | [Español](./docs/es/CONTRIBUTING.md) | [Français](./docs/fr/CONTRIBUTING.md) | [Deutsch](./docs/de/CONTRIBUTING.md) | [Português](./docs/pt/CONTRIBUTING.md) | [Русский](./docs/ru/CONTRIBUTING.md) | [العربية](./docs/ar/CONTRIBUTING.md)
 
-Thanks for thinking about contributing. OpenCreator is a local-first creator workspace built on the Codex agent loop, and most of its value lives in focused additions: one Skill folder, one creation template, one well-scoped fix. This guide tells you where each type of contribution lives and what bar a PR has to clear before we merge it.
+Thanks for thinking about contributing. Vishnu Creator is a local-first creator workspace built on the Codex agent loop, and most of its value lives in focused additions: one Skill folder, one creation template, one well-scoped fix. This guide tells you where each type of contribution lives and what bar a PR has to clear before we merge it.
 
 ---
 
@@ -19,7 +19,7 @@ Thanks for thinking about contributing. OpenCreator is a local-first creator wor
 
 ## Where to ask and who reviews
 
-Use an [issue](https://github.com/krillinai/OpenCreator/issues/new) to discuss an idea or ask where it belongs; we'll point you to the right area. When submitting a PR, mention the relevant member of [The Crew](./README.md#the-crew) for code and bug fixes, creation templates, design and assets, or Skills and docs. The crew helps with contribution standards, reviews, and community questions; merging follows repository permissions and required checks.
+Use an [issue](https://github.com/vishnuai/Vishnu Creator/issues/new) to discuss an idea or ask where it belongs; we'll point you to the right area. When submitting a PR, mention the relevant member of [The Crew](./README.md#the-crew) for code and bug fixes, creation templates, design and assets, or Skills and docs. The crew helps with contribution standards, reviews, and community questions; merging follows repository permissions and required checks.
 
 All participants in project spaces are expected to follow the [Code of Conduct](./CODE_OF_CONDUCT.md).
 
@@ -30,8 +30,8 @@ All participants in project spaces are expected to follow the [Code of Conduct](
 The full setup lives in the [README Quick Start](./README.md#quick-start). The TL;DR for contributors:
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable          # selects the pinned pnpm from packageManager
 pnpm install
 pnpm web:dev             # web + local daemon on demand
@@ -45,7 +45,7 @@ Node.js 22+ and a Codex CLI executable are required. Open `http://127.0.0.1:1986
 
 ## How to contribute
 
-1. Describe the problem, use case, and expected behavior in an [issue](https://github.com/krillinai/OpenCreator/issues).
+1. Describe the problem, use case, and expected behavior in an [issue](https://github.com/vishnuai/Vishnu Creator/issues).
 2. Create a focused feature or fix branch from the latest development branch.
 3. Follow the existing architecture: implement general product capabilities **once** in Web and Daemon, and isolate native Desktop differences behind explicit capabilities (for example `canSelectDirectory`).
 4. Add appropriate unit, integration, or E2E coverage for behavior changes, and list both completed and skipped verification in the PR.
@@ -68,4 +68,4 @@ Node.js 22+ and a Codex CLI executable are required. Open `http://127.0.0.1:1986
 
 ---
 
-OpenCreator · Create locally, work continuously.
+Vishnu Creator · Create locally, work continuously.

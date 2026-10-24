@@ -3,7 +3,7 @@ import {
   creatorRuntimeWorkspaces,
   type CreatorJson,
   type CreatorPresetRequirements
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 
 const localeTextSchema = z.object({

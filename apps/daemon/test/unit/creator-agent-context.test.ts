@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import type { CreatorJob } from '@opencreator/protocol';
+import type { CreatorJob } from '@vishnucreator/protocol';
 import { createAgentContextBuilder } from '../../src/creator/agent/context-builder.js';
 import { createDefaultCreatorTemplateRegistry } from '../../src/creator/templates/registry.js';
 
@@ -112,7 +112,7 @@ function job(): CreatorJob {
         id: 'stage-1',
         jobId: 'job-1',
         stageId: 'subtitle',
-        executor: 'krillinai',
+        executor: 'vishnuai',
         status: 'succeeded',
         dispatchStatus: 'finished',
         claimOwner: null,
@@ -135,7 +135,7 @@ function job(): CreatorJob {
         id: 'stage-2',
         jobId: 'job-1',
         stageId: 'render-horizontal',
-        executor: 'krillinai',
+        executor: 'vishnuai',
         status: 'succeeded',
         dispatchStatus: 'finished',
         claimOwner: null,

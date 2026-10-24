@@ -5,7 +5,7 @@ import type {
   ScheduleDetailResponse,
   ScheduleResponse,
   UpdateScheduleRequest,
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   CircleAlert,
   CircleCheck,
@@ -21,7 +21,7 @@ import {
 } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import type { OpenCreatorProject } from '../projects/project-model.js';
+import type { VishnuCreatorProject } from '../projects/project-model.js';
 import type { ScheduleSidebarTaskStatus } from '../shell/sidebar-task-model.js';
 import { IssueList } from '../issues/IssuePresenter.js';
 import { usePageIssueState } from '../issues/page-issue-state.js';
@@ -47,7 +47,7 @@ export function ScheduleThreadHeader(props: {
   status: ScheduleSidebarTaskStatus;
   nextRunLabel?: string;
   service: ScheduleThreadService;
-  projects: OpenCreatorProject[];
+  projects: VishnuCreatorProject[];
   profiles?: CodexProfileResponse[];
   onRunNow(schedule: ScheduleResponse): Promise<void> | void;
   onScheduleChanged(schedule: ScheduleResponse): void;

@@ -1,8 +1,8 @@
 import Fastify from 'fastify';
 import { describe, expect, it, vi } from 'vitest';
-import { createKrillinCodexLlmGateway } from '../../src/creator/krillin/codex-llm-gateway.js';
+import { createVishnuCodexLlmGateway } from '../../src/creator/vishnu/codex-llm-gateway.js';
 
-describe('Krillin Codex LLM gateway', () => {
+describe('Vishnu Codex LLM gateway', () => {
   it('cancels in-flight HTTP requests on close and preserves upstream HTTP failures', async () => {
     const createHost = vi.fn();
     const fetcher = vi.fn<typeof fetch>()
@@ -10,13 +10,13 @@ describe('Krillin Codex LLM gateway', () => {
       .mockImplementationOnce(async (_url, options) => new Promise((_resolve, reject) => {
         options?.signal?.addEventListener('abort', () => reject(new Error('Request cancelled')), { once: true });
       }));
-    const gateway = createKrillinCodexLlmGateway({ codexBin: '/fake/codex', codexHome: '/unused', cwd: '/unused', createHost, fetcher,
+    const gateway = createVishnuCodexLlmGateway({ codexBin: '/fake/codex', codexHome: '/unused', cwd: '/unused', createHost, fetcher,
       readLocalConfiguration: async () => ({ authentication: 'api_key', wireApi: 'responses', provider: {
         baseUrl: 'https://local.example/v1', apiKey: 'provider-key', model: 'local-model' } }) });
     const server = Fastify();
     await gateway.register(server);
     const headers = { authorization: `Bearer ${gateway.config('http://localhost').apiKey}` };
-    const request = { method: 'POST' as const, url: '/internal/krillin-llm/v1/chat/completions', headers,
+    const request = { method: 'POST' as const, url: '/internal/vishnu-llm/v1/chat/completions', headers,
       payload: { messages: [{ role: 'user', content: 'Hello' }], reasoning_effort: 'none' } };
     try {
       const rejected = await server.inject(request);
@@ -40,13 +40,13 @@ describe('Krillin Codex LLM gateway', () => {
       return Response.json({ status: 'completed', output: [{ type: 'message', content: [{ type: 'output_text', text: '你好' }] }] });
     });
     const createHost = vi.fn();
-    const gateway = createKrillinCodexLlmGateway({ codexBin: '/fake/codex', codexHome: '/unused', cwd: '/unused', createHost, fetcher,
+    const gateway = createVishnuCodexLlmGateway({ codexBin: '/fake/codex', codexHome: '/unused', cwd: '/unused', createHost, fetcher,
       readLocalConfiguration: async () => ({ authentication: 'api_key', wireApi: 'responses', provider: {
         baseUrl: 'https://local.example/v1', apiKey: 'provider-key', model: 'local-model' } }) });
     const server = Fastify();
     await gateway.register(server);
     const config = gateway.config('http://localhost');
-    const requests = Array.from({ length: 3 }, () => server.inject({ method: 'POST', url: '/internal/krillin-llm/v1/chat/completions',
+    const requests = Array.from({ length: 3 }, () => server.inject({ method: 'POST', url: '/internal/vishnu-llm/v1/chat/completions',
       headers: { authorization: `Bearer ${config.apiKey}` }, payload: { messages: [{ role: 'user', content: 'Hello' }], reasoning_effort: 'none' } }).then(response => response));
     try {
       await vi.waitFor(() => expect(fetcher).toHaveBeenCalledTimes(3));
@@ -85,7 +85,7 @@ describe('Krillin Codex LLM gateway', () => {
       close: vi.fn(async () => undefined)
     }));
     let configurationVersion = 'first';
-    const gateway = createKrillinCodexLlmGateway({
+    const gateway = createVishnuCodexLlmGateway({
       codexBin: '/bundled/codex',
       codexHome: '/isolated/codex-home',
       cwd: '/workspace',
@@ -98,14 +98,14 @@ describe('Krillin Codex LLM gateway', () => {
 
     const unauthorized = await server.inject({
       method: 'POST',
-      url: '/internal/krillin-llm/v1/chat/completions',
+      url: '/internal/vishnu-llm/v1/chat/completions',
       payload: { messages: [{ role: 'user', content: 'translate' }] }
     });
     expect(unauthorized.statusCode).toBe(401);
 
     const response = await server.inject({
       method: 'POST',
-      url: '/internal/krillin-llm/v1/chat/completions',
+      url: '/internal/vishnu-llm/v1/chat/completions',
       headers: { authorization: `Bearer ${config.apiKey}` },
       payload: {
         model: 'codex',
@@ -127,7 +127,7 @@ describe('Krillin Codex LLM gateway', () => {
       developerInstructions: expect.stringContaining('valid JSON')
     }));
     const origin = await server.listen({ port: 0, host: '127.0.0.1' });
-    const streamed = await fetch(`${origin}/internal/krillin-llm/v1/chat/completions`, {
+    const streamed = await fetch(`${origin}/internal/vishnu-llm/v1/chat/completions`, {
       method: 'POST',
       headers: {
         authorization: `Bearer ${config.apiKey}`,
@@ -149,7 +149,7 @@ describe('Krillin Codex LLM gateway', () => {
     expect(run).toHaveBeenCalledTimes(2);
     expect(createHost).toHaveBeenCalledWith(expect.objectContaining({ codexHome: '/following/local-home' }));
     configurationVersion = 'changed';
-    expect((await server.inject({ method: 'POST', url: '/internal/krillin-llm/v1/chat/completions',
+    expect((await server.inject({ method: 'POST', url: '/internal/vishnu-llm/v1/chat/completions',
       headers: { authorization: `Bearer ${config.apiKey}` },
       payload: { messages: [{ role: 'user', content: 'New configuration' }] }
     })).statusCode).toBe(200);

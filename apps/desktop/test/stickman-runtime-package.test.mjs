@@ -84,7 +84,7 @@ describe('Stickman Runtime package contract', () => {
       'utf8'
     );
     expect(source).toContain("targetPlatform === 'darwin'");
-    expect(source).toContain("OPENCREATOR_REQUIRE_DEVELOPER_ID === '1'");
+    expect(source).toContain("VISHNUCREATOR_REQUIRE_DEVELOPER_ID === '1'");
     expect(source).toContain("manifest.macSigningMode === 'developer-id'");
     expect(source).toContain('requiresDeveloperIdSignature()');
     expect(source).toContain('Optional Remotion rendering resources must not be embedded in the App');

@@ -14,7 +14,7 @@ Bilibili `?p=N` selects a single part. The shared URL parser retains that select
 
 Part lookup has a visible loading state and retry action. Invalid or out-of-range part parameters do not fall back to P1. Failed lookup does not start translation. The workflow API and shared Agent preflight both validate the selection, so Agent requests cannot bypass the UI. Collection metadata is cached for 30 seconds to avoid repeating the same upstream request for preview and validation.
 
-Audio preparation, deferred video composition, and title/description lookup use `--no-playlist`. KrillinAI URL normalization preserves an explicit part for both audio and video. Direct CLI calls without a part are defensively limited to P1; the product workflow requires an explicit selection for multipart videos and never starts a whole-collection download.
+Audio preparation, deferred video composition, and title/description lookup use `--no-playlist`. VishnuAI URL normalization preserves an explicit part for both audio and video. Direct CLI calls without a part are defensively limited to P1; the product workflow requires an explicit selection for multipart videos and never starts a whole-collection download.
 
 ## On-demand subtitle preview
 

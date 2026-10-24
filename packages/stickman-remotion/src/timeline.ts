@@ -1,7 +1,7 @@
 import {
   stickmanCanvasForRatio,
   type StickmanRatio
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export type StickmanTimelineProps = {
   ratio: StickmanRatio;

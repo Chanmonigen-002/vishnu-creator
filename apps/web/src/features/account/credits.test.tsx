@@ -1,7 +1,7 @@
 import { act, cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { ApiClientError } from '../../runtime/errors.js';
 import type { GatewayAccountSettingsService, GatewayBillingSummary, GatewayRechargeOrder } from '../../services/gateway-account-service.js';
@@ -9,15 +9,15 @@ import { GatewaySubscriptionSettingsView } from '../settings/GatewaySubscription
 
 afterEach(() => { cleanup(); sessionStorage.clear(); });
 const account: GatewayAccountState = { source: 'gateway', authState: 'signed_in', activationState: 'ready', account: { id: 'account-a', email: 'creator@example.test', verified: true }, bindingVersion: null, models: [], activationError: null };
-const summary: GatewayBillingSummary = { balance: { availableUnits: '413937000', reservedUnits: '0', periodEnd: null, asOf: '2026-10-10T01:00:00Z' }, subscription: null, billingAvailable: true, plansUrl: 'https://www.open-creator.ai/pricing' };
+const summary: GatewayBillingSummary = { balance: { availableUnits: '413937000', reservedUnits: '0', periodEnd: null, asOf: '2026-10-10T01:00:00Z' }, subscription: null, billingAvailable: true, plansUrl: 'https://www.vishnu-creator.ai/pricing' };
 const order: GatewayRechargeOrder = { id: 'order-a', planId: 'starter', currency: 'usd', amountUnits: '500', creditUnits: '2500000000', status: 'pending', paymentStatus: 'pending', creditStatus: 'pending', reviewRequired: false, paymentMode: 'test', createdAt: new Date().toISOString(), paidAt: null, completedAt: null, expiresAt: '2099-01-01T00:00:00Z' };
-const handoff = 'https://www.open-creator.ai/auth?lang=zh#handoff=' + 'a'.repeat(43);
+const handoff = 'https://www.vishnu-creator.ai/auth?lang=zh#handoff=' + 'a'.repeat(43);
 function service(): GatewayAccountSettingsService {
   return { getState: vi.fn(async () => account), start: vi.fn(), cancel: vi.fn(), logout: vi.fn(), activate: vi.fn(), setSource: vi.fn(), selectModel: vi.fn(), getBalance: vi.fn(), getSummary: vi.fn(async () => summary),
     openWebAccount: vi.fn(async () => ({ url: handoff })), getPlans: vi.fn(), getOrders: vi.fn(async () => ({ items: [] })), getOrder: vi.fn(async () => ({ order })), getCreditGrants: vi.fn(), checkout: vi.fn(), portal: vi.fn() };
 }
 function page(value: GatewayAccountSettingsService, openExternal = vi.fn(), state = account, billingOrderId?: string, hasActiveTasks = false) {
-  return <LanguageProvider initialPreference="zh-CN"><GatewaySubscriptionSettingsView service={value} embedded accountState={state} hasActiveTasks={hasActiveTasks} openExternal={openExternal} billingOrderId={billingOrderId} billingReturnUrl="opencreator://billing/return"/></LanguageProvider>;
+  return <LanguageProvider initialPreference="zh-CN"><GatewaySubscriptionSettingsView service={value} embedded accountState={state} hasActiveTasks={hasActiveTasks} openExternal={openExternal} billingOrderId={billingOrderId} billingReturnUrl="vishnucreator://billing/return"/></LanguageProvider>;
 }
 
 it('keeps reserved credits in the balance and changes it only when usage settles', async () => {
@@ -136,7 +136,7 @@ it('falls back to the existing website when an older gateway lacks handoffs', as
   const url = new URL(open.mock.calls[0]![0]);
   expect(url.pathname).toBe('/pricing');
   expect(url.searchParams.get('account')).toBe('account-a');
-  expect(url.searchParams.get('returnTo')).toBe('opencreator://billing/return');
+  expect(url.searchParams.get('returnTo')).toBe('vishnucreator://billing/return');
   expect(screen.queryByRole('alert')).not.toBeInTheDocument();
 });
 
@@ -172,7 +172,7 @@ it('finds a new website order on focus and distinguishes payment from credit com
   await act(async () => window.dispatchEvent(new Event('focus')));
   expect(await screen.findByText('充值成功，已到账 2500 积分')).toBeInTheDocument();
   expect(screen.getByText('2914')).toBeInTheDocument();
-  expect(sessionStorage.getItem('opencreator:billing-visit:account-a')).toBeNull();
+  expect(sessionStorage.getItem('vishnucreator:billing-visit:account-a')).toBeNull();
 });
 
 it('verifies the returned order under the signed-in account rather than trusting the URL', async () => {
@@ -183,7 +183,7 @@ it('verifies the returned order under the signed-in account rather than trusting
 });
 
 it('restores a website visit and ignores orders that already existed', async () => {
-  sessionStorage.setItem('opencreator:billing-visit:account-a', JSON.stringify({ startedAt: Date.now(), knownOrders: ['old-order'] }));
+  sessionStorage.setItem('vishnucreator:billing-visit:account-a', JSON.stringify({ startedAt: Date.now(), knownOrders: ['old-order'] }));
   const value = service(); vi.mocked(value.getOrders).mockResolvedValue({ items: [{ ...order, id: 'old-order' }] });
   render(page(value)); expect(await screen.findByText('414')).toBeInTheDocument();
   await waitFor(() => expect(value.getOrders).toHaveBeenCalled());
@@ -198,5 +198,5 @@ it('ignores a website response from the previous account', async () => {
   view.rerender(page(value, open, { ...account, account: { id: 'account-b', email: 'other@example.test', verified: true } }));
   await act(async () => finish({ url: handoff }));
   expect(open).not.toHaveBeenCalled();
-  expect(sessionStorage.getItem('opencreator:billing-visit:account-a')).toBeNull();
+  expect(sessionStorage.getItem('vishnucreator:billing-visit:account-a')).toBeNull();
 });

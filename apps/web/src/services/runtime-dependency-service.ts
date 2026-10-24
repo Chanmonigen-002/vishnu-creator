@@ -1,4 +1,4 @@
-import type { CreatorRuntimeComponent, CreatorRuntimeComponentsResponse, CreatorYtDlpStatusResponse } from '@opencreator/protocol';
+import type { CreatorRuntimeComponent, CreatorRuntimeComponentsResponse, CreatorYtDlpStatusResponse } from '@vishnucreator/protocol';
 
 type ClientLike = {
   get(path: string): Promise<unknown>;

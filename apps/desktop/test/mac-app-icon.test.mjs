@@ -36,7 +36,7 @@ describe('macOS app icon without Xcode', () => {
   });
 
   it.skipIf(process.platform !== 'darwin')('verifies the generated icon pixels against the source PNG', async () => {
-    const root = mkdtempSync(join(tmpdir(), 'opencreator-icon-test-'));
+    const root = mkdtempSync(join(tmpdir(), 'vishnucreator-icon-test-'));
     temporaryDirectories.push(root);
     const iconset = join(root, 'original.iconset');
     const bundled = join(root, 'icon.icns');
@@ -51,14 +51,14 @@ describe('macOS app icon without Xcode', () => {
   });
 
   it.skipIf(process.platform !== 'darwin')('fails if the macOS icon is absent', async () => {
-    const root = mkdtempSync(join(tmpdir(), 'opencreator-icon-test-'));
+    const root = mkdtempSync(join(tmpdir(), 'vishnucreator-icon-test-'));
     temporaryDirectories.push(root);
     await expect(prepareMacAppIcon({
       electronPlatformName: 'darwin',
       appOutDir: root,
       packager: {
         projectDir: new URL('..', import.meta.url).pathname,
-        appInfo: { productFilename: 'OpenCreator' }
+        appInfo: { productFilename: 'VishnuCreator' }
       }
     })).rejects.toThrow();
   });

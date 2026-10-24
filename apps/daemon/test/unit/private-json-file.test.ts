@@ -21,7 +21,7 @@ describe('private JSON configuration file', () => {
   });
 
   it('writes, reads, and deletes a user-private JSON document', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-private-config-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-private-config-'));
     const path = join(root, 'config', 'settings.json');
     const value = {
       apiKey: 'sk-local-file',

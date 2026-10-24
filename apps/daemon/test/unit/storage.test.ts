@@ -20,7 +20,7 @@ afterEach(() => {
 
 describe('runtime storage', () => {
   it('creates schema and persists a run', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const runs = createRunRepository(db);
 
@@ -55,7 +55,7 @@ describe('runtime storage', () => {
   });
 
   it('creates tables and enforces unique event sequence per run', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const tableRows = db
       .prepare(
@@ -95,7 +95,7 @@ describe('runtime storage', () => {
   });
 
   it('normalizes persisted run event timestamps to UTC ISO strings', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-event-time-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-event-time-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const runs = createRunRepository(db);
 
@@ -135,7 +135,7 @@ describe('runtime storage', () => {
   });
 
   it('creates project ownership schema and enforces active directory and Codex mapping uniqueness', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-projects-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-projects-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
 
     expect(
@@ -211,7 +211,7 @@ describe('runtime storage', () => {
   });
 
   it('persists nullable conversation pin timestamps across database restarts', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-thread-pin-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-thread-pin-'));
     const databasePath = join(tempDir, 'app.sqlite');
     db = openRuntimeDatabase(databasePath);
     let threads = createThreadRepository(db);
@@ -239,8 +239,8 @@ describe('runtime storage', () => {
       .toBe('2026-08-06T00:00:00.000Z');
   });
 
-  it('assigns only unowned OpenCreator conversation threads to projects', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-project-assignment-'));
+  it('assigns only unowned VishnuCreator conversation threads to projects', () => {
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-project-assignment-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     db.prepare(`
       INSERT INTO projects (
@@ -253,7 +253,7 @@ describe('runtime storage', () => {
     for (const input of [
       {
         id: 'thread_unowned',
-        origin: 'opencreator_created' as const,
+        origin: 'vishnucreator_created' as const,
         purpose: 'conversation' as const
       },
       {
@@ -263,7 +263,7 @@ describe('runtime storage', () => {
       },
       {
         id: 'thread_schedule',
-        origin: 'opencreator_created' as const,
+        origin: 'vishnucreator_created' as const,
         purpose: 'schedule_task' as const
       }
     ]) {
@@ -279,7 +279,7 @@ describe('runtime storage', () => {
     }
 
     expect(
-      threads.listUnassignedOpenCreatorConversationThreads().map(thread => thread.id)
+      threads.listUnassignedVishnuCreatorConversationThreads().map(thread => thread.id)
     ).toEqual(['thread_unowned']);
     expect(threads.assignProject({
       id: 'thread_unowned',
@@ -300,7 +300,7 @@ describe('runtime storage', () => {
   });
 
   it('creates the persistent notification outbox and pending cursor index', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
 
     expect(
@@ -329,7 +329,7 @@ describe('runtime storage', () => {
   });
 
   it('creates attachment metadata and cleanup indexes', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
 
     expect(
@@ -364,7 +364,7 @@ describe('runtime storage', () => {
   });
 
   it('creates codex session index tables, full-text search state, and indexes', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
 
     const tableRows = db
@@ -433,7 +433,7 @@ describe('runtime storage', () => {
   });
 
   it('creates codex skill operation log table', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
 
     const tableRows = db
@@ -452,7 +452,7 @@ describe('runtime storage', () => {
   });
 
   it('creates codex mcp operation log table', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
 
     const tableRows = db
@@ -471,7 +471,7 @@ describe('runtime storage', () => {
   });
 
   it('creates codex skill market install table and updated-at index', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
 
     const tableRows = db
@@ -490,7 +490,7 @@ describe('runtime storage', () => {
   });
 
   it('creates scheduler tables, indexes, and run timeout column', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
 
     const tableRows = db
@@ -575,7 +575,7 @@ describe('runtime storage', () => {
   });
 
   it('migrates legacy schedule operations without changing existing actor-less rows', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     const dbPath = join(tempDir, 'app.sqlite');
     const legacyDb = new Database(dbPath);
     legacyDb.exec(`
@@ -667,7 +667,7 @@ describe('runtime storage', () => {
   });
 
   it('enforces unique active schedule thread bindings while allowing deleted history', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const insertSchedule = db.prepare(`
       INSERT INTO schedules (
@@ -699,7 +699,7 @@ describe('runtime storage', () => {
   });
 
   it('persists codex skill operations', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
     db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
     const operations = createSkillOperationRepository(db);
 
@@ -724,7 +724,7 @@ describe('runtime storage', () => {
   });
 
 function createTestDatabase(): Database.Database {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
   db = openRuntimeDatabase(join(tempDir, 'app.sqlite'));
   return db;
 }
@@ -851,7 +851,7 @@ it('lists thread run history and preserves archived thread data', () => {
 });
 
 it('migrates legacy storage and preserves existing thread operations', () => {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
   const dbPath = join(tempDir, 'app.sqlite');
   const legacyDb = new Database(dbPath);
   legacyDb.exec(`
@@ -974,7 +974,7 @@ it('migrates legacy storage and preserves existing thread operations', () => {
 });
 
 it('normalizes retired knowledge threads without deleting conversation data', () => {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-knowledge-migration-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-knowledge-migration-'));
   const dbPath = join(tempDir, 'app.sqlite');
   db = openRuntimeDatabase(dbPath);
   db.exec(`
@@ -1015,7 +1015,7 @@ it('normalizes retired knowledge threads without deleting conversation data', ()
 });
 
 it('migrates legacy parallel schedules to queue before dedicated threads are attached', () => {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-storage-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-storage-'));
   const dbPath = join(tempDir, 'app.sqlite');
   const legacyDb = new Database(dbPath);
   legacyDb.exec(`

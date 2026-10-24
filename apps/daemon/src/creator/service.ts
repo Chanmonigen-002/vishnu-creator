@@ -9,11 +9,11 @@ import type {
   CreatorJobStatus,
   CreatorJson,
   CreatorPresetOrigin
-} from '@opencreator/protocol';
-import { wechatArticleSourceLimit } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { wechatArticleSourceLimit } from '@vishnucreator/protocol';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { randomUUID } from 'node:crypto';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { basename, extname, join, dirname } from 'node:path';
 import type { CreatorRepository } from './repository.js';
 import { CreatorProviderRequestLedger } from './provider-requests.js';
@@ -26,7 +26,7 @@ import {
 import type { CreatorTemplateRegistry } from './templates/types.js';
 import { videoTranslationArtifactRefsPatch } from './templates/video-translation-results.js';
 import { formatSrtTimestamp, parseSrt } from './validators/srt.js';
-import { normalizeSubtitleRenderCues } from '@opencreator/protocol';
+import { normalizeSubtitleRenderCues } from '@vishnucreator/protocol';
 import { detectSubtitleLanguage } from './subtitle-language.js';
 import {
   createBlankCreationFingerprint,
@@ -436,7 +436,7 @@ export function createCreatorService(input: {
         });
         const fileName = typeof artifact.metadata.fileName === 'string'
           ? artifact.metadata.fileName
-          : 'OpenCreator-video.mp4';
+          : 'VishnuCreator-video.mp4';
         const size = typeof artifact.metadata.size === 'number'
           ? artifact.metadata.size
           : typeof artifact.metadata.bytes === 'number'
@@ -1485,7 +1485,7 @@ function writeEditedSubtitleFile(
 ): string {
   const extension = extname(sourcePath) || '.srt';
   const stem = basename(sourcePath, extname(sourcePath))
-    .replace(/(?:\.opencreator-(?:source|horizontal|vertical|bilingual)-v\d+(?:-edit\d+)?)+$/, '');
+    .replace(/(?:\.vishnucreator-(?:source|horizontal|vertical|bilingual)-v\d+(?:-edit\d+)?)+$/, '');
   const label = kind === 'target_subtitle'
     ? 'horizontal'
     : kind === 'vertical_subtitle'
@@ -1503,7 +1503,7 @@ function writeEditedSubtitleFile(
     const editSuffix = edit === 1 ? '' : `-edit${edit}`;
     const outputPath = join(
       dirname(sourcePath),
-      `${stem}.opencreator-${label}-v${resultVersion}${editSuffix}${extension}`
+      `${stem}.vishnucreator-${label}-v${resultVersion}${editSuffix}${extension}`
     );
     try {
       writeFileSync(outputPath, `${content}\n`, { encoding: 'utf8', mode: 0o600, flag: 'wx' });

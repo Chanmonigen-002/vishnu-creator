@@ -2,7 +2,7 @@ import { mkdtemp, readFile, rm, writeFile, mkdir } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, expect, it, vi } from 'vitest';
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 import type { GatewayBootstrap } from '../../src/gateway/client.js';
 import { createOfficialModelAccess, isModelAccessFailure, modelAccessGroup, officialModelPolicy } from '../../src/gateway/model-access.js';
 

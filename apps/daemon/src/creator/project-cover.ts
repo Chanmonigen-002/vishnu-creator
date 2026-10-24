@@ -1,4 +1,4 @@
-import type { CreatorArtifact, CreatorJob } from '@opencreator/protocol';
+import type { CreatorArtifact, CreatorJob } from '@vishnucreator/protocol';
 import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { mkdir, rename, rm, stat } from 'node:fs/promises';

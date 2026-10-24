@@ -21,9 +21,9 @@ import type {
   CreatorStageDispatchStatus,
   CreatorStageRunStatus,
   IssueRetryResult,
-  OpenCreatorIssue
-} from '@opencreator/protocol';
-import { isOpenCreatorIssue, isPublicErrorFacts } from '@opencreator/protocol';
+  VishnuCreatorIssue
+} from '@vishnucreator/protocol';
+import { isVishnuCreatorIssue, isPublicErrorFacts } from '@vishnucreator/protocol';
 import type {
   CreatorIssueAssociationKind,
   NormalizedCreatorIssueInput
@@ -208,10 +208,10 @@ export type CreatorRepository = {
   }): CreatorProviderRequest;
   listArtifacts(jobId: string): CreatorArtifact[];
   listActivities(jobId: string): CreatorActivity[];
-  captureIssue(input: NormalizedCreatorIssueInput): OpenCreatorIssue;
-  getIssue(jobId: string, issueId: string): OpenCreatorIssue | undefined;
+  captureIssue(input: NormalizedCreatorIssueInput): VishnuCreatorIssue;
+  getIssue(jobId: string, issueId: string): VishnuCreatorIssue | undefined;
   getIssueResolutionAttemptId(jobId: string, issueId: string): string | undefined;
-  listIssues(jobId: string): OpenCreatorIssue[];
+  listIssues(jobId: string): VishnuCreatorIssue[];
   listIssueEvents(jobId: string, input?: {
     cursor?: string;
     limit?: number;
@@ -223,15 +223,15 @@ export type CreatorRepository = {
     associationKind: CreatorIssueAssociationKind;
     associationId: string;
     stageRunId?: string;
-  }): OpenCreatorIssue;
+  }): VishnuCreatorIssue;
   finishIssueResolution(input: {
     jobId: string;
     issueId: string;
     resolutionAttemptId: string;
     result: Exclude<IssueRetryResult, 'none'>;
-    publicFacts?: OpenCreatorIssue['publicFacts'];
+    publicFacts?: VishnuCreatorIssue['publicFacts'];
     technicalDetail?: string;
-  }): OpenCreatorIssue;
+  }): VishnuCreatorIssue;
   aggregateIssueStats(
     jobId: string,
     range: { from: string; to: string }
@@ -365,7 +365,7 @@ export function createCreatorRepository(
     `).all(jobId) as ProviderRequestRow[]
   ).map(hydrateProviderRequest);
 
-  const getIssue = (jobId: string, issueId: string): OpenCreatorIssue | undefined => {
+  const getIssue = (jobId: string, issueId: string): VishnuCreatorIssue | undefined => {
     const row = db.prepare(`
       SELECT * FROM creator_issues WHERE job_id = ? AND id = ?
     `).get(jobId, issueId) as IssueRow | undefined;
@@ -374,7 +374,7 @@ export function createCreatorRepository(
       .find(issue => issue.id === issueId);
   };
 
-  const listIssues = (jobId: string): OpenCreatorIssue[] => {
+  const listIssues = (jobId: string): VishnuCreatorIssue[] => {
     const active = db.prepare(`
       SELECT * FROM creator_issues
       WHERE job_id = ? AND status IN ('open', 'resolving')
@@ -777,7 +777,7 @@ export function createCreatorRepository(
       );
       return this.getProviderRequest(providerInput.id)!;
     },
-    captureIssue(input): OpenCreatorIssue {
+    captureIssue(input): VishnuCreatorIssue {
       return db.transaction(() => {
         const timestamp = now();
         const candidateId = idFactory('creator_issue');
@@ -842,7 +842,7 @@ export function createCreatorRepository(
           : {})
       };
     },
-    beginIssueResolution(input): OpenCreatorIssue {
+    beginIssueResolution(input): VishnuCreatorIssue {
       return db.transaction(() => {
         const current = getIssue(input.jobId, input.issueId);
         if (current === undefined) throw new Error('Creator issue not found');
@@ -870,7 +870,7 @@ export function createCreatorRepository(
         return getIssue(input.jobId, input.issueId)!;
       })();
     },
-    finishIssueResolution(input): OpenCreatorIssue {
+    finishIssueResolution(input): VishnuCreatorIssue {
       return db.transaction(() => {
         const row = db.prepare('SELECT * FROM creator_issues WHERE id = ? AND job_id = ?')
           .get(input.issueId, input.jobId) as IssueRow | undefined;
@@ -1217,8 +1217,8 @@ function recoveredIssueResult(db: Database.Database, row: IssueRow): Exclude<Iss
   return 'interrupted';
 }
 
-function hydrateIssue(row: IssueRow): OpenCreatorIssue {
-  const candidate: OpenCreatorIssue = {
+function hydrateIssue(row: IssueRow): VishnuCreatorIssue {
+  const candidate: VishnuCreatorIssue = {
     id: row.id,
     diagnosticId: row.diagnostic_id,
     code: row.code,
@@ -1244,7 +1244,7 @@ function hydrateIssue(row: IssueRow): OpenCreatorIssue {
     lastOccurredAt: toIso(row.last_occurred_at),
     ...(row.resolved_at === null ? {} : { resolvedAt: toIso(row.resolved_at) })
   };
-  if (!isOpenCreatorIssue(candidate)) {
+  if (!isVishnuCreatorIssue(candidate)) {
     throw new CreatorRepositoryDataError(`Creator issue ${row.id} is corrupt`);
   }
   return candidate;
@@ -1279,7 +1279,7 @@ function parseIssueSummaryParams(value: string): Record<string, string | number>
   return parsed as Record<string, string | number>;
 }
 
-function parseIssuePublicFacts(value: string): NonNullable<OpenCreatorIssue['publicFacts']> {
+function parseIssuePublicFacts(value: string): NonNullable<VishnuCreatorIssue['publicFacts']> {
   let parsed: unknown;
   try {
     parsed = JSON.parse(value);
@@ -1331,7 +1331,7 @@ function diagnosticId(id: string): string {
 function deriveLegacyStageIssues(
   jobId: string,
   stages: CreatorStageRun[]
-): OpenCreatorIssue[] {
+): VishnuCreatorIssue[] {
   const latestByScope = new Map<string, CreatorStageRun>();
   for (const stage of stages) {
     latestByScope.set(`${stage.stageId}\u0000${stage.scopeKey ?? ''}`, stage);
@@ -1436,10 +1436,10 @@ type IssueRow = {
   job_id: string;
   diagnostic_id: string;
   code: string;
-  source: OpenCreatorIssue['source'];
-  category: OpenCreatorIssue['category'];
-  severity: OpenCreatorIssue['severity'];
-  status: OpenCreatorIssue['status'];
+  source: VishnuCreatorIssue['source'];
+  category: VishnuCreatorIssue['category'];
+  severity: VishnuCreatorIssue['severity'];
+  status: VishnuCreatorIssue['status'];
   operation: string | null;
   stage_id: string | null;
   stage_run_id: string | null;

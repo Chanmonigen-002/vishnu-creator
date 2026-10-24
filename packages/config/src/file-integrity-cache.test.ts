@@ -49,7 +49,7 @@ describe('文件完整性缓存', () => {
 });
 
 function createFixture() {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-integrity-cache-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-integrity-cache-'));
   const file = join(tempDir, 'runtime.bin');
   const cachePath = join(tempDir, 'cache', 'integrity.json');
   writeFileSync(file, 'runtime-content');

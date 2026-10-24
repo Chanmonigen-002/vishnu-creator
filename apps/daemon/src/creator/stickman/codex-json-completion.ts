@@ -97,7 +97,7 @@ function completionThread(input: StickmanCodexJsonCompletionInput): RuntimeThrea
     id: `stickman-content-${input.jobId}`,
     title: `Stickman content: ${input.stageId}`,
     projectId: input.projectId,
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     cwd,
     canonicalCwd: cwd,
     workspaceMode: 'external',

@@ -1,4 +1,4 @@
-import type { AgentEventEnvelope, PublicRunStatus, RunResponse } from '@opencreator/protocol';
+import type { AgentEventEnvelope, PublicRunStatus, RunResponse } from '@vishnucreator/protocol';
 
 export type RunSubscriptionState = 'idle' | 'connecting' | 'connected' | 'disconnected';
 export type RunCancelState = 'idle' | 'requested' | 'failed';

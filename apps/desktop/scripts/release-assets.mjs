@@ -19,7 +19,7 @@ const releasePlatforms = [
   { platform: 'win32', arch: 'x64', label: 'Windows x64' }
 ];
 
-const krillinReleasePlatforms = [
+const vishnuReleasePlatforms = [
   ...releasePlatforms,
   { platform: 'linux', arch: 'x64', label: 'Linux x64' },
   { platform: 'linux', arch: 'arm64', label: 'Linux ARM64' }
@@ -30,7 +30,7 @@ export function releaseAssetNames(version, platform, arch) {
   if (!releasePlatforms.some(target => target.platform === platform && target.arch === arch)) {
     throw new Error(`Unsupported release platform: ${platform}-${arch}`);
   }
-  const prefix = `OpenCreator-${version}-${platform === 'darwin' ? 'mac' : 'win'}-${arch}`;
+  const prefix = `VishnuCreator-${version}-${platform === 'darwin' ? 'mac' : 'win'}-${arch}`;
   if (platform === 'win32') return [`${prefix}.exe`, 'latest.yml'];
   return [
     `${prefix}.dmg`,
@@ -40,12 +40,12 @@ export function releaseAssetNames(version, platform, arch) {
   ];
 }
 
-export function krillinReleaseAssetNames(version, platform, arch) {
+export function vishnuReleaseAssetNames(version, platform, arch) {
   assertVersion(version);
-  if (!krillinReleasePlatforms.some(target => (
+  if (!vishnuReleasePlatforms.some(target => (
     target.platform === platform && target.arch === arch
   ))) {
-    throw new Error(`Unsupported KrillinAI release platform: ${platform}-${arch}`);
+    throw new Error(`Unsupported VishnuAI release platform: ${platform}-${arch}`);
   }
   const os = platform === 'darwin'
     ? 'mac'
@@ -54,8 +54,8 @@ export function krillinReleaseAssetNames(version, platform, arch) {
       : 'linux';
   const extension = platform === 'win32' ? 'zip' : 'tar.gz';
   return [
-    `KrillinAI-Server-${version}-${os}-${arch}.${extension}`,
-    `KrillinAI-CLI-${version}-${os}-${arch}.${extension}`
+    `VishnuAI-Server-${version}-${os}-${arch}.${extension}`,
+    `VishnuAI-CLI-${version}-${os}-${arch}.${extension}`
   ];
 }
 
@@ -163,11 +163,11 @@ export function finalizeReleaseAssets({ directory, version, repository, highligh
   const desktopAssets = releasePlatforms.flatMap(
     ({ platform, arch }) => releaseAssetNames(version, platform, arch)
   );
-  const krillinAssets = krillinReleasePlatforms.flatMap(
-    ({ platform, arch }) => krillinReleaseAssetNames(version, platform, arch)
+  const vishnuAssets = vishnuReleasePlatforms.flatMap(
+    ({ platform, arch }) => vishnuReleaseAssetNames(version, platform, arch)
   );
   const remotionAssets = releasePlatforms.map(({ platform, arch }) => remotionReleaseAssetName(version, platform, arch));
-  const expected = [...desktopAssets, ...krillinAssets, ...remotionAssets];
+  const expected = [...desktopAssets, ...vishnuAssets, ...remotionAssets];
   const actual = readdirSync(directory, { withFileTypes: true });
   for (const entry of actual) {
     if (!entry.isFile() || (!expected.includes(entry.name) && entry.name !== 'SHA256SUMS.txt')) {
@@ -190,39 +190,39 @@ export function renderReleaseNotes({ version, repository, highlights = '' }) {
     const installer = releaseAssetNames(version, platform, arch)[0];
     return `| ${label} | [${installer}](${downloadRoot}/${installer}) |`;
   });
-  const krillinRows = (assetIndex) => krillinReleasePlatforms.map(
+  const vishnuRows = (assetIndex) => vishnuReleasePlatforms.map(
     ({ platform, arch, label }) => {
-      const asset = krillinReleaseAssetNames(version, platform, arch)[assetIndex];
+      const asset = vishnuReleaseAssetNames(version, platform, arch)[assetIndex];
       return `| ${label} | [${asset}](${downloadRoot}/${asset}) |`;
     }
   );
   const normalizedHighlights = highlights.trim();
   const notes = [
-    `# OpenCreator v${version}`,
+    `# VishnuCreator v${version}`,
     '',
     normalizedHighlights,
     '',
-    '## OpenCreator Desktop',
+    '## VishnuCreator Desktop',
     '',
     '| Platform | Installer |',
     '| --- | --- |',
     ...desktopRows,
     '',
-    '## KrillinAI Server',
+    '## VishnuAI Server',
     '',
     '| Platform | Server Binary |',
     '| --- | --- |',
-    ...krillinRows(0),
+    ...vishnuRows(0),
     '',
-    '## KrillinAI CLI',
+    '## VishnuAI CLI',
     '',
     '| Platform | CLI Binary |',
     '| --- | --- |',
-    ...krillinRows(1),
+    ...vishnuRows(1),
     '',
     '## Optional Rendering Components',
     '',
-    'Remotion rendering components are downloaded on demand by OpenCreator. They are not included in the Desktop installer.',
+    'Remotion rendering components are downloaded on demand by VishnuCreator. They are not included in the Desktop installer.',
     '',
     `[SHA-256 Checksums](${downloadRoot}/SHA256SUMS.txt)`,
     '',

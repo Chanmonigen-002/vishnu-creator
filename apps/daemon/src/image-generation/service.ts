@@ -5,7 +5,7 @@ import {
   type ImageGenerationResult,
   type PublicErrorFacts,
   type RuntimeErrorCode
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { randomBytes } from 'node:crypto';
 import { mkdir, readFile, rm, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
@@ -93,7 +93,7 @@ export function createImageGenerationService(input: {
       validateResultId(id);
       const images: ImageGenerationAsset[] = generated.contents.map(({ content, mime }, index) => ({
         index,
-        fileName: `OpenCreator-image-${id}-${index + 1}.${extensionForMime(mime)}`,
+        fileName: `VishnuCreator-image-${id}-${index + 1}.${extensionForMime(mime)}`,
         mime,
         size: content.length
       }));

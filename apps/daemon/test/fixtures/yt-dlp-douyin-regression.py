@@ -24,7 +24,7 @@ class DouyinRegression(unittest.TestCase):
     def setUp(self):
         self.ydl = yt_dlp.YoutubeDL({"quiet": True, "skip_download": True})
         self.extractor = self.ydl.get_info_extractor("Douyin")
-        self.assertEqual(self.extractor.PLUGIN_NAME, "opencreator")
+        self.assertEqual(self.extractor.PLUGIN_NAME, "vishnucreator")
 
     def tearDown(self):
         self.ydl.close()

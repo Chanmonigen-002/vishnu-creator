@@ -1,7 +1,7 @@
 import { act, cleanup, render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { afterEach, expect, it, vi } from 'vitest';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { createLocalizedCopy } from '../../i18n/localized-copy.js';
 import type { GatewayAccountSettingsService, GatewayBillingSummary } from '../../services/gateway-account-service.js';
@@ -114,7 +114,7 @@ it('ignores a previous account balance response after switching accounts', async
 });
 it('shows unavailable login without an enabled action', () => {
   render(page(null));
-  expect(within(screen.getByRole('region', { name: 'OpenCreator 账户' })).getByText('登录服务暂不可用')).toBeInTheDocument();
+  expect(within(screen.getByRole('region', { name: 'VishnuCreator 账户' })).getByText('登录服务暂不可用')).toBeInTheDocument();
   expect(screen.getByRole('button', { name: '登录 / 注册' })).toBeDisabled();
 });
 it('keeps model availability separate from sign-in and opens model settings', async () => {

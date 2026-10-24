@@ -415,10 +415,10 @@ describe('persistent app-server executor', () => {
           mcpServers: [{
             name: 'remote_crm',
             url: 'https://mcp.example/servers/crm',
-            bearerTokenEnvVar: 'OPENCREATOR_REMOTE_MCP_TOKEN'
+            bearerTokenEnvVar: 'VISHNUCREATOR_REMOTE_MCP_TOKEN'
           }],
           env: {
-            OPENCREATOR_REMOTE_MCP_TOKEN: 'secret'
+            VISHNUCREATOR_REMOTE_MCP_TOKEN: 'secret'
           },
           configurationFingerprint: fingerprint
         }))
@@ -550,7 +550,7 @@ function createFixture(): {
   readMessages(): Array<Record<string, unknown>>;
   readSpawns(): Array<{ pid: number; args: string[] }>;
 } {
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-persistent-app-server-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-persistent-app-server-'));
   const fakeCodex = createFakeAppServer(tempDir);
   const injection: AgentToolProcessInjection = {
     mcpServers: [],
@@ -603,7 +603,7 @@ function thread(overrides: Partial<RuntimeThread> = {}): RuntimeThread {
     id: 'thread-default',
     title: '测试会话',
     projectId: 'project-1',
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     cwd: tempDir,
     canonicalCwd: tempDir,
     workspaceMode: 'external',

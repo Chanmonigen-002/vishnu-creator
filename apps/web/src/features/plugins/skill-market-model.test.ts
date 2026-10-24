@@ -2,8 +2,8 @@ import type {
   CodexSkillListResponse,
   CodexSkillMarketInstallRecordResponse,
   CodexSkillResponse,
-} from '@opencreator/protocol';
-import type { SkillMarketEntry } from '@opencreator/skill-market';
+} from '@vishnucreator/protocol';
+import type { SkillMarketEntry } from '@vishnucreator/skill-market';
 import { describe, expect, it } from 'vitest';
 import {
   filterAndSortSkillMarketEntries,
@@ -344,7 +344,7 @@ function createEntry(
     platforms: ['Web'],
     tasks: ['课程课件'],
     creator: {
-      name: 'OpenCreator',
+      name: 'VishnuCreator',
       avatarUrl: 'https://example.com/avatar.png',
     },
     examples: [],

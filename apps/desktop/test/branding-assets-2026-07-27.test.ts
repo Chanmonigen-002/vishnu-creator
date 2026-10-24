@@ -20,10 +20,10 @@ const legacyAssetHashes = new Set([
 ]);
 
 describe('品牌资源', () => {
-  it('启动页使用 OpenCreator 文字品牌，菜单栏保留可用图标', () => {
+  it('启动页使用 VishnuCreator 文字品牌，菜单栏保留可用图标', () => {
     const bootstrapHtml = readFileSync(resolve(desktopRoot, 'src/bootstrap/index.html'), 'utf8');
     const bootstrapCss = readFileSync(resolve(desktopRoot, 'src/bootstrap/style.css'), 'utf8');
-    expect(bootstrapHtml).toContain('<span class="brand-name">OpenCreator</span>');
+    expect(bootstrapHtml).toContain('<span class="brand-name">VishnuCreator</span>');
     expect(bootstrapHtml).not.toContain('<img');
     expect(bootstrapCss).not.toContain('filter: brightness(0) saturate(100%);');
 
@@ -56,11 +56,11 @@ describe('品牌资源', () => {
     const iconSvg = readFileSync(resolve(desktopRoot, 'resources/icon.svg'), 'utf8');
     const traySvg = readFileSync(resolve(desktopRoot, 'resources/tray.svg'), 'utf8');
     const webMark = readFileSync(
-      resolve(repoRoot, 'apps/web/src/components/brand/OpenCreatorMark.tsx'),
+      resolve(repoRoot, 'apps/web/src/components/brand/VishnuCreatorMark.tsx'),
       'utf8'
     );
     const sidebar = readFileSync(
-      resolve(repoRoot, 'apps/web/src/features/shell/OpenCreatorSidebar.tsx'),
+      resolve(repoRoot, 'apps/web/src/features/shell/VishnuCreatorSidebar.tsx'),
       'utf8'
     );
 
@@ -68,7 +68,7 @@ describe('品牌资源', () => {
     expect(traySvg).toContain(brandMarkPolygon);
     expect(webMark).toContain(brandMarkPolygon);
     expect(webMark).toContain('fill="currentColor"');
-    expect(sidebar).toContain('<OpenCreatorMark');
+    expect(sidebar).toContain('<VishnuCreatorMark');
     expect(iconSvg).toContain('<rect width="460" height="460" rx="92" fill="#fff"/>');
     expect(traySvg).not.toContain('<rect');
 

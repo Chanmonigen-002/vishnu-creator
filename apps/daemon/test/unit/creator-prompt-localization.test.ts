@@ -1,4 +1,4 @@
-import { creatorPromptMaxLength, createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { creatorPromptMaxLength, createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { beforeAll, describe, expect, it } from 'vitest';

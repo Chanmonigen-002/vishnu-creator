@@ -1,4 +1,4 @@
-import type { DownloadPlatform, VideoMetadataResponse } from '@opencreator/protocol';
+import type { DownloadPlatform, VideoMetadataResponse } from '@vishnucreator/protocol';
 import { spawnCreatorProcess } from '../creator/process-tree.js';
 import { withYtDlpProxy } from '../creator/yt-dlp/args.js';
 import type { YtDlpRuntime } from '../creator/yt-dlp/runtime.js';

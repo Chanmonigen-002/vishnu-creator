@@ -142,7 +142,7 @@ describe('local Codex provider', () => {
   });
 
   async function codexHome(lines: string[]): Promise<string> {
-    const path = await mkdtemp(join(tmpdir(), 'opencreator-local-provider-'));
+    const path = await mkdtemp(join(tmpdir(), 'vishnucreator-local-provider-'));
     await mkdir(path, { recursive: true });
     await writeFile(join(path, 'config.toml'), `${lines.join('\n')}\n`);
     return path;

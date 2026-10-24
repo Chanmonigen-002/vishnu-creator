@@ -405,7 +405,7 @@ export default function VideoTranslationResultWorkspace(props: {
     while (node && node !== document.body) {
       for (const sibling of Array.from(node.parentElement?.children ?? [])) {
         if (sibling !== node && sibling instanceof HTMLElement && !sibling.hasAttribute('inert')
-          && !sibling.matches('.desktop-titlebar-drag-region, .opencreator-main-titlebar')) {
+          && !sibling.matches('.desktop-titlebar-drag-region, .vishnucreator-main-titlebar')) {
           sibling.setAttribute('inert', ''); siblings.push(sibling);
         }
       }

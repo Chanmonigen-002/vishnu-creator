@@ -202,8 +202,8 @@ async function waitForTaskPollingBaseline(page: Page) {
 async function waitForNotification(page: Page, title: string) {
   await expect.poll(async () => page.evaluate(expectedTitle => {
     const notifications = (window as Window & {
-      __opencreatorE2eNotifications?: Array<{ title: string }>;
-    }).__opencreatorE2eNotifications ?? [];
+      __vishnucreatorE2eNotifications?: Array<{ title: string }>;
+    }).__vishnucreatorE2eNotifications ?? [];
     return notifications.some(notification => notification.title === expectedTitle);
   }, title), { timeout: 12_000 }).toBe(true);
 }
@@ -211,8 +211,8 @@ async function waitForNotification(page: Page, title: string) {
 async function clickLatestNotification(page: Page) {
   await page.evaluate(() => {
     const notifications = (window as Window & {
-      __opencreatorE2eNotifications?: Array<{ click(): void }>;
-    }).__opencreatorE2eNotifications ?? [];
+      __vishnucreatorE2eNotifications?: Array<{ click(): void }>;
+    }).__vishnucreatorE2eNotifications ?? [];
     notifications.at(-1)?.click();
   });
 }

@@ -1,7 +1,7 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { useState } from 'react';
 import { beforeEach, expect, it, vi } from 'vitest';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 import { OfficialServicesContext, useOfficialServices } from './official-services.js';
 
 const fixture = vi.hoisted(() => ({ templateId: 'video-translation', state: {} as Record<string, unknown>, updateDraft: vi.fn() }));

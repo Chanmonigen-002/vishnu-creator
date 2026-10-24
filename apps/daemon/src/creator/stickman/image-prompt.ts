@@ -1,4 +1,4 @@
-import type { StickmanRatio } from '@opencreator/protocol';
+import type { StickmanRatio } from '@vishnucreator/protocol';
 import type { StickmanShot, StickmanStyleContract } from './contracts.js';
 
 export const STICKMAN_CHARACTER_REFERENCE_PREPARATION = 'original-bytes-v2';

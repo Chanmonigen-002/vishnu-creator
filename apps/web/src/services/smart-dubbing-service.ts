@@ -1,7 +1,7 @@
 import type {
   CreateSmartDubbingRequest,
   SmartDubbingResultResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 type SmartDubbingClient = Pick<RuntimeClient, 'post' | 'rawGet' | 'rawRequest'>;

@@ -1,7 +1,7 @@
 import type {
   CreatorTtsProvider,
   CreatorTtsVoice
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   LoaderCircle,
   Pause,

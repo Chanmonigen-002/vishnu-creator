@@ -60,7 +60,7 @@ export function prepareCreatorNlpRuntime({ vendorRoot, outputRoot, pythonExecuta
   });
   const buildPython = platform === process.platform && arch === process.arch
     ? pythonExecutable
-    : process.env.OPENCREATOR_BUILD_PYTHON?.trim() || (process.platform === 'win32' ? 'python' : 'python3');
+    : process.env.VISHNUCREATOR_BUILD_PYTHON?.trim() || (process.platform === 'win32' ? 'python' : 'python3');
   run(buildPython, ['-I', '-B', join(scriptDir, 'install-creator-nlp-wheels.py'), sitePackages, ...paths], {
     stdio: 'inherit', timeout: 120_000, windowsHide: true
   });

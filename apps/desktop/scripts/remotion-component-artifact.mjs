@@ -68,7 +68,7 @@ export function createRemotionComponentArtifact({ runtimeRoot, outputRoot, versi
     version: 1, id: 'remotion', componentVersion: version,
     remotionVersion: manifest.remotionVersion, chromiumVersion: manifest.chromiumVersion,
     platform, arch, fileName,
-    archiveUrl: `https://github.com/krillinai/OpenCreator/releases/download/v${version}/${fileName}`,
+    archiveUrl: `https://github.com/vishnuai/VishnuCreator/releases/download/v${version}/${fileName}`,
     archiveSha256: hashFile(archive), manifestSha256: hashFile(join(runtimeRoot, 'manifest.json')),
     bytes: statSync(archive).size
   };

@@ -99,4 +99,4 @@ template/<module>/<id>/1/
 
 ---
 
-لديك أسئلة؟ [افتح مشكلة](https://github.com/krillinai/OpenCreator/issues/new) مع فكرة قالبك ونموذج مخرجات، وسنساعدك في تحديد النطاق.
+لديك أسئلة؟ [افتح مشكلة](https://github.com/vishnuai/Vishnu Creator/issues/new) مع فكرة قالبك ونموذج مخرجات، وسنساعدك في تحديد النطاق.

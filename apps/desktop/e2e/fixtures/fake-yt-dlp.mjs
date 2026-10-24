@@ -15,7 +15,7 @@ process.stdout.write(JSON.stringify({
   title: 'Packaged video probe fixture',
   webpage_url: 'https://www.youtube.com/watch?v=C4gJinSiuG4',
   extractor_key: 'Youtube',
-  uploader: 'OpenCreator',
+  uploader: 'VishnuCreator',
   thumbnail: 'https://i.ytimg.com/vi/C4gJinSiuG4/hqdefault.jpg',
   duration: 213,
   width: 1920,

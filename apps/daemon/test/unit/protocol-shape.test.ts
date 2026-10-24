@@ -33,7 +33,7 @@ import type {
   ScheduleDetailResponse,
   ScheduleOperationListResponse,
   ScheduleResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 describe('protocol shape', () => {
   it('allows a minimal run request', () => {
@@ -90,7 +90,7 @@ describe('protocol shape', () => {
       id: 'thread_1',
       title: 'Daily status',
       projectId: 'project_1',
-      origin: 'opencreator_created',
+      origin: 'vishnucreator_created',
       codexThreadId: null,
       cwd: '/tmp/project',
       canonicalCwd: '/tmp/project',

@@ -1,4 +1,4 @@
-import { safePublicErrorMessage, type CreateImageGenerationRequest, type PublicErrorFacts } from '@opencreator/protocol';
+import { safePublicErrorMessage, type CreateImageGenerationRequest, type PublicErrorFacts } from '@vishnucreator/protocol';
 import { mkdtemp, mkdir, readFile, readdir, realpath, rm, stat, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { isAbsolute, join, relative, sep } from 'node:path';
@@ -33,7 +33,7 @@ export async function generateCodexNativeImage(input: {
 }): Promise<GeneratedImageContent> {
   input.signal.throwIfAborted();
   if (!input.runtime.codexBin) throw new CodexNativeImageError('The Codex executable is missing from this Runtime', 'configuration');
-  const workdir = await mkdtemp(join(tmpdir(), 'opencreator-codex-image-'));
+  const workdir = await mkdtemp(join(tmpdir(), 'vishnucreator-codex-image-'));
   const outputDir = join(workdir, 'output');
   let process: CodexExecProcess | undefined;
   const abort = () => process?.cancel();

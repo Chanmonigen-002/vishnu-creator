@@ -6,7 +6,7 @@ import type {
   CodexMcpListResponse,
   CodexMcpRemoveResponse,
   CodexMcpServerDetailResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 export function createMcpService(client: RuntimeClient) {

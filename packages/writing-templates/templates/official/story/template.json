@@ -25,10 +25,10 @@
   "tags": ["场景开篇", "人物叙事", "情绪节奏"],
   "structure": ["人物或场景", "矛盾推进", "关键转折", "主题回扣"],
   "instructions": "用具体人物、场景或冲突开篇，按故事推进承载核心观点。段落短而有节奏，关键转折处设置小标题，避免编造来源中不存在的细节。结尾回扣开头并留下余味。",
-  "author": "OpenCreator",
+  "author": "VishnuCreator",
   "status": "verified",
   "sortOrder": 20,
-  "source": { "type": "official", "license": "OpenCreator project" },
+  "source": { "type": "official", "license": "VishnuCreator project" },
   "skill": {
     "stageResources": {
       "topics": ["skill/SKILL.md"],

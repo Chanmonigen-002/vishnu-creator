@@ -26,7 +26,7 @@ describe('desktop project boundary', () => {
     expect(main).toContain("app.getPath('documents')");
     expect(bootstrap).toContain('defaultProjectRoot: this.input.defaultProjectRoot');
     expect(daemonManager).toContain(
-      'OPENCREATOR_DEFAULT_PROJECT_ROOT: input.defaultProjectRoot'
+      'VISHNUCREATOR_DEFAULT_PROJECT_ROOT: input.defaultProjectRoot'
     );
   });
 });

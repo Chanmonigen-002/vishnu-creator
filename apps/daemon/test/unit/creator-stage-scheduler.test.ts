@@ -92,7 +92,7 @@ function setup() {
   const stage = repository.createStageRun({
     jobId: job.id,
     stageId: 'subtitle',
-    executor: 'krillin',
+    executor: 'vishnu',
     status: 'queued',
     dispatchStatus: 'queued',
     idempotencyKey: 'stage-1'

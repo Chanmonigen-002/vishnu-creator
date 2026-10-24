@@ -1,4 +1,4 @@
-import type { CreateVideoGenerationRequest } from '@opencreator/protocol';
+import type { CreateVideoGenerationRequest } from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import {
   VideoGenerationError,
@@ -11,7 +11,7 @@ export async function registerVideoGenerationRoutes(
   service: VideoGenerationService
 ): Promise<void> {
   if (service.uploadReference) {
-    server.addContentTypeParser('application/vnd.opencreator.video-reference', { parseAs: 'buffer', bodyLimit: 100_000_000 }, (_request, body, done) => done(null, body));
+    server.addContentTypeParser('application/vnd.vishnucreator.video-reference', { parseAs: 'buffer', bodyLimit: 100_000_000 }, (_request, body, done) => done(null, body));
     server.post<{ Body: Buffer; Querystring: { mime?: string } }>('/video-generation/assets', { bodyLimit: 100_000_000 }, async (request, reply) => {
       try { return await service.uploadReference!(request.body, request.query.mime ?? ''); }
       catch (error) { return sendError(reply, error); }
@@ -42,7 +42,7 @@ export async function registerVideoGenerationRoutes(
       const { result, content } = await service.read(request.params.id);
       return reply
         .header('Content-Type', result.mime)
-        .header('Content-Disposition', contentDisposition(result.fileName ?? 'OpenCreator-video.mp4'))
+        .header('Content-Disposition', contentDisposition(result.fileName ?? 'VishnuCreator-video.mp4'))
         .header('Content-Length', String(content.length))
         .header('Cache-Control', 'no-store')
         .header('X-Content-Type-Options', 'nosniff')

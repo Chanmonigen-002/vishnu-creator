@@ -10,7 +10,7 @@ import type {
   CodexRuntimeMode,
   CodexRuntimeReadiness,
   RuntimeErrorCode
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type {
   CancelLoginAccountParams,
   CancelLoginAccountResponse,

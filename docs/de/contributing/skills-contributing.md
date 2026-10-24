@@ -21,15 +21,15 @@ Ein Skill ist ein Ordner unter [`skills/`](../../../skills/) mit einer `SKILL.md
 ## Schnellstart
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable && pnpm install
-cp -r skills/krillinai-tts skills/<dein-skill>   # vom ähnlichsten bestehenden Skill starten
+cp -r skills/vishnuai-tts skills/<dein-skill>   # vom ähnlichsten bestehenden Skill starten
 # skills/<dein-skill>/SKILL.md bearbeiten
 pnpm web:dev                                     # prüfen, ob der Agent ihn in einer Konversation erkennt
 ```
 
-Der schnellste Weg ist, den Skill zu kopieren, der deiner Idee am nächsten kommt, und ihn umzuschreiben — die bestehenden `krillinai-*`-Skills zeigen die erwartete Struktur und Tonalität.
+Der schnellste Weg ist, den Skill zu kopieren, der deiner Idee am nächsten kommt, und ihn umzuschreiben — die bestehenden `vishnuai-*`-Skills zeigen die erwartete Struktur und Tonalität.
 
 ## Skill-Aufbau
 
@@ -93,4 +93,4 @@ Ein Reviewer prüft jeden der folgenden Punkte — füge sie in deinen PR ein un
 
 ---
 
-Fragen? [Öffne ein Issue](https://github.com/krillinai/OpenCreator/issues/new) mit dem Thema `skill` — wir helfen dir beim Abgrenzen.
+Fragen? [Öffne ein Issue](https://github.com/vishnuai/Vishnu Creator/issues/new) mit dem Thema `skill` — wir helfen dir beim Abgrenzen.

@@ -1,5 +1,5 @@
 import { z } from 'zod/v3';
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 
 const strings = z.array(z.string().min(1));
 const descriptor = z.object({

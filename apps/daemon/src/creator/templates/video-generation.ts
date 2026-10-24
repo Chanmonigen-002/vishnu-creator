@@ -1,4 +1,4 @@
-import { creatorPromptMaxLength, videoGenerationSizes, videoGenerationDurations } from '@opencreator/protocol';
+import { creatorPromptMaxLength, videoGenerationSizes, videoGenerationDurations } from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 import type { CreatorTemplateDefinition } from './types.js';
 

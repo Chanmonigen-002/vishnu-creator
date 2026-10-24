@@ -34,7 +34,7 @@ describe('Native window chrome', () => {
       url: 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE',
       resourceType: 'subFrame',
       requestHeaders
-    })).toEqual({ ...requestHeaders, Referer: 'https://github.com/krillinai/OpenCreator/' });
+    })).toEqual({ ...requestHeaders, Referer: 'https://github.com/vishnuai/VishnuCreator/' });
     for (const [url, resourceType] of [
       ['https://www.youtube-nocookie.com/embed/M7lc1UVf-VE', 'mainFrame'],
       ['https://www.youtube-nocookie.com/youtubei/v1/player', 'xhr'],

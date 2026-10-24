@@ -22,7 +22,7 @@ describe('Codex credential storage configuration', () => {
   });
 
   it('forces Codex credentials into auth.json', async () => {
-    codexHome = mkdtempSync(join(tmpdir(), 'opencreator-codex-storage-'));
+    codexHome = mkdtempSync(join(tmpdir(), 'vishnucreator-codex-storage-'));
     const configPath = join(codexHome, 'config.toml');
     writeFileSync(
       configPath,

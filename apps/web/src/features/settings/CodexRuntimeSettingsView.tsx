@@ -1,4 +1,4 @@
-import type { CodexProviderConfig } from '@opencreator/protocol';
+import type { CodexProviderConfig } from '@vishnucreator/protocol';
 import { KeyRound, LoaderCircle, Save } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';

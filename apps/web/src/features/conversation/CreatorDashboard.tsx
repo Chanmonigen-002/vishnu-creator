@@ -3,7 +3,7 @@ import type { AppLanguage } from '../../i18n/language.js';
 import type {
   CreatorPresetSummary,
   CreatorRuntimeWorkspace
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   ChevronDown,
   Copy,
@@ -135,7 +135,7 @@ const imageModules = new Set<CreatorRuntimeWorkspace>([
   'image-generation',
   'cover-generator'
 ]);
-const recentPresetStorageKey = 'opencreator.creator-presets.recent.v1';
+const recentPresetStorageKey = 'vishnucreator.creator-presets.recent.v1';
 const recentPresetLimit = 12;
 
 export function CreatorDashboard(props: {

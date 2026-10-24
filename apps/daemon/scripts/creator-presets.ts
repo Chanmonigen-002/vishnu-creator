@@ -8,10 +8,10 @@ import {
 const command = process.argv[2];
 const repositoryRoot = path.resolve(import.meta.dirname, '../../..');
 const sourceRoot = path.resolve(
-  process.env.OPENCREATOR_PRESET_SOURCE_ROOT ?? path.join(repositoryRoot, 'template')
+  process.env.VISHNUCREATOR_PRESET_SOURCE_ROOT ?? path.join(repositoryRoot, 'template')
 );
 const outputRoot = path.resolve(
-  process.env.OPENCREATOR_PRESET_CATALOG_ROOT
+  process.env.VISHNUCREATOR_PRESET_CATALOG_ROOT
     ?? path.join(repositoryRoot, '.runtime/generated/creator-presets')
 );
 

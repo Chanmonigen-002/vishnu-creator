@@ -2,7 +2,7 @@ import { Fragment, useEffect, useId, useLayoutEffect, useMemo, useRef, useState,
 import { createPortal } from 'react-dom';
 import { Check, ChevronDown, Search, X } from 'lucide-react';
 import Fuse from 'fuse.js';
-import { gatewayModelDisplayName, gatewayModelIdMatches, gatewayRelayIdentity, gatewayModelReady, gatewayRecommendedModelId, type GatewayModel } from '@opencreator/protocol';
+import { gatewayModelDisplayName, gatewayModelIdMatches, gatewayRelayIdentity, gatewayModelReady, gatewayRecommendedModelId, type GatewayModel } from '@vishnucreator/protocol';
 import { useLocalizedCopy, type LocalizeCopy } from '../../i18n/useLocalizedCopy.js';
 import { officialModelPrice, officialModelPriceDescription } from './official-model-pricing.js';
 import ModelBrandIcon, { modelBrand } from '../brand/ModelBrandIcon.js';

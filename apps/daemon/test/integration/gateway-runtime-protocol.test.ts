@@ -10,7 +10,7 @@ import { createDirectRuntime } from '../../src/gateway/direct-runtime.js';
 import { prepareOfficialRuntimeProbe } from '../../src/gateway/runtime-probe.js';
 import * as officialFetch from '../../src/gateway/official-fetch.js';
 import { probeCodex } from '../../src/codex/probe.js';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 
 const manifest = JSON.parse(readFileSync(resolve(`../../resources/codex-runtime/${process.platform}-${process.arch}/manifest.json`), 'utf8'));
 const codexBin = resolve('../../apps/desktop/.pack/codex-runtime', manifest.binary.relativePath);

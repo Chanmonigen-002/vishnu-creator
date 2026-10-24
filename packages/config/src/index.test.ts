@@ -4,18 +4,18 @@ import {
   rmSync
 } from 'node:fs';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { openCreatorLanguages } from '@opencreator/protocol';
+import { vishnuCreatorLanguages } from '@vishnucreator/protocol';
 import {
-  readOpenCreatorConfig,
+  readVishnuCreatorConfig,
   resolveDesktopConfig,
-  resolveOpenCreatorPaths,
+  resolveVishnuCreatorPaths,
   resolveStorageSettings,
   resolveUiSettings,
-  updateOpenCreatorConfig,
-  updateOpenCreatorStorageSettings,
-  updateOpenCreatorUiSettings
+  updateVishnuCreatorConfig,
+  updateVishnuCreatorStorageSettings,
+  updateVishnuCreatorUiSettings
 } from './index.js';
 
 const tempDirs: string[] = [];
@@ -26,66 +26,71 @@ afterEach(() => {
   }
 });
 
-describe('OpenCreator config', () => {
-  it.each(openCreatorLanguages)('preserves %s across config writes and reads', language => {
-    const root = mkdtempSync(join(tmpdir(), 'opencreator-config-'));
+describe('VishnuCreator config', () => {
+  it.each(vishnuCreatorLanguages)('preserves %s across config writes and reads', language => {
+    const root = mkdtempSync(join(tmpdir(), 'vishnucreator-config-'));
     tempDirs.push(root);
     const path = join(root, 'config.toml');
-    updateOpenCreatorUiSettings(path, { language });
-    expect(resolveUiSettings(readOpenCreatorConfig(path)).language).toBe(language);
+    updateVishnuCreatorUiSettings(path, { language });
+    expect(resolveUiSettings(readVishnuCreatorConfig(path)).language).toBe(language);
   });
 
   it('resolves the product-owned directory layout', () => {
-    expect(resolveOpenCreatorPaths({ homeDir: '/Users/demo', env: {} })).toMatchObject({
-      root: '/Users/demo/.opencreator',
-      configFile: '/Users/demo/.opencreator/config.toml',
-      dataDir: '/Users/demo/.opencreator/data',
-      codexHome: '/Users/demo/.opencreator/runtime/codex',
-      creatorCodexHome: '/Users/demo/.opencreator/runtime/creator-codex'
+    const home = '/Users/demo';
+    const root = resolve(join(home, '.vishnucreator'));
+    expect(resolveVishnuCreatorPaths({ homeDir: home, env: {} })).toMatchObject({
+      root,
+      configFile: join(root, 'config.toml'),
+      dataDir: join(root, 'data'),
+      codexHome: join(root, 'runtime', 'codex'),
+      creatorCodexHome: join(root, 'runtime', 'creator-codex')
     });
   });
 
   it('isolates development state below the product directory', () => {
-    expect(resolveOpenCreatorPaths({
-      homeDir: '/Users/demo',
+    const home = '/Users/demo';
+    const root = resolve(join(home, '.vishnucreator', 'development'));
+    expect(resolveVishnuCreatorPaths({
+      homeDir: home,
       env: {},
       runtimeChannel: 'development'
     })).toMatchObject({
-      root: '/Users/demo/.opencreator/development',
-      configFile: '/Users/demo/.opencreator/development/config.toml',
-      dataDir: '/Users/demo/.opencreator/development/data',
-      codexHome: '/Users/demo/.opencreator/development/runtime/codex'
+      root,
+      configFile: join(root, 'config.toml'),
+      dataDir: join(root, 'data'),
+      codexHome: join(root, 'runtime', 'codex')
     });
   });
 
   it('keeps an explicit product home authoritative in development', () => {
-    expect(resolveOpenCreatorPaths({
+    const explicitHome = '/tmp/vishnucreator-explicit';
+    expect(resolveVishnuCreatorPaths({
       homeDir: '/Users/demo',
-      env: { OPENCREATOR_HOME: '/tmp/opencreator-explicit' },
+      env: { VISHNUCREATOR_HOME: explicitHome },
       runtimeChannel: 'development'
-    }).root).toBe('/tmp/opencreator-explicit');
+    }).root).toBe(resolve(explicitHome));
   });
 
-  it('creates OpenCreator settings from an empty product directory', () => {
-    const root = mkdtempSync(join(tmpdir(), 'opencreator-config-'));
+  it('creates VishnuCreator settings from an empty product directory', () => {
+    const root = mkdtempSync(join(tmpdir(), 'vishnucreator-config-'));
     tempDirs.push(root);
     const path = join(root, 'config.toml');
 
-    expect(resolveUiSettings(readOpenCreatorConfig(path)).accentColor).toBe('red');
+    expect(resolveUiSettings(readVishnuCreatorConfig(path)).accentColor).toBe('red');
 
-    updateOpenCreatorUiSettings(path, { colorMode: 'light', language: 'sv-SE' });
+    updateVishnuCreatorUiSettings(path, { colorMode: 'light', language: 'sv-SE' });
 
-    expect(resolveUiSettings(readOpenCreatorConfig(path)).colorMode).toBe('light');
-    expect(resolveUiSettings(readOpenCreatorConfig(path)).language).toBe('sv-SE');
+    expect(resolveUiSettings(readVishnuCreatorConfig(path)).colorMode).toBe('light');
+    expect(resolveUiSettings(readVishnuCreatorConfig(path)).language).toBe('sv-SE');
   });
 
   it('persists anonymous telemetry preferences and the install identifier', () => {
-    const root = mkdtempSync(join(tmpdir(), 'opencreator-config-'));
+    const root = mkdtempSync(join(tmpdir(), 'vishnucreator-config-'));
     tempDirs.push(root);
     const path = join(root, 'config.toml');
     const telemetryInstallId = '123e4567-e89b-42d3-a456-426614174000';
 
-    updateOpenCreatorConfig(path, document => ({
+    updateVishnuCreatorConfig(path, document => ({
       ...document,
       desktop: {
         closeBehavior: 'hide',
@@ -98,28 +103,28 @@ describe('OpenCreator config', () => {
     const source = readFileSync(path, 'utf8');
     expect(source).toContain('telemetry_enabled = false');
     expect(source).toContain(`telemetry_install_id = "${telemetryInstallId}"`);
-    expect(resolveDesktopConfig(readOpenCreatorConfig(path))).toMatchObject({
+    expect(resolveDesktopConfig(readVishnuCreatorConfig(path))).toMatchObject({
       telemetryEnabled: false,
       telemetryInstallId
     });
   });
 
   it('persists project and completed output locations', () => {
-    const root = mkdtempSync(join(tmpdir(), 'opencreator-config-'));
+    const root = mkdtempSync(join(tmpdir(), 'vishnucreator-config-'));
     tempDirs.push(root);
     const path = join(root, 'config.toml');
     const defaults = {
-      defaultProjectRoot: join(root, 'OpenCreator'),
-      outputRoot: join(root, 'OpenCreator', 'Exports')
+      defaultProjectRoot: join(root, 'VishnuCreator'),
+      outputRoot: join(root, 'VishnuCreator', 'Exports')
     };
 
-    expect(resolveStorageSettings(readOpenCreatorConfig(path), defaults)).toEqual(defaults);
-    updateOpenCreatorStorageSettings(path, {
+    expect(resolveStorageSettings(readVishnuCreatorConfig(path), defaults)).toEqual(defaults);
+    updateVishnuCreatorStorageSettings(path, {
       defaultProjectRoot: join(root, 'Projects'),
       outputRoot: join(root, 'Outputs')
     });
 
-    expect(resolveStorageSettings(readOpenCreatorConfig(path), defaults)).toEqual({
+    expect(resolveStorageSettings(readVishnuCreatorConfig(path), defaults)).toEqual({
       defaultProjectRoot: join(root, 'Projects'),
       outputRoot: join(root, 'Outputs')
     });

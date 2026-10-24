@@ -5,7 +5,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest';
 import {
   createCodexProviderCredentialStore,
   createFileCodexProviderCredentialStore,
-  createOpenCreatorCodexProviderCredentialStore,
+  createVishnuCreatorCodexProviderCredentialStore,
   readCodexProviderApiKey
 } from '../../src/codex/provider-credential-store.js';
 
@@ -56,7 +56,7 @@ describe('CodexProviderCredentialStore', () => {
   });
 
   it('persists the Codex API key in a local JSON configuration file', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-codex-provider-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-codex-provider-'));
     const path = join(root, 'config', 'codex-provider.json');
     const store = createFileCodexProviderCredentialStore(path);
 
@@ -80,35 +80,35 @@ describe('CodexProviderCredentialStore', () => {
     });
   });
 
-  it('stores the Codex API key in the shared OpenCreator credentials file', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-codex-provider-'));
+  it('stores the Codex API key in the shared VishnuCreator credentials file', async () => {
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-codex-provider-'));
     const credentialsFile = join(root, 'credentials.json');
-    const store = createOpenCreatorCodexProviderCredentialStore(credentialsFile);
+    const store = createVishnuCreatorCodexProviderCredentialStore(credentialsFile);
 
-    await store.writeApiKey('sk-opencreator', {
+    await store.writeApiKey('sk-vishnucreator', {
       baseUrl: 'https://api.deepseek.com',
       model: 'deepseek-chat'
     });
     await expect(store.readApiKey({
       baseUrl: 'https://api.deepseek.com/',
       model: 'deepseek-reasoner'
-    })).resolves.toBe('sk-opencreator');
+    })).resolves.toBe('sk-vishnucreator');
     await expect(store.readApiKey({
       baseUrl: 'https://api.openai.com/v1',
       model: 'gpt-5'
     })).resolves.toBeUndefined();
     expect(JSON.parse(readFileSync(credentialsFile, 'utf8'))).toMatchObject({
       codexProvider: {
-        apiKey: 'sk-opencreator',
+        apiKey: 'sk-vishnucreator',
         baseUrl: 'https://api.deepseek.com'
       }
     });
   });
 
   it('does not apply an unbound legacy key to a custom provider', async () => {
-    root = mkdtempSync(join(tmpdir(), 'opencreator-codex-provider-'));
+    root = mkdtempSync(join(tmpdir(), 'vishnucreator-codex-provider-'));
     const credentialsFile = join(root, 'credentials.json');
-    const store = createOpenCreatorCodexProviderCredentialStore(credentialsFile);
+    const store = createVishnuCreatorCodexProviderCredentialStore(credentialsFile);
     await store.writeApiKey('sk-legacy-unbound');
 
     await expect(store.readApiKey({

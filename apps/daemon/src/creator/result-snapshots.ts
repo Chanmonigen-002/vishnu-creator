@@ -3,8 +3,8 @@ import type {
   CreatorJob,
   CreatorJson,
   CreatorResultSnapshot
-} from '@opencreator/protocol';
-import { readCreatorResultSnapshots } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { readCreatorResultSnapshots } from '@vishnucreator/protocol';
 
 const snapshotStateExcludedKeys = new Set([
   'currentStage',

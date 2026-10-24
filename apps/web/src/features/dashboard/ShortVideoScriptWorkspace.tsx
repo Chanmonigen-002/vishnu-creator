@@ -1,4 +1,4 @@
-import type { CreatorArtifact, CreatorJson } from '@opencreator/protocol';
+import type { CreatorArtifact, CreatorJson } from '@vishnucreator/protocol';
 import {
   Copy,
   Download,

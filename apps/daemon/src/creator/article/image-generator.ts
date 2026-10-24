@@ -1,4 +1,4 @@
-import type { ImageGenerationProvider } from '@opencreator/protocol';
+import type { ImageGenerationProvider } from '@vishnucreator/protocol';
 import type { CreatorServicesConfigStore } from '../../creator-services/config-store.js';
 import {
   generateImageContents,

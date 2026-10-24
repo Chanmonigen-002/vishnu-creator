@@ -10,7 +10,7 @@ import {
 import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { afterEach, describe, expect, it } from 'vitest';
-import { packageKrillinRelease } from '../../../scripts/package-krillinai-release.mjs';
+import { packageVishnuRelease } from '../../../scripts/package-vishnuai-release.mjs';
 
 const directories = [];
 
@@ -20,10 +20,10 @@ afterEach(() => {
   }
 });
 
-describe('KrillinAI release packages', () => {
+describe('VishnuAI release packages', () => {
   it('creates separate Server and CLI archives with only their own executable', () => {
     const fixture = createFixture();
-    const result = packageKrillinRelease({
+    const result = packageVishnuRelease({
       rootDir: fixture.root,
       buildRoot: fixture.buildRoot,
       outputDir: fixture.outputDir,
@@ -34,22 +34,22 @@ describe('KrillinAI release packages', () => {
     });
 
     expect(result.assets.map(asset => asset.name)).toEqual([
-      'KrillinAI-Server-3.0.0-mac-arm64.tar.gz',
-      'KrillinAI-CLI-3.0.0-mac-arm64.tar.gz'
+      'VishnuAI-Server-3.0.0-mac-arm64.tar.gz',
+      'VishnuAI-CLI-3.0.0-mac-arm64.tar.gz'
     ]);
     const serverFiles = archiveFiles(result.assets[0].path);
     const cliFiles = archiveFiles(result.assets[1].path);
     expect(serverFiles).toContain(
-      'KrillinAI-Server-3.0.0-mac-arm64/krillinai-server'
+      'VishnuAI-Server-3.0.0-mac-arm64/vishnuai-server'
     );
     expect(serverFiles).not.toContain(
-      'KrillinAI-Server-3.0.0-mac-arm64/krillinai-cli'
+      'VishnuAI-Server-3.0.0-mac-arm64/vishnuai-cli'
     );
     expect(cliFiles).toContain(
-      'KrillinAI-CLI-3.0.0-mac-arm64/krillinai-cli'
+      'VishnuAI-CLI-3.0.0-mac-arm64/vishnuai-cli'
     );
     expect(cliFiles).not.toContain(
-      'KrillinAI-CLI-3.0.0-mac-arm64/krillinai-server'
+      'VishnuAI-CLI-3.0.0-mac-arm64/vishnuai-server'
     );
     for (const files of [serverFiles, cliFiles]) {
       expect(files.some(path => path.endsWith('/config/config-example.toml'))).toBe(true);
@@ -60,8 +60,8 @@ describe('KrillinAI release packages', () => {
 
   it('rejects binaries that changed after the build manifest was written', () => {
     const fixture = createFixture();
-    writeFileSync(join(fixture.buildRoot, 'bin', 'krillinai-cli'), 'modified');
-    expect(() => packageKrillinRelease({
+    writeFileSync(join(fixture.buildRoot, 'bin', 'vishnuai-cli'), 'modified');
+    expect(() => packageVishnuRelease({
       rootDir: fixture.root,
       buildRoot: fixture.buildRoot,
       outputDir: fixture.outputDir,
@@ -74,19 +74,19 @@ describe('KrillinAI release packages', () => {
 });
 
 function createFixture() {
-  const root = mkdtempSync(join(tmpdir(), 'krillinai-package-fixture-'));
+  const root = mkdtempSync(join(tmpdir(), 'vishnuai-package-fixture-'));
   directories.push(root);
   const buildRoot = join(root, 'build');
   const outputDir = join(root, 'release');
-  const configDir = join(root, 'runtime', 'krillinai', 'config');
+  const configDir = join(root, 'runtime', 'vishnuai', 'config');
   const binDir = join(buildRoot, 'bin');
   mkdirSync(configDir, { recursive: true });
   mkdirSync(binDir, { recursive: true });
   writeFileSync(join(configDir, 'config-example.toml'), '[server]\nport = 8888\n');
   writeFileSync(join(configDir, 'subtitle-style-default.json'), '{"version":1}\n');
-  writeFileSync(join(root, 'runtime', 'krillinai', 'LICENSE'), 'license\n');
+  writeFileSync(join(root, 'runtime', 'vishnuai', 'LICENSE'), 'license\n');
   const binaries = {};
-  for (const name of ['krillinai-server', 'krillinai-cli']) {
+  for (const name of ['vishnuai-server', 'vishnuai-cli']) {
     const path = join(binDir, name);
     writeFileSync(path, `${name}\n`);
     binaries[name] = {
@@ -96,7 +96,7 @@ function createFixture() {
   }
   writeFileSync(join(buildRoot, 'manifest.json'), JSON.stringify({
     version: 1,
-    component: 'opencreator-krillinai',
+    component: 'vishnucreator-vishnuai',
     componentVersion: '3.0.0',
     platform: 'darwin',
     arch: 'arm64',

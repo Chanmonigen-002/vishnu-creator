@@ -1,12 +1,12 @@
 import { describe, expect, it } from 'vitest';
 import {
-  createKrillinCliExecutionPlan,
+  createVishnuCliExecutionPlan,
   isYouTubeSource
-} from '../../src/creator/krillin/execution-plan.js';
+} from '../../src/creator/vishnu/execution-plan.js';
 
-describe('KrillinAI CLI execution plan', () => {
+describe('VishnuAI CLI execution plan', () => {
   it('defers transcription until captions are absent or unusable', () => {
-    expect(createKrillinCliExecutionPlan('subtitle', {
+    expect(createVishnuCliExecutionPlan('subtitle', {
       sourceUrl: 'https://www.youtube.com/watch?v=demo', mediaSource: 'local:/video.mp4'
     }, { captionSource: 'any' })).toEqual([
       {
@@ -17,8 +17,8 @@ describe('KrillinAI CLI execution plan', () => {
     ]);
   });
 
-  it('delegates platform-caption fallback to KrillinAI in one attempt', () => {
-    const plan = createKrillinCliExecutionPlan(
+  it('delegates platform-caption fallback to VishnuAI in one attempt', () => {
+    const plan = createVishnuCliExecutionPlan(
       'subtitle',
       { captionSource: 'any' }
     );
@@ -26,15 +26,15 @@ describe('KrillinAI CLI execution plan', () => {
     expect(plan).toEqual([{ options: { captionSource: 'any' } }]);
   });
 
-  it('defaults subtitles to KrillinAI any-source mode', () => {
-    expect(createKrillinCliExecutionPlan(
+  it('defaults subtitles to VishnuAI any-source mode', () => {
+    expect(createVishnuCliExecutionPlan(
       'subtitle',
       {}
     )).toEqual([{
       options: { captionSource: 'any' }
     }]);
 
-    expect(createKrillinCliExecutionPlan(
+    expect(createVishnuCliExecutionPlan(
       'subtitle',
       { captionSource: 'whisper' }
     )).toEqual([{
@@ -43,7 +43,7 @@ describe('KrillinAI CLI execution plan', () => {
   });
 
   it('keeps non-subtitle stages unchanged', () => {
-    expect(createKrillinCliExecutionPlan(
+    expect(createVishnuCliExecutionPlan(
       'render-horizontal',
       {}
     )).toEqual([{ options: {} }]);

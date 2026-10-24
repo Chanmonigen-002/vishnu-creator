@@ -1,5 +1,5 @@
 import { selectOption } from '../../test/select-option.js';
-import type { CodexProviderConfig, CodexRuntimeReadiness, GatewayAccountState } from '@opencreator/protocol';
+import type { CodexProviderConfig, CodexRuntimeReadiness, GatewayAccountState } from '@vishnucreator/protocol';
 import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -206,10 +206,10 @@ describe('StartupAgentSetup', () => {
 
   it('offers both modes and never exposes provider fields in sign-in mode', async () => {
     mount(createService());
-    expect(screen.getByRole('heading', { name: 'OpenCreator' })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'VishnuCreator' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '本地模式' })).toBeInTheDocument();
     await userEvent.setup().click(screen.getByRole('button', { name: '登录模式' }));
-    expect(screen.getByRole('button', { name: '登录 OpenCreator' })).toBeDisabled();
+    expect(screen.getByRole('button', { name: '登录 VishnuCreator' })).toBeDisabled();
     expect(screen.queryByLabelText('Base URL')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('API Key')).not.toBeInTheDocument();
   });
@@ -225,8 +225,8 @@ describe('StartupAgentSetup', () => {
     render(<LanguageProvider initialPreference="zh-CN"><StartupAgentSetup service={createService()} gatewayService={gateway} onReady={vi.fn()} onSkip={vi.fn()}/></LanguageProvider>);
     const user = userEvent.setup();
     await user.click(screen.getByRole('button', { name: '登录模式' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: '登录 OpenCreator' })).toBeEnabled());
-    await user.click(screen.getByRole('button', { name: '登录 OpenCreator' }));
+    await waitFor(() => expect(screen.getByRole('button', { name: '登录 VishnuCreator' })).toBeEnabled());
+    await user.click(screen.getByRole('button', { name: '登录 VishnuCreator' }));
     expect(await screen.findByText('请在浏览器中完成登录')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '返回' }));
     expect(gateway.cancel).toHaveBeenCalledOnce();

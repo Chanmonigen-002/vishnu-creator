@@ -1,4 +1,4 @@
-import type { PlatformConnectionState, YouTubeConnectionState } from '@opencreator/protocol';
+import type { PlatformConnectionState, YouTubeConnectionState } from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 export function createPlatformConnectionsService(client: Pick<RuntimeClient, 'get' | 'post' | 'delete'>) {

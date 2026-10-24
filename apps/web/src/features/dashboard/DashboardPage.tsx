@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
-import type { CreatorJob, CreatorJson, GatewayAccountState, OpenCreatorIssue } from '@opencreator/protocol';
+import type { CreatorJob, CreatorJson, GatewayAccountState, VishnuCreatorIssue } from '@vishnucreator/protocol';
 import { OfficialServicesContext } from './official-services.js';
 import type { GatewayAccountSettingsService } from '../../services/gateway-account-service.js';
 import { useAppLanguage } from '../../i18n/LanguageProvider.js';
@@ -217,7 +217,7 @@ const recommendedTabWorkspaces = new Set<CreatorWorkspace>([
 const CREATOR_JOB_CREATE_ATTEMPT_TIMEOUT_MS = 4_000;
 const CREATOR_JOB_CREATE_ATTEMPTS = 3;
 const CREATOR_JOB_CREATE_RECOVERY_TIMEOUT_MS = 30_000;
-const CREATOR_JOB_CREATION_STORAGE_PREFIX = 'opencreator.creator.pending-job:';
+const CREATOR_JOB_CREATION_STORAGE_PREFIX = 'vishnucreator.creator.pending-job:';
 
 export default function DashboardPage(props: {
   onSelectPrompt(prompt: string): void;
@@ -234,7 +234,7 @@ export default function DashboardPage(props: {
   creatorService?: CreatorWebService | null;
   runtimeDependencies?: RuntimeDependenciesController;
   onJobCreated?(job: CreatorJob): void;
-  onAskIssue?(issue: OpenCreatorIssue, question: string): void;
+  onAskIssue?(issue: VishnuCreatorIssue, question: string): void;
   onCreateProject?(projectType: CreatorProjectType): boolean | void | Promise<boolean | void>;
   createProjectError?: string;
   onOpenRuntimeComponents?(): void;
@@ -477,8 +477,8 @@ export default function DashboardPage(props: {
   }
 
   return (
-    <main className="opencreator-scroll-page creator-tools-page">
-      <div className="opencreator-page-content creator-tools-page-inner">
+    <main className="vishnucreator-scroll-page creator-tools-page">
+      <div className="vishnucreator-page-content creator-tools-page-inner">
         <header className="creator-tools-page-header">
           <h1>{t('dashboard.title')}</h1>
           {props.onCreateProject ? (
@@ -624,7 +624,7 @@ function CreatorWorkspaceSession(props: {
   jobId?: string;
   children: ReactNode;
   onJobCreated(job: CreatorJob): void;
-  onAskIssue?(issue: OpenCreatorIssue, question: string): void;
+  onAskIssue?(issue: VishnuCreatorIssue, question: string): void;
   onBack(): void;
 }) {
   const l = useLocalizedCopy();

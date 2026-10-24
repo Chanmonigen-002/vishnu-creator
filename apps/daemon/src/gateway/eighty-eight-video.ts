@@ -1,4 +1,4 @@
-import { gatewayVideoSizeParameters, type GatewayModel } from '@opencreator/protocol';
+import { gatewayVideoSizeParameters, type GatewayModel } from '@vishnucreator/protocol';
 import { GatewayError } from './client.js';
 import { publicMediaReference, type MediaUploader } from './supplier-media.js';
 

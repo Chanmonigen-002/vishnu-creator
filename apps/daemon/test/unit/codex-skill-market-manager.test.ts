@@ -2,8 +2,8 @@ import type {
   CodexSkillMarketInstallRecordResponse,
   CodexSkillOperationResponse,
   CodexSkillResponse
-} from '@opencreator/protocol';
-import { skillMarketCandidateCatalog } from '@opencreator/skill-market';
+} from '@vishnucreator/protocol';
+import { skillMarketCandidateCatalog } from '@vishnucreator/skill-market';
 import type Database from 'better-sqlite3';
 import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
@@ -301,7 +301,7 @@ function createManagerFixture(options: {
   listRecords?: CodexSkillMarketInstallRecordResponse[];
   tempRootName?: string;
 } = {}) {
-  tempDir ||= mkdtempSync(join(tmpdir(), 'opencreator-skill-market-manager-'));
+  tempDir ||= mkdtempSync(join(tmpdir(), 'vishnucreator-skill-market-manager-'));
   const dataDir = join(tempDir, 'data');
   mkdirSync(dataDir, { recursive: true });
   const skillManager = makeFakeSkillManager(options);
@@ -326,7 +326,7 @@ function createManagerFixture(options: {
 }
 
 function createRealManagerFixture(options: { failRecordWrite: boolean }) {
-  tempDir ||= mkdtempSync(join(tmpdir(), 'opencreator-skill-market-manager-'));
+  tempDir ||= mkdtempSync(join(tmpdir(), 'vishnucreator-skill-market-manager-'));
   const dataDir = join(tempDir, 'data');
   const codexHome = join(tempDir, 'codex-home');
   mkdirSync(dataDir, { recursive: true });
@@ -352,7 +352,7 @@ function createRealManagerFixture(options: { failRecordWrite: boolean }) {
 }
 
 function createConcurrentRealManagerFixture() {
-  tempDir ||= mkdtempSync(join(tmpdir(), 'opencreator-skill-market-manager-'));
+  tempDir ||= mkdtempSync(join(tmpdir(), 'vishnucreator-skill-market-manager-'));
   const dataDir = join(tempDir, 'data');
   const codexHome = join(tempDir, 'codex-home');
   mkdirSync(dataDir, { recursive: true });

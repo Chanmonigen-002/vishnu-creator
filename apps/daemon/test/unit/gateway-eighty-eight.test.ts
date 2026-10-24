@@ -2,7 +2,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, expect, it, vi } from 'vitest';
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 import { bootstrapSchema, createGatewayClient } from '../../src/gateway/client.js';
 import { createDirectTransport } from '../../src/gateway/direct-transport.js';
 import { createDirectRuntime } from '../../src/gateway/direct-runtime.js';

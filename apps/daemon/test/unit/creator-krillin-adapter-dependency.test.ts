@@ -1,28 +1,28 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import type { CreatorExecutorInput } from '../../src/creator/executor.js';
 import { mkdirSync, mkdtempSync, realpathSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, relative } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 
-const preflightKrillinDependencies = vi.hoisted(() => vi.fn());
-const runKrillinCli = vi.hoisted(() => vi.fn());
+const preflightVishnuDependencies = vi.hoisted(() => vi.fn());
+const runVishnuCli = vi.hoisted(() => vi.fn());
 
-vi.mock('../../src/creator/krillin/dependency-preflight.js', () => ({
-  preflightKrillinDependencies
+vi.mock('../../src/creator/vishnu/dependency-preflight.js', () => ({
+  preflightVishnuDependencies
 }));
 
 vi.mock('../../src/creator/validators/media.js', () => ({
   validateMediaFile: vi.fn(async () => ({ duration: 1, hasVideo: true, hasAudio: true }))
 }));
 
-vi.mock('../../src/creator/krillin/cli-runner.js', async importOriginal => {
-  const actual = await importOriginal<typeof import('../../src/creator/krillin/cli-runner.js')>();
-  return { ...actual, runKrillinCli };
+vi.mock('../../src/creator/vishnu/cli-runner.js', async importOriginal => {
+  const actual = await importOriginal<typeof import('../../src/creator/vishnu/cli-runner.js')>();
+  return { ...actual, runVishnuCli };
 });
 
-import { createKrillinExecutor } from '../../src/creator/krillin/adapter.js';
-import { KrillinCliError } from '../../src/creator/krillin/cli-runner.js';
+import { createVishnuExecutor } from '../../src/creator/vishnu/adapter.js';
+import { VishnuCliError } from '../../src/creator/vishnu/cli-runner.js';
 
 let tempDir = '';
 
@@ -32,7 +32,7 @@ afterEach(() => {
   tempDir = '';
 });
 
-describe('KrillinAI configured transcription dependency', () => {
+describe('VishnuAI configured transcription dependency', () => {
   it.each(['platform-success', 'platform-failure', 'audio', 'import'])('checks language only at the actual ASR boundary: %s', async route => {
     const fixture = setup();
     fixture.config.transcription.provider = 'whisperkit';
@@ -45,11 +45,11 @@ describe('KrillinAI configured transcription dependency', () => {
       const subtitle = writeTargetSubtitle(tempDir);
       stage.inputArtifacts.push({ id: 'source-srt', kind: 'source_subtitle', path: join(tempDir, subtitle.relativePath) } as never);
     }
-    if (route === 'platform-failure') runKrillinCli.mockRejectedValueOnce(new KrillinCliError('platform_caption_failed', 'No platform captions'));
-    else runKrillinCli.mockImplementation(async input => { const subtitle = writeTargetSubtitle(input.jobsRoot); return ['source_subtitle', 'target_subtitle', 'vertical_subtitle'].map(kind => ({ ...subtitle, kind })); });
+    if (route === 'platform-failure') runVishnuCli.mockRejectedValueOnce(new VishnuCliError('platform_caption_failed', 'No platform captions'));
+    else runVishnuCli.mockImplementation(async input => { const subtitle = writeTargetSubtitle(input.jobsRoot); return ['source_subtitle', 'target_subtitle', 'vertical_subtitle'].map(kind => ({ ...subtitle, kind })); });
     if (route === 'audio' || route === 'platform-failure') {
       await expect(fixture.executor.run(stage)).rejects.toMatchObject({ code: 'creator_transcription_language_unsupported' });
-      expect(runKrillinCli).toHaveBeenCalledTimes(route === 'audio' ? 0 : 1);
+      expect(runVishnuCli).toHaveBeenCalledTimes(route === 'audio' ? 0 : 1);
     } else await expect(fixture.executor.run(stage)).resolves.toMatchObject({ outputs: expect.any(Array) });
     expect(fixture.ensure).not.toHaveBeenCalled();
   });
@@ -67,20 +67,20 @@ describe('KrillinAI configured transcription dependency', () => {
     stage.job.state.sourceType = 'url';
     stage.job.state.sourceUrl = sourceUrl;
     stage.inputArtifacts = [];
-    runKrillinCli.mockImplementation(async input => {
+    runVishnuCli.mockImplementation(async input => {
       const subtitle = writeTargetSubtitle(input.jobsRoot);
       return ['source_subtitle', 'target_subtitle', 'vertical_subtitle'].map(kind => ({ ...subtitle, kind }));
     });
     await fixture.executor.run(stage);
     expect(fixture.ensure).toHaveBeenCalledTimes(1);
-    expect(runKrillinCli).toHaveBeenCalledTimes(1);
-    expect(runKrillinCli.mock.calls[0]?.[0]).toMatchObject({ source: expected, options: { sourceUrl: expected } });
+    expect(runVishnuCli).toHaveBeenCalledTimes(1);
+    expect(runVishnuCli.mock.calls[0]?.[0]).toMatchObject({ source: expected, options: { sourceUrl: expected } });
     expect(fixture.getYtDlpRuntime).toHaveBeenCalledWith(expected);
-    expect(runKrillinCli.mock.calls[0]?.[0].options.captionSource).not.toBe('platform');
+    expect(runVishnuCli.mock.calls[0]?.[0].options.captionSource).not.toBe('platform');
   });
   it('uses the original YouTube URL without preparing transcription when platform captions succeed', async () => {
     const fixture = setup();
-    runKrillinCli.mockImplementation(async input => [writeTargetSubtitle(input.jobsRoot)]);
+    runVishnuCli.mockImplementation(async input => [writeTargetSubtitle(input.jobsRoot)]);
 
     const result = await fixture.executor.run(fixture.stage);
 
@@ -88,8 +88,8 @@ describe('KrillinAI configured transcription dependency', () => {
       expect.objectContaining({ kind: 'target_subtitle', status: 'completed' })
     ]);
     expect(fixture.ensure).not.toHaveBeenCalled();
-    expect(runKrillinCli).toHaveBeenCalledTimes(1);
-    expect(runKrillinCli.mock.calls[0]?.[0]).toMatchObject({
+    expect(runVishnuCli).toHaveBeenCalledTimes(1);
+    expect(runVishnuCli.mock.calls[0]?.[0]).toMatchObject({
       source: 'https://www.youtube.com/watch?v=demo',
       options: {
         captionSource: 'platform',
@@ -101,8 +101,8 @@ describe('KrillinAI configured transcription dependency', () => {
 
   it.each(['platform_caption_failed', 'platform_caption_invalid'])('prepares transcription after %s and reports the fallback to the frontend', async code => {
     const fixture = setup();
-    runKrillinCli
-      .mockRejectedValueOnce(new KrillinCliError(
+    runVishnuCli
+      .mockRejectedValueOnce(new VishnuCliError(
         code,
         'No platform captions are available'
       ))
@@ -114,12 +114,12 @@ describe('KrillinAI configured transcription dependency', () => {
     const result = await fixture.executor.run(fixture.stage);
 
     expect(fixture.ensure).toHaveBeenCalledTimes(1);
-    expect(runKrillinCli).toHaveBeenCalledTimes(2);
-    expect(runKrillinCli.mock.calls[0]?.[0]).toMatchObject({
+    expect(runVishnuCli).toHaveBeenCalledTimes(2);
+    expect(runVishnuCli.mock.calls[0]?.[0]).toMatchObject({
       source: 'https://www.youtube.com/watch?v=demo',
       options: { captionSource: 'platform' }
     });
-    expect(runKrillinCli.mock.calls[1]?.[0]).toMatchObject({
+    expect(runVishnuCli.mock.calls[1]?.[0]).toMatchObject({
       source: expect.stringMatching(/^local:/),
       options: {
         captionSource: 'whisper',
@@ -141,12 +141,12 @@ describe('KrillinAI configured transcription dependency', () => {
 
   it.each(['platform_caption_failed', 'platform_caption_invalid'])('preserves %s diagnostics when transcription fallback also fails', async code => {
     const fixture = setup();
-    runKrillinCli
-      .mockRejectedValueOnce(new KrillinCliError(
+    runVishnuCli
+      .mockRejectedValueOnce(new VishnuCliError(
         code,
         'No original YouTube captions are available'
       ))
-      .mockRejectedValueOnce(new KrillinCliError(
+      .mockRejectedValueOnce(new VishnuCliError(
         'audio_transcription_failed',
         'whisperkit-cli rejected the language option'
       ));
@@ -165,9 +165,9 @@ describe('KrillinAI configured transcription dependency', () => {
     fixture.ensure.mockImplementationOnce(async input => {
       input.reportProgress({ phase: 'downloading_dependencies', message: 'Preparing the transcription model' });
     });
-    runKrillinCli.mockImplementationOnce(async input => {
+    runVishnuCli.mockImplementationOnce(async input => {
       input.stage.reportProgress({ providerStatus: 'failed', phase: 'failed' });
-      throw new KrillinCliError('platform_caption_invalid', 'No usable text');
+      throw new VishnuCliError('platform_caption_invalid', 'No usable text');
     }).mockImplementationOnce(async input => {
       const subtitle = writeTargetSubtitle(input.jobsRoot);
       return ['source_subtitle', 'target_subtitle', 'vertical_subtitle'].map(kind => ({ ...subtitle, kind }));
@@ -175,7 +175,7 @@ describe('KrillinAI configured transcription dependency', () => {
 
     await fixture.executor.run(stage);
 
-    expect(runKrillinCli.mock.calls[1]?.[0]).toMatchObject({
+    expect(runVishnuCli.mock.calls[1]?.[0]).toMatchObject({
       source: 'https://www.youtube.com/watch?v=demo', options: { captionSource: 'whisper' }
     });
     expect(stage.reportProgress).not.toHaveBeenCalledWith(expect.objectContaining({ providerStatus: 'failed' }));
@@ -190,22 +190,22 @@ describe('KrillinAI configured transcription dependency', () => {
     const controller = new AbortController();
     const stage = fixture.stage as CreatorExecutorInput;
     stage.signal = controller.signal;
-    runKrillinCli.mockImplementationOnce(async () => {
+    runVishnuCli.mockImplementationOnce(async () => {
       controller.abort();
-      throw new KrillinCliError('platform_caption_invalid', 'No usable text');
+      throw new VishnuCliError('platform_caption_invalid', 'No usable text');
     });
     await expect(fixture.executor.run(stage)).rejects.toMatchObject({ code: 'platform_caption_invalid' });
     expect(fixture.ensure).not.toHaveBeenCalled();
-    expect(runKrillinCli).toHaveBeenCalledTimes(1);
+    expect(runVishnuCli).toHaveBeenCalledTimes(1);
   });
 
   it.each(['platform_caption_access_failed', 'platform_caption_processing_failed'])('does not download transcription components after %s', async code => {
     const fixture = setup();
-    runKrillinCli.mockRejectedValueOnce(new KrillinCliError(code, 'Platform request failed'));
+    runVishnuCli.mockRejectedValueOnce(new VishnuCliError(code, 'Platform request failed'));
 
     await expect(fixture.executor.run(fixture.stage)).rejects.toMatchObject({ code });
 
-    expect(runKrillinCli).toHaveBeenCalledTimes(1);
+    expect(runVishnuCli).toHaveBeenCalledTimes(1);
     expect(fixture.ensure).not.toHaveBeenCalled();
   });
 
@@ -223,7 +223,7 @@ describe('KrillinAI configured transcription dependency', () => {
       : {};
     const subtitle = writeTargetSubtitle(tempDir);
     stage.inputArtifacts.push({ id: 'target-subtitle', kind: 'target_subtitle', path: join(tempDir, subtitle.relativePath) } as never);
-    runKrillinCli.mockImplementation(async input => {
+    runVishnuCli.mockImplementation(async input => {
       const outputDir = join(input.jobsRoot, stage.job.id, 'outputs');
       mkdirSync(outputDir, { recursive: true });
       const sourcePath = join(outputDir, 'new-source.mp4');
@@ -238,10 +238,10 @@ describe('KrillinAI configured transcription dependency', () => {
 
     const result = await fixture.executor.run(stage);
 
-    expect(runKrillinCli.mock.calls[0]?.[0].artifacts).toEqual([
+    expect(runVishnuCli.mock.calls[0]?.[0].artifacts).toEqual([
       expect.objectContaining({ id: 'target-subtitle', kind: 'target_subtitle' })
     ]);
-    expect(runKrillinCli.mock.calls[0]?.[0].options.sourceUrl).toBe(stage.job.state.sourceUrl);
+    expect(runVishnuCli.mock.calls[0]?.[0].options.sourceUrl).toBe(stage.job.state.sourceUrl);
     expect(result.outputs).toEqual([
       expect.objectContaining({ kind: 'source_video', sourceArtifactIds: [] }),
       expect.objectContaining({ kind: 'horizontal_video', sourceArtifactIds: ['target-subtitle'] })
@@ -261,7 +261,7 @@ describe('KrillinAI configured transcription dependency', () => {
       : provenance === 'matching-part'
         ? { settingsSnapshot: { sourceUrl: 'https://www.bilibili.com/video/BV18E421w7bf/?p=3&vd_source=other' } }
       : {};
-    runKrillinCli.mockImplementation(async input => {
+    runVishnuCli.mockImplementation(async input => {
       const outputDir = join(input.jobsRoot, stage.job.id, 'outputs');
       mkdirSync(outputDir, { recursive: true });
       const outputPath = join(outputDir, 'dubbed.wav');
@@ -271,7 +271,7 @@ describe('KrillinAI configured transcription dependency', () => {
 
     await fixture.executor.run(stage);
 
-    expect(runKrillinCli.mock.calls[0]?.[0].artifacts).toEqual([
+    expect(runVishnuCli.mock.calls[0]?.[0].artifacts).toEqual([
       expect.objectContaining({ id: 'source-video', kind: 'source_video' })
     ]);
     expect(fixture.ensure).not.toHaveBeenCalled();
@@ -279,7 +279,7 @@ describe('KrillinAI configured transcription dependency', () => {
 });
 
 function setup() {
-  tempDir = realpathSync(mkdtempSync(join(tmpdir(), 'creator-krillin-caption-plan-')));
+  tempDir = realpathSync(mkdtempSync(join(tmpdir(), 'creator-vishnu-caption-plan-')));
   const resourceRoot = join(tempDir, 'runtime');
   const jobsRoot = join(tempDir, 'jobs');
   const sourcePath = join(jobsRoot, 'auto-clip-job', 'inputs', 'source.mp4');
@@ -301,13 +301,13 @@ function setup() {
 
   const config = createDefaultCreatorServicesConfig();
   config.transcription.provider = 'whisperkit';
-  preflightKrillinDependencies.mockReturnValue({
+  preflightVishnuDependencies.mockReturnValue({
     manifest: { resources: [] },
     config
   });
   const ensure = vi.fn(async (_input: { reportProgress(progress: Record<string, unknown>): void }) => undefined);
   const getYtDlpRuntime = vi.fn(() => undefined);
-  const executor = createKrillinExecutor({
+  const executor = createVishnuExecutor({
     resourceRoot,
     jobsRoot,
     getYtDlpRuntime,

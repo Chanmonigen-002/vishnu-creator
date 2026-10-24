@@ -1,4 +1,4 @@
-import type { CreatorActionRequest, CreatorArtifact, CreatorJob } from '@opencreator/protocol';
+import type { CreatorActionRequest, CreatorArtifact, CreatorJob } from '@vishnucreator/protocol';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
@@ -282,13 +282,13 @@ function completedJob(job: CreatorJob): CreatorJob {
     kind: 'xiaohongshu_post',
     version: 1,
     status: 'completed',
-    path: '/tmp/OpenCreator-xiaohongshu-post.md',
+    path: '/tmp/VishnuCreator-xiaohongshu-post.md',
     scopeKey: null,
     inputFingerprint: null,
     sha256: null,
     sourceArtifactIds: [],
     metadata: {
-      fileName: 'OpenCreator-xiaohongshu-post.md',
+      fileName: 'VishnuCreator-xiaohongshu-post.md',
       title: '第一次参与开源项目',
       resultVersion: 1
     },

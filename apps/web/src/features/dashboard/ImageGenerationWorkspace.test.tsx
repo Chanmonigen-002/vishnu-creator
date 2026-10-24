@@ -7,8 +7,8 @@ import type {
   CreatorJob,
   CreatorJson,
   GatewayAccountState
-} from '@opencreator/protocol';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import type { AppLanguage } from '../../i18n/language.js';
@@ -213,7 +213,7 @@ describe('ImageGenerationWorkspace', () => {
     expect(within(form).getByRole('combobox', { name: copy.format })).toBeInTheDocument();
     expect(within(form).getByRole('button', { name: copy.generate })).toBeEnabled();
     expect(within(form).getByRole('button', { name: copy.clear })).toBeDisabled();
-    expect(within(screen.getByRole('complementary', { name: 'OpenCreator' })).getByRole('complementary', { name: copy.summary })).toBeInTheDocument();
+    expect(within(screen.getByRole('complementary', { name: 'VishnuCreator' })).getByRole('complementary', { name: copy.summary })).toBeInTheDocument();
   });
 
   it('places model selection before the editor and the reference banner above the prompt', () => {

@@ -3,7 +3,7 @@ import type {
   ScheduleLastStatus,
   ScheduleResponse,
   ThreadResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   getThreadActiveRun,
   type RunRegistryState

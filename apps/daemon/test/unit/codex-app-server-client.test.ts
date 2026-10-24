@@ -13,7 +13,7 @@ afterEach(() => {
 
 describe('Codex app-server client', () => {
   it('initializes lazily and reuses one process for concurrent requests', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-client-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-client-'));
     const codexBin = createFakeAppServer(tempDir);
     const client = createCodexAppServerClient({
       codexBin,
@@ -37,7 +37,7 @@ describe('Codex app-server client', () => {
   });
 
   it('restarts the process after an initialization timeout', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-client-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-client-'));
     const codexBin = createTimeoutThenRecoverAppServer(tempDir);
     const client = createCodexAppServerClient({
       codexBin,
@@ -60,7 +60,7 @@ describe('Codex app-server client', () => {
   });
 
   it('restarts on demand and remains usable', async () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-app-server-client-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-app-server-client-'));
     const codexBin = createFakeAppServer(tempDir);
     const client = createCodexAppServerClient({
       codexBin,

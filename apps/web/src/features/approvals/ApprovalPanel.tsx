@@ -1,6 +1,6 @@
 import type { LocalizeCopy } from '../../i18n/useLocalizedCopy.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
-import type { RuntimeApproval } from '@opencreator/protocol';
+import type { RuntimeApproval } from '@vishnucreator/protocol';
 import { Check, ChevronDown, FilePenLine, ShieldCheck, SquareTerminal, X } from 'lucide-react';
 
 export function ApprovalPanel(props: {

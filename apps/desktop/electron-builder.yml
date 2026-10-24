@@ -1,4 +1,4 @@
-appId: com.opencreator.desktop
+appId: com.vishnucreator.desktop
 productName: Vishnu Creator
 artifactName: VishnuCreator-${version}-${os}-${arch}.${ext}
 asar: true
@@ -62,11 +62,11 @@ extraResources:
 protocols:
   - name: Vishnu Creator
     schemes:
-      - opencreator
+      - vishnucreator
 publish:
   provider: github
-  owner: krillinai
-  repo: OpenCreator
+  owner: vishnuai
+  repo: VishnuCreator
 afterPack: ./scripts/sign-creator-runtime-after-pack.mjs
 afterSign: ./scripts/notarize-after-sign.mjs
 mac:

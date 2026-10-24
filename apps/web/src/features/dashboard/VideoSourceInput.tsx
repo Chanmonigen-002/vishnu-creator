@@ -1,7 +1,7 @@
 import { useRef, useState, type DragEvent } from 'react';
 import { Link2, UploadCloud } from 'lucide-react';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
-import type { VideoMetadataResponse } from '@opencreator/protocol';
+import type { VideoMetadataResponse } from '@vishnucreator/protocol';
 import type { VideoMetadataService } from '../../services/video-metadata-service.js';
 import VideoSourcePreview, { type SourcePlaybackPreview } from './VideoSourcePreview.js';
 import SupportedVideoSources from './SupportedVideoSources.js';

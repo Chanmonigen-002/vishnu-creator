@@ -5,16 +5,16 @@ import {
   createDefaultCreatorServicesConfig,
   type CreatorTtsProvider,
   type CreatorTtsVoicesResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CreatorServicesConfigStore } from '../../src/creator-services/config-store.js';
 import { registerCreatorServicesRoutes } from '../../src/api/routes.creator-services.js';
-import { createKrillinCreatorServicesCapabilities } from '../../src/creator/krillin/capabilities.js';
-import type { KrillinTtsService } from '../../src/creator/krillin/tts-service.js';
+import { createVishnuCreatorServicesCapabilities } from '../../src/creator/vishnu/capabilities.js';
+import type { VishnuTtsService } from '../../src/creator/vishnu/tts-service.js';
 
 describe('creator services API', () => {
   let server: FastifyInstance;
   let store: CreatorServicesConfigStore;
-  let ttsService: Pick<KrillinTtsService, 'listVoices' | 'preview'>;
+  let ttsService: Pick<VishnuTtsService, 'listVoices' | 'preview'>;
 
   beforeEach(async () => {
     const initial = createDefaultCreatorServicesConfig();
@@ -49,7 +49,7 @@ describe('creator services API', () => {
     await registerCreatorServicesRoutes(
       server,
       store,
-      () => createKrillinCreatorServicesCapabilities('darwin', 'arm64'),
+      () => createVishnuCreatorServicesCapabilities('darwin', 'arm64'),
       ttsService
     );
   });

@@ -5,7 +5,7 @@ import type {
   ThreadOrigin,
   ThreadPurpose,
   WorkspaceMode
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export type RuntimeThread = {
   id: string;

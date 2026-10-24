@@ -9,7 +9,7 @@ import type {
   CodexSkillMarketInstallRecordResponse,
   ConversationSearchResult,
   CreatorJob,
-  OpenCreatorIssue,
+  VishnuCreatorIssue,
   CreatorPresetSummary,
   CreateMemoryRequest,
   CreateThreadRequest,
@@ -22,7 +22,7 @@ import type {
   TaskItem,
   ThreadHistoryItem,
   ThreadResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type {
   CSSProperties,
   DragEvent as ReactDragEvent,
@@ -65,8 +65,8 @@ import {
   sortProjectConversations,
   parseLegacyLocalStorageProjects,
   PROJECTS_STORAGE_KEY,
-  type OpenCreatorConversation,
-  type OpenCreatorProject,
+  type VishnuCreatorConversation,
+  type VishnuCreatorProject,
   type ProjectPermission
 } from '../features/projects/project-model.js';
 import {
@@ -103,7 +103,7 @@ import {
 import type {
   DefaultPermissionPreference,
   RuntimeStatus
-} from '../features/settings/OpenCreatorSettingsView.js';
+} from '../features/settings/VishnuCreatorSettingsView.js';
 import {
   confirmAgentSetup,
   isAgentSetupConfirmed,
@@ -112,7 +112,7 @@ import {
 import '../features/settings/startup-agent-shell.css';
 import { useLocalizedCopy } from '../i18n/useLocalizedCopy.js';
 import type { McpCapabilities } from '../features/settings/McpSettingsView.js';
-import { OpenCreatorSidebar } from '../features/shell/OpenCreatorSidebar.js';
+import { VishnuCreatorSidebar } from '../features/shell/VishnuCreatorSidebar.js';
 import {
   createScheduleDraftSidebarSummaries,
   createSidebarTaskSummaries
@@ -134,7 +134,7 @@ import { createConnectionService, type ConnectionState } from '../services/conne
 import { createCreatorServicesService } from '../services/creator-services-service.js';
 import { createGatewayAccountService } from '../services/gateway-account-service.js';
 import { createPlatformConnectionsService } from '../services/platform-connections-service.js';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 import { createCreatorService } from '../services/creator-service.js';
 import { createCleanupService } from '../services/cleanup-service.js';
 import { createDiagnosticsService } from '../services/diagnostics-service.js';
@@ -151,7 +151,7 @@ import {
   type RecentModelConfig
 } from '../services/model-service-2026-08-05.js';
 import { createNotificationService } from '../services/notification-service.js';
-import { createOpenCreatorSettingsService } from '../services/opencreator-settings-service.js';
+import { createVishnuCreatorSettingsService } from '../services/vishnucreator-settings-service.js';
 import { createProfileService } from '../services/profile-service.js';
 import { createRunService } from '../services/run-service.js';
 import { createRuntimeDependencyService } from '../services/runtime-dependency-service.js';
@@ -220,7 +220,7 @@ const WORKSPACE_AUTO_COLLAPSE_MEDIA_QUERY =
 const RESIZE_KEY_STEP = 32;
 const CREATOR_PRESET_CREATION_TIMEOUT_MS = 15_000;
 const CREATOR_PRESET_CREATION_STORAGE_PREFIX =
-  'opencreator.creator-preset-creation.v1:';
+  'vishnucreator.creator-preset-creation.v1:';
 function canScrollVertically(
   target: EventTarget | null,
   boundary: HTMLElement,
@@ -251,8 +251,8 @@ function canScrollVertically(
 
   return false;
 }
-const DEFAULT_PERMISSION_STORAGE_KEY = 'opencreator.preferences.defaultPermission';
-const NAVIGATION_STORAGE_KEY = 'opencreator.navigation.v3';
+const DEFAULT_PERMISSION_STORAGE_KEY = 'vishnucreator.preferences.defaultPermission';
+const NAVIGATION_STORAGE_KEY = 'vishnucreator.navigation.v3';
 const CapabilitiesPage = lazy(() => import('../features/capabilities/CapabilitiesPage.js'));
 const FilesPage = lazy(() => import('../features/files/FilesPage.js'));
 const ProjectsPage = lazy(() => import('../features/projects/ProjectsPage.js'));
@@ -329,8 +329,8 @@ export function AppController(props: AppControllerProps) {
     runRegistryReducer,
     initialRunRegistryState
   );
-  const [projects, setProjects] = useState<OpenCreatorProject[]>([]);
-  const [archivedProjects, setArchivedProjects] = useState<OpenCreatorProject[]>([]);
+  const [projects, setProjects] = useState<VishnuCreatorProject[]>([]);
+  const [archivedProjects, setArchivedProjects] = useState<VishnuCreatorProject[]>([]);
   const [creatorJobs, setCreatorJobs] = useState<CreatorJob[]>([]);
   const [creatorJobsLoading, setCreatorJobsLoading] = useState(false);
   const [creatorJobsError, setCreatorJobsError] = useState<string>();
@@ -347,8 +347,8 @@ export function AppController(props: AppControllerProps) {
   const appShellStyle = integratedTitleBar === undefined
     ? undefined
     : {
-        '--opencreator-titlebar-height': `${integratedTitleBar.titleBarHeight}px`,
-        '--opencreator-traffic-light-inset': `${integratedTitleBar.trafficLightInset}px`
+        '--vishnucreator-titlebar-height': `${integratedTitleBar.titleBarHeight}px`,
+        '--vishnucreator-traffic-light-inset': `${integratedTitleBar.trafficLightInset}px`
       } as CSSProperties;
   const runtimeFetch = useMemo(() => props.runtimeFetch ?? globalThis.fetch.bind(globalThis), [props.runtimeFetch]);
   const subscribeRunEvents = props.subscribeRunEvents ?? defaultSubscribeRunEvents;
@@ -668,8 +668,8 @@ export function AppController(props: AppControllerProps) {
       document.removeEventListener('visibilitychange', onVisible);
     };
   }, [gatewayAccountService, connectionState.status, onGatewayStateChange]);
-  const openCreatorSettingsService = useMemo(
-    () => runtimeClient === null ? null : createOpenCreatorSettingsService(runtimeClient),
+  const vishnuCreatorSettingsService = useMemo(
+    () => runtimeClient === null ? null : createVishnuCreatorSettingsService(runtimeClient),
     [runtimeClient]
   );
   const creatorService = useMemo(
@@ -726,18 +726,18 @@ export function AppController(props: AppControllerProps) {
   useEffect(() => {
     if (
       connectionState.status !== 'connected'
-      || openCreatorSettingsService === null
+      || vishnuCreatorSettingsService === null
     ) {
       uiSettingsHydratedRef.current = false;
       return;
     }
     let canceled = false;
     uiSettingsHydratedRef.current = false;
-    void openCreatorSettingsService.getUiSettings()
+    void vishnuCreatorSettingsService.getUiSettings()
       .then(async response => {
         if (canceled) return;
         if (!response.configured) {
-          await openCreatorSettingsService.updateUiSettings({
+          await vishnuCreatorSettingsService.updateUiSettings({
             language: languagePreference,
             colorMode,
             accentColor,
@@ -771,21 +771,21 @@ export function AppController(props: AppControllerProps) {
     return () => {
       canceled = true;
     };
-  }, [connectionState.status, openCreatorSettingsService]);
+  }, [connectionState.status, vishnuCreatorSettingsService]);
 
   useEffect(() => {
     if (
       !uiSettingsHydratedRef.current
-      || openCreatorSettingsService === null
+      || vishnuCreatorSettingsService === null
       || persistedLanguagePreferenceRef.current === languagePreference
     ) {
       return;
     }
     persistedLanguagePreferenceRef.current = languagePreference;
-    void openCreatorSettingsService.updateUiSettings({
+    void vishnuCreatorSettingsService.updateUiSettings({
       language: languagePreference
     }).catch(() => undefined);
-  }, [languagePreference, openCreatorSettingsService]);
+  }, [languagePreference, vishnuCreatorSettingsService]);
   const visibleRuntimeThreads = useMemo(
     () => runtimeThreads.filter(shouldShowThreadInSidebar),
     [runtimeThreads]
@@ -798,7 +798,7 @@ export function AppController(props: AppControllerProps) {
     () => sortProjectConversations(
       visibleThreadGroups.conversationThreads.map(
         thread => mapThreadToConversation(thread)
-      ).filter((conversation): conversation is OpenCreatorConversation => conversation !== undefined)
+      ).filter((conversation): conversation is VishnuCreatorConversation => conversation !== undefined)
     ),
     [projects, visibleThreadGroups.conversationThreads]
   );
@@ -2342,7 +2342,7 @@ export function AppController(props: AppControllerProps) {
     setColorMode(mode);
     applyColorMode(mode);
     writeColorModePreference(mode);
-    void openCreatorSettingsService?.updateUiSettings({ colorMode: mode })
+    void vishnuCreatorSettingsService?.updateUiSettings({ colorMode: mode })
       .then(() => appIssues.resolveOperation('app.save-color-mode'))
       .catch(cause => appIssues.captureOperationFailure(
         'app.save-color-mode',
@@ -2355,7 +2355,7 @@ export function AppController(props: AppControllerProps) {
     setAccentColor(color);
     applyAccentColor(color, customAccentColor);
     writeAccentColorPreference(color);
-    void openCreatorSettingsService?.updateUiSettings({ accentColor: color })
+    void vishnuCreatorSettingsService?.updateUiSettings({ accentColor: color })
       .then(() => appIssues.resolveOperation('app.save-accent-color'))
       .catch(cause => appIssues.captureOperationFailure(
         'app.save-accent-color',
@@ -2372,7 +2372,7 @@ export function AppController(props: AppControllerProps) {
     applyAccentColor('custom', normalized);
     writeCustomAccentColorPreference(normalized);
     writeAccentColorPreference('custom');
-    void openCreatorSettingsService?.updateUiSettings({
+    void vishnuCreatorSettingsService?.updateUiSettings({
       accentColor: 'custom',
       customAccentColor: normalized
     }).then(() => appIssues.resolveOperation('app.save-accent-color'))
@@ -2389,7 +2389,7 @@ export function AppController(props: AppControllerProps) {
     defaultPermissionSyncFailuresRef.current.clear();
     setDefaultPermissionSyncError(undefined);
     writeDefaultPermissionPreference(permission);
-    void openCreatorSettingsService?.updateUiSettings({
+    void vishnuCreatorSettingsService?.updateUiSettings({
       defaultPermission: permission
     }).catch(() => undefined);
   }
@@ -2401,7 +2401,7 @@ export function AppController(props: AppControllerProps) {
       && !mobileSidebarHistoryEntryRef.current
     ) {
       window.history.pushState(
-        { ...window.history.state, opencreatorMobileNavigation: true },
+        { ...window.history.state, vishnucreatorMobileNavigation: true },
         ''
       );
       mobileSidebarHistoryEntryRef.current = true;
@@ -2411,7 +2411,7 @@ export function AppController(props: AppControllerProps) {
 
   function closeMobileSidebar() {
     setMobileSidebarOpen(false);
-    if (window.history.state?.opencreatorMobileNavigation !== true) {
+    if (window.history.state?.vishnucreatorMobileNavigation !== true) {
       mobileSidebarHistoryEntryRef.current = false;
     }
   }
@@ -2420,7 +2420,7 @@ export function AppController(props: AppControllerProps) {
     setMobileSidebarOpen(false);
     if (
       mobileSidebarHistoryEntryRef.current
-      && window.history.state?.opencreatorMobileNavigation === true
+      && window.history.state?.vishnucreatorMobileNavigation === true
     ) {
       mobileSidebarHistoryEntryRef.current = false;
       window.history.back();
@@ -2497,7 +2497,7 @@ export function AppController(props: AppControllerProps) {
     }
   }
 
-  function askAgentAboutIssue(issue: OpenCreatorIssue, question: string) {
+  function askAgentAboutIssue(issue: VishnuCreatorIssue, question: string) {
     const prompt = buildIssueAgentPrompt(issue, question, language);
     startNewConversation();
     setPendingIssueInquiry(prompt);
@@ -2527,7 +2527,7 @@ export function AppController(props: AppControllerProps) {
     setCreatorJobs(current => current.filter(job => job.id !== jobId));
   }
 
-  function openCreatorJob(job: CreatorJob) {
+  function vishnuCreatorJob(job: CreatorJob) {
     const workspace = creatorWorkspaceForTemplate(job.templateId);
     if (workspace === undefined) return;
     setCreatorSkillLaunch(undefined);
@@ -2970,7 +2970,7 @@ export function AppController(props: AppControllerProps) {
     const routeKey = formatRoute(route);
     const replaceMobileSidebarEntry =
       mobileSidebarHistoryEntryRef.current
-      && window.history.state?.opencreatorMobileNavigation === true;
+      && window.history.state?.vishnucreatorMobileNavigation === true;
     if (replaceMobileSidebarEntry) {
       mobileSidebarHistoryEntryRef.current = false;
       setMobileSidebarOpen(false);
@@ -3288,7 +3288,7 @@ export function AppController(props: AppControllerProps) {
     if (!isSkillCreator) {
       try {
         const [{ skillMarketCatalog }, { getSkillMarketDisplayTitle }] = await Promise.all([
-          import('@opencreator/skill-market'),
+          import('@vishnucreator/skill-market'),
           import('../features/plugins/skill-market-model.js')
         ]);
         const entry = skillMarketCatalog.find(candidate => candidate.id === skillId);
@@ -4650,7 +4650,7 @@ export function AppController(props: AppControllerProps) {
           : projectType => createProject(projectType, 'projects')
       }
       createProjectError={createProjectError}
-      onOpenJob={openCreatorJob}
+      onOpenJob={vishnuCreatorJob}
       onDeleteJob={creatorService === null ? undefined : deleteCreatorJob}
     />
   ) : state.activeView === 'dashboard' ? (
@@ -4792,7 +4792,7 @@ export function AppController(props: AppControllerProps) {
       onAccentColorChange={handleAccentColorChange}
       customAccentColor={customAccentColor}
       onCustomAccentColorChange={handleCustomAccentColorChange}
-      storageSettingsService={openCreatorSettingsService}
+      storageSettingsService={vishnuCreatorSettingsService}
       platformConnectionsService={platformConnectionsService}
       onSelectStorageDirectory={hostBridge.selectProjectDirectory}
       desktopCloseBehavior={desktopCloseBehavior}
@@ -4944,7 +4944,7 @@ export function AppController(props: AppControllerProps) {
       />
       {agentSetup === 'needed' && !configurationPageActive ? null : <AppLayout
       sidebar={
-        <OpenCreatorSidebar
+        <VishnuCreatorSidebar
           projects={projects}
           conversations={conversations}
           tasks={sidebarTasks}
@@ -5495,7 +5495,7 @@ function isRuntimeWorkspacePath(path: string): boolean {
 
 function mapThreadToConversation(
   thread: ThreadResponse
-): OpenCreatorConversation | undefined {
+): VishnuCreatorConversation | undefined {
   if (thread.projectId === null) return undefined;
   return {
     id: thread.id,
@@ -5509,7 +5509,7 @@ function mapThreadToConversation(
 
 function buildMemoryProjectOptions(
   threads: ThreadResponse[],
-  projects: OpenCreatorProject[]
+  projects: VishnuCreatorProject[]
 ): Array<{ key: string; label: string }> {
   const options = new Map<string, string>();
   for (const thread of threads) {
@@ -5598,7 +5598,7 @@ function getRuntimeErrorMessage(error: unknown, fallback: string): string {
 
 function buildThreadRequest(
   prompt: string,
-  project: OpenCreatorProject,
+  project: VishnuCreatorProject,
   config: ComposerRunConfig
 ): Extract<CreateThreadRequest, { projectId: string }> {
   const request: Extract<CreateThreadRequest, { projectId: string }> = {
@@ -5615,7 +5615,7 @@ function buildThreadRequest(
 }
 
 function defaultComposerRunConfig(
-  project: OpenCreatorProject | undefined,
+  project: VishnuCreatorProject | undefined,
   defaultPermission: DefaultPermissionPreference,
   recentModelConfig: RecentModelConfig | null
 ): ComposerRunConfig {
@@ -5636,7 +5636,7 @@ function defaultComposerRunConfig(
 }
 
 function resolveDefaultPermission(
-  project: OpenCreatorProject | undefined,
+  project: VishnuCreatorProject | undefined,
   preference: DefaultPermissionPreference
 ): ProjectPermission {
   if (preference !== 'follow-project') return preference;
@@ -5728,7 +5728,7 @@ export function buildComposerSlashCommands(
   return [...skillCommands, ...mcpCommands];
 }
 
-function toRuntimeSandbox(permission: OpenCreatorProject['sandbox'] | undefined): SandboxMode {
+function toRuntimeSandbox(permission: VishnuCreatorProject['sandbox'] | undefined): SandboxMode {
   if (permission === 'danger-full-access' || permission === 'workspace-write') return permission;
   return 'workspace-write';
 }
@@ -5744,9 +5744,9 @@ function upsertThread(threads: ThreadResponse[], thread: ThreadResponse): Thread
 }
 
 function upsertProject(
-  projects: OpenCreatorProject[],
-  project: OpenCreatorProject
-): OpenCreatorProject[] {
+  projects: VishnuCreatorProject[],
+  project: VishnuCreatorProject
+): VishnuCreatorProject[] {
   return [project, ...projects.filter(item => item.id !== project.id)];
 }
 

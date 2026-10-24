@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { ArrowLeft, Settings2 } from 'lucide-react';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 import type { ExternalNavigation } from '../../host/bridge.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import type { GatewayAccountSettingsService } from '../../services/gateway-account-service.js';
@@ -31,7 +31,7 @@ export default function PersonalCenterPage(props: {
   const title = l('个人中心', 'Account');
   const modelUnavailable = state?.authState === 'signed_in' && state.source === 'gateway' && state.activationState !== 'ready';
 
-  return <main className="opencreator-scroll-page personal-center" aria-label={title}>
+  return <main className="vishnucreator-scroll-page personal-center" aria-label={title}>
     <div className="personal-center__content">
       <header className="personal-center__heading">
         <button type="button" onClick={props.onBack} title={l('返回', 'Back')} aria-label={l('返回', 'Back')}><ArrowLeft size={20}/></button>

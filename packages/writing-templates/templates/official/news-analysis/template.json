@@ -25,10 +25,10 @@
   "tags": ["事实速览", "影响分析", "趋势判断"],
   "structure": ["事件概况", "重要背景", "影响对象", "后续信号"],
   "instructions": "开头用最少篇幅交代发生了什么，随后回答为什么重要、影响谁、接下来关注什么。区分来源事实与作者判断，不夸大结论，不制造未经来源支持的数据。",
-  "author": "OpenCreator",
+  "author": "VishnuCreator",
   "status": "verified",
   "sortOrder": 40,
-  "source": { "type": "official", "license": "OpenCreator project" },
+  "source": { "type": "official", "license": "VishnuCreator project" },
   "skill": {
     "stageResources": {
       "topics": ["skill/SKILL.md"],

@@ -1,8 +1,8 @@
 import { existsSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
-import type { KrillinRuntimeManifest } from '../krillin/manifest.js';
-import { resolveInside } from '../krillin/manifest.js';
+import type { VishnuRuntimeManifest } from '../vishnu/manifest.js';
+import { resolveInside } from '../vishnu/manifest.js';
 
 export type YtDlpRuntime = {
   version: string;
@@ -14,7 +14,7 @@ export type YtDlpRuntime = {
 
 export function resolveYtDlpRuntime(input: {
   resourceRoot: string;
-  manifest: KrillinRuntimeManifest;
+  manifest: VishnuRuntimeManifest;
   overridePath?: string;
 }): YtDlpRuntime | undefined {
   const pluginArgs = ['--plugin-dirs', fileURLToPath(new URL('../../../runtime/yt-dlp', import.meta.url))];
@@ -80,7 +80,7 @@ export function resolveYtDlpRuntime(input: {
 function manifestResource(
   input: {
     resourceRoot: string;
-    manifest: KrillinRuntimeManifest;
+    manifest: VishnuRuntimeManifest;
   },
   relativePath: string,
   kind: 'executable' | 'asset'

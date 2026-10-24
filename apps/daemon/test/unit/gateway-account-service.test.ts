@@ -10,7 +10,7 @@ import Fastify from 'fastify';
 import { registerGatewayAccountRoutes } from '../../src/api/routes.gateway-account.js';
 import { createOfficialModelAccess, type OfficialModelAccess } from '../../src/gateway/model-access.js';
 import { createGatewayCreatorSource } from '../../src/gateway/creator-service-source.js';
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { createRuntimeSource } from '../../src/gateway/runtime-source.js';
 import type { AppServerRuntimeManager } from '../../src/codex/app-server-runtime-manager.js';
 

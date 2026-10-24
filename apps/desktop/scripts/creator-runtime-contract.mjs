@@ -66,8 +66,8 @@ export function verifyCreatorRuntime(root, platform, arch) {
   const executableNames = new Set(manifest.resources
     .filter(resource => resource.kind === 'executable')
     .map(resource => basename(resource.path).toLowerCase()));
-  if (!executableNames.has(`krillinai-cli${suffix}`)) {
-    throw new Error('Creator Runtime requires the precompiled KrillinAI CLI');
+  if (!executableNames.has(`vishnuai-cli${suffix}`)) {
+    throw new Error('Creator Runtime requires the precompiled VishnuAI CLI');
   }
   for (const name of [`ffmpeg${suffix}`, `ffprobe${suffix}`]) {
     if (!executableNames.has(name)) throw new Error(`Creator Runtime executable is missing: ${name}`);

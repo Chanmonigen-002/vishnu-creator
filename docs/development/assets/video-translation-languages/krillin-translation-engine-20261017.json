@@ -2,7 +2,7 @@
   "date": "2026-10-17",
   "targetLanguage": "zh_cn",
   "modelResponses": "本地接口替身与固定响应，不是真实翻译模型",
-  "sourceSamples": "语言原生名、OpenCreator、数字和标点组成的合成路由探针，不是各语言自然语料",
+  "sourceSamples": "语言原生名、VishnuCreator、数字和标点组成的合成路由探针，不是各语言自然语料",
   "realModelCalls": 0,
   "sources": 123,
   "applicationRouteCases": 369,

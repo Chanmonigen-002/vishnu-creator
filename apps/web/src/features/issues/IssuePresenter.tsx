@@ -1,4 +1,4 @@
-import type { CreatorRepairAction, OpenCreatorIssue } from '@opencreator/protocol';
+import type { CreatorRepairAction, VishnuCreatorIssue } from '@vishnucreator/protocol';
 import {
   AlertCircle,
   CheckCircle2,
@@ -27,11 +27,11 @@ export type IssueActionRegistry = {
   retryOperations?: Record<string, () => void | Promise<void>>;
   settingsRoutes?: Record<string, () => void>;
   inputFields?: Record<string, () => void>;
-  onFocusAgent?(issue: OpenCreatorIssue): void;
+  onFocusAgent?(issue: VishnuCreatorIssue): void;
 };
 
 export function IssuePresenter(props: {
-  issue: OpenCreatorIssue;
+  issue: VishnuCreatorIssue;
   actions?: IssueActionRegistry;
   onDismiss?(issueId: string): void;
   compact?: boolean;
@@ -77,7 +77,7 @@ export function IssuePresenter(props: {
 }
 
 export function IssueList(props: {
-  issues: OpenCreatorIssue[];
+  issues: VishnuCreatorIssue[];
   actions?: IssueActionRegistry;
   onDismiss?(issueId: string): void;
   compact?: boolean;
@@ -101,7 +101,7 @@ export function IssueList(props: {
 }
 
 export function IssueActionButtons(props: {
-  issue: OpenCreatorIssue;
+  issue: VishnuCreatorIssue;
   actions?: IssueActionRegistry;
   includeFocusAgent?: boolean;
 }) {
@@ -141,7 +141,7 @@ function canHandle(action: CreatorRepairAction, registry: IssueActionRegistry | 
 
 async function runAction(
   action: CreatorRepairAction,
-  issue: OpenCreatorIssue,
+  issue: VishnuCreatorIssue,
   registry: IssueActionRegistry,
   setPending: (value: string) => void
 ): Promise<void> {

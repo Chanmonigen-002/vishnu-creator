@@ -2,8 +2,8 @@
 
 <h1>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="../images/OpenCreator_logo_vector_dark.svg" />
-    <img src="../images/OpenCreator_logo_vector.svg" alt="OpenCreator" width="380" />
+    <source media="(prefers-color-scheme: dark)" srcset="../images/Vishnu Creator_logo_vector_dark.svg" />
+    <img src="../images/Vishnu Creator_logo_vector.svg" alt="Vishnu Creator" width="380" />
   </picture>
   <br />
   Ruang kerja AI sumber terbuka & Skills untuk kreator
@@ -11,16 +11,16 @@
 
 <p>Gabungkan alat kreasi visual, Skills yang dapat digunakan kembali, dan Agent untuk naskah, video, gambar, suara, avatar, penerjemahan, dan penyuntingan—semuanya dalam satu ruang kerja.</p>
 
-<p><strong>OpenCreator sebelumnya bernama KrillinAI.</strong></p>
+<p><strong>Vishnu Creator sebelumnya bernama VishnuAI.</strong></p>
 
-<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="OpenCreator (sebelumnya KrillinAI): Repositori Terbaik Hari Ini peringkat 1 di Trendshift" width="250" height="55" /></a>
+<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="Vishnu Creator (sebelumnya VishnuAI): Repositori Terbaik Hari Ini peringkat 1 di Trendshift" width="250" height="55" /></a>
 
 [English](../../README.md) | [简体中文](../zh/README.md) | [日本語](../ja/README.md) | [한국어](../ko/README.md) | **Bahasa Indonesia** | [Español](../es/README.md) | [Français](../fr/README.md) | [Deutsch](../de/README.md) | [Português](../pt/README.md) | [Русский](../ru/README.md) | [العربية](../ar/README.md) | [ภาษาไทย](../th/README.md) | [Türkçe](../tr/README.md) | [हिन्दी](../hi/README.md) | [বাংলা](../bn/README.md) | [اردو](../ur/README.md) | [Tiếng Việt](../vi/README.md) | [Filipino](../fil/README.md)
 
-[![GitHub Stars](https://badgen.net/github/stars/krillinai/OpenCreator?icon=github&label=Stars&color=EAB308)](https://github.com/krillinai/OpenCreator/stargazers)
+[![GitHub Stars](https://badgen.net/github/stars/vishnuai/Vishnu Creator?icon=github&label=Stars&color=EAB308)](https://github.com/vishnuai/Vishnu Creator/stargazers)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Bilibili](https://img.shields.io/badge/dynamic/json?label=Bilibili&query=%24.data.follower&suffix=%E7%B2%89%E4%B8%9D&url=https%3A%2F%2Fapi.bilibili.com%2Fx%2Frelation%2Fstat%3Fvmid%3D242124650&logo=bilibili&color=00A1D6&labelColor=FE7398&logoColor=FFFFFF)](https://space.bilibili.com/242124650)
-[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/krillinai/OpenCreator)
+[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/vishnuai/Vishnu Creator)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/fUNvbqDaw)
 [![Grup QQ](https://img.shields.io/badge/QQ%20群-754069680-green?logo=tencent-qq)](https://qm.qq.com/q/W4YC0PLMeA)
 
@@ -28,13 +28,13 @@
 
 </div>
 
-![Ruang kerja Agent OpenCreator](../images/opencreator-home-en.png)
+![Ruang kerja Agent Vishnu Creator](../images/vishnucreator-home-en.png)
 
 ## Ikhtisar Proyek
 
-OpenCreator dibuat untuk individu dan tim yang ingin menjalankan pekerjaan kreatif dan pengembangan secara lokal. Alih-alih mengimplementasikan ulang loop Agent, OpenCreator menggunakan Codex CLI sebagai mesin eksekusi dan menambahkan Runtime lokal yang stabil, ruang kerja visual, serta host Desktop di sekelilingnya.
+Vishnu Creator dibuat untuk individu dan tim yang ingin menjalankan pekerjaan kreatif dan pengembangan secara lokal. Alih-alih mengimplementasikan ulang loop Agent, Vishnu Creator menggunakan Codex CLI sebagai mesin eksekusi dan menambahkan Runtime lokal yang stabil, ruang kerja visual, serta host Desktop di sekelilingnya.
 
-OpenCreator menyediakan dua cara kerja yang saling terhubung:
+Vishnu Creator menyediakan dua cara kerja yang saling terhubung:
 
 - **Ruang kerja konten**: gunakan alat visual dan templat kreasi untuk menerjemahkan dan mengunduh video, membuat thumbnail dan gambar, serta mengerjakan kreasi lainnya.
 - **Percakapan Agent**: mulai dan arahkan tugas kreatif atau pengembangan dengan bahasa alami, atur percakapan berdasarkan proyek, biarkan Runs tetap berjalan di latar belakang, dan kelola persetujuan, lampiran, file, Skills, MCP, jadwal, notifikasi, memori, serta diagnostik dari satu tempat.
@@ -45,7 +45,7 @@ Web adalah satu-satunya implementasi frontend. Desktop memuat build Web yang sam
 
 - 🤖 **Native Codex**: gunakan kembali loop Agent, model, penalaran, pemanggilan alat, percakapan, Skills, dan MCP dari Codex tanpa memelihara mesin eksekusi kedua.
 
-- 🚀 **Aplikasi Desktop Siap Pakai**: jalankan OpenCreator langsung dari aplikasi Desktop yang sudah menyertakan Codex CLI; Runtime lokal dimulai sesuai kebutuhan dan menyiapkan proyek default secara otomatis.
+- 🚀 **Aplikasi Desktop Siap Pakai**: jalankan Vishnu Creator langsung dari aplikasi Desktop yang sudah menyertakan Codex CLI; Runtime lokal dimulai sesuai kebutuhan dan menyiapkan proyek default secara otomatis.
 
 - ⚙️ **Deteksi Konfigurasi Codex Lokal**: saat Desktop pertama kali dibuka, konfigurasi Codex yang ada diperiksa agar login ChatGPT atau API key yang siap digunakan dapat dipakai kembali. Penyedia model lain juga dapat diatur melalui panduan awal.
 
@@ -73,7 +73,7 @@ Rilis saat ini mencakup enam alat kreasi. Model dan layanan yang tersedia bergan
 
 Buka Dashboard untuk menerjemahkan atau mengunduh video, membuat thumbnail atau gambar, menghasilkan sulih suara dengan Text to Speech, atau membuat video dengan Seedance.
 
-![Dashboard Kreasi OpenCreator](../images/product/opencreator-dashboard-en.png)
+![Dashboard Kreasi Vishnu Creator](../images/product/vishnucreator-dashboard-en.png)
 
 > Alat kreasi baru terus ditambahkan.
 
@@ -115,7 +115,7 @@ Buka Dashboard untuk menerjemahkan atau mengunduh video, membuat thumbnail atau 
 
 Mulai berkarya dari templat tanpa harus menyusun prompt dan pengaturan dari awal. Jelajahi templat unggulan berdasarkan kategori, termasuk kreasi video dan desain gambar.
 
-Koleksi ini memadukan templat buatan OpenCreator dan kreator independen. Untuk templat dari pihak ketiga, halaman detail mencantumkan pembuat dan tautan ke sumber aslinya.
+Koleksi ini memadukan templat buatan Vishnu Creator dan kreator independen. Untuk templat dari pihak ketiga, halaman detail mencantumkan pembuat dan tautan ke sumber aslinya.
 
 Buka templat untuk melihat contoh hasil, prompt, pengaturan, tag, pembuat, dan sumber aslinya. Pilih **Gunakan templat ini** untuk langsung memulai kreasi, lalu sesuaikan input sesuai kebutuhan.
 
@@ -123,23 +123,23 @@ Buka templat untuk melihat contoh hasil, prompt, pengaturan, tag, pembuat, dan s
 
 ## Skills
 
-Alat kreasi menyediakan kontrol visual; Skills memberi Agent instruksi dan alur kerja alat yang dapat digunakan kembali. OpenCreator menyertakan Skills produksi video di repositori serta mendukung pengelolaan Skills lokal Codex.
+Alat kreasi menyediakan kontrol visual; Skills memberi Agent instruksi dan alur kerja alat yang dapat digunakan kembali. Vishnu Creator menyertakan Skills produksi video di repositori serta mendukung pengelolaan Skills lokal Codex.
 
-Direktori [`skills/`](../../skills/) di repositori berisi instruksi yang dapat digunakan kembali oleh Agent untuk menjalankan KrillinAI CLI yang terintegrasi.
+Direktori [`skills/`](../../skills/) di repositori berisi instruksi yang dapat digunakan kembali oleh Agent untuk menjalankan VishnuAI CLI yang terintegrasi.
 
 | Skill | Kemampuan |
 | --- | --- |
-| [KrillinAI CLI](../../skills/krillinai-cli/SKILL.md) | Memilih perintah, memeriksa konfigurasi, serta memahami progres, manifes, keluaran, dan kesalahan |
-| [Subtitle](../../skills/krillinai-subtitle/SKILL.md) | Mengunduh subtitle platform atau mentranskripsikan media, menerjemahkan subtitle, dan menghasilkan subtitle dwibahasa atau subtitle pendek untuk video vertikal |
-| [TTS](../../skills/krillinai-tts/SKILL.md) | Menghasilkan sulih suara bahasa target dari subtitle dan secara opsional membuat video dengan sulih suara |
-| [Render horizontal](../../skills/krillinai-render-horizontal/SKILL.md) | Merender video horizontal dengan subtitle dwibahasa atau audio sulih suara dan subtitle bahasa target |
-| [Render vertikal](../../skills/krillinai-render-vertical/SKILL.md) | Menyusun video vertikal dengan judul, subtitle dwibahasa, atau sulih suara |
-| [Sampul](../../skills/krillinai-cover/SKILL.md) | Menghasilkan gambar sampul dari prompt teks lengkap serta menyimpan gambar dan prompt akhir |
-| [Perencanaan pipeline](../../skills/krillinai-pipeline/SKILL.md) | Memvalidasi rencana keluaran beberapa tahap dalam mode dry-run; menjalankan pekerjaan nyata melalui Skills masing-masing tahap |
+| [VishnuAI CLI](../../skills/vishnuai-cli/SKILL.md) | Memilih perintah, memeriksa konfigurasi, serta memahami progres, manifes, keluaran, dan kesalahan |
+| [Subtitle](../../skills/vishnuai-subtitle/SKILL.md) | Mengunduh subtitle platform atau mentranskripsikan media, menerjemahkan subtitle, dan menghasilkan subtitle dwibahasa atau subtitle pendek untuk video vertikal |
+| [TTS](../../skills/vishnuai-tts/SKILL.md) | Menghasilkan sulih suara bahasa target dari subtitle dan secara opsional membuat video dengan sulih suara |
+| [Render horizontal](../../skills/vishnuai-render-horizontal/SKILL.md) | Merender video horizontal dengan subtitle dwibahasa atau audio sulih suara dan subtitle bahasa target |
+| [Render vertikal](../../skills/vishnuai-render-vertical/SKILL.md) | Menyusun video vertikal dengan judul, subtitle dwibahasa, atau sulih suara |
+| [Sampul](../../skills/vishnuai-cover/SKILL.md) | Menghasilkan gambar sampul dari prompt teks lengkap serta menyimpan gambar dan prompt akhir |
+| [Perencanaan pipeline](../../skills/vishnuai-pipeline/SKILL.md) | Memvalidasi rencana keluaran beberapa tahap dalam mode dry-run; menjalankan pekerjaan nyata melalui Skills masing-masing tahap |
 
 ### Perluas dengan Skills sendiri
 
-OpenCreator mendukung Skills lokal Codex yang didefinisikan melalui `SKILL.md`, sehingga Anda dapat menambahkan metode dan alur kerja sendiri tanpa hanya bergantung pada alat kreasi tetap. Ketersediaan Skills bergantung pada Codex home yang aktif dan Skills yang terpasang; Skills video memerlukan konfigurasi CLI dan layanan terkait. Adanya Skill di repositori tidak berarti Skill tersebut otomatis terpasang atau semua layanan eksternal disertakan.
+Vishnu Creator mendukung Skills lokal Codex yang didefinisikan melalui `SKILL.md`, sehingga Anda dapat menambahkan metode dan alur kerja sendiri tanpa hanya bergantung pada alat kreasi tetap. Ketersediaan Skills bergantung pada Codex home yang aktif dan Skills yang terpasang; Skills video memerlukan konfigurasi CLI dan layanan terkait. Adanya Skill di repositori tidak berarti Skill tersebut otomatis terpasang atau semua layanan eksternal disertakan.
 
 ## Percakapan dan ruang kerja, bergerak bersama
 
@@ -228,11 +228,11 @@ Transkripsi lokal juga mendukung faster-whisper, WhisperKit, dan whisper.cpp pad
 
 ### Penerjemahan Video
 
-Contoh publik di bawah ini dibuat saat OpenCreator masih bernama KrillinAI. Contoh tersebut menunjukkan alur kerja penyelarasan subtitel, penerjemahan, sulih suara, dan video potret yang telah teruji dan kini dibawa oleh ruang kerja Penerjemahan Video OpenCreator ke dalam alur Agent yang lebih luas.
+Contoh publik di bawah ini dibuat saat Vishnu Creator masih bernama VishnuAI. Contoh tersebut menunjukkan alur kerja penyelarasan subtitel, penerjemahan, sulih suara, dan video potret yang telah teruji dan kini dibawa oleh ruang kerja Penerjemahan Video Vishnu Creator ke dalam alur Agent yang lebih luas.
 
 Proyek ini menghasilkan file subtitel di bawah dari video lokal berdurasi 46 menit dalam satu kali proses, tanpa penyesuaian subtitel secara manual. Hasil yang dipublikasikan mencakup seluruh bagian, tanpa baris yang tumpang tindih, dengan segmentasi alami dan terjemahan berkualitas tinggi.
 
-![Contoh penyelarasan subtitel OpenCreator](../images/examples/krillinai-subtitle-alignment.png)
+![Contoh penyelarasan subtitel Vishnu Creator](../images/examples/vishnuai-subtitle-alignment.png)
 
 <table width="100%">
 <tr>
@@ -260,7 +260,7 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
 </tr>
 </table>
 
-> Contoh video dan gambar penyelarasan subtitel ini dibuat saat OpenCreator masih menggunakan nama KrillinAI.
+> Contoh video dan gambar penyelarasan subtitel ini dibuat saat Vishnu Creator masih menggunakan nama VishnuAI.
 
 ### Pengunduh Video
 
@@ -283,37 +283,37 @@ Sumber video yang didukung:
   </tr>
 </table>
 
-Ketersediaan bergantung pada video dan wilayah; beberapa sumber mungkin memerlukan cookie platform. OpenCreator tidak mengimpor cookie peramban secara otomatis.
+Ketersediaan bergantung pada video dan wilayah; beberapa sumber mungkin memerlukan cookie platform. Vishnu Creator tidak mengimpor cookie peramban secara otomatis.
 
-![Pemilihan format Pengunduh Video OpenCreator](../images/examples/video-downloader-formats-and-subtitles-en.png)
+![Pemilihan format Pengunduh Video Vishnu Creator](../images/examples/video-downloader-formats-and-subtitles-en.png)
 
 ### Pembuatan Video
 
 Buat video AI dari prompt teks atau gambar referensi dengan Seedance. Atur model, rasio aspek, resolusi, dan durasi, lalu pratinjau, buat ulang, atau unduh setiap versi dari ruang kerja proyek.
 
-![Pembuatan Video OpenCreator dengan Seedance](../images/examples/video-generation-seedance-en.png)
+![Pembuatan Video Vishnu Creator dengan Seedance](../images/examples/video-generation-seedance-en.png)
 
 ### Animasi Figur Stik
 
-OpenCreator mengembangkan koleksi karakter orisinal ini bersama seniman [Harbor Hsia](https://www.behance.net/xiaheyuan1), kreator [Stickman di Behance](https://www.behance.net/gallery/254715463/Stickman). Karakter bawaan menjaga identitas karakter tetap konsisten selama pembuatan animasi.
+Vishnu Creator mengembangkan koleksi karakter orisinal ini bersama seniman [Harbor Hsia](https://www.behance.net/xiaheyuan1), kreator [Stickman di Behance](https://www.behance.net/gallery/254715463/Stickman). Karakter bawaan menjaga identitas karakter tetap konsisten selama pembuatan animasi.
 
-![Karakter figur stik OpenCreator yang dikembangkan bersama seniman](../images/examples/stick-figure-characters.webp)
+![Karakter figur stik Vishnu Creator yang dikembangkan bersama seniman](../images/examples/stick-figure-characters.webp)
 
 Ubah teks atau konten YouTube menjadi animasi melalui peninjauan naskah, narasi, pengaturan waktu, storyboard, subtitle, rendering, dan unduhan video.
 
-![Contoh frame animasi figur stik OpenCreator](../images/examples/stick-figure-animation-frame.jpg)
+![Contoh frame animasi figur stik Vishnu Creator](../images/examples/stick-figure-animation-frame.jpg)
 
 ## Mulai Cepat
 
 ### Pasang Aplikasi Desktop
 
-Unduh penginstal macOS Apple Silicon, macOS Intel, atau Windows x64 dari [rilis terbaru](https://github.com/krillinai/OpenCreator/releases/latest). Aplikasi Desktop tidak memerlukan Node.js atau pnpm dan sudah menyertakan Codex CLI. Tugas model yang nyata memerlukan login ChatGPT atau konfigurasi API key yang dapat digunakan.
+Unduh penginstal macOS Apple Silicon, macOS Intel, atau Windows x64 dari [rilis terbaru](https://github.com/vishnuai/Vishnu Creator/releases/latest). Aplikasi Desktop tidak memerlukan Node.js atau pnpm dan sudah menyertakan Codex CLI. Tugas model yang nyata memerlukan login ChatGPT atau konfigurasi API key yang dapat digunakan.
 
 Saat pertama dibuka, Desktop memulai Runtime lokal, menyiapkan proyek default, dan memeriksa konfigurasi Codex di komputer Anda. Jika login atau API key serta pengaturan model yang dapat digunakan ditemukan, pilih **Gunakan Codex lokal dan lanjutkan** untuk memakainya kembali. Anda juga dapat mengatur penyedia model lain dalam panduan awal yang sama.
 
-![Pengaturan penyedia model saat pertama kali menjalankan OpenCreator Desktop](../images/product/opencreator-codex-setup.png)
+![Pengaturan penyedia model saat pertama kali menjalankan Vishnu Creator Desktop](../images/product/vishnucreator-codex-setup.png)
 
-Setelah pengaturan selesai, masukkan permintaan untuk memulai tugas. Jika ada masalah, lihat [panduan pengguna](../opencreator-user-guide-and-troubleshooting.md).
+Setelah pengaturan selesai, masukkan permintaan untuk memulai tugas. Jika ada masalah, lihat [panduan pengguna](../vishnucreator-user-guide-and-troubleshooting.md).
 
 ### Menjalankan Web dari Kode Sumber
 
@@ -333,8 +333,8 @@ codex --version
 ```
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable
 pnpm install
 pnpm web:dev
@@ -367,9 +367,9 @@ pnpm desktop:dev
 | `pnpm desktop:package` | Direktori yang dapat dijalankan untuk platform saat ini, ditujukan untuk verifikasi lokal |
 | `pnpm desktop:dist` | Installer untuk platform saat ini |
 | `pnpm desktop:release` | Titik masuk pengemasan untuk rilis resmi |
-| `pnpm --filter @opencreator/desktop verify:package` | Verifikasi paket Desktop yang sudah ada |
+| `pnpm --filter @vishnucreator/desktop verify:package` | Verifikasi paket Desktop yang sudah ada |
 
-Pengemasan Desktop membangun ulang Web dari ruang kerja saat ini, mencatat commit, status dirty, platform, arsitektur, dan hash Web, lalu membandingkan `apps/web/dist` dengan resource yang disematkan dalam aplikasi. Pengemasan gagal jika keduanya berbeda. Lihat [panduan operasional rilis Desktop](../operations/opencreator-desktop-release-runbook.md) untuk penandatanganan, notarisasi, build Windows, dan persyaratan rilis.
+Pengemasan Desktop membangun ulang Web dari ruang kerja saat ini, mencatat commit, status dirty, platform, arsitektur, dan hash Web, lalu membandingkan `apps/web/dist` dengan resource yang disematkan dalam aplikasi. Pengemasan gagal jika keduanya berbeda. Lihat [panduan operasional rilis Desktop](../operations/vishnucreator-desktop-release-runbook.md) untuk penandatanganan, notarisasi, build Windows, dan persyaratan rilis.
 
 ## Alur Kerja Inti
 
@@ -386,18 +386,18 @@ Pengemasan Desktop membangun ulang Web dari ruang kerja saat ini, mencatat commi
 - Telusuri marketplace Skill, riwayat instalasi, dan Skills yang tersedia secara lokal di pusat plugin.
 - Pilih Skill dari kotak input dengan `/` atau menu tambah agar tugas berikutnya mengikuti alur kerjanya.
 - Pengelolaan MCP menggunakan perintah dan konfigurasi native Codex, bukan memelihara mesin eksekusi kedua.
-- OpenCreator menggunakan `$CODEX_HOME` aktif secara default, jadi periksa dampaknya sebelum mengubah Skills global atau konfigurasi MCP.
+- Vishnu Creator menggunakan `$CODEX_HOME` aktif secara default, jadi periksa dampaknya sebelum mengubah Skills global atau konfigurasi MCP.
 
 ### Jadwal dan Thread Tugas Khusus
 
-- Setiap jadwal memiliki percakapan OpenCreator yang persisten dan khusus.
+- Setiap jadwal memiliki percakapan Vishnu Creator yang persisten dan khusus.
 - Pemicu otomatis, eksekusi manual, dan tindak lanjut pengguna menggunakan kembali percakapan tersebut dan berjalan secara serial sesuai kebijakan `queue` atau `skip`.
 - Menghapus jadwal akan mengarsipkan percakapan khususnya sambil mempertahankan Runs, hasil, dan riwayat Codex yang mendasarinya.
-- Merotasi atau memulihkan thread Codex yang mendasarinya tidak mengubah entri tugas atau rute halaman OpenCreator.
+- Merotasi atau memulihkan thread Codex yang mendasarinya tidak mengubah entri tugas atau rute halaman Vishnu Creator.
 
-## Struktur Sistem OpenCreator
+## Struktur Sistem Vishnu Creator
 
-OpenCreator memperlakukan ruang kerja visual dan percakapan Agent sebagai dua antarmuka untuk tugas kreatif yang sama, bukan dua alur kerja terpisah. Setiap alur kerja kreator dimodelkan sebagai mesin status: input sumber, konfigurasi, pembuatan, peninjauan, revisi, dan ekspor menjadi status serta peristiwa yang eksplisit. Tindakan di ruang kerja dan perintah percakapan masuk ke mesin status yang sama, sedangkan langkah saat ini, konfigurasi, progres, versi, dan hasil diproyeksikan kembali ke kedua antarmuka. Hal ini menjaga ruang kerja dan percakapan tetap sinkron tanpa menghadirkan sumber kebenaran kedua.
+Vishnu Creator memperlakukan ruang kerja visual dan percakapan Agent sebagai dua antarmuka untuk tugas kreatif yang sama, bukan dua alur kerja terpisah. Setiap alur kerja kreator dimodelkan sebagai mesin status: input sumber, konfigurasi, pembuatan, peninjauan, revisi, dan ekspor menjadi status serta peristiwa yang eksplisit. Tindakan di ruang kerja dan perintah percakapan masuk ke mesin status yang sama, sedangkan langkah saat ini, konfigurasi, progres, versi, dan hasil diproyeksikan kembali ke kedua antarmuka. Hal ini menjaga ruang kerja dan percakapan tetap sinkron tanpa menghadirkan sumber kebenaran kedua.
 
 Pekerjaan kreatif bersifat iteratif, sehingga revisi tidak menimpa hasil saat ini. Setiap koreksi atau pembuatan ulang menghasilkan versi baru dari status alur kerja yang ada, dengan tetap menyimpan pengaturan dan keluaran versi sebelumnya untuk ditinjau, dibandingkan, dan disempurnakan lebih lanjut.
 
@@ -433,7 +433,7 @@ Pekerjaan kreatif bersifat iteratif, sehingga revisi tidak menimpa hasil saat in
 +---------------------+  +---------------------+  +-------------------------+
 ```
 
-| Komponen OpenCreator | Tanggung jawab | Implementasi |
+| Komponen Vishnu Creator | Tanggung jawab | Implementasi |
 | --- | --- | --- |
 | Pengalaman Kreator | Dashboard, alat kreasi, percakapan Agent, pengaturan, dan file | `apps/web` · React 18 · Vite · TypeScript |
 | Inti Kolaborasi | Menyinkronkan langkah ruang kerja, konteks percakapan, progres, hasil, dan revisi | Status alur kerja bersama · `CreatorCollaborationPanel` · riwayat versi |
@@ -456,7 +456,7 @@ Prinsip inti:
 ## Tata Letak Repositori
 
 ```text
-OpenCreator/
+Vishnu Creator/
 ├── apps/
 │   ├── web/          # Satu-satunya implementasi frontend React
 │   ├── daemon/       # Runtime Fastify lokal dan adaptor Codex
@@ -476,32 +476,32 @@ OpenCreator/
 
 Buka **Pengaturan → Layanan AI** untuk mengonfigurasi penyedia model, transkripsi, audio, dan gambar yang digunakan ruang kerja saat ini. Kategori layanan tambahan mungkin muncul sebagai persiapan untuk alat kreasi mendatang. Setiap kategori hanya menampilkan kolom yang diperlukan oleh penyedia terpilih, termasuk Base URL, API Key, model, proxy, atau kredensial khusus penyedia.
 
-![Pengaturan Kunci API Layanan AI OpenCreator](../images/product/opencreator-ai-services-en.png)
+![Pengaturan Kunci API Layanan AI Vishnu Creator](../images/product/vishnucreator-ai-services-en.png)
 
 Kredensial disimpan melalui penyimpanan kredensial sistem milik Runtime lokal dan tidak boleh pernah dimasukkan ke repositori. Beberapa penyedia lokal atau berbasis sistem, seperti Edge TTS, tidak memerlukan API Key.
 
 ### Komponen Runtime Pihak Ketiga
 
-Buka **Pengaturan → Komponen Pihak Ketiga** untuk melihat versi yt-dlp nightly yang sedang digunakan, versi bawaan OpenCreator, sumbernya, dan rilis terbaru yang tersedia. OpenCreator memeriksa pembaruan setiap tujuh hari, tetapi tidak pernah memasangnya secara otomatis. Pembaruan memerlukan tindakan pengguna secara eksplisit, dan versi yang sedang berfungsi tetap tersedia jika pengunduhan, verifikasi, atau pemasangan gagal.
+Buka **Pengaturan → Komponen Pihak Ketiga** untuk melihat versi yt-dlp nightly yang sedang digunakan, versi bawaan Vishnu Creator, sumbernya, dan rilis terbaru yang tersedia. Vishnu Creator memeriksa pembaruan setiap tujuh hari, tetapi tidak pernah memasangnya secara otomatis. Pembaruan memerlukan tindakan pengguna secara eksplisit, dan versi yang sedang berfungsi tetap tersedia jika pengunduhan, verifikasi, atau pemasangan gagal.
 
-![Pengaturan Komponen Pihak Ketiga OpenCreator](../images/product/opencreator-third-party-components-en.png)
+![Pengaturan Komponen Pihak Ketiga Vishnu Creator](../images/product/vishnucreator-third-party-components-en.png)
 ### Variabel Lingkungan Runtime
 
 Sebagian besar pengguna tidak memerlukan variabel lingkungan. Gunakan variabel berikut saat Anda memerlukan data terisolasi, executable Codex tertentu, atau direktori proyek terkelola khusus:
 
 | Variabel lingkungan | Default | Tujuan |
 | --- | --- | --- |
-| `OPENCREATOR_DATA_DIR` | `.runtime` | Database OpenCreator, Runs, lampiran, dan ruang kerja terkelola |
-| `OPENCREATOR_CODEX_BIN` | `codex` | Path ke executable Codex CLI |
+| `VISHNUCREATOR_DATA_DIR` | `.runtime` | Database Vishnu Creator, Runs, lampiran, dan ruang kerja terkelola |
+| `VISHNUCREATOR_CODEX_BIN` | `codex` | Path ke executable Codex CLI |
 | `CODEX_HOME` | `~/.codex` | Sumber kebenaran untuk sesi, konfigurasi, Skills, MCP, dan Profiles Codex |
-| `OPENCREATOR_DEFAULT_CWD` | Direktori kerja saat ini | Direktori kerja default daemon |
-| `OPENCREATOR_DEFAULT_PROJECT_ROOT` | Kebijakan default Runtime | Root proyek terkelola; jika diatur, OpenCreator menggunakan subdirektori `OpenCreator/` di dalamnya |
-| `OPENCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | Ambang Runs terminal untuk merotasi thread Codex di balik jadwal berdurasi panjang; gunakan `0` untuk menonaktifkan rotasi proaktif |
+| `VISHNUCREATOR_DEFAULT_CWD` | Direktori kerja saat ini | Direktori kerja default daemon |
+| `VISHNUCREATOR_DEFAULT_PROJECT_ROOT` | Kebijakan default Runtime | Root proyek terkelola; jika diatur, Vishnu Creator menggunakan subdirektori `Vishnu Creator/` di dalamnya |
+| `VISHNUCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | Ambang Runs terminal untuk merotasi thread Codex di balik jadwal berdurasi panjang; gunakan `0` untuk menonaktifkan rotasi proaktif |
 
 Contohnya, untuk mengisolasi data Runtime dan lingkungan Codex sekaligus:
 
 ```bash
-OPENCREATOR_DATA_DIR=/path/to/opencreator-data \
+VISHNUCREATOR_DATA_DIR=/path/to/vishnucreator-data \
 CODEX_HOME=/path/to/codex-home \
 pnpm web:dev
 ```
@@ -523,11 +523,11 @@ Batas keamanan mencakup:
 
 - Daemon hanya mendengarkan pada `127.0.0.1`; setiap API kecuali pemeriksaan kesehatan memerlukan token Bearer.
 - Pratinjau HTML menonaktifkan skrip, navigasi, dan pop-up secara default serta hanya mengizinkan resource relatif terkontrol dari ruang kerja yang sama.
-- Memori sensitif memerlukan konfirmasi kedua. OpenCreator tidak pernah menyimpan saran yang belum dikonfirmasi secara otomatis dan permanen.
+- Memori sensitif memerlukan konfirmasi kedua. Vishnu Creator tidak pernah menyimpan saran yang belum dikonfirmasi secara otomatis dan permanen.
 - Diagnostik dan log Run disamarkan sebelum dikembalikan atau diekspor.
 - Paket Desktop mengaktifkan integritas ASAR dan enkripsi cookie sambil menonaktifkan RunAsNode, `NODE_OPTIONS`, dan Node CLI Inspector.
 
-Lihat [panduan pengguna dan pemecahan masalah](../opencreator-user-guide-and-troubleshooting.md) untuk prosedur pencadangan, pemulihan, pembersihan, dan pengaturan ulang yang lengkap.
+Lihat [panduan pengguna dan pemecahan masalah](../vishnucreator-user-guide-and-troubleshooting.md) untuk prosedur pencadangan, pemulihan, pembersihan, dan pengaturan ulang yang lengkap.
 
 ## Pengembangan
 
@@ -552,15 +552,15 @@ Perubahan pada Desktop, Host Bridge, proxy Runtime, atau alur kerja frontend ber
 Smoke test dengan Codex nyata dinonaktifkan secara default. Aktifkan secara eksplisit dengan:
 
 ```bash
-OPENCREATOR_RUN_REAL_CODEX_SMOKE=1 \
-pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
+VISHNUCREATOR_RUN_REAL_CODEX_SMOKE=1 \
+pnpm --filter @vishnucreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 ```
 
 ## Dokumentasi
 
-- **Menggunakan OpenCreator:** [Mulai Cepat](#mulai-cepat) · [Panduan pengguna dan pemecahan masalah](../opencreator-user-guide-and-troubleshooting.md)
+- **Menggunakan Vishnu Creator:** [Mulai Cepat](#mulai-cepat) · [Panduan pengguna dan pemecahan masalah](../vishnucreator-user-guide-and-troubleshooting.md)
 - **Mengembangkan dan memperluas:** [Panduan kontribusi](../../CONTRIBUTING.md) · [Kontribusi Skill](../contributing/skills-contributing.md) · [Kontribusi template kreasi](../contributing/templates-contributing.md) · [Runtime API v1](../runtime-api-for-ui-v1.md) · [Pedoman komponen visual](../visual-component-guidelines.md)
-- **Pemeliharaan dan rilis:** [Desain Runtime native Codex](../2026-07-03-codex-native-agent-runtime-design.md) · [Panduan operasional rilis Desktop](../operations/opencreator-desktop-release-runbook.md) · [Panduan rilis Desktop untuk Windows](../operations/opencreator-desktop-windows-release.md)
+- **Pemeliharaan dan rilis:** [Desain Runtime native Codex](../2026-07-03-codex-native-agent-runtime-design.md) · [Panduan operasional rilis Desktop](../operations/vishnucreator-desktop-release-runbook.md) · [Panduan rilis Desktop untuk Windows](../operations/vishnucreator-desktop-windows-release.md)
 
 ## Konvensi Penerjemahan
 
@@ -568,9 +568,9 @@ File `README.md` di root adalah dokumen bahasa Inggris kanonis. Terjemahan yang 
 
 ## Komunitas
 
-<p>Pengguna GitHub dari <strong>setidaknya 105 negara dan wilayah</strong> telah memberi Star kepada OpenCreator.</p>
+<p>Pengguna GitHub dari <strong>setidaknya 105 negara dan wilayah</strong> telah memberi Star kepada Vishnu Creator.</p>
 
-<img src="../images/star-coverage-map.svg" alt="Peta dunia yang menandai negara dan wilayah pengguna GitHub yang memberi Star pada OpenCreator" width="760" />
+<img src="../images/star-coverage-map.svg" alt="Peta dunia yang menandai negara dan wilayah pengguna GitHub yang memberi Star pada Vishnu Creator" width="760" />
 
 ### Tim Inti
 
@@ -581,7 +581,7 @@ Setiap anggota bertanggung jawab atas standar, peninjauan dan penggabungan kontr
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/wulien.svg" width="64" height="64" alt="wulien avatar" /><br /><a href="https://github.com/wulien">wulien</a><br />Kode &amp; perbaikan bug</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/dle-kb.svg" width="64" height="64" alt="DLe-kb avatar" /><br /><a href="https://github.com/DLe-kb">DLe-kb</a><br />Template kreasi</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/xiaheyuan.svg" width="64" height="64" alt="xiaheyuan avatar" /><br /><a href="https://github.com/xiaheyuan">xiaheyuan</a><br />Desain &amp; aset</td>
-    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/krillinai.svg" width="64" height="64" alt="krillinai avatar" /><br /><a href="https://github.com/krillinai">krillinai</a><br />Skills &amp; dokumentasi</td>
+    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/vishnuai.svg" width="64" height="64" alt="vishnuai avatar" /><br /><a href="https://github.com/vishnuai">vishnuai</a><br />Skills &amp; dokumentasi</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/hbxugang.svg" width="64" height="64" alt="hbxugang avatar" /><br /><a href="https://github.com/hbxugang">hbxugang</a><br />Deployment perusahaan</td>
   </tr>
 </table>
@@ -594,7 +594,7 @@ Terima kasih kepada semua orang yang telah berkontribusi melalui kode, dokumenta
   <a href="https://github.com/maranello-o"><img src="../images/contributors/maranello-o.svg" width="48" height="48" alt="maranello-o" /></a>
   <a href="https://github.com/wulien"><img src="../images/contributors/wulien.svg" width="48" height="48" alt="wulien" /></a>
   <a href="https://github.com/puji4810"><img src="../images/contributors/puji4810.svg" width="48" height="48" alt="puji4810" /></a>
-  <a href="https://github.com/krillinai"><img src="../images/contributors/krillinai.svg" width="48" height="48" alt="krillinai" /></a>
+  <a href="https://github.com/vishnuai"><img src="../images/contributors/vishnuai.svg" width="48" height="48" alt="vishnuai" /></a>
   <a href="https://github.com/PairZhu"><img src="../images/contributors/pairzhu.svg" width="48" height="48" alt="PairZhu" /></a>
   <a href="https://github.com/Mijaelx"><img src="../images/contributors/mijaelx.svg" width="48" height="48" alt="Mijaelx" /></a>
   <a href="https://github.com/OutisLi"><img src="../images/contributors/outisli.svg" width="48" height="48" alt="OutisLi" /></a>
@@ -610,7 +610,7 @@ Terima kasih kepada semua orang yang telah berkontribusi melalui kode, dokumenta
   <a href="https://github.com/DLe-kb"><img src="../images/contributors/dle-kb.svg" width="48" height="48" alt="DLe-kb" /></a>
   <a href="https://github.com/liupig"><img src="../images/contributors/liupig.svg" width="48" height="48" alt="liupig" /></a>
   <a href="https://github.com/alextavares" title="alextavares"><img src="../images/contributors/alextavares.svg" width="48" height="48" alt="alextavares" /></a>
-  <a href="https://github.com/krillinai/OpenCreator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
+  <a href="https://github.com/vishnuai/Vishnu Creator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
   <a href="https://github.com/mifan100g" title="mifan100g (米饭二两)"><img src="../images/contributors/mifan100g.svg" width="48" height="48" alt="mifan100g (米饭二两)" /></a>
   <a href="https://github.com/askalf"><img src="../images/contributors/askalf.svg" width="48" height="48" alt="askalf" /></a>
   <a href="https://github.com/Yi-111-a"><img src="../images/contributors/yi-111-a.svg" width="48" height="48" alt="Yi-111-a" /></a>
@@ -618,7 +618,7 @@ Terima kasih kepada semua orang yang telah berkontribusi melalui kode, dokumenta
 
 ### Berkontribusi
 
-Anda dapat berkontribusi ke OpenCreator dengan berbagai cara, tidak hanya lewat kode:
+Anda dapat berkontribusi ke Vishnu Creator dengan berbagai cara, tidak hanya lewat kode:
 
 | Jenis | Kontribusi | Yang perlu disiapkan | Tempat mengirim |
 | --- | --- | --- | --- |
@@ -632,20 +632,20 @@ Simpan setiap templat dan asetnya di `template/<module>/<id>/<version>/template.
 
 Cara berkontribusi:
 
-1. Jelaskan masalah, kasus penggunaan, dan perilaku yang diharapkan di [Issues](https://github.com/krillinai/OpenCreator/issues).
+1. Jelaskan masalah, kasus penggunaan, dan perilaku yang diharapkan di [Issues](https://github.com/vishnuai/Vishnu Creator/issues).
 2. Buat branch fitur atau perbaikan yang terfokus dari branch pengembangan terbaru.
 3. Ikuti arsitektur yang ada: implementasikan kemampuan produk umum satu kali di Web dan Daemon, lalu pisahkan perbedaan native di balik capabilities yang eksplisit.
 4. Tambahkan cakupan unit, integrasi, atau E2E yang sesuai untuk perubahan perilaku, dan cantumkan verifikasi yang diselesaikan maupun dilewati dalam Pull Request.
 5. Jangan pernah memasukkan `.runtime/`, kredensial lokal, sesi Codex, cache build, atau data pengguna lainnya ke dalam commit.
 
-[contribute-issue]: https://github.com/krillinai/OpenCreator/issues
-[contribute-pr]: https://github.com/krillinai/OpenCreator/pulls
+[contribute-issue]: https://github.com/vishnuai/Vishnu Creator/issues
+[contribute-pr]: https://github.com/vishnuai/Vishnu Creator/pulls
 
 ## Riwayat Star
 
-OpenCreator sebelumnya bernama KrillinAI. Grafik ini mencakup seluruh riwayat repositori sebelum dan sesudah perubahan nama.
+Vishnu Creator sebelumnya bernama VishnuAI. Grafik ini mencakup seluruh riwayat repositori sebelum dan sesudah perubahan nama.
 
-[![Riwayat Star OpenCreator](https://api.star-history.com/svg?repos=krillinai/OpenCreator&type=date)](https://www.star-history.com/?type=date&repos=krillinai%2FOpenCreator)
+[![Riwayat Star Vishnu Creator](https://api.star-history.com/svg?repos=vishnuai/Vishnu Creator&type=date)](https://www.star-history.com/?type=date&repos=vishnuai%2FVishnu Creator)
 
 ## Proyek Terkait
 
@@ -665,6 +665,6 @@ OpenCreator sebelumnya bernama KrillinAI. Grafik ini mencakup seluruh riwayat re
 
 <div align="center">
 
-**OpenCreator · Berkreasi secara lokal, bekerja tanpa henti.**
+**Vishnu Creator · Berkreasi secara lokal, bekerja tanpa henti.**
 
 </div>

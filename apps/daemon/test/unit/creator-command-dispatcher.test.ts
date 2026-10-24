@@ -70,7 +70,7 @@ describe('creator command dispatcher', () => {
       const job = fixture.service.createJob({ projectId: 'project', templateId: 'video-generation', state: { prompt: 'test' } });
       const original = fixture.repository.createStageRun({ jobId: job.id, stageId: 'generate', executor: 'video', status: 'failed' });
       const ledger = new CreatorProviderRequestLedger(fixture.repository);
-      const receipt = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: original.id, provider: 'opencreator-gateway-video', requestKey: 'rejected-video', request: {} });
+      const receipt = ledger.registerBeforeSubmit({ jobId: job.id, stageRunId: original.id, provider: 'vishnucreator-gateway-video', requestKey: 'rejected-video', request: {} });
       ledger.markSubmitting(receipt.id); ledger.markFailed(receipt.id);
       const dispatcher = createCreatorCommandDispatcher({ service: fixture.service, repository: fixture.repository, receipts: fixture.receipts });
       const result = dispatcher.dispatch(job.id, { action: 'retry-stage', expectedRevision: job.revision, idempotencyKey: 'retry-rejected-video', input: { stageId: 'generate' } }, 'user');

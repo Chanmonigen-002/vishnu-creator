@@ -3,9 +3,9 @@
   --subtitle-preview-muted: #b6b6bd;
   position: fixed;
   inset: 0;
-  inset-block-start: var(--opencreator-titlebar-height, 0px);
+  inset-block-start: var(--vishnucreator-titlebar-height, 0px);
   z-index: 1000;
-  height: calc(100dvh - var(--opencreator-titlebar-height, 0px));
+  height: calc(100dvh - var(--vishnucreator-titlebar-height, 0px));
   overflow: hidden;
   background: var(--surface);
 }

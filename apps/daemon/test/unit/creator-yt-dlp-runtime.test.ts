@@ -3,7 +3,7 @@ import { tmpdir } from 'node:os';
 import { join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterEach, describe, expect, it } from 'vitest';
-import type { KrillinRuntimeManifest } from '../../src/creator/krillin/manifest.js';
+import type { VishnuRuntimeManifest } from '../../src/creator/vishnu/manifest.js';
 import { resolveYtDlpRuntime } from '../../src/creator/yt-dlp/runtime.js';
 
 let root = '';
@@ -147,7 +147,7 @@ async function writeResource(path: string): Promise<void> {
 function resource(
   path: string,
   kind: 'executable' | 'asset'
-): KrillinRuntimeManifest['resources'][number] {
+): VishnuRuntimeManifest['resources'][number] {
   return {
     path,
     kind,
@@ -156,9 +156,9 @@ function resource(
 }
 
 function manifest(
-  ytDlp: KrillinRuntimeManifest['ytDlp'],
-  resources: KrillinRuntimeManifest['resources']
-): KrillinRuntimeManifest {
+  ytDlp: VishnuRuntimeManifest['ytDlp'],
+  resources: VishnuRuntimeManifest['resources']
+): VishnuRuntimeManifest {
   return {
     version: 1,
     platform: process.platform,

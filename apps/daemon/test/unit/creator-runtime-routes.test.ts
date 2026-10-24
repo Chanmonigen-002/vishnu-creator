@@ -1,6 +1,6 @@
 import Fastify, { type FastifyInstance } from 'fastify';
-import { createDefaultCreatorServicesConfig, type CreatorRuntimeComponent, type CreatorYtDlpStatus } from '@opencreator/protocol';
-import { createKrillinDependencyLoader } from '../../src/creator/krillin/dependency-loader.js';
+import { createDefaultCreatorServicesConfig, type CreatorRuntimeComponent, type CreatorYtDlpStatus } from '@vishnucreator/protocol';
+import { createVishnuDependencyLoader } from '../../src/creator/vishnu/dependency-loader.js';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { registerCreatorRuntimeRoutes } from '../../src/api/routes.creator-runtime.js';
 import {
@@ -20,7 +20,7 @@ describe('creator yt-dlp runtime routes', () => {
     const config = createDefaultCreatorServicesConfig();
     const component: CreatorRuntimeComponent = { id: 'remotion', name: 'Remotion', available: true, version: null, supportedVersion: '4.0.473', installedAt: null, path: '/runtime/remotion', source: 'verified release', models: [], model: null, state: 'not_installed', item: null, downloadedBytes: 0, totalBytes: null, percent: null, bytesPerSecond: null, remainingSeconds: null, error: null };
     const remotion = { status: vi.fn(async () => component), download: vi.fn(async () => component), ensure: vi.fn(), close: vi.fn() };
-    const loader = createKrillinDependencyLoader({ root: '/tmp/opencreator-remotion-api', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => false, install: vi.fn() } });
+    const loader = createVishnuDependencyLoader({ root: '/tmp/vishnucreator-remotion-api', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => false, install: vi.fn() } });
     const download = vi.spyOn(loader, 'download');
     server = Fastify();
     await registerCreatorRuntimeRoutes(server, undefined, { loader, readConfig: async () => config, remotion });
@@ -41,7 +41,7 @@ describe('creator yt-dlp runtime routes', () => {
     const saved = structuredClone(config);
     let installed = false;
     const install = vi.fn(async () => { installed = true; });
-    const loader = createKrillinDependencyLoader({ root: '/tmp/opencreator-independent-components-route', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => installed, install } });
+    const loader = createVishnuDependencyLoader({ root: '/tmp/vishnucreator-independent-components-route', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => installed, install } });
     server = Fastify();
     await registerCreatorRuntimeRoutes(server, undefined, { loader, readConfig: async () => config });
 
@@ -57,7 +57,7 @@ describe('creator yt-dlp runtime routes', () => {
 
   it.each([{ componentId: 'openai' }, { componentId: 123 }, { componentId: null }, ['whisperkit']])('rejects an invalid component request %j without downloading', async payload => {
     const install = vi.fn();
-    const loader = createKrillinDependencyLoader({ root: '/tmp/opencreator-invalid-components-route', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => false, install } });
+    const loader = createVishnuDependencyLoader({ root: '/tmp/vishnucreator-invalid-components-route', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => false, install } });
     server = Fastify();
     await registerCreatorRuntimeRoutes(server, undefined, { loader, readConfig: async () => createDefaultCreatorServicesConfig() });
 
@@ -69,7 +69,7 @@ describe('creator yt-dlp runtime routes', () => {
   });
 
   it('rejects components unsupported by the Runtime platform even with a cloud provider', async () => {
-    const loader = createKrillinDependencyLoader({ root: '/tmp/opencreator-unsupported-components-route', platform: 'linux', arch: 'x64' });
+    const loader = createVishnuDependencyLoader({ root: '/tmp/vishnucreator-unsupported-components-route', platform: 'linux', arch: 'x64' });
     server = Fastify();
     await registerCreatorRuntimeRoutes(server, undefined, { loader, readConfig: async () => createDefaultCreatorServicesConfig() });
 
@@ -84,7 +84,7 @@ describe('creator yt-dlp runtime routes', () => {
     config.transcription.provider = 'whisperkit';
     let installed = false;
     const install = vi.fn(async () => { installed = true; });
-    const loader = createKrillinDependencyLoader({ root: '/tmp/opencreator-components-route', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => installed, install } });
+    const loader = createVishnuDependencyLoader({ root: '/tmp/vishnucreator-components-route', platform: 'darwin', arch: 'arm64', whisperKitInstaller: { isInstalled: async () => installed, install } });
     server = Fastify();
     await registerCreatorRuntimeRoutes(server, undefined, { loader, readConfig: async () => config });
     const before = await server.inject({ method: 'GET', url: '/creator/components/status' });

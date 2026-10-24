@@ -1,4 +1,4 @@
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 import type { LocalizeCopy } from '../../i18n/useLocalizedCopy.js';
 import { formatGatewayCreditAmount } from '../../features/account/billing-display.js';
 

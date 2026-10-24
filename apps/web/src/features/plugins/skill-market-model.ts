@@ -2,12 +2,12 @@ import type {
   CodexSkillListResponse,
   CodexSkillMarketInstallRecordResponse,
   CodexSkillResponse,
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   skillMarketCategories,
   type SkillMarketCategory,
   type SkillMarketEntry,
-} from '@opencreator/skill-market';
+} from '@vishnucreator/skill-market';
 
 export type SkillMarketStatus =
   | 'not_installed'

@@ -4,12 +4,12 @@ import { mkdir, rename, rm } from 'node:fs/promises';
 import { basename, extname, join, resolve } from 'node:path';
 import { Transform, type Readable } from 'node:stream';
 import { pipeline } from 'node:stream/promises';
-import type { CreatorSourceUploadResponse } from '@opencreator/protocol';
+import type { CreatorSourceUploadResponse } from '@vishnucreator/protocol';
 import { CreatorServiceError, type CreatorService } from './service.js';
 import { validateImageFile } from './validators/image.js';
 
 export const CREATOR_REFERENCE_IMAGE_CONTENT_TYPE =
-  'application/vnd.opencreator.creator-reference-image';
+  'application/vnd.vishnucreator.creator-reference-image';
 export const CREATOR_REFERENCE_IMAGE_MAX_SIZE_BYTES = 20 * 1024 * 1024;
 
 export type CreatorReferenceImageUploadService =

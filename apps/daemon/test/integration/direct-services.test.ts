@@ -3,7 +3,7 @@ import { mkdtemp, rm } from 'node:fs/promises';
 import { join } from 'node:path';
 import { tmpdir } from 'node:os';
 import { afterEach, expect, it, vi } from 'vitest';
-import { createDefaultCreatorServicesConfig, gatewayDefaultVoiceId, type GatewayModel } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, gatewayDefaultVoiceId, type GatewayModel } from '@vishnucreator/protocol';
 import { createGatewayCreatorSource } from '../../src/gateway/creator-service-source.js';
 import type { GatewayAccountService } from '../../src/gateway/account-service.js';
 import { createDirectTransport } from '../../src/gateway/direct-transport.js';
@@ -11,7 +11,7 @@ import { createDirectRuntime } from '../../src/gateway/direct-runtime.js';
 import { registerCreatorServicesRoutes } from '../../src/api/routes.creator-services.js';
 import { createVideoGenerationService } from '../../src/video-generation/service.js';
 import { officialEventStream } from '../../src/gateway/official-stream.js';
-import { createKrillinTtsService } from '../../src/creator/krillin/tts-service.js';
+import { createVishnuTtsService } from '../../src/creator/vishnu/tts-service.js';
 import { generateImageContents } from '../../src/image-generation/provider.js';
 import { readPrivateJsonFile } from '../../src/config/private-json-file.js';
 import { openRuntimeDatabase } from '../../src/storage/database.js';
@@ -79,7 +79,7 @@ it.each(['tech', 'org'])('routes Creator subtitle transcription directly through
   const form = new FormData(); form.set('model', transcription.id); form.set('response_format', 'verbose_json');
   form.set('timestamp_granularities[]', 'segment'); form.set('file', new Blob(['audio'], { type: 'audio/wav' }), 'audio.wav');
   const request = new Request('http://localhost', { method: 'POST', body: form });
-  const response = await f.server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/audio/transcriptions', headers: { Authorization: `Bearer ${config.transcription.openai.apiKey}`, 'Content-Type': request.headers.get('content-type')!, 'Idempotency-Key': 'ca-asr' }, payload: Buffer.from(await request.arrayBuffer()) });
+  const response = await f.server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/audio/transcriptions', headers: { Authorization: `Bearer ${config.transcription.openai.apiKey}`, 'Content-Type': request.headers.get('content-type')!, 'Idempotency-Key': 'ca-asr' }, payload: Buffer.from(await request.arrayBuffer()) });
   expect(response.statusCode).toBe(200);
   expect(response.json()).toMatchObject({ segments: [{ start: 0, end: 1 }] });
   expect(f.fetcher).toHaveBeenCalledOnce();
@@ -91,7 +91,7 @@ it('rejects a Creator capability issued before a supplier change without submitt
   const config = await f.source.store.read();
   const original = await f.account.modelCredentials();
   f.account.modelCredentials = async () => ({ ...original, baseUrl: 'https://api.chatanywhere.tech/v1', modelKey: 'new-ca-key', transport: 'supplier-direct' });
-  const response = await f.server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/audio/speech', headers: { Authorization: `Bearer ${config.tts.openai.apiKey}` }, payload: { model: 'vendor/speech', input: 'test', voice: 'tested_voice' } });
+  const response = await f.server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/audio/speech', headers: { Authorization: `Bearer ${config.tts.openai.apiKey}` }, payload: { model: 'vendor/speech', input: 'test', voice: 'tested_voice' } });
   expect(response.statusCode).toBe(409);
   expect(response.json()).toMatchObject({ error: { code: 'supplier_binding_changed' } });
   expect(f.fetcher).not.toHaveBeenCalled();
@@ -115,7 +115,7 @@ it.each(['account', 'headers', 'first-token'])('opens the translation stream bef
       controller.close();
     } }), { headers: { 'Content-Type': 'text/event-stream' } });
   });
-  const submit = () => fetch(`${origin}/internal/krillin-llm/gateway/v1/chat/completions`, {
+  const submit = () => fetch(`${origin}/internal/vishnu-llm/gateway/v1/chat/completions`, {
     method: 'POST', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Content-Type': 'application/json', 'Idempotency-Key': 'same-translation' },
     body: JSON.stringify({ model: 'vendor/text', messages: [], stream: true }), signal: AbortSignal.timeout(2_000)
   });
@@ -147,7 +147,7 @@ it('does not submit a paid translation after the caller disconnects during accou
   f.account.beginModelUse = async () => { await waiting; return { credentials: await f.account.modelCredentials(), release }; };
   const disconnected = new Promise<void>(resolve => f.server.server.once('request', (_request, response) => response.once('close', resolve)));
   try {
-    const response = await fetch(`${origin}/internal/krillin-llm/gateway/v1/chat/completions`, {
+    const response = await fetch(`${origin}/internal/vishnu-llm/gateway/v1/chat/completions`, {
       method: 'POST', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Content-Type': 'application/json' },
       body: JSON.stringify({ model: 'vendor/text', messages: [], stream: true }), signal: AbortSignal.timeout(2_000)
     });
@@ -163,7 +163,7 @@ it('reports rejected streaming translations without exposing upstream details', 
   const f = await fixture();
   const config = await f.source.store.read();
   vi.mocked(f.fetcher).mockImplementation(async () => Response.json({ error: { message: 'OpenRouter private failure' } }, { status: 402 }));
-  const response = await f.server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/chat/completions',
+  const response = await f.server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/chat/completions',
     headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: 'vendor/text', messages: [], stream: true } });
   expect(response.statusCode).toBe(200);
   expect(response.body).toContain('credits_insufficient');
@@ -176,7 +176,7 @@ it.each([
   const f = await fixture();
   const config = await f.source.store.read();
   vi.mocked(f.fetcher).mockImplementation(async () => Response.json({ error: { message: 'Model unavailable in this country private-user-key' } }, { status: 403 }));
-  const response = await f.server.inject({ method: 'POST', url: `/internal/krillin-llm/gateway/v1/${resource}`, headers: { Authorization: `Bearer ${config.llm.apiKey}` },
+  const response = await f.server.inject({ method: 'POST', url: `/internal/vishnu-llm/gateway/v1/${resource}`, headers: { Authorization: `Bearer ${config.llm.apiKey}` },
     payload: { model: `vendor/${modality}`, prompt: 'test', input: 'test', voice: 'tested_voice', size: '1280x720', duration: 5 } });
   expect(response.statusCode).toBe(403);
   expect(response.body).not.toContain('private-user-key');
@@ -190,14 +190,14 @@ it('reconciles a streamed chat result without creating an unknown-acceptance iss
   const issues = createCreatorIssueService(repository);
   const f = await fixture(new CreatorProviderRequestLedger(repository, issues));
   const job = repository.createJob({ projectId: 'project', templateId: 'video-translation', templateVersion: 1, status: 'running', state: {} });
-  const stage = repository.createStageRun({ jobId: job.id, stageId: 'subtitle', executor: 'krillinai', status: 'running' });
+  const stage = repository.createStageRun({ jobId: job.id, stageId: 'subtitle', executor: 'vishnuai', status: 'running' });
   vi.mocked(f.fetcher).mockImplementation(async () => new Response(new ReadableStream<Uint8Array>({
     start(controller) { controller.enqueue(new TextEncoder().encode('data: {"choices":[{"delta":{"content":"translated"}}]}\n\ndata: [DONE]\n\n')); }
   }), { headers: { 'Content-Type': 'text/event-stream' } }));
   try {
     await f.source.runForJob(job.id, stage.id, async () => {
       const config = await f.source.store.read();
-      const response = await f.server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/chat/completions',
+      const response = await f.server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/chat/completions',
         headers: { Authorization: 'Bearer ' + config.llm.apiKey }, payload: { model: 'vendor/text', messages: [], stream: true } });
       expect(response.statusCode).toBe(200);
       expect(response.body).toContain('[DONE]');
@@ -219,7 +219,7 @@ it('hides official addresses and credentials, preserving custom configuration ac
 });
 it('sends multimodal requests directly, translates image edits, and replays a paid result locally', async () => {
   const f = await fixture(); const config = await f.source.store.read();
-  const submit = (operation: string, payload: Record<string, unknown>, key = operation) => f.server.inject({ method: 'POST', url: `/internal/krillin-llm/gateway/v1/${operation}`, headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Idempotency-Key': key }, payload });
+  const submit = (operation: string, payload: Record<string, unknown>, key = operation) => f.server.inject({ method: 'POST', url: `/internal/vishnu-llm/gateway/v1/${operation}`, headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Idempotency-Key': key }, payload });
   expect((await submit('chat/completions', { model: 'vendor/text', messages: [{ role: 'user', content: 'hello' }] })).statusCode).toBe(200);
   expect((await submit('images/generations', { model: 'vendor/image', prompt: 'image', n: 1, size: '1536x1024', response_format: 'b64_json' })).statusCode).toBe(200);
   const imageBody = JSON.parse(String(vi.mocked(f.fetcher).mock.lastCall?.[1]?.body));
@@ -230,13 +230,13 @@ it('sends multimodal requests directly, translates image edits, and replays a pa
   expect(JSON.parse(String(vi.mocked(f.fetcher).mock.lastCall?.[1]?.body))).not.toHaveProperty('response_format');
   const form = new FormData(); form.set('model', 'vendor/image'); form.set('prompt', 'edit'); form.set('image[]', new Blob(['image'], { type: 'image/png' }), 'image.png');
   const request = new Request('http://localhost', { method: 'POST', body: form });
-  const edited = await f.server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/images/edits', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Content-Type': request.headers.get('content-type')!, 'Idempotency-Key': 'edit' }, payload: Buffer.from(await request.arrayBuffer()) });
+  const edited = await f.server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/images/edits', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Content-Type': request.headers.get('content-type')!, 'Idempotency-Key': 'edit' }, payload: Buffer.from(await request.arrayBuffer()) });
   expect(edited.statusCode).toBe(200);
   expect(vi.mocked(f.fetcher).mock.lastCall?.[0]).toBe('https://openrouter.ai/api/v1/images');
   expect(JSON.parse(String(vi.mocked(f.fetcher).mock.lastCall?.[1]?.body))).toMatchObject({ input_references: [{ type: 'image_url', image_url: { url: 'data:image/png;base64,aW1hZ2U=' } }] });
   const transcription = new FormData(); transcription.set('model', 'vendor/transcription'); transcription.set('file', new Blob(['audio'], { type: 'audio/wav' }), 'audio.wav');
   const audioRequest = new Request('http://localhost', { method: 'POST', body: transcription });
-  expect((await f.server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/audio/transcriptions', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Content-Type': audioRequest.headers.get('content-type')!, 'Idempotency-Key': 'asr' }, payload: Buffer.from(await audioRequest.arrayBuffer()) })).json()).toEqual({ text: 'recognized' });
+  expect((await f.server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/audio/transcriptions', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Content-Type': audioRequest.headers.get('content-type')!, 'Idempotency-Key': 'asr' }, payload: Buffer.from(await audioRequest.arrayBuffer()) })).json()).toEqual({ text: 'recognized' });
   const count = vi.mocked(f.fetcher).mock.calls.length;
   await submit('images/generations', { model: 'vendor/image', prompt: 'image', n: 1, size: '1536x1024', response_format: 'b64_json' });
   expect(vi.mocked(f.fetcher).mock.calls).toHaveLength(count);
@@ -245,7 +245,7 @@ it('sends multimodal requests directly, translates image edits, and replays a pa
 });
 it('retains an async video receipt and downloads content locally without exposing upstream URLs', async () => {
   const f = await fixture(); const origin = await f.server.listen({ host: '127.0.0.1', port: 0 });
-  const service = createVideoGenerationService({ dataDir: f.root, configStore: f.source.store, gatewaySource: { async binding() { const binding = await f.source.binding(); return binding ? { ...binding, baseUrl: `${origin}/internal/krillin-llm/gateway/v1` } : undefined; } } });
+  const service = createVideoGenerationService({ dataDir: f.root, configStore: f.source.store, gatewaySource: { async binding() { const binding = await f.source.binding(); return binding ? { ...binding, baseUrl: `${origin}/internal/vishnu-llm/gateway/v1` } : undefined; } } });
   const task = await service.create({ provider: 'seedance', prompt: 'video', size: '1280x720', duration: 5 });
   expect(task.status).toBe('in_progress');
   expect(JSON.parse(String(vi.mocked(f.fetcher).mock.calls[0]?.[1]?.body))).toMatchObject({ size: '1280x720' });
@@ -258,7 +258,7 @@ it('persists and resumes a video using dynamic official options beyond custom pr
   const model = f.state.models.find(model => model.modality === 'video')!;
   model.sizes = []; model.resolutions = ['1080p']; model.aspectRatios = ['1:1']; model.durations = [12];
   const origin = await f.server.listen({ host: '127.0.0.1', port: 0 });
-  const service = createVideoGenerationService({ dataDir: f.root, configStore: f.source.store, gatewaySource: { async binding() { const binding = await f.source.binding(); return binding ? { ...binding, baseUrl: `${origin}/internal/krillin-llm/gateway/v1` } : undefined; } } });
+  const service = createVideoGenerationService({ dataDir: f.root, configStore: f.source.store, gatewaySource: { async binding() { const binding = await f.source.binding(); return binding ? { ...binding, baseUrl: `${origin}/internal/vishnu-llm/gateway/v1` } : undefined; } } });
   const task = await service.create({ provider: 'seedance', prompt: 'test', size: '1080p@1:1', duration: 12 });
   expect(await service.get(task.id)).toMatchObject({ videoSize: '1080p@1:1', duration: 12 });
   expect((await service.refresh(task.id)).status).toBe('completed');
@@ -270,7 +270,7 @@ it('persists and resumes a video using dynamic official options beyond custom pr
 it('uses the selected official speech model voice catalog and rejects incompatible voices', async () => {
   const f = await fixture();
   const synthesize = vi.fn(async () => ({ content: Buffer.from('audio'), format: 'mp3' as const }));
-  const service = createKrillinTtsService({ resourceRoot: f.root, workRoot: f.root, configStore: f.source.store, executeSynthesis: synthesize });
+  const service = createVishnuTtsService({ resourceRoot: f.root, workRoot: f.root, configStore: f.source.store, executeSynthesis: synthesize });
   expect(await service.listVoices('openai')).toMatchObject({ model: 'vendor/speech', voices: [{ id: 'tested_voice' }] });
   expect(await service.synthesize({ text: 'Hello' })).toMatchObject({ voiceId: 'tested_voice', model: 'vendor/speech', format: 'mp3' });
   await expect(service.synthesize({ text: 'Hello', voiceId: 'alloy' })).rejects.toMatchObject({ code: 'VALIDATION_FAILED' });
@@ -296,7 +296,7 @@ it('delivers a playable WAV for an official PCM-only speech model', async () => 
   f.state.models.find(model => model.modality === 'speech')!.capabilities = ['pcm_speech'];
   vi.mocked(f.fetcher).mockImplementation(async () => new Response(Buffer.from([0, 1, 0, 2]), { headers: { 'content-type': 'audio/pcm;rate=44100;channels=1' } }));
   const config = await f.source.store.read();
-  const response = await f.server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/audio/speech', headers: { Authorization: `Bearer ${config.tts.openai.apiKey}`, 'Idempotency-Key': 'pcm' }, payload: { model: 'vendor/speech', input: 'Hello', voice: 'tested_voice' } });
+  const response = await f.server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/audio/speech', headers: { Authorization: `Bearer ${config.tts.openai.apiKey}`, 'Idempotency-Key': 'pcm' }, payload: { model: 'vendor/speech', input: 'Hello', voice: 'tested_voice' } });
   expect(response.statusCode).toBe(200);
   expect(response.headers['content-type']).toBe('audio/wav');
   expect(response.rawPayload.toString('ascii', 0, 4)).toBe('RIFF');
@@ -345,11 +345,11 @@ it('omits the voice for official models that supply a default, preserving custom
   const f = await fixture();
   const speech = f.state.models.find(model => model.modality === 'speech')!;
   speech.capabilities = ['default_voice']; speech.voices = [];
-  const service = createKrillinTtsService({ resourceRoot: f.root, workRoot: f.root, configStore: f.source.store, executeSynthesis: vi.fn(async () => ({ content: Buffer.from('audio'), format: 'mp3' as const })) });
+  const service = createVishnuTtsService({ resourceRoot: f.root, workRoot: f.root, configStore: f.source.store, executeSynthesis: vi.fn(async () => ({ content: Buffer.from('audio'), format: 'mp3' as const })) });
   expect(await service.listVoices('openai')).toMatchObject({ voices: [{ id: gatewayDefaultVoiceId }] });
   expect(await service.synthesize({ text: 'hello' })).toMatchObject({ voiceId: gatewayDefaultVoiceId });
   const config = await f.source.store.read();
-  const response = await f.server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/audio/speech', headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: 'vendor/speech', input: 'hello', voice: gatewayDefaultVoiceId } });
+  const response = await f.server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/audio/speech', headers: { Authorization: `Bearer ${config.llm.apiKey}` }, payload: { model: 'vendor/speech', input: 'hello', voice: gatewayDefaultVoiceId } });
   expect(response.statusCode).toBe(200);
   expect(JSON.parse(String(vi.mocked(f.fetcher).mock.lastCall?.[1]?.body))).not.toHaveProperty('voice');
 });
@@ -401,7 +401,7 @@ it('polls an official image receipt and downloads a cached image without making 
   const origin = await f.server.listen({ host: '127.0.0.1', port: 0 });
   const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aC1sAAAAASUVORK5CYII=', 'base64');
   vi.mocked(f.fetcher).mockImplementation(async () => Response.json({ data: [{ b64_json: image.toString('base64') }] }));
-  const config = await f.source.store.read(); config.image.openai.baseUrl = `${origin}/internal/krillin-llm/gateway/v1`;
+  const config = await f.source.store.read(); config.image.openai.baseUrl = `${origin}/internal/vishnu-llm/gateway/v1`;
   const onGatewayRequest = vi.fn();
   const result = await generateImageContents({ provider: 'openai', prompt: 'test', size: '1024x1024', quality: 'medium', count: 1 }, config, { logicalId: 'paid-once', onGatewayRequest });
   expect(result.contents[0]?.content).toEqual(image);
@@ -433,7 +433,7 @@ it.each([true, false])('reconciles both image ledgers and records usable progres
   vi.mocked(f.fetcher).mockImplementation(async () => success ? Response.json({ data: [{ b64_json: image.toString('base64') }] }) : Response.json({ error: { message: 'Key limit exceeded (total limit)' } }, { status: 403 }));
   const job = repository.createJob({ projectId: 'project', templateId: 'image-generation', templateVersion: 2, status: 'running', state: { prompt: 'test', provider: 'openai', candidateCount: 1, size: '1024x1024', quality: 'medium' } });
   const stage = repository.createStageRun({ jobId: job.id, stageId: 'generate', executor: 'image', status: 'running' });
-  const executor = createImageExecutor({ ledger, configStore: { async read() { const config = await f.source.store.read(); config.image.openai.baseUrl = `${origin}/internal/krillin-llm/gateway/v1`; return config; } } });
+  const executor = createImageExecutor({ ledger, configStore: { async read() { const config = await f.source.store.read(); config.image.openai.baseUrl = `${origin}/internal/vishnu-llm/gateway/v1`; return config; } } });
   const reportProgress = vi.fn();
   try {
     const run = f.source.runForJob(job.id, stage.id, () => executor.run({ job, stageRun: stage, workdir: root, inputArtifacts: [], signal: AbortSignal.timeout(3_000), reportProgress }));
@@ -471,7 +471,7 @@ it('queries a saved paid image receipt and resolves related ledgers without resu
   const stage = repository.createStageRun({ jobId: job.id, stageId: 'generate', executor: 'image', status: 'failed' });
   try {
     const config = await f.source.store.read();
-    const response = await f.server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/images/generations', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Idempotency-Key': 'query-paid-image' }, payload: { model: 'vendor/image', prompt: 'test' } });
+    const response = await f.server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/images/generations', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Idempotency-Key': 'query-paid-image' }, payload: { model: 'vendor/image', prompt: 'test' } });
     expect(response.statusCode).toBe(200);
     const requestId = String(response.headers['x-request-id']);
     const register = (provider: string) => {
@@ -479,8 +479,8 @@ it('queries a saved paid image receipt and resolves related ledgers without resu
       ledger.markSubmitting(receipt.id); ledger.markWaitingRemote(receipt.id, requestId);
       return ledger.markUnknownRemoteAcceptance(receipt.id);
     };
-    const outer = register('opencreator-gateway-image');
-    register('opencreator-gateway-images/generations');
+    const outer = register('vishnucreator-gateway-image');
+    register('vishnucreator-gateway-images/generations');
     await f.source.queryProviderRequest(outer);
     expect(repository.listProviderRequests(job.id).map(receipt => receipt.status)).toEqual(['succeeded', 'succeeded']);
     expect(f.fetcher).toHaveBeenCalledOnce();
@@ -502,7 +502,7 @@ it('replays an existing image after model quarantine and rejects new requests to
   const image = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+aC1sAAAAASUVORK5CYII=', 'base64');
   vi.mocked(f.fetcher).mockImplementation(async () => Response.json({ data: [{ b64_json: image.toString('base64') }] }));
   const generate = async () => {
-    const config = await f.source.store.read(); config.image.openai.baseUrl = `${origin}/internal/krillin-llm/gateway/v1`;
+    const config = await f.source.store.read(); config.image.openai.baseUrl = `${origin}/internal/vishnu-llm/gateway/v1`;
     return generateImageContents({ provider: 'openai', prompt: 'test', size: '1024x1024', quality: 'medium', count: 1 }, config, { logicalId: 'quarantined-paid-image' });
   };
   try {
@@ -512,7 +512,7 @@ it('replays an existing image after model quarantine and rejects new requests to
     expect(f.fetcher).toHaveBeenCalledOnce();
     await expect(f.source.runForJob(job.id, original.id, generate)).rejects.toMatchObject({ code: 'invalid_model' });
     const config = await f.source.store.read();
-    const response = await f.server.inject({ method: 'POST', url: '/internal/krillin-llm/gateway/v1/images/generations', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Idempotency-Key': 'new-quarantined-image' }, payload: { model: 'vendor/image', prompt: 'test' } });
+    const response = await f.server.inject({ method: 'POST', url: '/internal/vishnu-llm/gateway/v1/images/generations', headers: { Authorization: `Bearer ${config.llm.apiKey}`, 'Idempotency-Key': 'new-quarantined-image' }, payload: { model: 'vendor/image', prompt: 'test' } });
     expect(response.statusCode).toBe(400);
     expect(f.fetcher).toHaveBeenCalledOnce();
   } finally { await f.source.revoke(); db.close(); await rm(root, { recursive: true, force: true }); }

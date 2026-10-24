@@ -1,7 +1,7 @@
 import type {
   CodexMcpListResponse,
   CodexMcpServerResponse
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import {
   LoaderCircle,
   LogIn,

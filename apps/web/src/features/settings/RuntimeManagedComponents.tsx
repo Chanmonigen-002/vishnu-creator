@@ -1,4 +1,4 @@
-import type { CreatorRuntimeComponent } from '@opencreator/protocol';
+import type { CreatorRuntimeComponent } from '@vishnucreator/protocol';
 import { AlertCircle, CheckCircle2, ChevronDown, Download, LoaderCircle, RefreshCw } from 'lucide-react';
 import { useEffect, useRef, useState } from 'react';
 import type { RuntimeDependenciesController } from '../../app/use-runtime-dependencies.js';

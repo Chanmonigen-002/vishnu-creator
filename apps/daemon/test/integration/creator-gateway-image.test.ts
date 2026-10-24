@@ -1,5 +1,5 @@
 import Fastify from 'fastify';
-import { createDefaultCreatorServicesConfig, type GatewayModel } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig, type GatewayModel } from '@vishnucreator/protocol';
 import { mkdtemp, readFile, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -126,7 +126,7 @@ it('rejects a mismatched receipt and recovers its paid image on retry with the o
     await f.runner.runStageRun(command.commandReceipt.stageRunId!);
     let job = f.repository.getJob(f.job.id)!;
     expect(job.stages[0]).toMatchObject({ status: 'failed', errorMessage: 'Invalid image generation receipt' });
-    const receipt = job.providerRequests.find(r => r.provider === 'opencreator-gateway-image')!;
+    const receipt = job.providerRequests.find(r => r.provider === 'vishnucreator-gateway-image')!;
     const queried = await f.dispatcher.dispatchAsync(job.id, { action: 'resolve-provider-request', expectedRevision: job.revision,
       idempotencyKey: 'query', input: { ledgerId: receipt.id, decision: 'query' } }, 'user');
     expect(queried.job.providerRequests.find(r => r.id === receipt.id)?.status).toBe('succeeded');

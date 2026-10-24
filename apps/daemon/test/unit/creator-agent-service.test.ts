@@ -184,7 +184,7 @@ describe('creator agent service', () => {
     fixture.db.close();
   });
 
-  it('auto-approves OpenCreator write tools in full-access mode', async () => {
+  it('auto-approves VishnuCreator write tools in full-access mode', async () => {
     let observedDecision: AppServerApprovalDecision | undefined;
     const runtime: AgentRuntimeAdapter = {
       id: 'fake-full-access-creator-tool',
@@ -194,9 +194,9 @@ describe('creator agent service', () => {
           id: 'approval-write-1',
           method: 'mcpServer/elicitation/request',
           params: {
-            serverName: 'opencreator_tools',
+            serverName: 'vishnucreator_tools',
             mode: 'form',
-            message: 'Allow the opencreator_tools MCP server to run tool "creator_apply_action"?',
+            message: 'Allow the vishnucreator_tools MCP server to run tool "creator_apply_action"?',
             requestedSchema: { type: 'object', properties: {} }
           }
         });
@@ -226,7 +226,7 @@ describe('creator agent service', () => {
             item: {
               id: 'runtime-tool-1',
               type: 'mcpToolCall',
-              server: 'opencreator_tools',
+              server: 'vishnucreator_tools',
               tool: 'creator_apply_action'
             }
           }
@@ -258,7 +258,7 @@ describe('creator agent service', () => {
             item: {
               id: 'runtime-tool-failed',
               type: 'mcpToolCall',
-              server: 'opencreator_tools',
+              server: 'vishnucreator_tools',
               tool: 'creator_apply_action'
             }
           }
@@ -315,8 +315,8 @@ describe('creator agent service', () => {
           id: 'approval-request-read-only',
           method: 'mcpServer/elicitation/request',
           params: {
-            serverName: 'opencreator_tools',
-            message: 'Allow the opencreator_tools MCP server to run tool "creator_get_context"?',
+            serverName: 'vishnucreator_tools',
+            message: 'Allow the vishnucreator_tools MCP server to run tool "creator_get_context"?',
             _meta: { codex_approval_kind: 'mcp_tool_call' }
           }
         });

@@ -1,4 +1,4 @@
-import { createDefaultCreatorServicesConfig } from '@opencreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import Fastify, { type FastifyInstance } from 'fastify';
 import { mkdtemp, rm } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
@@ -14,7 +14,7 @@ describe('video generation API', () => {
 
   beforeEach(async () => {
     server = Fastify({ logger: false });
-    dataDir = await mkdtemp(join(tmpdir(), 'opencreator-video-generation-'));
+    dataDir = await mkdtemp(join(tmpdir(), 'vishnucreator-video-generation-'));
   });
 
   afterEach(async () => {

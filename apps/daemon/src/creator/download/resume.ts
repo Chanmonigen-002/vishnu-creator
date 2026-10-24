@@ -1,4 +1,4 @@
-import type { CreatorJob, CreatorStageRun } from '@opencreator/protocol';
+import type { CreatorJob, CreatorStageRun } from '@vishnucreator/protocol';
 
 export function downloadWorkdirStageId(job: CreatorJob, stage: CreatorStageRun): string {
   if (job.templateId !== 'video-download' || job.templateVersion < 2 || stage.stageId !== 'download') return stage.id;

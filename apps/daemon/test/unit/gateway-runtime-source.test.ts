@@ -1,5 +1,5 @@
 import { expect, it, vi } from 'vitest';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 import type { AppServerRuntimeExecution, AppServerRuntimeManager, AppServerRuntimeTurnInput } from '../../src/codex/app-server-runtime-manager.js';
 import { GatewayError } from '../../src/gateway/client.js';
 import { createRuntimeSource } from '../../src/gateway/runtime-source.js';
@@ -19,7 +19,7 @@ function fixture() {
     selectedModels: { text: 'vendor/text' }, models: [{ id: 'vendor/text', modality: 'text', capabilities: ['responses'] }] };
   const input: AppServerRuntimeTurnInput = { scope: { kind: 'project', id: 'project' }, runId: 'run',
     cwd: '/tmp', sandbox: 'danger-full-access', model: 'vendor/text', profile: 'default', prompt: 'Hello',
-    thread: { id: 'thread', projectId: 'project', title: null, origin: 'opencreator_created', cwd: '/tmp', canonicalCwd: '/tmp',
+    thread: { id: 'thread', projectId: 'project', title: null, origin: 'vishnucreator_created', cwd: '/tmp', canonicalCwd: '/tmp',
       workspaceMode: 'external', profile: 'default', sandbox: 'danger-full-access', status: 'active', purpose: 'conversation',
       createdAt: new Date(0).toISOString(), updatedAt: new Date(0).toISOString() } };
   return { execution, startTurn, official, manual, state, input };

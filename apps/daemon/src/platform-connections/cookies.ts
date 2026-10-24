@@ -1,4 +1,4 @@
-import type { ConnectionPlatform } from '@opencreator/protocol';
+import type { ConnectionPlatform } from '@vishnucreator/protocol';
 
 export type PlatformCookie = {
   name: string;

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { LoaderCircle, RefreshCw } from 'lucide-react';
-import type { GatewayAccountState, GatewayActivationStage } from '@opencreator/protocol';
+import type { GatewayAccountState, GatewayActivationStage } from '@vishnucreator/protocol';
 import type { GatewayAccountSettingsService } from '../../services/gateway-account-service.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import './official-services-settings.css';

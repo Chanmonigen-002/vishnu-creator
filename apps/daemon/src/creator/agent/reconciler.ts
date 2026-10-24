@@ -4,7 +4,7 @@ import type {
   CreatorAgentTurn,
   CreatorAgentTurnStatus,
   CreatorJson
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type { CreatorAgentRepository } from './repository.js';
 import {
   creatorRuntimeItemMetadata,

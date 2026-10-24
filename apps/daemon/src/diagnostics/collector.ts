@@ -1,7 +1,7 @@
 import type {
   DiagnosticFileResponse,
   ScheduleRunTrace
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { lstatSync, readFileSync, realpathSync } from 'node:fs';
 import { relative, resolve, sep } from 'node:path';
 import {

@@ -62,7 +62,7 @@ test('Remotion 组件不随 App 内嵌，首次渲染按需下载后自动继续
   writeFileSync(descriptorPath, JSON.stringify({ ...release, archiveUrl: `http://127.0.0.1:${address.port}/${release.fileName}` }));
   let fixture: Awaited<ReturnType<typeof launchCreatorDesktop>> | undefined;
   try {
-    fixture = await launchCreatorDesktop(undefined, { OPENCREATOR_REMOTION_COMPONENT_MANIFEST: descriptorPath, OPENCREATOR_REMOTION_COMPONENT_ARCHIVE: '' });
+    fixture = await launchCreatorDesktop(undefined, { VISHNUCREATOR_REMOTION_COMPONENT_MANIFEST: descriptorPath, VISHNUCREATOR_REMOTION_COMPONENT_ARCHIVE: '' });
     await waitForWorkspace(fixture.app.page);
     expect(existsSync(packagedStickmanRuntimeRoot())).toBe(false);
     const before = await runtimeRequest<{ components: Array<{ id: string; state: string }> }>(fixture.app.page, 'GET', '/creator/components/status');
@@ -82,8 +82,8 @@ test('Remotion 组件不随 App 内嵌，首次渲染按需下载后自动继续
     const created = await runtimeRequest<{ job: { id: string; revision: number } }>(fixture.app.page, 'POST', '/creator/jobs', { projectId: project.body.project.id, templateId: 'stickman-video', state: { sourceMode: 'text', sourceText: 'Render component fixture', ratio: '16:9' } });
     expect(created.status).toBe(201);
     const jobId = created.body.job.id;
-    const dataDir = join(fixture.root, '.opencreator', 'data');
-    const workRoot = join(fixture.root, '.opencreator', 'creator', 'jobs', jobId, 'fixtures');
+    const dataDir = join(fixture.root, '.vishnucreator', 'data');
+    const workRoot = join(fixture.root, '.vishnucreator', 'creator', 'jobs', jobId, 'fixtures');
     mkdirSync(workRoot, { recursive: true });
     const imagePath = join(workRoot, 'image.png');
     const audioPath = join(workRoot, 'audio.wav');
@@ -174,7 +174,7 @@ test('打包 App 的视频翻译支持多语言检索、保存和内置字体', 
     await page.reload();
     await expect(source).toHaveAttribute('data-value', 'ar');
     const font = await page.evaluate(async () => {
-      const response = await fetch('/fonts/opencreator/NotoSansArabic-Regular.woff2');
+      const response = await fetch('/fonts/vishnucreator/NotoSansArabic-Regular.woff2');
       return { status: response.status, bytes: (await response.arrayBuffer()).byteLength };
     });
     expect(font.status).toBe(200);
@@ -216,7 +216,7 @@ test('打包 App 的 YouTube 视频嵌入请求带有有效 HTTP 来源标识', 
       frame.src = 'https://www.youtube-nocookie.com/embed/M7lc1UVf-VE';
       document.body.append(frame);
     });
-    await expect.poll(() => referer).toBe('https://github.com/krillinai/OpenCreator/');
+    await expect.poll(() => referer).toBe('https://github.com/vishnuai/VishnuCreator/');
   } finally {
     await closePackagedApp(fixture.app).catch(() => undefined);
     rmSync(fixture.root, { recursive: true, force: true, maxRetries: 10, retryDelay: 100 });
@@ -305,7 +305,7 @@ test('打包 App 的浅色窗口按钮区域与设置侧栏连续且保留标题
     await fixture.app.page.getByRole('button', { name: '工作台', exact: true }).click();
     await expect(fixture.app.page.locator('.creator-tools-page')).toBeVisible();
     expect(await fixture.app.page.evaluate(() => (
-      typeof window.opencreatorDesktop?.setWindowColorMode
+      typeof window.vishnucreatorDesktop?.setWindowColorMode
     ))).toBe('function');
     await expect(fixture.app.page.getByRole('group', { name: '窗口控制' }).getByRole('button')).toHaveCount(3);
     for (const action of ['close', 'minimize', 'zoom']) {
@@ -350,7 +350,7 @@ test('打包 App 的浅色窗口按钮区域与设置侧栏连续且保留标题
       await fixture.app.page.getByRole('button', { name: label, exact: true }).click();
       await expect(fixture.app.page.locator('html')).toHaveAttribute('data-theme', theme);
       expect(await fixture.app.page.evaluate(() => {
-        const pane = document.querySelector('.opencreator-main-pane')!;
+        const pane = document.querySelector('.vishnucreator-main-pane')!;
         const settings = document.querySelector('.settings-page')!;
         const sidebar = document.querySelector('.settings-sidebar')!;
         const back = document.querySelector('.settings-back')!;
@@ -400,7 +400,7 @@ test('打包 App 的黑白基准色固定且灰色不随强调色变化', async 
           const result = {
             page: getComputedStyle(document.body).backgroundColor,
             text: getComputedStyle(document.body).color,
-            sidebar: getComputedStyle(document.querySelector('.opencreator-sidebar-pane')!).backgroundColor,
+            sidebar: getComputedStyle(document.querySelector('.vishnucreator-sidebar-pane')!).backgroundColor,
             surface: getComputedStyle(surface).backgroundColor
           };
           surface.remove();
@@ -430,7 +430,7 @@ test('打包 App 导航和文章模板图标只保留外层容器', async ({}, t
   const fixture = await launchCreatorDesktop({ width: 1440, height: 900 });
   try {
     await waitForWorkspace(fixture.app.page);
-    const sidebar = fixture.app.page.locator('.opencreator-sidebar');
+    const sidebar = fixture.app.page.locator('.vishnucreator-sidebar');
     for (const collapsed of [false, true]) {
       if (collapsed) await sidebar.locator('.sidebar-collapse-button').click();
       await expect(sidebar).toHaveAttribute('data-collapsed', String(collapsed));
@@ -658,12 +658,12 @@ test('@package-smoke 实际 Desktop 包创建并重启恢复 Creator Job，且�
 
   try {
     await waitForWorkspace(currentApp.page);
-    expect(currentApp.page.url()).toContain('opencreator-app://app/');
+    expect(currentApp.page.url()).toContain('vishnucreator-app://app/');
     await expect.poll(async () => (
-      await currentApp.page.evaluate(() => window.opencreatorDesktop?.readBootstrapState())
+      await currentApp.page.evaluate(() => window.vishnucreatorDesktop?.readBootstrapState())
     )?.codexHome).toBe(join(
       fixture.root,
-      '.opencreator',
+      '.vishnucreator',
       'runtime',
       'external-codex'
     ));
@@ -691,7 +691,7 @@ test('@package-smoke 实际 Desktop 包创建并重启恢复 Creator Job，且�
     });
     expect(runtimeManifest.resources.map(resource => resource.path)).toEqual(
       expect.arrayContaining([
-        executableResource('bin/krillinai-cli'),
+        executableResource('bin/vishnuai-cli'),
         executableResource('bin/ffmpeg'),
         executableResource('bin/ffprobe'),
         runtimeManifest.ytDlp.javascriptRuntime.executable,
@@ -701,8 +701,8 @@ test('@package-smoke 实际 Desktop 包创建并重启恢复 Creator Job，且�
       ])
     );
     const buildManifest = JSON.parse(readFileSync(
-      process.env.OPENCREATOR_DESKTOP_BUILD_MANIFEST
-        ?? join(desktopDir, 'release', 'opencreator-desktop-build-manifest.json'),
+      process.env.VISHNUCREATOR_DESKTOP_BUILD_MANIFEST
+        ?? join(desktopDir, 'release', 'vishnucreator-desktop-build-manifest.json'),
       'utf8'
     )) as { ytDlpVersion: string };
     expect(buildManifest.ytDlpVersion).toMatch(/^\d{4}\.\d{2}\.\d{2}\.\d{6}$/);
@@ -989,7 +989,7 @@ test('@package-smoke 实际 Desktop 包创建并重启恢复 Creator Job，且�
     });
 
     const currentProjectId = await currentApp.page.evaluate(() => {
-      const stored = localStorage.getItem('opencreator.navigation.v3');
+      const stored = localStorage.getItem('vishnucreator.navigation.v3');
       if (stored === null) return undefined;
       const parsed = JSON.parse(stored) as { currentProjectId?: unknown };
       return typeof parsed.currentProjectId === 'string' ? parsed.currentProjectId : undefined;
@@ -1249,7 +1249,7 @@ test('@package-smoke 实际 Desktop 包创建并重启恢复 Creator Job，且�
       launchArgs: currentApp.launchArgs,
       env: {
         ...currentApp.env,
-        OPENCREATOR_YT_DLP_PATH: fixture.ytDlpBin
+        VISHNUCREATOR_YT_DLP_PATH: fixture.ytDlpBin
       }
     };
     await closePackagedApp(currentApp);
@@ -1439,7 +1439,7 @@ test('@package-smoke 实际 Desktop 包创建并重启恢复 Creator Job，且�
     expect(hasWhisperKitDependency(fixture.root)).toBe(false);
   } finally {
     await closePackagedApp(currentApp).catch(() => undefined);
-    if (process.env.OPENCREATOR_E2E_KEEP_TEMP !== '1') {
+    if (process.env.VISHNUCREATOR_E2E_KEEP_TEMP !== '1') {
       rmSync(fixture.root, {
         recursive: true,
         force: true,
@@ -1457,7 +1457,7 @@ test('Creator Preset 在实际 Desktop 包中创建并重启恢复', async () =>
 
   try {
     await waitForWorkspace(currentApp.page);
-    expect(currentApp.page.url()).toContain('opencreator-app://app/');
+    expect(currentApp.page.url()).toContain('vishnucreator-app://app/');
     const catalog = await runtimeRequest<{
       catalogHash: string;
       presets: Array<{
@@ -1486,7 +1486,7 @@ test('Creator Preset 在实际 Desktop 包中创建并重启恢复', async () =>
     const staticResources = await currentApp.page.evaluate(async coverUrl => {
       const [cover, font] = await Promise.all([
         fetch(coverUrl),
-        fetch('/fonts/opencreator/OpenCreatorRounded-Bold.woff2')
+        fetch('/fonts/vishnucreator/VishnuCreatorRounded-Bold.woff2')
       ]);
       return {
         cover: {
@@ -1587,7 +1587,7 @@ test('Creator Preset 在实际 Desktop 包中创建并重启恢复', async () =>
     });
   } finally {
     await closePackagedApp(currentApp).catch(() => undefined);
-    if (process.env.OPENCREATOR_E2E_KEEP_TEMP !== '1') {
+    if (process.env.VISHNUCREATOR_E2E_KEEP_TEMP !== '1') {
       rmSync(fixture.root, {
         recursive: true,
         force: true,
@@ -1601,7 +1601,7 @@ test('Creator Preset 在实际 Desktop 包中创建并重启恢复', async () =>
 test('Creator Preset verifier 拒绝损坏和陈旧的打包资源', () => {
   test.setTimeout(300_000);
   const sourceRoot = packagedPackageRoot();
-  const fixtureRoot = mkdtempSync(join(tmpdir(), 'opencreator-preset-verifier-'));
+  const fixtureRoot = mkdtempSync(join(tmpdir(), 'vishnucreator-preset-verifier-'));
   const packageRoot = join(fixtureRoot, basename(sourceRoot));
 
   try {
@@ -1673,7 +1673,7 @@ function hasWhisperKitDependency(root: string): boolean {
     'daemon',
     'creator-runtime',
     'dependencies',
-    'krillinai'
+    'vishnuai'
   );
   return existsSync(join(dependencyRoot, 'bin', 'whisperkit-cli'))
     || existsSync(join(
@@ -1689,14 +1689,14 @@ async function launchCreatorDesktop(windowBounds?: { width: number; height: numb
   root: string;
   ytDlpBin: string;
 }> {
-  const root = mkdtempSync(join(tmpdir(), 'opencreator-packaged-e2e-'));
+  const root = mkdtempSync(join(tmpdir(), 'vishnucreator-packaged-e2e-'));
   const binDir = join(root, 'bin');
   const stateDir = join(root, 'fake-codex-state');
   const codexHome = join(root, 'codex-home');
   const userData = join(root, 'user-data');
   const codexBin = writeCodexShim(binDir);
   const ytDlpBin = writeYtDlpShim(binDir);
-  writeOpenCreatorConfig(join(root, '.opencreator'), codexBin, windowBounds);
+  writeVishnuCreatorConfig(join(root, '.vishnucreator'), codexBin, windowBounds);
 
   const app = await launchPackagedApp({
     executablePath: packagedExecutable(desktopDir),
@@ -1710,15 +1710,15 @@ async function launchCreatorDesktop(windowBounds?: { width: number; height: numb
       SHELL: process.platform === 'win32' ? process.env.ComSpec : '/bin/false',
       HOME: root,
       USERPROFILE: root,
-      OPENCREATOR_DEFAULT_PROJECT_ROOT: join(root, 'Documents'),
-      OPENCREATOR_HOME: join(root, '.opencreator'),
+      VISHNUCREATOR_DEFAULT_PROJECT_ROOT: join(root, 'Documents'),
+      VISHNUCREATOR_HOME: join(root, '.vishnucreator'),
       CODEX_HOME: codexHome,
-      OPENCREATOR_CODEX_APPLICATION_ROOTS: join(root, 'Applications'),
-      OPENCREATOR_E2E_FAKE_CODEX_STATE_DIR: stateDir,
-      OPENCREATOR_E2E_FAKE_CODEX_MODE: 'success',
-      OPENCREATOR_E2E_NODE_BINARY: process.execPath,
-      OPENCREATOR_E2E_FAKE_CODEX_SCRIPT: fakeCodexScript,
-      OPENCREATOR_E2E_FAKE_YT_DLP_SCRIPT: fakeYtDlpScript,
+      VISHNUCREATOR_CODEX_APPLICATION_ROOTS: join(root, 'Applications'),
+      VISHNUCREATOR_E2E_FAKE_CODEX_STATE_DIR: stateDir,
+      VISHNUCREATOR_E2E_FAKE_CODEX_MODE: 'success',
+      VISHNUCREATOR_E2E_NODE_BINARY: process.execPath,
+      VISHNUCREATOR_E2E_FAKE_CODEX_SCRIPT: fakeCodexScript,
+      VISHNUCREATOR_E2E_FAKE_YT_DLP_SCRIPT: fakeYtDlpScript,
       ...overrides
     },
     timeoutMs: 45_000
@@ -1728,7 +1728,7 @@ async function launchCreatorDesktop(windowBounds?: { width: number; height: numb
 
 async function waitForWorkspace(page: Page): Promise<void> {
   await expect.poll(async () => {
-    const state = await page.evaluate(() => window.opencreatorDesktop?.readBootstrapState())
+    const state = await page.evaluate(() => window.vishnucreatorDesktop?.readBootstrapState())
       .catch(() => undefined);
     if (state?.phase === 'failed' || state?.phase === 'workspace_failed') {
       throw new Error(
@@ -1739,9 +1739,9 @@ async function waitForWorkspace(page: Page): Promise<void> {
     return new URL(page.url()).hostname;
   }, { timeout: 45_000 }).toBe('app');
   await expect.poll(async () => (
-    await page.evaluate(() => window.opencreatorDesktop?.readBootstrapState())
+    await page.evaluate(() => window.vishnucreatorDesktop?.readBootstrapState())
   )?.phase).toBe('ready');
-  const confirmed = await page.evaluate(() => window.localStorage.getItem('opencreator.agent-setup-confirmed.v1') !== null);
+  const confirmed = await page.evaluate(() => window.localStorage.getItem('vishnucreator.agent-setup-confirmed.v1') !== null);
   if (!confirmed) {
     const setup = page.getByRole('region', { name: '开始使用 Agent' });
     await setup.waitFor({ state: 'visible', timeout: 5_000 }).catch(() => undefined);
@@ -1751,7 +1751,7 @@ async function waitForWorkspace(page: Page): Promise<void> {
       await expect(setup).toBeHidden();
     }
   }
-  await expect(page.locator('.opencreator-shell')).toBeVisible();
+  await expect(page.locator('.vishnucreator-shell')).toBeVisible();
 }
 
 async function runtimeRequest<T>(
@@ -1761,7 +1761,7 @@ async function runtimeRequest<T>(
   body?: unknown
 ): Promise<{ status: number; body: T }> {
   return await page.evaluate(async ({ method, path, body }) => {
-    const response = await fetch(`/.opencreator/runtime${path}`, {
+    const response = await fetch(`/.vishnucreator/runtime${path}`, {
       method,
       headers: body === undefined ? undefined : { 'content-type': 'application/json' },
       ...(body === undefined ? {} : { body: JSON.stringify(body) })
@@ -1818,11 +1818,11 @@ async function uploadOversizedWaveSource(
       lastModified: '0'
     });
     const response = await fetch(
-      `/.opencreator/runtime/creator/jobs/${encodeURIComponent(jobId)}/source-video?${query}`,
+      `/.vishnucreator/runtime/creator/jobs/${encodeURIComponent(jobId)}/source-video?${query}`,
       {
         method: 'POST',
         headers: {
-          'content-type': 'application/vnd.opencreator.creator-source'
+          'content-type': 'application/vnd.vishnucreator.creator-source'
         },
         body: new Blob([header, new Uint8Array(pcmBytes)])
       }
@@ -1837,8 +1837,8 @@ async function uploadOversizedWaveSource(
 function packagedRuntimeRoot(): string {
   const packageRoot = dirname(packagedExecutable(desktopDir));
   return process.platform === 'darwin'
-    ? resolve(packageRoot, '..', 'Resources', 'creator-runtime', 'krillinai')
-    : join(packageRoot, 'resources', 'creator-runtime', 'krillinai');
+    ? resolve(packageRoot, '..', 'Resources', 'creator-runtime', 'vishnuai')
+    : join(packageRoot, 'resources', 'creator-runtime', 'vishnuai');
 }
 
 function packagedStickmanRuntimeRoot(): string {
@@ -1885,7 +1885,7 @@ function runPackagedVerifier(packageRoot: string): ReturnType<typeof spawnSync> 
     cwd: resolve(desktopDir, '../..'),
     env: {
       ...process.env,
-      OPENCREATOR_DESKTOP_PACKAGE_ROOT: packageRoot
+      VISHNUCREATOR_DESKTOP_PACKAGE_ROOT: packageRoot
     },
     encoding: 'utf8',
     timeout: 5 * 60_000,
@@ -1965,14 +1965,14 @@ function packagedCreatorAgentRuntimeFiles(): string[] {
         'Resources',
         'daemon',
         'runtime',
-        'opencreator-runtime'
+        'vishnucreator-runtime'
       )
     : join(
         packageRoot,
         'resources',
         'daemon',
         'runtime',
-        'opencreator-runtime'
+        'vishnucreator-runtime'
       );
   return ['SKILL.md', 'manifest.json'].filter(name => existsSync(join(runtimeRoot, name)));
 }
@@ -2035,7 +2035,7 @@ function writeYtDlpShim(binDir: string): string {
   return scriptPath;
 }
 
-function writeOpenCreatorConfig(
+function writeVishnuCreatorConfig(
   productHome: string,
   codexBin: string,
   windowBounds?: { width: number; height: number }
@@ -2068,8 +2068,8 @@ function withoutDesktopTestEnvironment(env: NodeJS.ProcessEnv): NodeJS.ProcessEn
   const next = { ...env };
   for (const name of [
     'ELECTRON_RUN_AS_NODE',
-    'OPENCREATOR_UPDATE_URL',
-    'OPENCREATOR_CREATOR_RUNTIME_ROOT'
+    'VISHNUCREATOR_UPDATE_URL',
+    'VISHNUCREATOR_CREATOR_RUNTIME_ROOT'
   ]) {
     delete next[name];
   }

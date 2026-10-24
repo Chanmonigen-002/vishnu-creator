@@ -2,7 +2,7 @@
 
 > [English](../../CONTRIBUTING.md) | [简体中文](../zh/CONTRIBUTING.md) | [日本語](../ja/CONTRIBUTING.md) | **한국어** | [Bahasa Indonesia](../id/CONTRIBUTING.md) | [Español](../es/CONTRIBUTING.md) | [Français](../fr/CONTRIBUTING.md) | [Deutsch](../de/CONTRIBUTING.md) | [Português](../pt/CONTRIBUTING.md) | [Русский](../ru/CONTRIBUTING.md) | [العربية](../ar/CONTRIBUTING.md)
 
-OpenCreator에 기여해 주셔서 감사합니다. OpenCreator는 Codex 에이전트 루프 위에 구축된 로컬 우선 크리에이터 워크스페이스이며, 프로젝트 가치의 대부분은 작고 집중된 추가 — Skill 폴터 하나, 생성 템플릿 하나, 범위가 명확한 수정 하나 — 에서 나옵니다. 이 가이드는 각 유형의 기여가 어디에 위치해야 하는지, 그리고 PR이 머지되기 전에 충족해야 하는 기준을 설명합니다.
+Vishnu Creator에 기여해 주셔서 감사합니다. Vishnu Creator는 Codex 에이전트 루프 위에 구축된 로컬 우선 크리에이터 워크스페이스이며, 프로젝트 가치의 대부분은 작고 집중된 추가 — Skill 폴터 하나, 생성 템플릿 하나, 범위가 명확한 수정 하나 — 에서 나옵니다. 이 가이드는 각 유형의 기여가 어디에 위치해야 하는지, 그리고 PR이 머지되기 전에 충족해야 하는 기준을 설명합니다.
 
 ---
 
@@ -19,7 +19,7 @@ OpenCreator에 기여해 주셔서 감사합니다. OpenCreator는 Codex 에이�
 
 ## 질문과 검토 담당
 
-아이디어를 논의하거나 적절한 영역을 모르면 [Issue](https://github.com/krillinai/OpenCreator/issues/new)를 여세요. PR을 제출할 때 코드 및 버그 수정, 제작 템플릿, 디자인 및 에셋, Skills 및 문서에 맞는 [운영 팀](../../README.md#the-crew) 담당자를 언급하세요. 팀은 기여 기준, 검토 및 커뮤니티 질문을 지원하며 병합은 저장소 권한과 필수 검사에 따릅니다.
+아이디어를 논의하거나 적절한 영역을 모르면 [Issue](https://github.com/vishnuai/Vishnu Creator/issues/new)를 여세요. PR을 제출할 때 코드 및 버그 수정, 제작 템플릿, 디자인 및 에셋, Skills 및 문서에 맞는 [운영 팀](../../README.md#the-crew) 담당자를 언급하세요. 팀은 기여 기준, 검토 및 커뮤니티 질문을 지원하며 병합은 저장소 권한과 필수 검사에 따릅니다.
 
 ---
 
@@ -28,8 +28,8 @@ OpenCreator에 기여해 주셔서 감사합니다. OpenCreator는 Codex 에이�
 전체 설정은 [README 빠른 시작](../../README.md#quick-start)에 있습니다. 기여자를 위한 요약:
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable          # packageManager에 고정된 pnpm 선택
 pnpm install
 pnpm web:dev             # Web + 필요 시 로컬 daemon 실행
@@ -43,7 +43,7 @@ Node.js 22 이상과 Codex CLI 실행 파일이 필요합니다. `pnpm web:dev` 
 
 ## 기여 방법
 
-1. [이슈](https://github.com/krillinai/OpenCreator/issues)에서 문제, 사용 사례, 기대 동작을 설명합니다.
+1. [이슈](https://github.com/vishnuai/Vishnu Creator/issues)에서 문제, 사용 사례, 기대 동작을 설명합니다.
 2. 최신 개발 브랜치에서 집중된 기능 또는 수정 브랜치를 생성합니다.
 3. 기존 아키텍처를 따릅니다: 범용 제품 기능은 Web과 Daemon에서 **한 번만** 구현하고, Desktop 네이티브 차이는 명시적 capability(예: `canSelectDirectory`)로 분리합니다.
 4. 동작 변경에는 적절한 단위, 통합 또는 E2E 테스트를 추가하고, PR에 수행한 검증과 건너뛴 검증을 모두 나열합니다.
@@ -66,4 +66,4 @@ Node.js 22 이상과 Codex CLI 실행 파일이 필요합니다. `pnpm web:dev` 
 
 ---
 
-OpenCreator · Create locally, work continuously.
+Vishnu Creator · Create locally, work continuously.

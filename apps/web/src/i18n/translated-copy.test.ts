@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { additionalLanguageCatalogs, translateEnglishCopy } from './translated-copy.js';
 import type { AppLanguage } from './language.js';
-import { openCreatorLanguages } from '@opencreator/protocol';
+import { vishnuCreatorLanguages } from '@vishnucreator/protocol';
 
 describe('additional language catalogs', () => {
   it('covers immersive subtitle editing controls in every client language', () => {
@@ -19,7 +19,7 @@ describe('additional language catalogs', () => {
 
   it('loads a catalog for every supported language except the built-in Chinese and English sources', () => {
     expect(Object.keys(additionalLanguageCatalogs).sort()).toEqual(
-      openCreatorLanguages.filter(language => language !== 'zh-CN' && language !== 'en-US').sort()
+      vishnuCreatorLanguages.filter(language => language !== 'zh-CN' && language !== 'en-US').sort()
     );
   });
 
@@ -106,7 +106,7 @@ describe('additional language catalogs', () => {
 
   it.each(['th-TH', 'fil-PH', 'hi-IN', 'bn-BD', 'pl-PL', 'uk-UA', 'nl-NL', 'ms-MY', 'da-DK', 'nb-NO', 'fi-FI', 'cs-CZ', 'ro-RO', 'hu-HU', 'el-GR', 'ta-IN', 'te-IN', 'bg-BG', 'sk-SK', 'hr-HR', 'sr-RS', 'ar-SA', 'fa-IR', 'ur-PK', 'he-IL', 'mr-IN', 'gu-IN', 'pa-IN'] as const)('retains product names in %s service guidance', language => {
     const l = (source: string) => translateEnglishCopy(language, source);
-    expect(l('OpenCreator version')).toContain('OpenCreator');
+    expect(l('VishnuCreator version')).toContain('VishnuCreator');
     expect(l('Maintain reusable Codex configuration for sessions and scheduled tasks.')).toContain('Codex');
     const services = l('Configure Seedance, Kling, or Veo video generation and the default model for new tasks.');
     for (const name of ['Seedance', 'Kling', 'Veo']) expect(services).toContain(name);

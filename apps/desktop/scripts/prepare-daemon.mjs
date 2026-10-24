@@ -36,14 +36,14 @@ const runtimeDependencyDir = resolve(
 );
 const runtimeDependencyManifest = resolve(runtimeDependencyDir, 'package.json');
 const runtimeDependencyLockfile = resolve(runtimeDependencyDir, 'pnpm-lock.yaml');
-const targetArch = process.env.OPENCREATOR_DESKTOP_TARGET_ARCH ?? process.arch;
+const targetArch = process.env.VISHNUCREATOR_DESKTOP_TARGET_ARCH ?? process.arch;
 const require = createRequire(import.meta.url);
 const nodeGypRoot = dirname(require.resolve('node-gyp/package.json'));
 const cacheDir = resolve(
-  process.env.OPENCREATOR_DESKTOP_CACHE_DIR
+  process.env.VISHNUCREATOR_DESKTOP_CACHE_DIR
     ?? resolve(desktopDir, '.cache')
 );
-const offline = process.env.OPENCREATOR_DESKTOP_OFFLINE === '1';
+const offline = process.env.VISHNUCREATOR_DESKTOP_OFFLINE === '1';
 const nativeBuildEnv = { ...process.env };
 delete nativeBuildEnv.npm_config_recursive;
 mkdirSync(cacheDir, { recursive: true });
@@ -63,19 +63,19 @@ await runStage('编译 Creator Preset', 'pnpm', ['templates:compile'], {
   cwd: rootDir,
   timeoutMs: 5 * 60_000
 });
-await runStage('构建 Protocol', 'pnpm', ['--filter', '@opencreator/protocol', 'build'], {
+await runStage('构建 Protocol', 'pnpm', ['--filter', '@vishnucreator/protocol', 'build'], {
   cwd: rootDir,
   timeoutMs: 5 * 60_000
 });
-await runStage('构建 Config', 'pnpm', ['--filter', '@opencreator/config', 'build'], {
+await runStage('构建 Config', 'pnpm', ['--filter', '@vishnucreator/config', 'build'], {
   cwd: rootDir,
   timeoutMs: 5 * 60_000
 });
-await runStage('构建 Daemon', 'pnpm', ['--filter', '@opencreator/daemon', 'build'], {
+await runStage('构建 Daemon', 'pnpm', ['--filter', '@vishnucreator/daemon', 'build'], {
   cwd: rootDir,
   timeoutMs: 5 * 60_000
 });
-await runStage('构建 Web', 'pnpm', ['--filter', '@opencreator/web', 'build'], {
+await runStage('构建 Web', 'pnpm', ['--filter', '@vishnucreator/web', 'build'], {
   cwd: rootDir,
   timeoutMs: 5 * 60_000
 });
@@ -135,8 +135,8 @@ pruneDevelopmentArtifacts(targetDir);
 
 assertExists(resolve(targetDir, 'dist/main.js'));
 assertExists(resolve(targetDir, 'node_modules/better-sqlite3/build/Release/better_sqlite3.node'));
-assertExists(resolve(targetDir, 'runtime/opencreator-runtime/SKILL.md'));
-assertExists(resolve(targetDir, 'runtime/opencreator-runtime/manifest.json'));
+assertExists(resolve(targetDir, 'runtime/vishnucreator-runtime/SKILL.md'));
+assertExists(resolve(targetDir, 'runtime/vishnucreator-runtime/manifest.json'));
 assertExists(resolve(targetDir, 'runtime/creator-presets/catalog.json'));
 assertExists(resolve(targetDir, 'runtime/creator-presets/manifest.json'));
 assertWorkspaceRuntimePackage('protocol', 'Protocol');
@@ -144,8 +144,8 @@ assertWorkspaceRuntimePackage('config', 'Config');
 assertWorkspaceRuntimePackage('skill-market', 'Skill Market');
 assertWorkspaceRuntimePackage('writing-templates', 'Writing Templates');
 assertMissing(
-  resolve(targetDir, 'node_modules/@opencreator/protocol/dist/krillin-opencreator.js'),
-  'Desktop Protocol runtime package still contains the removed Krillin sidecar contract'
+  resolve(targetDir, 'node_modules/@vishnucreator/protocol/dist/vishnu-vishnucreator.js'),
+  'Desktop Protocol runtime package still contains the removed Vishnu sidecar contract'
 );
 assertPortableDependencyTree();
 assertCleanDeployment();
@@ -189,10 +189,10 @@ function assertRuntimeDependencyManifest() {
     'utf8'
   ));
   const workspacePackages = new Set([
-    '@opencreator/config',
-    '@opencreator/protocol',
-    '@opencreator/skill-market',
-    '@opencreator/writing-templates'
+    '@vishnucreator/config',
+    '@vishnucreator/protocol',
+    '@vishnucreator/skill-market',
+    '@vishnucreator/writing-templates'
   ]);
   const expectedNames = Object.keys(daemonPackage.dependencies)
     .filter(name => !workspacePackages.has(name))
@@ -247,7 +247,7 @@ function prepareWorkspaceRuntimePackages() {
 
 function copyWorkspaceRuntimePackage(name) {
   const sourceDir = resolve(rootDir, 'packages', name);
-  const packageDir = resolve(targetDir, `node_modules/@opencreator/${name}`);
+  const packageDir = resolve(targetDir, `node_modules/@vishnucreator/${name}`);
   rmSync(packageDir, { recursive: true, force: true });
   mkdirSync(packageDir, { recursive: true });
   cpSync(resolve(sourceDir, 'dist'), resolve(packageDir, 'dist'), {
@@ -273,7 +273,7 @@ function copyWorkspaceRuntimePackage(name) {
 }
 
 function assertWorkspaceRuntimePackage(name, label) {
-  const packageDir = resolve(targetDir, `node_modules/@opencreator/${name}`);
+  const packageDir = resolve(targetDir, `node_modules/@vishnucreator/${name}`);
   const packageJson = JSON.parse(
     readFileSync(resolve(packageDir, 'package.json'), 'utf8')
   );

@@ -30,18 +30,18 @@ describe('agent tool run injection', () => {
       expect.objectContaining({
         name: AGENT_SCHEDULE_MCP_SERVER_NAME,
         url: 'http://127.0.0.1:43123/internal/agent-tools/mcp',
-        bearerTokenEnvVar: 'OPENCREATOR_AGENT_CAPABILITY_TOKEN',
+        bearerTokenEnvVar: 'VISHNUCREATOR_AGENT_CAPABILITY_TOKEN',
         enabledTools: [
-          'opencreator_schedule_create',
-          'opencreator_schedule_update',
-          'opencreator_schedule_pause',
-          'opencreator_schedule_resume',
-          'opencreator_schedule_run_now',
-          'opencreator_schedule_get'
+          'vishnucreator_schedule_create',
+          'vishnucreator_schedule_update',
+          'vishnucreator_schedule_pause',
+          'vishnucreator_schedule_resume',
+          'vishnucreator_schedule_run_now',
+          'vishnucreator_schedule_get'
         ]
       })
     ]);
-    const token = injection?.env.OPENCREATOR_AGENT_CAPABILITY_TOKEN;
+    const token = injection?.env.VISHNUCREATOR_AGENT_CAPABILITY_TOKEN;
     expect(token).toMatch(/^occap_/);
     expect(injection?.env).toMatchObject({
       NO_PROXY: 'existing.example,internal.example,127.0.0.1,localhost',
@@ -73,17 +73,17 @@ describe('agent tool run injection', () => {
     });
 
     expect(taskRun?.mcpServers[0]?.enabledTools).toEqual([
-      'opencreator_schedule_update',
-      'opencreator_schedule_pause',
-      'opencreator_schedule_resume',
-      'opencreator_schedule_run_now',
-      'opencreator_schedule_get'
+      'vishnucreator_schedule_update',
+      'vishnucreator_schedule_pause',
+      'vishnucreator_schedule_resume',
+      'vishnucreator_schedule_run_now',
+      'vishnucreator_schedule_get'
     ]);
     expect(automaticRun?.mcpServers[0]?.enabledTools).toEqual([
-      'opencreator_schedule_get'
+      'vishnucreator_schedule_get'
     ]);
     expect(() => tokens.authorize(
-      automaticRun?.env.OPENCREATOR_AGENT_CAPABILITY_TOKEN,
+      automaticRun?.env.VISHNUCREATOR_AGENT_CAPABILITY_TOKEN,
       { scope: 'schedule:update' }
     )).toThrow('scope is not allowed');
     tokens.close();
@@ -116,16 +116,16 @@ describe('agent tool run injection', () => {
       expect.objectContaining({
         name: AGENT_SCHEDULE_MCP_SERVER_NAME,
         url: 'http://127.0.0.1:43123/internal/agent-tools/mcp',
-        bearerTokenEnvVar: 'OPENCREATOR_AGENT_CAPABILITY_TOKEN'
+        bearerTokenEnvVar: 'VISHNUCREATOR_AGENT_CAPABILITY_TOKEN'
       }),
       expect.objectContaining({
         name: AGENT_CREATOR_MCP_SERVER_NAME,
         url: 'http://127.0.0.1:43123/internal/agent-tools/mcp/creator',
-        bearerTokenEnvVar: 'OPENCREATOR_AGENT_CAPABILITY_TOKEN'
+        bearerTokenEnvVar: 'VISHNUCREATOR_AGENT_CAPABILITY_TOKEN'
       })
     ]);
     expect(injection?.mcpServers[0]).not.toHaveProperty('enabledTools');
-    const token = injection?.env.OPENCREATOR_AGENT_CAPABILITY_TOKEN;
+    const token = injection?.env.VISHNUCREATOR_AGENT_CAPABILITY_TOKEN;
     expectCapabilityCode(
       () => tokens.inspect(token),
       'CAPABILITY_CONTEXT_INACTIVE'
@@ -205,7 +205,7 @@ describe('agent tool run injection', () => {
       AGENT_CREATOR_MCP_SERVER_NAME
     ]);
 
-    const scheduleToken = schedule?.env.OPENCREATOR_AGENT_CAPABILITY_TOKEN;
+    const scheduleToken = schedule?.env.VISHNUCREATOR_AGENT_CAPABILITY_TOKEN;
     schedule?.activate({
       runId: 'run-schedule-only',
       thread: thread({ purpose: 'conversation' }),
@@ -219,7 +219,7 @@ describe('agent tool run injection', () => {
       'CAPABILITY_SCOPE_FORBIDDEN'
     );
 
-    const creatorToken = creator?.env.OPENCREATOR_AGENT_CAPABILITY_TOKEN;
+    const creatorToken = creator?.env.VISHNUCREATOR_AGENT_CAPABILITY_TOKEN;
     creator?.activate({
       runId: 'run-creator-only',
       thread: thread({ purpose: 'creator_agent' }),
@@ -259,7 +259,7 @@ function thread(overrides: Partial<RuntimeThread> = {}): RuntimeThread {
     id: 'thread-1',
     title: '测试会话',
     projectId: 'project-1',
-    origin: 'opencreator_created',
+    origin: 'vishnucreator_created',
     cwd: '/workspace/current',
     canonicalCwd: '/workspace/current',
     workspaceMode: 'external',

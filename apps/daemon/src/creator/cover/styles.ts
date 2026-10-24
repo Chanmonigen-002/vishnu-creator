@@ -2,7 +2,7 @@ import type {
   CoverStyleId,
   CoverTextLanguage,
   CreatorJson
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 type CoverStyleDefinition = {
   id: CoverStyleId;

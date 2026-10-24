@@ -1,11 +1,11 @@
-import { gatewayRelayIdentity, sanitizePublicErrorFacts, type OpenCreatorIssue, type PublicErrorFacts } from '@opencreator/protocol';
+import { gatewayRelayIdentity, sanitizePublicErrorFacts, type VishnuCreatorIssue, type PublicErrorFacts } from '@vishnucreator/protocol';
 
 export class ApiClientError extends Error {
   readonly status: number;
   readonly code: string;
   readonly details?: Record<string, unknown>;
   readonly publicFacts?: PublicErrorFacts;
-  readonly issue?: OpenCreatorIssue;
+  readonly issue?: VishnuCreatorIssue;
 
   constructor(input: {
     status: number;
@@ -13,7 +13,7 @@ export class ApiClientError extends Error {
     message: string;
     details?: Record<string, unknown>;
     publicFacts?: PublicErrorFacts;
-    issue?: OpenCreatorIssue;
+    issue?: VishnuCreatorIssue;
   }) {
     super(gatewayRelayIdentity.test(input.message) ? 'Official model service could not complete the request.' : input.message);
     this.name = 'ApiClientError';

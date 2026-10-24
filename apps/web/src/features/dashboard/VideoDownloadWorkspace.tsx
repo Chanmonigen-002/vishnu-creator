@@ -5,8 +5,8 @@ import type {
   DownloadMediaType,
   DownloadOption,
   DownloadProbe
-} from '@opencreator/protocol';
-import { extractDouyinShareUrl, supportedVideoSourcePlatform } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { extractDouyinShareUrl, supportedVideoSourcePlatform } from '@vishnucreator/protocol';
 import {
   AlertCircle,
   Check,

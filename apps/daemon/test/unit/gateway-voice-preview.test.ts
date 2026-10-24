@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from 'vitest';
 import { createOfficialVoicePreview, createOfficialVoicePreviewLanguages } from '../../src/gateway/voice-preview.js';
-import { createKrillinTtsService } from '../../src/creator/krillin/tts-service.js';
+import { createVishnuTtsService } from '../../src/creator/vishnu/tts-service.js';
 
 const request = { provider: 'openai' as const, model: 'grok-tts', voiceId: 'eve', language: 'zh-TW' };
 function state() {
@@ -24,7 +24,7 @@ describe('stored official voice previews', () => {
     const read = vi.fn();
     const executeSynthesis = vi.fn();
     const preview = createOfficialVoicePreview({ origin: 'https://gateway.example', getState: state, fetcher });
-    const service = createKrillinTtsService({ resourceRoot: '/unused', workRoot: '/unused', configStore: { read }, executeSynthesis, officialPreview: preview });
+    const service = createVishnuTtsService({ resourceRoot: '/unused', workRoot: '/unused', configStore: { read }, executeSynthesis, officialPreview: preview });
     expect(await service.preview(request)).toMatchObject({ provider: 'openai', model: 'grok-tts', voiceId: 'eve', format: 'mp3', language: 'en' });
     const [target, init] = fetcher.mock.calls[0] as unknown as [URL, RequestInit];
     expect(target.pathname).toBe('/api/v1/voice-previews');
@@ -38,7 +38,7 @@ describe('stored official voice previews', () => {
     const fetcher = vi.fn(async () => new Response(null, { status: 404 }));
     const executeSynthesis = vi.fn();
     const read = vi.fn();
-    const service = createKrillinTtsService({ resourceRoot: '/unused', workRoot: '/unused', configStore: { read }, executeSynthesis,
+    const service = createVishnuTtsService({ resourceRoot: '/unused', workRoot: '/unused', configStore: { read }, executeSynthesis,
       officialPreview: createOfficialVoicePreview({ origin: 'https://gateway.example', getState: state, fetcher }) });
     await expect(service.preview(request)).rejects.toMatchObject({ code: 'creator_tts_upstream_error' });
     expect(read).not.toHaveBeenCalled();

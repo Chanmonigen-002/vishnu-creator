@@ -4,7 +4,7 @@ import {
   type CreatorJob,
   type CreatorJson,
   type CreatorStageRun
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export function isBackgroundSourceDownload(stage: CreatorStageRun): boolean {
   return stage.stageId === 'preview-source-video' && stage.progress.backgroundSourceDownload === true;

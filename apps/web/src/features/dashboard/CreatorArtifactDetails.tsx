@@ -1,5 +1,5 @@
 import AppSelect from '../../components/forms/Select.js';
-import { readCreatorResultSnapshots, type CreatorArtifact, type CreatorJob } from '@opencreator/protocol';
+import { readCreatorResultSnapshots, type CreatorArtifact, type CreatorJob } from '@vishnucreator/protocol';
 import { useEffect, useRef, useState } from 'react';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import { creatorPanelAdapterFor } from './creator-panel-adapters.js';

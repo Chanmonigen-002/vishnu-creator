@@ -5,7 +5,7 @@
   display: grid;
   place-items: center;
   overflow: auto;
-  padding: max(32px, var(--opencreator-titlebar-height, 0px)) 20px 32px;
+  padding: max(32px, var(--vishnucreator-titlebar-height, 0px)) 20px 32px;
   background: var(--bg);
 }
 

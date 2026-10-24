@@ -5,7 +5,7 @@ import { pipeline } from 'node:stream/promises';
 import { errorFacts, statelessResponses, type OfficialModelFailureReporter, type OfficialModelSuccessReporter } from './direct-transport.js';
 import { officialEventStream } from './official-stream.js';
 import { GatewayError, validateGatewayOrigin } from './client.js';
-import type { GatewayModel } from '@opencreator/protocol';
+import type { GatewayModel } from '@vishnucreator/protocol';
 import { creatorServiceFailureFacts } from '../creator-services/upstream-fetch.js';
 import { publicFactsFromFailure } from '../creator/public-error-facts.js';
 import { isKnownDirectBase, supplierBases } from './supplier.js';

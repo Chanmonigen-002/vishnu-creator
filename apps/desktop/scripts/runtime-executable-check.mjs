@@ -4,7 +4,7 @@ import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 
 export function verifyRuntimeExecutable(input) {
-  const verificationRoot = mkdtempSync(join(tmpdir(), 'opencreator-runtime-check-'));
+  const verificationRoot = mkdtempSync(join(tmpdir(), 'vishnucreator-runtime-check-'));
   try {
     const result = spawnSync(input.path, input.args, {
       cwd: verificationRoot,

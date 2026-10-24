@@ -77,7 +77,7 @@ it('proxies validated website handoffs through the authenticated account service
   const server = Fastify();
   try {
     await registerGatewayAccountRoutes(server, { billing } as unknown as GatewayAccountService);
-    const body = { destination: 'recharge', locale: 'zh', returnUrl: 'opencreator://billing/return' };
+    const body = { destination: 'recharge', locale: 'zh', returnUrl: 'vishnucreator://billing/return' };
     const result = await server.inject({ method: 'POST', url: '/gateway/account/web', payload: body });
     expect(result.statusCode).toBe(200);
     expect(result.headers['cache-control']).toBe('no-store');

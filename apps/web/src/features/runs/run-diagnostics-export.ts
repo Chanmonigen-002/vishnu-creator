@@ -1,4 +1,4 @@
-import type { RunDiagnosticsResponse } from '@opencreator/protocol';
+import type { RunDiagnosticsResponse } from '@vishnucreator/protocol';
 
 export function downloadRunDiagnosticsBundle(diagnostics: RunDiagnosticsResponse): void {
   const bundle = serializeRunDiagnosticsBundle(diagnostics);
@@ -18,7 +18,7 @@ export function serializeRunDiagnosticsBundle(
   diagnostics: RunDiagnosticsResponse
 ): string {
   return JSON.stringify({
-    format: 'opencreator-run-diagnostics',
+    format: 'vishnucreator-run-diagnostics',
     version: 1,
     exportedAt: new Date().toISOString(),
     runId: diagnostics.runId,

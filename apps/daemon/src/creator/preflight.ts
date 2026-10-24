@@ -8,16 +8,16 @@ import type {
   CreatorServicesCapabilitiesResponse,
   CreatorServicesConfig,
   PublicErrorFacts
-} from '@opencreator/protocol';
-import { creatorPreflightFailure, imagePromptRequiresReference } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { creatorPreflightFailure, imagePromptRequiresReference } from '@vishnucreator/protocol';
 import { access, mkdir, readFile } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { join } from 'node:path';
 import type { CreatorTemplateStage } from './templates/types.js';
 import type { CreatorServicesConfigStore } from '../creator-services/config-store.js';
-import { preflightKrillinDependencies } from './krillin/dependency-preflight.js';
-import { assessKrillinTranscription } from './krillin/transcription-language.js';
-import { isYouTubeSource } from './krillin/execution-plan.js';
+import { preflightVishnuDependencies } from './vishnu/dependency-preflight.js';
+import { assessVishnuTranscription } from './vishnu/transcription-language.js';
+import { isYouTubeSource } from './vishnu/execution-plan.js';
 import type { YtDlpRuntime } from './yt-dlp/runtime.js';
 import {
   imageProviderConfigured,
@@ -69,7 +69,7 @@ export function createCreatorPreflight(input: {
   readCodexImageStatus?(): Promise<CodexImageStatus>;
   videoMetadataService?: VideoMetadataService;
   assertServiceSource?(jobId: string): void;
-  validateOfficialModel?(modality: import('@opencreator/protocol').GatewayModel['modality'], model: string): Promise<unknown>;
+  validateOfficialModel?(modality: import('@vishnucreator/protocol').GatewayModel['modality'], model: string): Promise<unknown>;
 }) {
   const executorIds = new Set(input.executorIds ?? []);
 
@@ -136,7 +136,7 @@ export function createCreatorPreflight(input: {
         }, { label: 'Select a video part', deepLink: `#/workbench?tool=video-translation&jobId=${encodeURIComponent(job.id)}` });
       }
     }
-    if (inputState.sourceType === 'file' && stage.executor === 'krillinai' && typeof inputState.sourceArtifactId !== 'string') {
+    if (inputState.sourceType === 'file' && stage.executor === 'vishnuai' && typeof inputState.sourceArtifactId !== 'string') {
       add('blocked', {
         id: 'input-file',
         title: 'Input file missing',
@@ -167,7 +167,7 @@ export function createCreatorPreflight(input: {
 
     const gateway = gatewayCreatorBinding(config);
     if (gateway && blocked.length === 0 && input.validateOfficialModel) {
-      const modalities = new Set<import('@opencreator/protocol').GatewayModel['modality']>();
+      const modalities = new Set<import('@vishnucreator/protocol').GatewayModel['modality']>();
       for (const check of ready) {
         if (check.id === 'llm') modalities.add('text');
         if (check.id === 'tts') modalities.add('speech');
@@ -226,7 +226,7 @@ export function createCreatorPreflight(input: {
       add('blocked', {
         id: 'managed-directory',
         title: 'Managed directory is not writable',
-        message: 'OpenCreator cannot write to the task directory or save artifacts safely.',
+        message: 'VishnuCreator cannot write to the task directory or save artifacts safely.',
         executionMode: 'local'
       }, { label: 'Open diagnostics', deepLink: '#/settings?tab=diagnostics' });
     }
@@ -247,9 +247,9 @@ export function createCreatorPreflight(input: {
         await input.ensureRuntimeReady();
       } catch (error) {
         add('blocked', {
-          id: 'krillin-runtime',
-          title: 'KrillinAI Runtime unavailable',
-          message: error instanceof Error ? error.message : 'KrillinAI Runtime verification failed.',
+          id: 'vishnu-runtime',
+          title: 'VishnuAI Runtime unavailable',
+          message: error instanceof Error ? error.message : 'VishnuAI Runtime verification failed.',
           executionMode: 'local'
         }, { label: 'Open local component settings', deepLink: '#/settings?tab=local-components' });
         return;
@@ -257,8 +257,8 @@ export function createCreatorPreflight(input: {
     }
     if (input.validateRuntimeAssets !== false) {
       const requiredTools = new Map<string, string | undefined>();
-      if (['download', 'clip', 'krillinai', 'stickman-media-validation'].includes(stage.executor)) requiredTools.set('ffmpeg', input.ffmpegPath);
-      if (['download', 'clip', 'krillinai', 'stickman-audio', 'stickman-remotion', 'stickman-media-validation', 'stickman-delivery'].includes(stage.executor)) requiredTools.set('ffprobe', input.ffprobePath);
+      if (['download', 'clip', 'vishnuai', 'stickman-media-validation'].includes(stage.executor)) requiredTools.set('ffmpeg', input.ffmpegPath);
+      if (['download', 'clip', 'vishnuai', 'stickman-audio', 'stickman-remotion', 'stickman-media-validation', 'stickman-delivery'].includes(stage.executor)) requiredTools.set('ffprobe', input.ffprobePath);
       for (const [id, path] of requiredTools) {
         const label = id === 'ffmpeg' ? 'FFmpeg' : 'ffprobe';
         if (path === undefined) add('blocked', {
@@ -296,7 +296,7 @@ export function createCreatorPreflight(input: {
         }
       }
     }
-    if (input.validateRuntimeAssets !== false && (stage.executor === 'download' || stage.executor === 'cover-analysis' || (stage.executor === 'krillinai' && job.state.sourceType !== 'file' && job.state.sourceType !== 'subtitle'))) {
+    if (input.validateRuntimeAssets !== false && (stage.executor === 'download' || stage.executor === 'cover-analysis' || (stage.executor === 'vishnuai' && job.state.sourceType !== 'file' && job.state.sourceType !== 'subtitle'))) {
       let runtime: YtDlpRuntime | undefined;
       try { runtime = input.getYtDlpRuntime?.(); } catch { runtime = undefined; }
       if (runtime === undefined) add('blocked', {
@@ -307,22 +307,22 @@ export function createCreatorPreflight(input: {
       }, { label: 'Open local component settings', deepLink: '#/settings?tab=local-components' });
       else add('ready', { id: 'yt-dlp', title: 'yt-dlp', message: `Ready (${runtime.version}).`, executionMode: 'local' });
     }
-    if (input.validateRuntimeAssets !== false && stage.executor === 'krillinai') {
+    if (input.validateRuntimeAssets !== false && stage.executor === 'vishnuai') {
       try {
-        preflightKrillinDependencies(input.resourceRoot, config, {
+        preflightVishnuDependencies(input.resourceRoot, config, {
           cachePath: input.runtimeVerificationCachePath
         });
-        add('ready', { id: 'krillin-runtime', title: 'KrillinAI Runtime', message: 'Runtime assets passed verification.', executionMode: 'local' });
+        add('ready', { id: 'vishnu-runtime', title: 'VishnuAI Runtime', message: 'Runtime assets passed verification.', executionMode: 'local' });
       } catch (error) {
         add('blocked', {
-          id: 'krillin-runtime',
-          title: 'KrillinAI Runtime incomplete',
-          message: error instanceof Error ? error.message : 'KrillinAI Runtime asset verification failed.',
+          id: 'vishnu-runtime',
+          title: 'VishnuAI Runtime incomplete',
+          message: error instanceof Error ? error.message : 'VishnuAI Runtime asset verification failed.',
           executionMode: 'local'
         }, { label: 'Open local component settings', deepLink: '#/settings?tab=local-components' });
       }
     }
-    if (stage.executor === 'krillinai' && stage.id === 'subtitle' && job.state.sourceType !== 'subtitle' && !hasImportedSubtitle(job) && !canTryPlatformCaptions(job) && ['whisper.cpp', 'whisperkit', 'faster-whisper'].includes(config.transcription.provider)) {
+    if (stage.executor === 'vishnuai' && stage.id === 'subtitle' && job.state.sourceType !== 'subtitle' && !hasImportedSubtitle(job) && !canTryPlatformCaptions(job) && ['whisper.cpp', 'whisperkit', 'faster-whisper'].includes(config.transcription.provider)) {
       const provider = input.readCapabilities().transcription.providers.find(candidate => candidate.provider === config.transcription.provider);
       if (provider?.available !== true) add('blocked', {
         id: 'transcription-capability',
@@ -336,7 +336,7 @@ export function createCreatorPreflight(input: {
 
 function runtimeBackedExecutor(executorId: string): boolean {
   return [
-    'krillinai',
+    'vishnuai',
     'download',
     'cover-analysis',
     'clip',
@@ -357,7 +357,7 @@ async function checkProviderConfig(
   readCodexImageStatus?: () => Promise<CodexImageStatus>
 ): Promise<void> {
   const needs = new Set<string>();
-  if (stage.executor === 'krillinai') {
+  if (stage.executor === 'vishnuai') {
     if (
       stage.id === 'subtitle'
       && !job.artifacts.some(artifact => (
@@ -382,7 +382,7 @@ async function checkProviderConfig(
   if (stage.executor === 'wechat-article' && stage.id === 'images') needs.add('image');
 
   if (needs.has('llm')) {
-    if (config.llm.source === 'codex' && stage.executor === 'krillinai' && config.llm.apiKey.trim()) {
+    if (config.llm.source === 'codex' && stage.executor === 'vishnuai' && config.llm.apiKey.trim()) {
       add('ready', {
         id: 'llm',
         title: 'Text model',
@@ -472,10 +472,10 @@ async function checkProviderConfig(
       else add('ready', { id: 'video-provider', title: 'Video service', message: `${provider} / ${settings.model} is configured.`, executionMode: 'remote' });
     }
   }
-  if (stage.executor === 'krillinai' && stage.id === 'subtitle' && job.state.sourceType !== 'subtitle' && !hasImportedSubtitle(job)) {
+  if (stage.executor === 'vishnuai' && stage.id === 'subtitle' && job.state.sourceType !== 'subtitle' && !hasImportedSubtitle(job)) {
     const choices = job.state.officialModels;
     const selectedModel = choices && typeof choices === 'object' && !Array.isArray(choices) && typeof choices.transcription === 'string' ? choices.transcription : undefined;
-    const assessment = assessKrillinTranscription(config, typeof job.state.sourceLanguage === 'string' ? job.state.sourceLanguage : 'en', selectedModel);
+    const assessment = assessVishnuTranscription(config, typeof job.state.sourceLanguage === 'string' ? job.state.sourceLanguage : 'en', selectedModel);
     const languageExecutionMode = capabilities.transcription.providers.find(candidate => candidate.provider === assessment.provider)?.kind === 'local' ? 'local' : 'remote';
     const fallbackOnly = canTryPlatformCaptions(job);
     const repair = { label: 'Change speech recognition service or import source subtitles', deepLink: '#/settings?tab=ai-services&section=transcription' };
@@ -577,7 +577,7 @@ function executionMode(stage: CreatorTemplateStage, job: CreatorJob): CreatorPre
     || (stage.executor === 'stickman-content' && ['source-brief', 'content-plan', 'script', 'storyboard'].includes(stage.id))
     || (stage.executor === 'stickman-audio' && stage.id === 'narration')
   ) return 'mixed';
-  if (stage.executor === 'krillinai' && job.state.sourceType !== 'file') return 'mixed';
+  if (stage.executor === 'vishnuai' && job.state.sourceType !== 'file') return 'mixed';
   return 'local';
 }
 

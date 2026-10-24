@@ -4,8 +4,8 @@ import type {
   CreatorPresetHighlight,
   CreatorRuntimeWorkspace,
   CreatorServicesConfig
-} from '@opencreator/protocol';
-import { defaultVideoGenerationModels, isCreatorTtsProvider } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { defaultVideoGenerationModels, isCreatorTtsProvider } from '@vishnucreator/protocol';
 import { readImageProvider } from '../image-settings.js';
 import { deepMergeCreatorJson } from './requirements.js';
 import type {

@@ -17,7 +17,7 @@ import {
 export function registerPrivilegedSchemes(): void {
   protocol.registerSchemesAsPrivileged([
     {
-      scheme: 'opencreator-app',
+      scheme: 'vishnucreator-app',
       privileges: {
         standard: true,
         secure: true,
@@ -44,11 +44,11 @@ export async function installProtocolHandler(input: {
 }): Promise<ProtocolHandlerController> {
   let runtimeSuspended = false;
   const activeRequests = new Set<AbortController>();
-  await protocol.handle('opencreator-app', async request => {
+  await protocol.handle('vishnucreator-app', async request => {
     const url = new URL(request.url);
     if (isRuntimeRequestUrl(url)) {
       if (runtimeSuspended) {
-        return jsonError(503, 'RUNTIME_SHUTTING_DOWN', 'OpenCreator Runtime is stopping');
+        return jsonError(503, 'RUNTIME_SHUTTING_DOWN', 'VishnuCreator Runtime is stopping');
       }
       const controller = new AbortController();
       activeRequests.add(controller);
@@ -97,7 +97,7 @@ async function proxyRuntimeRequest(
       method: request.method,
       path: url.pathname
     }, 5_000);
-    return jsonError(503, 'RUNTIME_UNAVAILABLE', 'OpenCreator Runtime is not ready');
+    return jsonError(503, 'RUNTIME_UNAVAILABLE', 'VishnuCreator Runtime is not ready');
   }
   const startedAt = performance.now();
   let phase = 'target';

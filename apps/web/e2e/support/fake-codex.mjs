@@ -20,8 +20,8 @@ if (!args.includes('app-server') || !args.includes('--stdio')) {
   process.exit(2);
 }
 
-const configPath = requireEnvironment('OPENCREATOR_E2E_FAKE_CODEX_CONFIG');
-const stateDir = requireEnvironment('OPENCREATOR_E2E_FAKE_CODEX_STATE_DIR');
+const configPath = requireEnvironment('VISHNUCREATOR_E2E_FAKE_CODEX_CONFIG');
+const stateDir = requireEnvironment('VISHNUCREATOR_E2E_FAKE_CODEX_STATE_DIR');
 mkdirSync(stateDir, { recursive: true });
 appendFileSync(resolve(stateDir, 'app-server-pids.txt'), `${process.pid}\n`);
 
@@ -51,7 +51,7 @@ readline.on('line', line => {
     send({
       id: message.id,
       result: {
-        userAgent: 'opencreator-e2e',
+        userAgent: 'vishnucreator-e2e',
         codexHome: process.env.CODEX_HOME,
         platformFamily: 'unix',
         platformOs: 'test'
@@ -98,7 +98,7 @@ readline.on('line', line => {
         data: [{
           cwd: message.params?.cwds?.[0] ?? process.cwd(),
           skills: [{
-            name: 'opencreator-runtime',
+            name: 'vishnucreator-runtime',
             path: resolve(extraSkillRoots[0] ?? process.cwd(), 'SKILL.md')
           }]
         }]
@@ -399,7 +399,7 @@ function turnsPath(targetThreadId) {
 
 async function createAgentSchedule(schedule) {
   const baseUrl = readAgentToolBaseUrl();
-  const token = requireEnvironment('OPENCREATOR_AGENT_CAPABILITY_TOKEN');
+  const token = requireEnvironment('VISHNUCREATOR_AGENT_CAPABILITY_TOKEN');
   const response = await fetch(`${baseUrl}/internal/agent-tools/schedules`, {
     method: 'POST',
     headers: {
@@ -414,16 +414,16 @@ async function createAgentSchedule(schedule) {
 }
 
 function readAgentToolBaseUrl() {
-  const legacyBaseUrl = process.env.OPENCREATOR_AGENT_TOOL_URL;
+  const legacyBaseUrl = process.env.VISHNUCREATOR_AGENT_TOOL_URL;
   if (typeof legacyBaseUrl === 'string' && legacyBaseUrl.length > 0) {
     return legacyBaseUrl.replace(/\/+$/, '');
   }
 
-  const mcpUrl = readCodexConfigValue('mcp_servers.opencreator_schedule.url');
+  const mcpUrl = readCodexConfigValue('mcp_servers.vishnucreator_schedule.url');
   const route = '/internal/agent-tools/mcp';
   const parsed = new URL(mcpUrl);
   if (!parsed.pathname.endsWith(route)) {
-    throw new Error(`Unexpected OpenCreator schedule MCP URL: ${mcpUrl}`);
+    throw new Error(`Unexpected VishnuCreator schedule MCP URL: ${mcpUrl}`);
   }
   parsed.pathname = parsed.pathname.slice(0, -route.length) || '/';
   parsed.search = '';

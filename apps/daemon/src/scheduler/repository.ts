@@ -4,7 +4,7 @@ import type {
   ScheduleDiagnosticEventType,
   ScheduleRunTrace,
   ScheduleTriggerType
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type Database from 'better-sqlite3';
 import { nanoid } from 'nanoid';
 import type {

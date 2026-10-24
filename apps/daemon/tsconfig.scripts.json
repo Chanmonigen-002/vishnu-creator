@@ -3,7 +3,7 @@
   "compilerOptions": {
     "baseUrl": "../..",
     "paths": {
-      "@opencreator/protocol": ["packages/protocol/src/index.ts"]
+      "@vishnucreator/protocol": ["packages/protocol/src/index.ts"]
     }
   },
   "include": ["src/**/*.ts", "scripts/**/*.ts"]

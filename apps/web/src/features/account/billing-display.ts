@@ -52,7 +52,7 @@ export function rechargeOrderLabel(order: GatewayRechargeOrder, l: LocalizeCopy)
 
 export function creditPlansURL(raw: string | undefined, language: string) {
   try {
-    const url = new URL(raw || 'https://www.open-creator.ai/pricing');
+    const url = new URL(raw || 'https://www.vishnu-creator.ai/pricing');
     const local = ['127.0.0.1', 'localhost'].includes(url.hostname);
     if ((url.protocol !== 'https:' && !(url.protocol === 'http:' && local)) || url.username || url.password || url.pathname !== '/pricing') return undefined;
     url.searchParams.set('lang', language === 'zh-CN' ? 'zh' : 'en');

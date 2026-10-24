@@ -14,10 +14,10 @@ import type {
   CreatorStageRun,
   CreatorServicesConfig,
   IssueSource,
-  OpenCreatorIssue,
+  VishnuCreatorIssue,
   RuntimeErrorCode
-} from '@opencreator/protocol';
-import { isCreateCreatorJobRequest, isOpenCreatorIssue } from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
+import { isCreateCreatorJobRequest, isVishnuCreatorIssue } from '@vishnucreator/protocol';
 import { createHash } from 'node:crypto';
 import { createReadStream } from 'node:fs';
 import { rm, stat } from 'node:fs/promises';
@@ -26,8 +26,8 @@ import type { Readable } from 'node:stream';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { z, ZodError } from 'zod/v3';
 import { creatorSubtitleStyleSchema } from '../creator/presets/module-schemas.js';
-import type { SubtitlePreviewService } from '../creator/krillin/subtitle-preview.js';
-import type { createSubtitleRenderService } from '../creator/krillin/subtitle-render.js';
+import type { SubtitlePreviewService } from '../creator/vishnu/subtitle-preview.js';
+import type { createSubtitleRenderService } from '../creator/vishnu/subtitle-render.js';
 import type { CreatorEventHub } from '../creator/events.js';
 import {
   creatorAgentEventKind,
@@ -338,7 +338,7 @@ export async function registerCreatorRoutes(
         }
         return reply.code(response.deduplicated ? 200 : 201).send(response);
       } catch (error) {
-        let existingIssue: OpenCreatorIssue | undefined;
+        let existingIssue: VishnuCreatorIssue | undefined;
         if (repair !== undefined && options.issueService !== undefined) {
           try {
             existingIssue = options.issueService.finishResolution({
@@ -1489,7 +1489,7 @@ type CreatorErrorContext = {
   scopeKey?: string;
   service: CreatorService;
   issueService?: CreatorIssueService;
-  existingIssue?: OpenCreatorIssue;
+  existingIssue?: VishnuCreatorIssue;
 };
 
 function sendCreatorError(reply: FastifyReply, error: unknown, context?: CreatorErrorContext) {
@@ -1589,11 +1589,11 @@ function sendCreatorError(reply: FastifyReply, error: unknown, context?: Creator
 function captureIssueForError(
   error: unknown,
   context: CreatorErrorContext | undefined
-): OpenCreatorIssue | undefined {
+): VishnuCreatorIssue | undefined {
   const attachedIssue = typeof error === 'object' && error !== null
     ? (error as { issue?: unknown }).issue
     : undefined;
-  if (isOpenCreatorIssue(attachedIssue)) return attachedIssue;
+  if (isVishnuCreatorIssue(attachedIssue)) return attachedIssue;
   if (
     context === undefined
     || context.issueService === undefined

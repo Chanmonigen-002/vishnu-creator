@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { RefreshCw } from 'lucide-react';
-import type { CreatorSubtitlePreviewRequest } from '@opencreator/protocol';
+import type { CreatorSubtitlePreviewRequest } from '@vishnucreator/protocol';
 import type { CreatorWebService } from '../../services/creator-service.js';
 import SubtitleCompositionPreview from './SubtitleCompositionPreview.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';

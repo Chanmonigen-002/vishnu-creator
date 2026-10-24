@@ -20,7 +20,7 @@ export function AppLayout(props: {
   const onCloseMobileSidebarRef = useRef(props.onCloseMobileSidebar);
   const mobileSidebarOpen = props.mobileSidebarOpen === true;
   const shellClassName = [
-    'opencreator-shell',
+    'vishnucreator-shell',
     props.detailOpen ? 'has-detail' : undefined,
     props.sidebarCollapsed ? 'sidebar-collapsed' : undefined,
     props.immersive ? 'is-immersive' : undefined
@@ -74,7 +74,7 @@ export function AppLayout(props: {
         />
       ) : null}
       {props.immersive ? null : <aside
-        className="opencreator-sidebar-pane"
+        className="vishnucreator-sidebar-pane"
         aria-label={l("Vishnu Creator 导航", "Vishnu Creator navigation")}
         data-collapsed={props.sidebarCollapsed ? 'true' : 'false'}
         data-mobile-open={mobileSidebarOpen ? 'true' : 'false'}
@@ -92,12 +92,12 @@ export function AppLayout(props: {
         {props.sidebar}
       </aside>}
       <section
-        className="opencreator-main-pane"
+        className="vishnucreator-main-pane"
         aria-label={l("Vishnu Creator 工作区", "Vishnu Creator workspace")}
         data-has-main-header={props.mainHeader === undefined ? undefined : 'true'}
       >
         {props.mainHeader === undefined ? null : (
-          <div className="opencreator-main-titlebar">{props.mainHeader}</div>
+          <div className="vishnucreator-main-titlebar">{props.mainHeader}</div>
         )}
         {props.immersive ? null : <div className="mobile-navigation-toolbar">
           <button
@@ -112,10 +112,10 @@ export function AppLayout(props: {
             <Menu aria-hidden="true" size={20} />
           </button>
         </div>}
-        <div className="opencreator-main-content">{props.main}</div>
+        <div className="vishnucreator-main-content">{props.main}</div>
       </section>
       {props.detailOpen ? (
-        <aside className="opencreator-detail-pane" aria-label={l("详情", "Details")}>
+        <aside className="vishnucreator-detail-pane" aria-label={l("详情", "Details")}>
           {props.detail}
         </aside>
       ) : null}

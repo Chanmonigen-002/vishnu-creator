@@ -2,8 +2,8 @@
 
 <h1>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="../images/OpenCreator_logo_vector_dark.svg" />
-    <img src="../images/OpenCreator_logo_vector.svg" alt="OpenCreator" width="380" />
+    <source media="(prefers-color-scheme: dark)" srcset="../images/Vishnu Creator_logo_vector_dark.svg" />
+    <img src="../images/Vishnu Creator_logo_vector.svg" alt="Vishnu Creator" width="380" />
   </picture>
   <br />
   크리에이터를 위한 오픈소스 AI 워크스페이스 & Skills
@@ -11,16 +11,16 @@
 
 <p>시각적 제작 도구, 재사용 가능한 Skills, Agent를 하나의 워크스페이스에 모아 스크립트, 동영상, 이미지, 음성, 아바타, 번역, 편집을 진행합니다.</p>
 
-<p><strong>OpenCreator의 이전 이름은 KrillinAI였습니다.</strong></p>
+<p><strong>Vishnu Creator의 이전 이름은 VishnuAI였습니다.</strong></p>
 
-<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="OpenCreator(구 KrillinAI): Trendshift 오늘의 리포지토리 1위" width="250" height="55" /></a>
+<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="Vishnu Creator(구 VishnuAI): Trendshift 오늘의 리포지토리 1위" width="250" height="55" /></a>
 
 [English](../../README.md) | [简体中文](../zh/README.md) | [日本語](../ja/README.md) | **한국어** | [Bahasa Indonesia](../id/README.md) | [Español](../es/README.md) | [Français](../fr/README.md) | [Deutsch](../de/README.md) | [Português](../pt/README.md) | [Русский](../ru/README.md) | [العربية](../ar/README.md) | [ภาษาไทย](../th/README.md) | [Türkçe](../tr/README.md) | [हिन्दी](../hi/README.md) | [বাংলা](../bn/README.md) | [اردو](../ur/README.md) | [Tiếng Việt](../vi/README.md) | [Filipino](../fil/README.md)
 
-[![GitHub Stars](https://badgen.net/github/stars/krillinai/OpenCreator?icon=github&label=Stars&color=EAB308)](https://github.com/krillinai/OpenCreator/stargazers)
+[![GitHub Stars](https://badgen.net/github/stars/vishnuai/Vishnu Creator?icon=github&label=Stars&color=EAB308)](https://github.com/vishnuai/Vishnu Creator/stargazers)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Bilibili](https://img.shields.io/badge/dynamic/json?label=Bilibili&query=%24.data.follower&suffix=%E7%B2%89%E4%B8%9D&url=https%3A%2F%2Fapi.bilibili.com%2Fx%2Frelation%2Fstat%3Fvmid%3D242124650&logo=bilibili&color=00A1D6&labelColor=FE7398&logoColor=FFFFFF)](https://space.bilibili.com/242124650)
-[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/krillinai/OpenCreator)
+[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/vishnuai/Vishnu Creator)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/fUNvbqDaw)
 [![QQ 그룹](https://img.shields.io/badge/QQ%20群-754069680-green?logo=tencent-qq)](https://qm.qq.com/q/W4YC0PLMeA)
 
@@ -28,13 +28,13 @@
 
 </div>
 
-![OpenCreator Agent 워크스페이스](../images/opencreator-home-en.png)
+![Vishnu Creator Agent 워크스페이스](../images/vishnucreator-home-en.png)
 
 ## 프로젝트 소개
 
-OpenCreator는 창작 및 개발 작업을 로컬에서 계속 실행하고자 하는 개인과 팀을 위해 만들어졌습니다. Agent 루프를 다시 구현하는 대신 Codex CLI를 실행 엔진으로 사용하고, 그 위에 안정적인 로컬 Runtime, 시각적 워크스페이스, Desktop 호스트를 제공합니다.
+Vishnu Creator는 창작 및 개발 작업을 로컬에서 계속 실행하고자 하는 개인과 팀을 위해 만들어졌습니다. Agent 루프를 다시 구현하는 대신 Codex CLI를 실행 엔진으로 사용하고, 그 위에 안정적인 로컬 Runtime, 시각적 워크스페이스, Desktop 호스트를 제공합니다.
 
-OpenCreator는 서로 연결된 두 가지 작업 방식을 제공합니다.
+Vishnu Creator는 서로 연결된 두 가지 작업 방식을 제공합니다.
 
 - **콘텐츠 워크스페이스**: 시각적 도구와 제작 템플릿을 사용해 동영상 번역과 다운로드, 썸네일 및 이미지 생성 등의 작업을 진행할 수 있습니다.
 - **Agent 대화**: 자연어로 제작이나 개발 작업을 시작하고 진행하며, 대화를 프로젝트별로 정리할 수 있습니다. Run을 백그라운드에서 계속 실행하면서 승인, 첨부 파일, 파일, Skills, MCP, 일정, 알림, 메모리, 진단을 한곳에서 관리할 수 있습니다.
@@ -45,7 +45,7 @@ Web은 유일한 프런트엔드 구현입니다. Desktop은 동일한 Web 빌�
 
 - 🤖 **Codex 네이티브**: 별도의 실행 엔진을 유지하지 않고 Codex의 Agent 루프, 모델, 추론, 도구 호출, 대화, Skills, MCP를 그대로 활용합니다.
 
-- 🚀 **바로 사용할 수 있는 Desktop 앱**: Codex CLI가 포함된 Desktop 앱에서 OpenCreator를 직접 실행할 수 있습니다. 로컬 Runtime은 필요할 때 시작되고 기본 프로젝트를 자동으로 준비합니다.
+- 🚀 **바로 사용할 수 있는 Desktop 앱**: Codex CLI가 포함된 Desktop 앱에서 Vishnu Creator를 직접 실행할 수 있습니다. 로컬 Runtime은 필요할 때 시작되고 기본 프로젝트를 자동으로 준비합니다.
 
 - ⚙️ **로컬 Codex 설정 자동 감지**: Desktop을 처음 실행할 때 기존 Codex 설정을 확인하고 사용 가능한 ChatGPT 로그인 또는 API 키를 재사용할 수 있습니다. 다른 모델 제공업체도 안내 화면에서 설정할 수 있습니다.
 
@@ -73,7 +73,7 @@ Web은 유일한 프런트엔드 구현입니다. Desktop은 동일한 Web 빌�
 
 Dashboard에서 동영상을 번역하거나 다운로드하고, 썸네일 또는 이미지를 생성하고, Text to Speech으로 음성 해설을 만들거나 Seedance로 동영상을 생성할 수 있습니다.
 
-![OpenCreator 제작 Dashboard](../images/product/opencreator-dashboard-en.png)
+![Vishnu Creator 제작 Dashboard](../images/product/vishnucreator-dashboard-en.png)
 
 > 제작 도구는 계속 추가될 예정입니다.
 
@@ -115,7 +115,7 @@ Dashboard에서 동영상을 번역하거나 다운로드하고, 썸네일 또�
 
 프롬프트와 설정을 처음부터 만들지 않고 템플릿으로 바로 제작을 시작할 수 있습니다. 동영상 제작과 이미지 디자인 등 카테고리별 추천 템플릿을 둘러보세요.
 
-제작 템플릿에는 OpenCreator의 오리지널 템플릿과 외부 크리에이터의 템플릿이 함께 제공됩니다. 외부 템플릿의 상세 화면에는 제작자와 원본 출처 링크가 표시됩니다.
+제작 템플릿에는 Vishnu Creator의 오리지널 템플릿과 외부 크리에이터의 템플릿이 함께 제공됩니다. 외부 템플릿의 상세 화면에는 제작자와 원본 출처 링크가 표시됩니다.
 
 템플릿을 열면 예시 결과와 프롬프트, 설정, 태그, 제작자 및 원본 출처를 확인할 수 있습니다. **이 템플릿 사용**을 선택해 제작을 시작하고 필요한 입력을 조정하세요.
 
@@ -123,23 +123,23 @@ Dashboard에서 동영상을 번역하거나 다운로드하고, 썸네일 또�
 
 ## Skills
 
-제작 도구는 시각적 제어 기능을 제공하고, Skills는 Agent에 재사용 가능한 실행 지침과 도구 워크플로를 제공합니다. OpenCreator는 저장소에 동영상 제작 Skills를 포함하며 로컬 Codex Skills 관리도 지원합니다.
+제작 도구는 시각적 제어 기능을 제공하고, Skills는 Agent에 재사용 가능한 실행 지침과 도구 워크플로를 제공합니다. Vishnu Creator는 저장소에 동영상 제작 Skills를 포함하며 로컬 Codex Skills 관리도 지원합니다.
 
-저장소의 [`skills/`](../../skills/) 디렉터리에는 내장 KrillinAI CLI를 사용하는 Agent를 위한 재사용 가능한 지침이 포함되어 있습니다.
+저장소의 [`skills/`](../../skills/) 디렉터리에는 내장 VishnuAI CLI를 사용하는 Agent를 위한 재사용 가능한 지침이 포함되어 있습니다.
 
 | Skill | 기능 |
 | --- | --- |
-| [KrillinAI CLI](../../skills/krillinai-cli/SKILL.md) | 명령 선택, 설정 확인, 진행 상황·매니페스트·출력·오류 해석 |
-| [자막 생성](../../skills/krillinai-subtitle/SKILL.md) | 플랫폼 자막 다운로드 또는 미디어 전사, 자막 번역, 이중 언어 자막이나 세로 동영상용 짧은 자막 생성 |
-| [TTS](../../skills/krillinai-tts/SKILL.md) | 자막을 바탕으로 대상 언어 더빙을 생성하고 필요에 따라 더빙 동영상 제작 |
-| [가로 렌더링](../../skills/krillinai-render-horizontal/SKILL.md) | 이중 언어 자막이 있는 가로 동영상 또는 더빙 음성과 대상 언어 자막이 있는 동영상 렌더링 |
-| [세로 렌더링](../../skills/krillinai-render-vertical/SKILL.md) | 제목, 이중 언어 자막 또는 더빙이 포함된 세로 동영상 합성 |
-| [커버 생성](../../skills/krillinai-cover/SKILL.md) | 완성된 텍스트 프롬프트로 커버 이미지를 생성하고 이미지와 최종 프롬프트 저장 |
-| [파이프라인 계획](../../skills/krillinai-pipeline/SKILL.md) | dry-run 모드로 다단계 출력 계획을 검증하고 실제 작업은 각 단계의 Skills로 개별 실행 |
+| [VishnuAI CLI](../../skills/vishnuai-cli/SKILL.md) | 명령 선택, 설정 확인, 진행 상황·매니페스트·출력·오류 해석 |
+| [자막 생성](../../skills/vishnuai-subtitle/SKILL.md) | 플랫폼 자막 다운로드 또는 미디어 전사, 자막 번역, 이중 언어 자막이나 세로 동영상용 짧은 자막 생성 |
+| [TTS](../../skills/vishnuai-tts/SKILL.md) | 자막을 바탕으로 대상 언어 더빙을 생성하고 필요에 따라 더빙 동영상 제작 |
+| [가로 렌더링](../../skills/vishnuai-render-horizontal/SKILL.md) | 이중 언어 자막이 있는 가로 동영상 또는 더빙 음성과 대상 언어 자막이 있는 동영상 렌더링 |
+| [세로 렌더링](../../skills/vishnuai-render-vertical/SKILL.md) | 제목, 이중 언어 자막 또는 더빙이 포함된 세로 동영상 합성 |
+| [커버 생성](../../skills/vishnuai-cover/SKILL.md) | 완성된 텍스트 프롬프트로 커버 이미지를 생성하고 이미지와 최종 프롬프트 저장 |
+| [파이프라인 계획](../../skills/vishnuai-pipeline/SKILL.md) | dry-run 모드로 다단계 출력 계획을 검증하고 실제 작업은 각 단계의 Skills로 개별 실행 |
 
 ### 나만의 Skills로 확장
 
-OpenCreator는 `SKILL.md`로 정의된 로컬 Codex Skills를 지원하므로 고정된 제작 도구에만 의존하지 않고 나만의 방법과 워크플로를 추가할 수 있습니다. 사용 가능한 Skills는 활성 Codex home과 설치된 Skills에 따라 달라지며 동영상 워크플로 Skills는 CLI와 관련 서비스 설정이 필요합니다. 저장소에 Skill이 포함되어 있다고 해서 자동으로 설치되거나 모든 외부 서비스가 함께 제공되는 것은 아닙니다.
+Vishnu Creator는 `SKILL.md`로 정의된 로컬 Codex Skills를 지원하므로 고정된 제작 도구에만 의존하지 않고 나만의 방법과 워크플로를 추가할 수 있습니다. 사용 가능한 Skills는 활성 Codex home과 설치된 Skills에 따라 달라지며 동영상 워크플로 Skills는 CLI와 관련 서비스 설정이 필요합니다. 저장소에 Skill이 포함되어 있다고 해서 자동으로 설치되거나 모든 외부 서비스가 함께 제공되는 것은 아닙니다.
 
 ## 대화와 워크스페이스를 함께 진행
 
@@ -228,11 +228,11 @@ Agent에게 변경할 내용을 알려 주고 자연어로 결과를 계속 다�
 
 ### 동영상 번역
 
-아래 공개 사례는 OpenCreator가 KrillinAI라는 이름을 사용하던 시기에 제작되었습니다. 이 사례들은 OpenCreator의 동영상 번역 워크스페이스가 더 넓은 Agent 워크플로에 제공하는 검증된 자막 정렬, 번역, 더빙, 세로형 동영상 워크플로를 보여 줍니다.
+아래 공개 사례는 Vishnu Creator가 VishnuAI라는 이름을 사용하던 시기에 제작되었습니다. 이 사례들은 Vishnu Creator의 동영상 번역 워크스페이스가 더 넓은 Agent 워크플로에 제공하는 검증된 자막 정렬, 번역, 더빙, 세로형 동영상 워크플로를 보여 줍니다.
 
 이 프로젝트는 46분 분량의 로컬 동영상에서 수동 자막 조정 없이 한 번의 실행으로 아래 자막 파일을 생성했습니다. 공개된 결과는 모든 구간을 빠짐없이 다루고, 자막이 서로 겹치지 않으며, 자연스럽게 분할되고, 높은 번역 품질을 보여 줍니다.
 
-![OpenCreator 자막 정렬 사례](../images/examples/krillinai-subtitle-alignment.png)
+![Vishnu Creator 자막 정렬 사례](../images/examples/vishnuai-subtitle-alignment.png)
 
 <table width="100%">
 <tr>
@@ -260,7 +260,7 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
 </tr>
 </table>
 
-> 이 동영상 사례와 자막 정렬 이미지는 OpenCreator가 KrillinAI라는 이름을 사용하던 시기에 제작되었습니다.
+> 이 동영상 사례와 자막 정렬 이미지는 Vishnu Creator가 VishnuAI라는 이름을 사용하던 시기에 제작되었습니다.
 
 ### 비디오 다운로드
 
@@ -283,37 +283,37 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
   </tr>
 </table>
 
-이용 가능 여부는 동영상과 지역에 따라 다르며 일부 플랫폼에는 쿠키가 필요할 수 있습니다. OpenCreator는 브라우저 쿠키를 자동으로 가져오지 않습니다.
+이용 가능 여부는 동영상과 지역에 따라 다르며 일부 플랫폼에는 쿠키가 필요할 수 있습니다. Vishnu Creator는 브라우저 쿠키를 자동으로 가져오지 않습니다.
 
-![OpenCreator 비디오 다운로더 형식 선택](../images/examples/video-downloader-formats-and-subtitles-en.png)
+![Vishnu Creator 비디오 다운로더 형식 선택](../images/examples/video-downloader-formats-and-subtitles-en.png)
 
 ### 동영상 생성
 
 Seedance를 사용해 텍스트 프롬프트 또는 참조 이미지에서 AI 동영상을 생성합니다. 모델, 화면 비율, 해상도, 길이를 설정한 뒤 프로젝트 작업 공간에서 각 버전을 미리 보거나 다시 생성하거나 다운로드할 수 있습니다.
 
-![OpenCreator Seedance 동영상 생성](../images/examples/video-generation-seedance-en.png)
+![Vishnu Creator Seedance 동영상 생성](../images/examples/video-generation-seedance-en.png)
 
 ### 스틱 피겨 애니메이션
 
-OpenCreator는 [Behance의 Stickman](https://www.behance.net/gallery/254715463/Stickman)을 제작한 아티스트 [Harbor Hsia](https://www.behance.net/xiaheyuan1)와 협업하여 이 오리지널 캐릭터 컬렉션을 개발했습니다. 내장 캐릭터는 애니메이션 제작 과정에서 일관된 정체성을 유지합니다.
+Vishnu Creator는 [Behance의 Stickman](https://www.behance.net/gallery/254715463/Stickman)을 제작한 아티스트 [Harbor Hsia](https://www.behance.net/xiaheyuan1)와 협업하여 이 오리지널 캐릭터 컬렉션을 개발했습니다. 내장 캐릭터는 애니메이션 제작 과정에서 일관된 정체성을 유지합니다.
 
-![아티스트와 함께 개발한 OpenCreator 스틱 피겨 캐릭터](../images/examples/stick-figure-characters.webp)
+![아티스트와 함께 개발한 Vishnu Creator 스틱 피겨 캐릭터](../images/examples/stick-figure-characters.webp)
 
 텍스트나 YouTube 콘텐츠에서 대본 검토, 내레이션, 타이밍, 스토리보드, 자막, 렌더링을 거쳐 다운로드 가능한 애니메이션을 만듭니다.
 
-![OpenCreator 스틱 피겨 애니메이션 예시 프레임](../images/examples/stick-figure-animation-frame.jpg)
+![Vishnu Creator 스틱 피겨 애니메이션 예시 프레임](../images/examples/stick-figure-animation-frame.jpg)
 
 ## 빠른 시작
 
 ### Desktop 앱 설치
 
-[최신 릴리스](https://github.com/krillinai/OpenCreator/releases/latest)에서 macOS Apple Silicon, macOS Intel 또는 Windows x64용 설치 파일을 다운로드하세요. Desktop 앱에는 Node.js나 pnpm이 필요하지 않으며 Codex CLI가 포함됩니다. 실제 모델 작업에는 사용 가능한 ChatGPT 로그인 또는 API 키 설정이 필요합니다.
+[최신 릴리스](https://github.com/vishnuai/Vishnu Creator/releases/latest)에서 macOS Apple Silicon, macOS Intel 또는 Windows x64용 설치 파일을 다운로드하세요. Desktop 앱에는 Node.js나 pnpm이 필요하지 않으며 Codex CLI가 포함됩니다. 실제 모델 작업에는 사용 가능한 ChatGPT 로그인 또는 API 키 설정이 필요합니다.
 
 처음 실행하면 로컬 Runtime을 시작하고 기본 프로젝트를 준비한 뒤 로컬 Codex 설정을 확인합니다. 사용 가능한 로그인 또는 API 키와 모델 설정이 발견되면 **로컬 Codex 사용하고 계속**을 선택해 재사용할 수 있습니다. 같은 시작 화면에서 다른 모델 제공업체를 설정할 수도 있습니다.
 
-![OpenCreator Desktop 첫 실행 시 모델 제공업체 설정](../images/product/opencreator-codex-setup.png)
+![Vishnu Creator Desktop 첫 실행 시 모델 제공업체 설정](../images/product/vishnucreator-codex-setup.png)
 
-설정 후 입력창에서 작업을 시작하세요. 문제가 있다면 [사용자 가이드](../opencreator-user-guide-and-troubleshooting.md)를 확인하세요.
+설정 후 입력창에서 작업을 시작하세요. 문제가 있다면 [사용자 가이드](../vishnucreator-user-guide-and-troubleshooting.md)를 확인하세요.
 
 ### 소스에서 Web 실행
 
@@ -333,8 +333,8 @@ codex --version
 ```
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable
 pnpm install
 pnpm web:dev
@@ -367,9 +367,9 @@ pnpm desktop:dev
 | `pnpm desktop:package` | 로컬 검증을 위한 현재 플랫폼의 실행 가능한 디렉터리 |
 | `pnpm desktop:dist` | 현재 플랫폼용 설치 프로그램 |
 | `pnpm desktop:release` | 정식 릴리스 패키징 진입점 |
-| `pnpm --filter @opencreator/desktop verify:package` | 기존 Desktop 패키지 검증 |
+| `pnpm --filter @vishnucreator/desktop verify:package` | 기존 Desktop 패키지 검증 |
 
-Desktop 패키징은 현재 작업 공간에서 Web을 다시 빌드하고 commit, dirty 상태, 플랫폼, 아키텍처, Web 해시를 기록한 다음 `apps/web/dist`와 애플리케이션에 포함된 리소스를 비교합니다. 서로 다르면 패키징이 실패합니다. 서명, 공증, Windows 빌드, 릴리스 요구 사항은 [Desktop 릴리스 운영 가이드](../operations/opencreator-desktop-release-runbook.md)를 참고하세요.
+Desktop 패키징은 현재 작업 공간에서 Web을 다시 빌드하고 commit, dirty 상태, 플랫폼, 아키텍처, Web 해시를 기록한 다음 `apps/web/dist`와 애플리케이션에 포함된 리소스를 비교합니다. 서로 다르면 패키징이 실패합니다. 서명, 공증, Windows 빌드, 릴리스 요구 사항은 [Desktop 릴리스 운영 가이드](../operations/vishnucreator-desktop-release-runbook.md)를 참고하세요.
 
 ## 핵심 워크플로
 
@@ -386,18 +386,18 @@ Desktop 패키징은 현재 작업 공간에서 Web을 다시 빌드하고 commi
 - 플러그인 센터에서 Skill 마켓플레이스, 설치 기록, 로컬에서 사용할 수 있는 Skills를 살펴볼 수 있습니다.
 - 입력창에서 `/` 또는 추가 메뉴를 통해 Skill을 선택하면 다음 작업이 해당 워크플로를 따릅니다.
 - MCP 관리는 별도의 실행 엔진을 유지하는 대신 Codex 네이티브 명령과 설정을 사용합니다.
-- OpenCreator는 기본적으로 현재 `$CODEX_HOME`을 사용하므로 전역 Skills 또는 MCP 설정을 변경하기 전에 영향을 확인하세요.
+- Vishnu Creator는 기본적으로 현재 `$CODEX_HOME`을 사용하므로 전역 Skills 또는 MCP 설정을 변경하기 전에 영향을 확인하세요.
 
 ### 일정과 전용 작업 스레드
 
-- 각 일정에는 영구적인 전용 OpenCreator 대화가 있습니다.
+- 각 일정에는 영구적인 전용 Vishnu Creator 대화가 있습니다.
 - 자동 트리거, 수동 실행, 사용자 후속 작업은 동일한 대화를 재사용하며 `queue` 또는 `skip` 정책에 따라 순차 실행됩니다.
 - 일정을 삭제하면 전용 대화는 보관 처리되지만 기존 Runs, 결과, 기반 Codex 기록은 유지됩니다.
-- 기반 Codex 스레드를 교체하거나 복구해도 OpenCreator 작업 항목과 페이지 경로는 변경되지 않습니다.
+- 기반 Codex 스레드를 교체하거나 복구해도 Vishnu Creator 작업 항목과 페이지 경로는 변경되지 않습니다.
 
-## OpenCreator 시스템 구조
+## Vishnu Creator 시스템 구조
 
-OpenCreator는 시각적 워크스페이스와 Agent 대화를 서로 다른 두 워크플로가 아니라 동일한 창작 작업을 위한 두 개의 인터페이스로 취급합니다. 각 제작 워크플로는 상태 머신으로 모델링됩니다. 소스 입력, 설정, 생성, 검토, 수정, 내보내기가 명시적인 상태와 이벤트가 됩니다. 워크스페이스 동작과 대화 명령은 동일한 상태 머신에 입력되며 현재 단계, 설정, 진행 상황, 버전, 결과는 두 인터페이스에 다시 반영됩니다. 이를 통해 두 번째 정보 출처를 만들지 않고 워크스페이스와 대화를 동기화합니다.
+Vishnu Creator는 시각적 워크스페이스와 Agent 대화를 서로 다른 두 워크플로가 아니라 동일한 창작 작업을 위한 두 개의 인터페이스로 취급합니다. 각 제작 워크플로는 상태 머신으로 모델링됩니다. 소스 입력, 설정, 생성, 검토, 수정, 내보내기가 명시적인 상태와 이벤트가 됩니다. 워크스페이스 동작과 대화 명령은 동일한 상태 머신에 입력되며 현재 단계, 설정, 진행 상황, 버전, 결과는 두 인터페이스에 다시 반영됩니다. 이를 통해 두 번째 정보 출처를 만들지 않고 워크스페이스와 대화를 동기화합니다.
 
 창작 작업은 반복적이므로 수정 시 현재 결과를 덮어쓰지 않습니다. 각 수정이나 재생성은 기존 워크플로 상태에서 새 버전을 만들고 이전 버전의 설정과 결과를 유지하여 검토, 비교, 추가 개선에 활용할 수 있게 합니다.
 
@@ -433,7 +433,7 @@ OpenCreator는 시각적 워크스페이스와 Agent 대화를 서로 다른 두
 +---------------------+  +---------------------+  +-------------------------+
 ```
 
-| OpenCreator 구성 요소 | 역할 | 구현 |
+| Vishnu Creator 구성 요소 | 역할 | 구현 |
 | --- | --- | --- |
 | 제작 경험 | Dashboard, 제작 도구, Agent 대화, 설정, 파일 제공 | `apps/web` · React 18 · Vite · TypeScript |
 | 협업 코어 | 워크스페이스 단계, 대화 컨텍스트, 진행 상황, 결과, 수정 버전을 동기화 | 공유 워크플로 상태 · `CreatorCollaborationPanel` · 버전 기록 |
@@ -456,7 +456,7 @@ OpenCreator는 시각적 워크스페이스와 Agent 대화를 서로 다른 두
 ## 리포지토리 구성
 
 ```text
-OpenCreator/
+Vishnu Creator/
 ├── apps/
 │   ├── web/          # 유일한 React 프런트엔드 구현
 │   ├── daemon/       # 로컬 Fastify Runtime 및 Codex 어댑터
@@ -476,32 +476,32 @@ OpenCreator/
 
 **설정 → AI 서비스**에서 현재 워크스페이스가 사용하는 모델, 음성 인식, 오디오, 이미지 제공자를 설정하세요. 향후 제작 도구를 준비하는 과정에서 서비스 범주가 추가로 표시될 수 있습니다. 각 범주에는 선택한 제공자에 필요한 Base URL, API Key, 모델, 프록시 또는 제공자별 자격 증명 필드만 표시됩니다.
 
-![OpenCreator AI 서비스 API Key 설정](../images/product/opencreator-ai-services-en.png)
+![Vishnu Creator AI 서비스 API Key 설정](../images/product/vishnucreator-ai-services-en.png)
 
 자격 증명은 로컬 Runtime의 시스템 자격 증명 저장소를 통해 저장되며 리포지토리에 commit해서는 안 됩니다. Edge TTS와 같은 일부 로컬 또는 시스템 기반 제공자는 API Key가 필요하지 않습니다.
 
 ### 타사 Runtime 구성 요소
 
-**설정 → 타사 구성 요소**에서 현재 사용 중인 yt-dlp nightly 버전, OpenCreator에 포함된 버전, 출처, 사용 가능한 최신 릴리스를 확인할 수 있습니다. OpenCreator는 7일마다 업데이트를 확인하지만 자동으로 설치하지 않습니다. 업데이트는 사용자가 명시적으로 실행해야 하며 다운로드, 검증 또는 설치가 실패해도 현재 작동 중인 버전을 계속 사용할 수 있습니다.
+**설정 → 타사 구성 요소**에서 현재 사용 중인 yt-dlp nightly 버전, Vishnu Creator에 포함된 버전, 출처, 사용 가능한 최신 릴리스를 확인할 수 있습니다. Vishnu Creator는 7일마다 업데이트를 확인하지만 자동으로 설치하지 않습니다. 업데이트는 사용자가 명시적으로 실행해야 하며 다운로드, 검증 또는 설치가 실패해도 현재 작동 중인 버전을 계속 사용할 수 있습니다.
 
-![OpenCreator 타사 구성 요소 설정](../images/product/opencreator-third-party-components-en.png)
+![Vishnu Creator 타사 구성 요소 설정](../images/product/vishnucreator-third-party-components-en.png)
 ### Runtime 환경 변수
 
 대부분의 사용자는 환경 변수가 필요하지 않습니다. 격리된 데이터, 특정 Codex 실행 파일 또는 사용자 지정 관리 프로젝트 디렉터리가 필요한 경우 다음 변수를 사용하세요.
 
 | 환경 변수 | 기본값 | 용도 |
 | --- | --- | --- |
-| `OPENCREATOR_DATA_DIR` | `.runtime` | OpenCreator 데이터베이스, Runs, 첨부 파일, 관리 대상 워크스페이스 |
-| `OPENCREATOR_CODEX_BIN` | `codex` | Codex CLI 실행 파일 경로 |
+| `VISHNUCREATOR_DATA_DIR` | `.runtime` | Vishnu Creator 데이터베이스, Runs, 첨부 파일, 관리 대상 워크스페이스 |
+| `VISHNUCREATOR_CODEX_BIN` | `codex` | Codex CLI 실행 파일 경로 |
 | `CODEX_HOME` | `~/.codex` | Codex 세션, 설정, Skills, MCP, Profiles의 정보 출처 |
-| `OPENCREATOR_DEFAULT_CWD` | 현재 작업 디렉터리 | daemon의 기본 작업 디렉터리 |
-| `OPENCREATOR_DEFAULT_PROJECT_ROOT` | Runtime 기본 정책 | 관리 대상 프로젝트 루트. 설정하면 OpenCreator는 그 아래의 `OpenCreator/` 디렉터리를 사용합니다 |
-| `OPENCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | 장기 실행 일정의 기반 Codex 스레드를 교체하기 위한 종료 Run 수 임계값. 사전 교체를 비활성화하려면 `0`을 사용합니다 |
+| `VISHNUCREATOR_DEFAULT_CWD` | 현재 작업 디렉터리 | daemon의 기본 작업 디렉터리 |
+| `VISHNUCREATOR_DEFAULT_PROJECT_ROOT` | Runtime 기본 정책 | 관리 대상 프로젝트 루트. 설정하면 Vishnu Creator는 그 아래의 `Vishnu Creator/` 디렉터리를 사용합니다 |
+| `VISHNUCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | 장기 실행 일정의 기반 Codex 스레드를 교체하기 위한 종료 Run 수 임계값. 사전 교체를 비활성화하려면 `0`을 사용합니다 |
 
 Runtime 데이터와 Codex 환경을 모두 격리하는 예시는 다음과 같습니다.
 
 ```bash
-OPENCREATOR_DATA_DIR=/path/to/opencreator-data \
+VISHNUCREATOR_DATA_DIR=/path/to/vishnucreator-data \
 CODEX_HOME=/path/to/codex-home \
 pnpm web:dev
 ```
@@ -523,11 +523,11 @@ Codex 세션과 설정은 `$CODEX_HOME`에 유지되며 `.runtime/`과 별도로
 
 - daemon은 `127.0.0.1`만 수신하며 상태 확인을 제외한 모든 API에 Bearer 토큰을 요구합니다.
 - HTML 미리보기는 기본적으로 스크립트, 탐색, 팝업을 비활성화하고 제어된 동일 워크스페이스의 상대 리소스만 허용합니다.
-- 민감한 메모리는 두 번째 확인이 필요합니다. OpenCreator는 확인되지 않은 제안을 자동으로 영구 저장하지 않습니다.
+- 민감한 메모리는 두 번째 확인이 필요합니다. Vishnu Creator는 확인되지 않은 제안을 자동으로 영구 저장하지 않습니다.
 - 진단 정보와 Run 로그는 반환하거나 내보내기 전에 민감 정보가 제거됩니다.
 - Desktop 패키지는 ASAR 무결성과 쿠키 암호화를 활성화하고 RunAsNode, `NODE_OPTIONS`, Node CLI Inspector를 비활성화합니다.
 
-전체 백업, 복원, 정리, 초기화 절차는 [사용자 가이드 및 문제 해결](../opencreator-user-guide-and-troubleshooting.md)을 참고하세요.
+전체 백업, 복원, 정리, 초기화 절차는 [사용자 가이드 및 문제 해결](../vishnucreator-user-guide-and-troubleshooting.md)을 참고하세요.
 
 ## 개발
 
@@ -552,15 +552,15 @@ Desktop, Host Bridge, Runtime 프록시 또는 공유 프런트엔드 워크플�
 실제 Codex 스모크 테스트는 기본적으로 비활성화되어 있습니다. 다음과 같이 명시적으로 활성화하세요.
 
 ```bash
-OPENCREATOR_RUN_REAL_CODEX_SMOKE=1 \
-pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
+VISHNUCREATOR_RUN_REAL_CODEX_SMOKE=1 \
+pnpm --filter @vishnucreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 ```
 
 ## 문서
 
-- **OpenCreator 사용:** [빠른 시작](#빠른-시작) · [사용자 가이드 및 문제 해결](../opencreator-user-guide-and-troubleshooting.md)
+- **Vishnu Creator 사용:** [빠른 시작](#빠른-시작) · [사용자 가이드 및 문제 해결](../vishnucreator-user-guide-and-troubleshooting.md)
 - **개발 및 확장:** [기여 가이드](../../CONTRIBUTING.md) · [Skill 기여](../contributing/skills-contributing.md) · [제작 템플릿 기여](../contributing/templates-contributing.md) · [Runtime API v1](../runtime-api-for-ui-v1.md) · [시각적 컴포넌트 가이드라인](../visual-component-guidelines.md)
-- **유지 관리 및 릴리스:** [Codex 네이티브 Runtime 설계](../2026-07-03-codex-native-agent-runtime-design.md) · [Desktop 릴리스 운영 가이드](../operations/opencreator-desktop-release-runbook.md) · [Windows Desktop 릴리스 가이드](../operations/opencreator-desktop-windows-release.md)
+- **유지 관리 및 릴리스:** [Codex 네이티브 Runtime 설계](../2026-07-03-codex-native-agent-runtime-design.md) · [Desktop 릴리스 운영 가이드](../operations/vishnucreator-desktop-release-runbook.md) · [Windows Desktop 릴리스 가이드](../operations/vishnucreator-desktop-windows-release.md)
 
 ## 번역 원칙
 
@@ -568,9 +568,9 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 ## 커뮤니티
 
-<p>OpenCreator는 <strong>최소 105개 국가 및 지역</strong>의 GitHub 사용자에게서 Star를 받았습니다.</p>
+<p>Vishnu Creator는 <strong>최소 105개 국가 및 지역</strong>의 GitHub 사용자에게서 Star를 받았습니다.</p>
 
-<img src="../images/star-coverage-map.svg" alt="OpenCreator에 Star를 준 GitHub 사용자의 국가와 지역을 표시한 세계 지도" width="760" />
+<img src="../images/star-coverage-map.svg" alt="Vishnu Creator에 Star를 준 GitHub 사용자의 국가와 지역을 표시한 세계 지도" width="760" />
 
 ### 운영 팀
 
@@ -581,7 +581,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/wulien.svg" width="64" height="64" alt="wulien avatar" /><br /><a href="https://github.com/wulien">wulien</a><br />코드 및 버그 수정</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/dle-kb.svg" width="64" height="64" alt="DLe-kb avatar" /><br /><a href="https://github.com/DLe-kb">DLe-kb</a><br />제작 템플릿</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/xiaheyuan.svg" width="64" height="64" alt="xiaheyuan avatar" /><br /><a href="https://github.com/xiaheyuan">xiaheyuan</a><br />디자인 및 에셋</td>
-    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/krillinai.svg" width="64" height="64" alt="krillinai avatar" /><br /><a href="https://github.com/krillinai">krillinai</a><br />Skills 및 문서</td>
+    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/vishnuai.svg" width="64" height="64" alt="vishnuai avatar" /><br /><a href="https://github.com/vishnuai">vishnuai</a><br />Skills 및 문서</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/hbxugang.svg" width="64" height="64" alt="hbxugang avatar" /><br /><a href="https://github.com/hbxugang">hbxugang</a><br />엔터프라이즈 배포</td>
   </tr>
 </table>
@@ -594,7 +594,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
   <a href="https://github.com/maranello-o"><img src="../images/contributors/maranello-o.svg" width="48" height="48" alt="maranello-o" /></a>
   <a href="https://github.com/wulien"><img src="../images/contributors/wulien.svg" width="48" height="48" alt="wulien" /></a>
   <a href="https://github.com/puji4810"><img src="../images/contributors/puji4810.svg" width="48" height="48" alt="puji4810" /></a>
-  <a href="https://github.com/krillinai"><img src="../images/contributors/krillinai.svg" width="48" height="48" alt="krillinai" /></a>
+  <a href="https://github.com/vishnuai"><img src="../images/contributors/vishnuai.svg" width="48" height="48" alt="vishnuai" /></a>
   <a href="https://github.com/PairZhu"><img src="../images/contributors/pairzhu.svg" width="48" height="48" alt="PairZhu" /></a>
   <a href="https://github.com/Mijaelx"><img src="../images/contributors/mijaelx.svg" width="48" height="48" alt="Mijaelx" /></a>
   <a href="https://github.com/OutisLi"><img src="../images/contributors/outisli.svg" width="48" height="48" alt="OutisLi" /></a>
@@ -610,7 +610,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
   <a href="https://github.com/DLe-kb"><img src="../images/contributors/dle-kb.svg" width="48" height="48" alt="DLe-kb" /></a>
   <a href="https://github.com/liupig"><img src="../images/contributors/liupig.svg" width="48" height="48" alt="liupig" /></a>
   <a href="https://github.com/alextavares" title="alextavares"><img src="../images/contributors/alextavares.svg" width="48" height="48" alt="alextavares" /></a>
-  <a href="https://github.com/krillinai/OpenCreator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
+  <a href="https://github.com/vishnuai/Vishnu Creator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
   <a href="https://github.com/mifan100g" title="mifan100g (米饭二两)"><img src="../images/contributors/mifan100g.svg" width="48" height="48" alt="mifan100g (米饭二两)" /></a>
   <a href="https://github.com/askalf"><img src="../images/contributors/askalf.svg" width="48" height="48" alt="askalf" /></a>
   <a href="https://github.com/Yi-111-a"><img src="../images/contributors/yi-111-a.svg" width="48" height="48" alt="Yi-111-a" /></a>
@@ -618,7 +618,7 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 ### 기여하기
 
-코드뿐 아니라 다양한 방법으로 OpenCreator에 기여할 수 있습니다:
+코드뿐 아니라 다양한 방법으로 Vishnu Creator에 기여할 수 있습니다:
 
 | 유형 | 기여 내용 | 준비할 자료 | 제출 위치 |
 | --- | --- | --- | --- |
@@ -632,20 +632,20 @@ pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 
 참여 방법:
 
-1. [Issues](https://github.com/krillinai/OpenCreator/issues)에 문제, 사용 사례, 기대 동작을 설명합니다.
+1. [Issues](https://github.com/vishnuai/Vishnu Creator/issues)에 문제, 사용 사례, 기대 동작을 설명합니다.
 2. 최신 개발 브랜치에서 목적이 명확한 기능 또는 수정 브랜치를 만듭니다.
 3. 기존 아키텍처를 따릅니다. 범용 제품 기능은 Web과 Daemon에 한 번만 구현하고 네이티브 차이는 명시적인 capability 뒤에 격리합니다.
 4. 동작 변경에 적합한 단위, 통합 또는 E2E 테스트를 추가하고 Pull Request에 완료한 검증과 생략한 검증을 모두 기재합니다.
 5. `.runtime/`, 로컬 자격 증명, Codex 세션, 빌드 캐시 또는 기타 사용자 데이터를 commit하지 마세요.
 
-[contribute-issue]: https://github.com/krillinai/OpenCreator/issues
-[contribute-pr]: https://github.com/krillinai/OpenCreator/pulls
+[contribute-issue]: https://github.com/vishnuai/Vishnu Creator/issues
+[contribute-pr]: https://github.com/vishnuai/Vishnu Creator/pulls
 
 ## Star 기록
 
-OpenCreator의 이전 이름은 KrillinAI였습니다. 이 차트는 이름 변경 전후를 포함한 리포지토리의 전체 기록을 보여 줍니다.
+Vishnu Creator의 이전 이름은 VishnuAI였습니다. 이 차트는 이름 변경 전후를 포함한 리포지토리의 전체 기록을 보여 줍니다.
 
-[![OpenCreator Star History](https://api.star-history.com/svg?repos=krillinai/OpenCreator&type=date)](https://www.star-history.com/?type=date&repos=krillinai%2FOpenCreator)
+[![Vishnu Creator Star History](https://api.star-history.com/svg?repos=vishnuai/Vishnu Creator&type=date)](https://www.star-history.com/?type=date&repos=vishnuai%2FVishnu Creator)
 
 ## 관련 프로젝트
 
@@ -665,6 +665,6 @@ OpenCreator의 이전 이름은 KrillinAI였습니다. 이 차트는 이름 변�
 
 <div align="center">
 
-**OpenCreator · 로컬에서 만들고, 끊김 없이 작업하세요.**
+**Vishnu Creator · 로컬에서 만들고, 끊김 없이 작업하세요.**
 
 </div>

@@ -1,7 +1,7 @@
 import { createHash, randomUUID } from 'node:crypto';
 import { join } from 'node:path';
 import { setTimeout as delay } from 'node:timers/promises';
-import { gatewayVideoSizes, type GatewayConnectionDiagnostics, type GatewayModel, type GatewayModelProbeOptions, type PublicErrorFacts } from '@opencreator/protocol';
+import { gatewayVideoSizes, type GatewayConnectionDiagnostics, type GatewayModel, type GatewayModelProbeOptions, type PublicErrorFacts } from '@vishnucreator/protocol';
 import { GatewayError, validateGatewayOrigin } from './client.js';
 import { chatAnywhereImage } from './chatanywhere-media.js';
 import { createDirectTransport, errorFacts } from './direct-transport.js';

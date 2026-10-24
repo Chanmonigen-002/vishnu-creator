@@ -100,14 +100,14 @@ describe('Creator Runtime dependency updates', () => {
     }));
     writeFileSync(join(root, 'yt-dlp'), contents(oldVersion));
     writeFileSync(join(root, 'versions.json'), JSON.stringify({ version: 1, platform, arch: 'x64', dependencies: { ytDlp: cache() } }));
-    vi.stubEnv('OPENCREATOR_CREATOR_RUNTIME_VENDOR', root);
-    vi.stubEnv('OPENCREATOR_CREATOR_RUNTIME_PLATFORM', platform);
-    vi.stubEnv('OPENCREATOR_CREATOR_RUNTIME_ARCH', 'x64');
-    vi.stubEnv('OPENCREATOR_DESKTOP_TARGET_PLATFORM', platform);
-    vi.stubEnv('OPENCREATOR_DESKTOP_TARGET_ARCH', 'x64');
-    vi.stubEnv('OPENCREATOR_DESKTOP_OFFLINE', '0');
-    vi.stubEnv('OPENCREATOR_DOWNLOAD_PROXY', '');
-    vi.stubEnv('OPENCREATOR_YT_DLP_PATH', '');
+    vi.stubEnv('VISHNUCREATOR_CREATOR_RUNTIME_VENDOR', root);
+    vi.stubEnv('VISHNUCREATOR_CREATOR_RUNTIME_PLATFORM', platform);
+    vi.stubEnv('VISHNUCREATOR_CREATOR_RUNTIME_ARCH', 'x64');
+    vi.stubEnv('VISHNUCREATOR_DESKTOP_TARGET_PLATFORM', platform);
+    vi.stubEnv('VISHNUCREATOR_DESKTOP_TARGET_ARCH', 'x64');
+    vi.stubEnv('VISHNUCREATOR_DESKTOP_OFFLINE', '0');
+    vi.stubEnv('VISHNUCREATOR_DOWNLOAD_PROXY', '');
+    vi.stubEnv('VISHNUCREATOR_YT_DLP_PATH', '');
     vi.stubEnv('GH_TOKEN', '');
     vi.stubEnv('GITHUB_TOKEN', '');
     vi.spyOn(console, 'log').mockImplementation(() => undefined);
@@ -206,31 +206,31 @@ describe('Creator Runtime dependency updates', () => {
   });
 
   it('validates the offline cache without requesting a release or downloading files', async () => {
-    vi.stubEnv('OPENCREATOR_DESKTOP_OFFLINE', '1');
+    vi.stubEnv('VISHNUCREATOR_DESKTOP_OFFLINE', '1');
     await install();
     expect(run).not.toHaveBeenCalled();
     expect(JSON.parse(readFileSync(join(root, 'versions.json'), 'utf8')).dependencies.ytDlp).toEqual(cache());
   });
 
   it('rejects a corrupted offline download without accessing the network', async () => {
-    vi.stubEnv('OPENCREATOR_DESKTOP_OFFLINE', '1');
+    vi.stubEnv('VISHNUCREATOR_DESKTOP_OFFLINE', '1');
     writeFileSync(join(root, 'yt-dlp'), 'corrupt cache');
     await expect(install()).rejects.toThrow(/offline cache/);
     expect(run).not.toHaveBeenCalled();
   });
 
   it.each(['0', '1'])('refreshes dependencies from the prepare entry point even with a complete cache (offline=%s)', async offline => {
-    vi.stubEnv('OPENCREATOR_DESKTOP_OFFLINE', offline);
+    vi.stubEnv('VISHNUCREATOR_DESKTOP_OFFLINE', offline);
     const stopped = new Error('dependency updater reached');
     run.mockImplementation((command, args) => {
       expect(command).toBe(process.execPath);
       if (args[0].endsWith('install-creator-runtime-dependencies.mjs')) throw stopped;
-      expect(args[0].endsWith('build-krillinai.mjs')).toBe(true);
+      expect(args[0].endsWith('build-vishnuai.mjs')).toBe(true);
       return '';
     });
     await expect(import('../scripts/prepare-creator-runtime.mjs')).rejects.toBe(stopped);
     expect(run).toHaveBeenLastCalledWith(process.execPath,
       [expect.stringContaining('install-creator-runtime-dependencies.mjs')],
-      expect.objectContaining({ env: expect.objectContaining({ OPENCREATOR_CREATOR_RUNTIME_VENDOR: root, OPENCREATOR_CREATOR_RUNTIME_PLATFORM: platform, OPENCREATOR_CREATOR_RUNTIME_ARCH: 'x64' }) }));
+      expect.objectContaining({ env: expect.objectContaining({ VISHNUCREATOR_CREATOR_RUNTIME_VENDOR: root, VISHNUCREATOR_CREATOR_RUNTIME_PLATFORM: platform, VISHNUCREATOR_CREATOR_RUNTIME_ARCH: 'x64' }) }));
   });
 });

@@ -1,4 +1,4 @@
-import type { AgentEventEnvelope } from '@opencreator/protocol';
+import type { AgentEventEnvelope } from '@vishnucreator/protocol';
 import { assertKnownEventType, isRecord } from './validators.js';
 
 export type SseFrame = {

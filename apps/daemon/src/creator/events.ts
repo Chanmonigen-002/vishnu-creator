@@ -4,8 +4,8 @@ import type {
   CreatorEventKind,
   CreatorJson,
   CreatorStageRun,
-  OpenCreatorIssue
-} from '@opencreator/protocol';
+  VishnuCreatorIssue
+} from '@vishnucreator/protocol';
 import { createHash } from 'node:crypto';
 
 export type CreatorEventHub = ReturnType<typeof createCreatorEventHub>;
@@ -57,7 +57,7 @@ export function creatorStageEventId(stage: CreatorStageRun): string {
   return `stage:${stage.id}:${digest}`;
 }
 
-export function creatorIssueEventId(issue: OpenCreatorIssue): string {
+export function creatorIssueEventId(issue: VishnuCreatorIssue): string {
   const digest = createHash('sha256').update(JSON.stringify({
     status: issue.status,
     occurrenceCount: issue.occurrenceCount,

@@ -1,13 +1,13 @@
-import { gatewayModelIdMatches } from '@opencreator/protocol';
+import { gatewayModelIdMatches } from '@vishnucreator/protocol';
 import { isDirectTransport, type SupplierRegion } from './supplier.js';
 import { createHash } from 'node:crypto';
-import type { GatewayAccountState, GatewayActivationStage, GatewayBalanceSnapshot, GatewayBalanceState, GatewayModel, GatewayModelOperation, GatewayModelProbeOptions, PublicErrorFacts, ServiceSource } from '@opencreator/protocol';
+import type { GatewayAccountState, GatewayActivationStage, GatewayBalanceSnapshot, GatewayBalanceState, GatewayModel, GatewayModelOperation, GatewayModelProbeOptions, PublicErrorFacts, ServiceSource } from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 import { createGatewayConfigStore, type GatewayCredentials } from './config-store.js';
 import { accountSchema, bootstrapSchema, cachedModelUsePolicy, catalogSchema, GatewayError, type GatewayBootstrap, type GatewayClient, type GatewayDeviceGrant } from './client.js';
 import { officialModelPolicy, withModelCatalog, type OfficialModelAccess } from './model-access.js';
 import { ModelProbeError, type ModelProbeScope } from './model-selection-probe.js';
-import { gatewayModelSupports, gatewayModelReady, gatewayRecommendedModelId, type GatewayModelPurpose } from '@opencreator/protocol';
+import { gatewayModelSupports, gatewayModelReady, gatewayRecommendedModelId, type GatewayModelPurpose } from '@vishnucreator/protocol';
 import { migrateModelPreferences, resolveModelPreferences } from './model-preferences.js';
 
 export function createGatewayAccountService(input: {

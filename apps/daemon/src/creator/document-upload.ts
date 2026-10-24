@@ -1,4 +1,4 @@
-import type { CreatorSourceUploadResponse } from '@opencreator/protocol';
+import type { CreatorSourceUploadResponse } from '@vishnucreator/protocol';
 import { createHash, randomBytes } from 'node:crypto';
 import { createWriteStream } from 'node:fs';
 import { mkdir, rename, rm } from 'node:fs/promises';
@@ -8,7 +8,7 @@ import { pipeline } from 'node:stream/promises';
 import { CreatorServiceError, type CreatorService } from './service.js';
 
 export const CREATOR_DOCUMENT_UPLOAD_CONTENT_TYPE =
-  'application/vnd.opencreator.creator-document';
+  'application/vnd.vishnucreator.creator-document';
 export const CREATOR_DOCUMENT_MAX_SIZE_BYTES = 25 * 1024 * 1024;
 
 export type CreatorDocumentUploadService = ReturnType<typeof createCreatorDocumentUploadService>;

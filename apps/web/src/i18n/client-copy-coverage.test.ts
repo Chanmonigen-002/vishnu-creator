@@ -6,7 +6,7 @@ import { additionalLanguageCatalogs } from './translated-copy.js';
 
 const auditedSurfaces = [
   'features/dashboard/SubtitleTimeline.tsx',
-  'features/shell/OpenCreatorSidebar.tsx', 'components/layout/AppLayout.tsx',
+  'features/shell/VishnuCreatorSidebar.tsx', 'components/layout/AppLayout.tsx',
   'components/editor/FileTree.tsx', 'components/editor/FileEditor.tsx',
   'features/files/FileTopBar.tsx', 'features/files/FilePathBar.tsx', 'features/files/ProjectFileTree.tsx',
   'features/files/FileEditorPane.tsx', 'features/files/FileWorkspaceView.tsx', 'features/files/HtmlPreview.tsx',

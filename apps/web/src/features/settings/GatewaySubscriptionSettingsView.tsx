@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { CircleCheck, CreditCard, ExternalLink, HelpCircle, LoaderCircle, MessageSquare, ReceiptText, RefreshCw, Sparkles, X } from 'lucide-react';
-import type { GatewayAccountState } from '@opencreator/protocol';
+import type { GatewayAccountState } from '@vishnucreator/protocol';
 import type { ExternalNavigation } from '../../host/bridge.js';
 import type { GatewayAccountSettingsService, GatewayBillingSummary, GatewayRechargeOrder, GatewayWebDestination } from '../../services/gateway-account-service.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
@@ -12,7 +12,7 @@ import './gateway-account-settings.css';
 import '../account/credits.css';
 
 type PortalVisit = { startedAt: number; knownOrders?: string[]; orderId?: string };
-const visitKey = (id: string) => `opencreator:billing-visit:${id}`;
+const visitKey = (id: string) => `vishnucreator:billing-visit:${id}`;
 function readVisit(id?: string): PortalVisit | undefined {
   if (!id) return;
   try {
@@ -198,7 +198,7 @@ export function GatewaySubscriptionSettingsView(props: {
       <button type="button" disabled={!!opening || !plansURL} onClick={() => void openWeb('account')}><ReceiptText size={17}/><span>{l('账单与充值记录', 'Billing and recharge history')}</span><ExternalLink size={14}/></button>
       <button type="button" disabled={!!opening || !plansURL} onClick={() => void openWeb('usage')}><Sparkles size={17}/><span>{l('积分用量估算', 'Estimate credit usage')}</span><ExternalLink size={14}/></button>
       <button type="button" disabled={!!opening || !plansURL} onClick={() => void openWeb('faq')}><HelpCircle size={17}/><span>FAQ</span><ExternalLink size={14}/></button>
-      <a href="https://github.com/krillinai/Vishnu Creator/issues" target="_blank" rel="noreferrer" onClick={props.openExternal ? event => { event.preventDefault(); void Promise.resolve(props.openExternal!('https://github.com/krillinai/Vishnu Creator/issues')).catch(() => setWebError(true)); } : undefined}><MessageSquare size={17}/><span>{l('问题反馈', 'Report an issue')}</span><ExternalLink size={14}/></a>
+      <a href="https://github.com/vishnuai/Vishnu Creator/issues" target="_blank" rel="noreferrer" onClick={props.openExternal ? event => { event.preventDefault(); void Promise.resolve(props.openExternal!('https://github.com/vishnuai/Vishnu Creator/issues')).catch(() => setWebError(true)); } : undefined}><MessageSquare size={17}/><span>{l('问题反馈', 'Report an issue')}</span><ExternalLink size={14}/></a>
     </nav>
   </section>;
 }

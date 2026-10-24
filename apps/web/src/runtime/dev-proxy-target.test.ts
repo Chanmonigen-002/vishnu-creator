@@ -32,18 +32,18 @@ describe('Vite Runtime proxy target', () => {
   it('keeps runtime requests on the validated daemon origin', () => {
     expect(buildDevProxyTarget(
       'http://127.0.0.1:60764',
-      '/.opencreator/runtime/healthz?full=1'
+      '/.vishnucreator/runtime/healthz?full=1'
     ).toString()).toBe('http://127.0.0.1:60764/healthz?full=1');
   });
 
   it('rejects prefix collisions and network-path variants', () => {
     for (const incomingUrl of [
-      '/.opencreator/runtimeevil',
-      '/.opencreator/runtime//attacker.example/path',
-      '/.opencreator/runtime/%2f%2fattacker.example/path',
-      '/.opencreator/runtime/%5c%5cattacker.example/path',
-      '/.opencreator/runtime/%00healthz',
-      '/.opencreator/runtime/%'
+      '/.vishnucreator/runtimeevil',
+      '/.vishnucreator/runtime//attacker.example/path',
+      '/.vishnucreator/runtime/%2f%2fattacker.example/path',
+      '/.vishnucreator/runtime/%5c%5cattacker.example/path',
+      '/.vishnucreator/runtime/%00healthz',
+      '/.vishnucreator/runtime/%'
     ]) {
       expect(() => buildDevProxyTarget(
         'http://127.0.0.1:60764',
@@ -56,7 +56,7 @@ describe('Vite Runtime proxy target', () => {
     expect(parseDevDaemonStartupError([
       'build output',
       JSON.stringify({
-        type: 'opencreator_daemon_bootstrap_error',
+        type: 'vishnucreator_daemon_bootstrap_error',
         code: 'CODEX_VERSION_CHECK_FAILED',
         message: 'Codex CLI 无法正常启动'
       })

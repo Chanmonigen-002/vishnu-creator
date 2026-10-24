@@ -99,4 +99,4 @@ Reviewer 的大部分时间会花在 `defaults` 和 `defaultsByLocale` 上：
 
 ---
 
-有问题？[提一个 Issue](https://github.com/krillinai/OpenCreator/issues/new)，附上你的模板想法和一个示例输出，我们会帮你明确范围。
+有问题？[提一个 Issue](https://github.com/vishnuai/Vishnu Creator/issues/new)，附上你的模板想法和一个示例输出，我们会帮你明确范围。

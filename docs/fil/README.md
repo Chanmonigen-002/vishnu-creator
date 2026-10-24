@@ -2,8 +2,8 @@
 
 <h1>
   <picture>
-    <source media="(prefers-color-scheme: dark)" srcset="../images/OpenCreator_logo_vector_dark.svg" />
-    <img src="../images/OpenCreator_logo_vector.svg" alt="OpenCreator" width="380" />
+    <source media="(prefers-color-scheme: dark)" srcset="../images/Vishnu Creator_logo_vector_dark.svg" />
+    <img src="../images/Vishnu Creator_logo_vector.svg" alt="Vishnu Creator" width="380" />
   </picture>
   <br />
   Open-source na AI workspace at Skills para sa mga creator
@@ -11,16 +11,16 @@
 
 <p>Pagsamahin ang mga biswal na setting, muling magagamit na Skills, at Agent para sa script, video, larawan, boses, pagsasalin, at pag-edit sa iisang workspace.</p>
 
-<p><strong>Dating kilala ang OpenCreator bilang KrillinAI.</strong></p>
+<p><strong>Dating kilala ang Vishnu Creator bilang VishnuAI.</strong></p>
 
-<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="OpenCreator, dating KrillinAI: nangungunang repository ng araw sa Trendshift" width="250" height="55" /></a>
+<a href="https://trendshift.io/repositories/13360" target="_blank"><img src="https://trendshift.io/api/badge/repositories/13360" alt="Vishnu Creator, dating VishnuAI: nangungunang repository ng araw sa Trendshift" width="250" height="55" /></a>
 
 [English](../../README.md) | [简体中文](../zh/README.md) | [日本語](../ja/README.md) | [한국어](../ko/README.md) | [Bahasa Indonesia](../id/README.md) | [Español](../es/README.md) | [Français](../fr/README.md) | [Deutsch](../de/README.md) | [Português](../pt/README.md) | [Русский](../ru/README.md) | [العربية](../ar/README.md) | [ภาษาไทย](../th/README.md) | [Türkçe](../tr/README.md) | [हिन्दी](../hi/README.md) | [বাংলা](../bn/README.md) | [اردو](../ur/README.md) | [Tiếng Việt](../vi/README.md) | **Filipino**
 
-[![GitHub Stars](https://badgen.net/github/stars/krillinai/OpenCreator?icon=github&label=Stars&color=EAB308)](https://github.com/krillinai/OpenCreator/stargazers)
+[![GitHub Stars](https://badgen.net/github/stars/vishnuai/Vishnu Creator?icon=github&label=Stars&color=EAB308)](https://github.com/vishnuai/Vishnu Creator/stargazers)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://www.apache.org/licenses/LICENSE-2.0)
 [![Bilibili](https://img.shields.io/badge/dynamic/json?label=Bilibili&query=%24.data.follower&suffix=%E7%B2%89%E4%B8%9D&url=https%3A%2F%2Fapi.bilibili.com%2Fx%2Frelation%2Fstat%3Fvmid%3D242124650&logo=bilibili&color=00A1D6&labelColor=FE7398&logoColor=FFFFFF)](https://space.bilibili.com/242124650)
-[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/krillinai/OpenCreator)
+[![AtomGit G-Star](https://img.shields.io/badge/AtomGit-G--Star-DA203E?style=flat)](https://atomgit.com/vishnuai/Vishnu Creator)
 [![Discord](https://img.shields.io/badge/Discord-Join-5865F2?logo=discord&logoColor=white)](https://discord.gg/fUNvbqDaw)
 [![Grupo sa QQ](https://img.shields.io/badge/QQ%20群-754069680-green?logo=tencent-qq)](https://qm.qq.com/q/W4YC0PLMeA)
 
@@ -28,15 +28,15 @@
 
 </div>
 
-![Agent workspace ng OpenCreator](../images/opencreator-home-en.png)
+![Agent workspace ng Vishnu Creator](../images/vishnucreator-home-en.png)
 
 <a id="project-overview"></a>
 
 ## Pangkalahatang ideya ng proyekto
 
-Ang OpenCreator ay para sa mga indibidwal at pangkat na gustong gawin nang lokal ang paglikha at pag-develop. Ginagamit nito ang Codex CLI bilang execution engine at dinaragdagan ito ng matatag na lokal na Runtime, biswal na workspace, at Desktop host, sa halip na buuing muli ang Agent loop.
+Ang Vishnu Creator ay para sa mga indibidwal at pangkat na gustong gawin nang lokal ang paglikha at pag-develop. Ginagamit nito ang Codex CLI bilang execution engine at dinaragdagan ito ng matatag na lokal na Runtime, biswal na workspace, at Desktop host, sa halip na buuing muli ang Agent loop.
 
-May dalawang magkaugnay na paraan ng pagtatrabaho sa OpenCreator:
+May dalawang magkaugnay na paraan ng pagtatrabaho sa Vishnu Creator:
 
 - **Content workspace**: gumamit ng biswal na tool at template para sa pagsasalin at pag-download ng video, pagbuo ng larawan at video, voiceover, pagsulat ng artikulo at social post, script ng maikling video, at stick figure animation.
 - **Pag-uusap sa Agent**: magsimula at gumabay ng malikhaing gawain o pag-develop gamit ang natural na wika; ayusin ang usapan ayon sa proyekto, hayaang tumakbo sa background ang mga Run, at pamahalaan ang pag-apruba, attachment, file, Skills, MCP, iskedyul, notification, memorya, at diagnostic sa iisang lugar.
@@ -79,7 +79,7 @@ May sampung tool para sa creator ang kasalukuyang release. Nakadepende ang mga m
 
 Buksan ang Dashboard para magsulat ng artikulo, Xiaohongshu post, o script ng maikling video; gumawa ng stick figure animation; magsalin o mag-download ng video; bumuo ng thumbnail, larawan, o video; at lumikha ng voiceover sa Text to Speech.
 
-![Creator Dashboard ng OpenCreator](../images/product/opencreator-dashboard-en.png)
+![Creator Dashboard ng Vishnu Creator](../images/product/vishnucreator-dashboard-en.png)
 
 > Patuloy na nadaragdagan ang mga tool para sa creator.
 
@@ -123,7 +123,7 @@ Buksan ang Dashboard para magsulat ng artikulo, Xiaohongshu post, o script ng ma
 
 Magsimula sa template sa halip na buuin ang bawat prompt at setting mula sa simula. Hanapin ang angkop na panimula sa mga tampok na template ayon sa kategorya, kabilang ang video at disenyo ng larawan.
 
-Kasama sa koleksiyon ang mga template ng OpenCreator at ng mga independiyenteng creator. Kinikilala ng pahina ng detalye ang gumawa ng third-party template at may link sa orihinal na sanggunian.
+Kasama sa koleksiyon ang mga template ng Vishnu Creator at ng mga independiyenteng creator. Kinikilala ng pahina ng detalye ang gumawa ng third-party template at may link sa orihinal na sanggunian.
 
 Buksan ang template upang makita ang halimbawang resulta, prompt, setting, tag, may-akda, at orihinal na sanggunian. Piliin ang **Use this template**, saka baguhin ang input para sa iyong gawain.
 
@@ -135,23 +135,23 @@ Buksan ang template upang makita ang halimbawang resulta, prompt, setting, tag, 
 
 May biswal na kontrol ang mga tool; nagbibigay naman ang Skills ng muling magagamit na tagubilin at daloy ng paggamit ng tool sa Agent. Kasama sa repository ang Skills para sa video production at pamamahala ng lokal na Codex Skills.
 
-Nasa [`skills/`](../../skills/) ang muling magagamit na tagubilin para sa Agent na gumagamit ng naka-embed na KrillinAI CLI.
+Nasa [`skills/`](../../skills/) ang muling magagamit na tagubilin para sa Agent na gumagamit ng naka-embed na VishnuAI CLI.
 
 | Skill | Mga kakayahan |
 | --- | --- |
-| [KrillinAI CLI](../../skills/krillinai-cli/SKILL.md) | Pumili ng command, suriin ang configuration, at unawain ang progreso, manifest, output, at error |
-| [Subtitle](../../skills/krillinai-subtitle/SKILL.md) | Mag-download ng caption o mag-transcribe, magsalin ng subtitle, at gumawa ng bilingguwal o maikling subtitle para sa patayong video |
-| [TTS](../../skills/krillinai-tts/SKILL.md) | Gumawa ng dubbing sa target na wika mula sa subtitle at opsyonal na dubbed video |
-| [Pahalang na render](../../skills/krillinai-render-horizontal/SKILL.md) | Mag-render ng pahalang na video na may bilingguwal na subtitle o dubbed audio at target-language subtitle |
-| [Patayong render](../../skills/krillinai-render-vertical/SKILL.md) | Gumawa ng patayong video na may pamagat, bilingguwal na subtitle, o dubbing |
-| [Pabalat](../../skills/krillinai-cover/SKILL.md) | Bumuo ng pabalat mula sa buong text prompt at i-save ang larawan at huling prompt |
-| [Plano ng pipeline](../../skills/krillinai-pipeline/SKILL.md) | Suriin ang planong may maraming yugto sa dry-run; gawin ang aktuwal na trabaho sa Skills ng bawat yugto |
+| [VishnuAI CLI](../../skills/vishnuai-cli/SKILL.md) | Pumili ng command, suriin ang configuration, at unawain ang progreso, manifest, output, at error |
+| [Subtitle](../../skills/vishnuai-subtitle/SKILL.md) | Mag-download ng caption o mag-transcribe, magsalin ng subtitle, at gumawa ng bilingguwal o maikling subtitle para sa patayong video |
+| [TTS](../../skills/vishnuai-tts/SKILL.md) | Gumawa ng dubbing sa target na wika mula sa subtitle at opsyonal na dubbed video |
+| [Pahalang na render](../../skills/vishnuai-render-horizontal/SKILL.md) | Mag-render ng pahalang na video na may bilingguwal na subtitle o dubbed audio at target-language subtitle |
+| [Patayong render](../../skills/vishnuai-render-vertical/SKILL.md) | Gumawa ng patayong video na may pamagat, bilingguwal na subtitle, o dubbing |
+| [Pabalat](../../skills/vishnuai-cover/SKILL.md) | Bumuo ng pabalat mula sa buong text prompt at i-save ang larawan at huling prompt |
+| [Plano ng pipeline](../../skills/vishnuai-pipeline/SKILL.md) | Suriin ang planong may maraming yugto sa dry-run; gawin ang aktuwal na trabaho sa Skills ng bawat yugto |
 
 <a id="extend-with-your-own-skills"></a>
 
 ### Palawakin gamit ang sariling Skills
 
-Sinusuportahan ng OpenCreator ang lokal na Codex Skills na may `SKILL.md`, kaya maaari kang magdagdag ng sariling paraan at daloy. Nakadepende ang magagamit na Skills sa aktibong Codex home at mga naka-install na Skill; kailangan ng video Skills ang naka-configure na CLI at kaugnay na serbisyo. Ang pagkakasama sa repository ay hindi nangangahulugang awtomatikong naka-install ang lahat ng Skill o kasama ang lahat ng panlabas na serbisyo.
+Sinusuportahan ng Vishnu Creator ang lokal na Codex Skills na may `SKILL.md`, kaya maaari kang magdagdag ng sariling paraan at daloy. Nakadepende ang magagamit na Skills sa aktibong Codex home at mga naka-install na Skill; kailangan ng video Skills ang naka-configure na CLI at kaugnay na serbisyo. Ang pagkakasama sa repository ay hindi nangangahulugang awtomatikong naka-install ang lahat ng Skill o kasama ang lahat ng panlabas na serbisyo.
 
 <a id="conversation-and-workspace-moving-together"></a>
 
@@ -159,7 +159,7 @@ Sinusuportahan ng OpenCreator ang lokal na Codex Skills na may `SKILL.md`, kaya 
 
 Ilarawan ang gawain nang natural, saka lumipat sa biswal na tool kapag kailangan ng eksaktong kontrol.
 
-![Magkaugnay na usapan at biswal na workspace ng OpenCreator](../images/examples/opencreator-auto-clips-en.png)
+![Magkaugnay na usapan at biswal na workspace ng Vishnu Creator](../images/examples/vishnucreator-auto-clips-en.png)
 
 <a id="fine-grained-workspace-controls"></a>
 
@@ -264,11 +264,11 @@ Sinusuportahan din ang lokal na transcription gamit ang faster-whisper, WhisperK
 
 ### Pagsasalin ng video
 
-Ginawa ang mga pampublikong halimbawa noong KrillinAI pa ang pangalan ng OpenCreator. Ipinapakita nila ang matatag na daloy ng subtitle alignment, pagsasalin, dubbing, at patayong video na bahagi na ngayon ng mas malawak na Agent workflow sa Video Translation.
+Ginawa ang mga pampublikong halimbawa noong VishnuAI pa ang pangalan ng Vishnu Creator. Ipinapakita nila ang matatag na daloy ng subtitle alignment, pagsasalin, dubbing, at patayong video na bahagi na ngayon ng mas malawak na Agent workflow sa Video Translation.
 
 Nabuo ang subtitle sa ibaba mula sa 46-minutong lokal na video sa isang Run, nang walang manu-manong pag-aayos. Makikita ang buong saklaw, walang nagsasapawang linya, natural na paghahati, at mahusay na pagsasalin.
 
-![Halimbawa ng subtitle alignment ng OpenCreator](../images/examples/krillinai-subtitle-alignment.png)
+![Halimbawa ng subtitle alignment ng Vishnu Creator](../images/examples/vishnuai-subtitle-alignment.png)
 
 <table width="100%">
 <tr>
@@ -302,7 +302,7 @@ https://github.com/user-attachments/assets/c2c7b528-0ef8-4ba9-b8ac-f9f92f6d4e71
 </tr>
 </table>
 
-> Ginawa ang mga video at larawan ng subtitle alignment noong KrillinAI pa ang pangalan ng OpenCreator.
+> Ginawa ang mga video at larawan ng subtitle alignment noong VishnuAI pa ang pangalan ng Vishnu Creator.
 
 <a id="video-downloader"></a>
 
@@ -337,15 +337,15 @@ Nag-iiba ang availability ayon sa video at rehiyon; maaaring kailanganin ang pla
 
 Gumawa ng AI video mula sa text prompt o reference image gamit ang Seedance. Itakda ang modelo, aspect ratio, resolution, at tagal; i-preview, buuing muli, o i-download ang bawat bersyon sa workspace ng proyekto.
 
-![Pagbuo ng video sa OpenCreator gamit ang Seedance](../images/examples/video-generation-seedance-en.png)
+![Pagbuo ng video sa Vishnu Creator gamit ang Seedance](../images/examples/video-generation-seedance-en.png)
 
 <a id="stick-figure-animation"></a>
 
 ### Stick figure animation
 
-Binuo ng OpenCreator ang orihinal na koleksiyon ng karakter kasama ang artist na si [Harbor Hsia](https://www.behance.net/xiaheyuan1), gumawa ng [Stickman sa Behance](https://www.behance.net/gallery/254715463/Stickman). Pinananatili ng mga kasamang karakter ang pare-parehong pagkakakilanlan sa buong paggawa ng animation.
+Binuo ng Vishnu Creator ang orihinal na koleksiyon ng karakter kasama ang artist na si [Harbor Hsia](https://www.behance.net/xiaheyuan1), gumawa ng [Stickman sa Behance](https://www.behance.net/gallery/254715463/Stickman). Pinananatili ng mga kasamang karakter ang pare-parehong pagkakakilanlan sa buong paggawa ng animation.
 
-![Mga karakter na binuo ng OpenCreator kasama ang artist](../images/examples/stick-figure-characters.webp)
+![Mga karakter na binuo ng Vishnu Creator kasama ang artist](../images/examples/stick-figure-characters.webp)
 
 Gawing buong animation ang teksto o YouTube content sa gabay na daloy ng pagsusuri ng script, salaysay, timing, storyboard, subtitle, rendering, at nada-download na video.
 
@@ -359,13 +359,13 @@ Gawing buong animation ang teksto o YouTube content sa gabay na daloy ng pagsusu
 
 ### I-install ang Desktop app
 
-I-download ang installer mula sa [pinakabagong OpenCreator release](https://github.com/krillinai/OpenCreator/releases/latest) para sa macOS Apple Silicon, macOS Intel, o Windows x64. I-install at buksan; hindi kailangan ang Node.js o pnpm. Kasama ang Codex CLI; kailangan ng gumaganang ChatGPT sign-in o API key para sa tunay na model task.
+I-download ang installer mula sa [pinakabagong Vishnu Creator release](https://github.com/vishnuai/Vishnu Creator/releases/latest) para sa macOS Apple Silicon, macOS Intel, o Windows x64. I-install at buksan; hindi kailangan ang Node.js o pnpm. Kasama ang Codex CLI; kailangan ng gumaganang ChatGPT sign-in o API key para sa tunay na model task.
 
 Sa unang pagbukas, pinapatakbo ng Desktop ang lokal na Runtime, naghahanda ng default na proyekto, at sinusuri ang Codex configuration. Kung may gumaganang sign-in o API key at model setting, piliin ang **Use local Codex and continue**. Maaari ring mag-configure ng ibang provider sa parehong proseso:
 
-![Pag-set up ng provider sa unang pagbukas ng Desktop](../images/product/opencreator-codex-setup.png)
+![Pag-set up ng provider sa unang pagbukas ng Desktop](../images/product/vishnucreator-codex-setup.png)
 
-Pagkatapos ng setup, ilagay ang kahilingan sa composer upang magsimula. Tingnan ang [gabay at pag-aayos ng problema](../opencreator-user-guide-and-troubleshooting.md) kung may aberya.
+Pagkatapos ng setup, ilagay ang kahilingan sa composer upang magsimula. Tingnan ang [gabay at pag-aayos ng problema](../vishnucreator-user-guide-and-troubleshooting.md) kung may aberya.
 
 <a id="run-web-from-source"></a>
 
@@ -387,8 +387,8 @@ codex --version
 ```
 
 ```bash
-git clone https://github.com/krillinai/OpenCreator.git
-cd OpenCreator
+git clone https://github.com/vishnuai/Vishnu Creator.git
+cd Vishnu Creator
 corepack enable
 pnpm install
 pnpm web:dev
@@ -427,10 +427,10 @@ pnpm desktop:dev
 | `pnpm desktop:package` | Directory na mapapatakbo sa kasalukuyang platform para sa lokal na pagsusuri |
 | `pnpm desktop:dist` | Installer para sa kasalukuyang platform |
 | `pnpm desktop:release` | Opisyal na command para sa release packaging |
-| `pnpm --filter @opencreator/desktop verify:package` | Pagsusuri ng umiiral na Desktop package |
-| `pnpm krillinai:package` | Magkahiwalay na KrillinAI Server at CLI archive para sa napiling platform |
+| `pnpm --filter @vishnucreator/desktop verify:package` | Pagsusuri ng umiiral na Desktop package |
+| `pnpm vishnuai:package` | Magkahiwalay na VishnuAI Server at CLI archive para sa napiling platform |
 
-Muling bina-build ng Desktop packaging ang Web mula sa kasalukuyang workspace, itinatala ang commit, dirty state, platform, architecture, at Web hash, at inihahambing ang `apps/web/dist` sa naka-embed na resource. Nabibigo ang packaging kung magkaiba. Tingnan ang [Desktop release runbook](../operations/opencreator-desktop-release-runbook.md) para sa signing, notarization, Windows build, at release requirement.
+Muling bina-build ng Desktop packaging ang Web mula sa kasalukuyang workspace, itinatala ang commit, dirty state, platform, architecture, at Web hash, at inihahambing ang `apps/web/dist` sa naka-embed na resource. Nabibigo ang packaging kung magkaiba. Tingnan ang [Desktop release runbook](../operations/vishnucreator-desktop-release-runbook.md) para sa signing, notarization, Windows build, at release requirement.
 
 <a id="core-workflows"></a>
 
@@ -459,14 +459,14 @@ Muling bina-build ng Desktop packaging ang Web mula sa kasalukuyang workspace, i
 
 ### Mga iskedyul at nakalaang task thread
 
-- Bawat iskedyul ay may sarili at patuloy na naka-save na usapan sa OpenCreator.
+- Bawat iskedyul ay may sarili at patuloy na naka-save na usapan sa Vishnu Creator.
 - Ginagamit muli ng awtomatikong trigger, manu-manong Run, at follow-up ang usapan; sunod-sunod ang takbo ayon sa `queue` o `skip`.
 - Ina-archive ng pagtanggal ng iskedyul ang usapan habang pinananatili ang Run, resulta, at kasaysayan ng Codex.
-- Hindi binabago ng pag-rotate o pagbawi ng Codex thread ang task entry o page route ng OpenCreator.
+- Hindi binabago ng pag-rotate o pagbawi ng Codex thread ang task entry o page route ng Vishnu Creator.
 
-<a id="opencreator-system-architecture"></a>
+<a id="vishnucreator-system-architecture"></a>
 
-## Arkitektura ng OpenCreator
+## Arkitektura ng Vishnu Creator
 
 Ang biswal na workspace at usapan sa Agent ay dalawang interface ng iisang malikhaing gawain. Bawat daloy ay state machine: may malinaw na estado at event para sa input, configuration, generation, review, revision, at export. Sa iisang state machine pumapasok ang biswal na kilos at utos sa usapan; ibinabalik sa parehong interface ang kasalukuyang hakbang, setting, progreso, bersyon, at resulta. Nagsasabay sila gamit ang iisang pinagmumulan ng estado.
 
@@ -504,7 +504,7 @@ Paulit-ulit ang paglikha, kaya hindi pinapatungan ng rebisyon ang resulta. Bawat
 +---------------------+  +---------------------+  +-------------------------+
 ```
 
-| Bahagi ng OpenCreator | Tungkulin | Implementasyon |
+| Bahagi ng Vishnu Creator | Tungkulin | Implementasyon |
 | --- | --- | --- |
 | Karanasan ng creator | Dashboard, tool, usapan sa Agent, setting, at file | `apps/web` · React 18 · Vite · TypeScript |
 | Ubod ng kolaborasyon | Isinasabay ang hakbang, konteksto, progreso, resulta, at rebisyon | Shared workflow state · `CreatorCollaborationPanel` · kasaysayan ng bersyon |
@@ -529,7 +529,7 @@ Pangunahing prinsipyo:
 ## Ayos ng repository
 
 ```text
-OpenCreator/
+Vishnu Creator/
 ├── apps/
 │   ├── web/          # Nag-iisang React frontend
 │   ├── daemon/       # Lokal na Fastify Runtime at Codex adapter
@@ -553,7 +553,7 @@ OpenCreator/
 
 Buksan ang **Settings → AI Services** upang itakda ang provider ng modelo, transcription, boses, at larawan para sa workspace. Maaaring may karagdagang kategorya para sa paparating na tool. Mga kailangang field lamang ng napiling provider ang ipinapakita: Base URL, API Key, modelo, proxy, o natatanging credential.
 
-![Mga API key setting ng AI service](../images/product/opencreator-ai-services-en.png)
+![Mga API key setting ng AI service](../images/product/vishnucreator-ai-services-en.png)
 
 Sa system credential storage ng lokal na Runtime naka-save ang credential; huwag itong i-commit sa repository. Hindi kailangan ng ilang lokal o system-backed provider gaya ng Edge TTS ang API Key.
 
@@ -561,12 +561,12 @@ Sa system credential storage ng lokal na Runtime naka-save ang credential; huwag
 
 ### Account at subscription
 
-Ipinapakita ng personal center ang account, kumpirmadong subscription, at magagamit na credit. Binubuksan ng sign-in ang `https://www.open-creator.ai/device`. Mag-sign in sa website at aprubahan ang device; nakakakuha ang lokal na Daemon ng sariling session. Pareho ang account sa browser at app, ngunit hiwalay ang session.
+Ipinapakita ng personal center ang account, kumpirmadong subscription, at magagamit na credit. Binubuksan ng sign-in ang `https://www.vishnu-creator.ai/device`. Mag-sign in sa website at aprubahan ang device; nakakakuha ang lokal na Daemon ng sariling session. Pareho ang account sa browser at app, ngunit hiwalay ang session.
 
 
 
 
-Piliin ang plano sa OpenCreator. Binubuksan ng pagbili ang Stripe Checkout; sa Stripe Billing Portal pinamamahalaan ang subscription. Ang pagbabalik sa app mula sa billing ay sa `/billing/return`, na hindi nangangailangan ng website session. Nirerefresh ng OpenCreator ang benepisyo mula sa Gateway pagkatapos ng beripikadong Stripe notification. May isa pang daan sa pagbili sa `/pricing` at `/account`, gamit ang parehong subscription backend.
+Piliin ang plano sa Vishnu Creator. Binubuksan ng pagbili ang Stripe Checkout; sa Stripe Billing Portal pinamamahalaan ang subscription. Ang pagbabalik sa app mula sa billing ay sa `/billing/return`, na hindi nangangailangan ng website session. Nirerefresh ng Vishnu Creator ang benepisyo mula sa Gateway pagkatapos ng beripikadong Stripe notification. May isa pang daan sa pagbili sa `/pricing` at `/account`, gamit ang parehong subscription backend.
 
 
 
@@ -577,9 +577,9 @@ Piliin ang plano sa OpenCreator. Binubuksan ng pagbili ang Stripe Checkout; sa S
 
 ### Third-party Runtime component
 
-Buksan ang **Settings → Third-party Components** para makita ang ginagamit na yt-dlp nightly, kasamang bersyon, pinagmulan, at pinakabagong release. Bawat pitong araw nagsusuri ang OpenCreator ngunit hindi kusang nag-i-install. Kailangan ng tahasang utos ng user; nananatili ang gumaganang bersyon kung pumalya ang download, beripikasyon, o pag-install.
+Buksan ang **Settings → Third-party Components** para makita ang ginagamit na yt-dlp nightly, kasamang bersyon, pinagmulan, at pinakabagong release. Bawat pitong araw nagsusuri ang Vishnu Creator ngunit hindi kusang nag-i-install. Kailangan ng tahasang utos ng user; nananatili ang gumaganang bersyon kung pumalya ang download, beripikasyon, o pag-install.
 
-![Setting ng third-party component](../images/product/opencreator-third-party-components-en.png)
+![Setting ng third-party component](../images/product/vishnucreator-third-party-components-en.png)
 
 <a id="runtime-environment-variables"></a>
 
@@ -589,18 +589,18 @@ Hindi kailangan ng karamihan ang environment variable. Gamitin kapag kailangan n
 
 | Environment variable | Default | Layunin |
 | --- | --- | --- |
-| `OPENCREATOR_DATA_DIR` | `.runtime` | Database, Run, attachment, at managed workspace ng OpenCreator |
-| `OPENCREATOR_GATEWAY_ORIGIN` | `https://www.open-creator.ai` | Gateway para sa login, subscription, credit, at opisyal na modelo; palitan para sa lokal na Gateway |
-| `OPENCREATOR_CODEX_BIN` | `codex` | Path ng Codex CLI executable |
+| `VISHNUCREATOR_DATA_DIR` | `.runtime` | Database, Run, attachment, at managed workspace ng Vishnu Creator |
+| `VISHNUCREATOR_GATEWAY_ORIGIN` | `https://www.vishnu-creator.ai` | Gateway para sa login, subscription, credit, at opisyal na modelo; palitan para sa lokal na Gateway |
+| `VISHNUCREATOR_CODEX_BIN` | `codex` | Path ng Codex CLI executable |
 | `CODEX_HOME` | `~/.codex` | Awtoridad para sa Codex session, configuration, Skills, MCP, at Profile |
-| `OPENCREATOR_DEFAULT_CWD` | Kasalukuyang working directory | Default na working directory ng daemon |
-| `OPENCREATOR_DEFAULT_PROJECT_ROOT` | Default na patakaran ng Runtime | Ugat ng managed project; ginagamit ang subdirectory na `OpenCreator/` kung itinakda |
-| `OPENCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | Bilang ng tapos na Run bago i-rotate ang Codex thread ng pangmatagalang iskedyul; `0` para patayin ang maagap na rotation |
+| `VISHNUCREATOR_DEFAULT_CWD` | Kasalukuyang working directory | Default na working directory ng daemon |
+| `VISHNUCREATOR_DEFAULT_PROJECT_ROOT` | Default na patakaran ng Runtime | Ugat ng managed project; ginagamit ang subdirectory na `Vishnu Creator/` kung itinakda |
+| `VISHNUCREATOR_CODEX_THREAD_ROTATION_RUN_THRESHOLD` | `50` | Bilang ng tapos na Run bago i-rotate ang Codex thread ng pangmatagalang iskedyul; `0` para patayin ang maagap na rotation |
 
 Halimbawa, paghiwalayin ang Runtime data at Codex environment:
 
 ```bash
-OPENCREATOR_DATA_DIR=/path/to/opencreator-data \
+VISHNUCREATOR_DATA_DIR=/path/to/vishnucreator-data \
 CODEX_HOME=/path/to/codex-home \
 pnpm web:dev
 ```
@@ -628,7 +628,7 @@ Kasama sa hangganan ng seguridad:
 - Inaalis ang sensitibong detalye sa diagnostic at Run log bago ibalik o i-export.
 - Naka-on ang ASAR integrity at cookie encryption sa Desktop package; naka-off ang RunAsNode, `NODE_OPTIONS`, at Node CLI Inspector.
 
-Nasa [gabay at pag-aayos ng problema](../opencreator-user-guide-and-troubleshooting.md) ang buong proseso ng backup, restore, cleanup, at reset.
+Nasa [gabay at pag-aayos ng problema](../vishnucreator-user-guide-and-troubleshooting.md) ang buong proseso ng backup, restore, cleanup, at reset.
 
 <a id="development"></a>
 
@@ -657,17 +657,17 @@ Kailangan din ng pagbabago sa Desktop, Host Bridge, Runtime proxy, o shared fron
 Naka-off bilang default ang tunay na Codex smoke test. Tahasang buksan gamit ang:
 
 ```bash
-OPENCREATOR_RUN_REAL_CODEX_SMOKE=1 \
-pnpm --filter @opencreator/daemon test -- test/smoke/real-codex-smoke.test.ts
+VISHNUCREATOR_RUN_REAL_CODEX_SMOKE=1 \
+pnpm --filter @vishnucreator/daemon test -- test/smoke/real-codex-smoke.test.ts
 ```
 
 <a id="documentation"></a>
 
 ## Dokumentasyon
 
-- **Paggamit:** [Pagsisimula](#quick-start) · [Gabay at pag-aayos ng problema](../opencreator-user-guide-and-troubleshooting.md)
+- **Paggamit:** [Pagsisimula](#quick-start) · [Gabay at pag-aayos ng problema](../vishnucreator-user-guide-and-troubleshooting.md)
 - **Pag-develop at pagpapalawak:** [Kontribusyon](../../CONTRIBUTING.md) · [Alituntunin sa asal](../../CODE_OF_CONDUCT.md) · [Pag-ambag ng Skill](../contributing/skills-contributing.md) · [Pag-ambag ng template](../contributing/templates-contributing.md) · [Runtime API v1](../runtime-api-for-ui-v1.md) · [Gabay sa UI component](../visual-component-guidelines.md)
-- **Pagpapanatili at release:** [Disenyo ng Codex-native Runtime](../2026-07-03-codex-native-agent-runtime-design.md) · [Desktop release runbook](../operations/opencreator-desktop-release-runbook.md) · [Gabay sa Windows Desktop release](../operations/opencreator-desktop-windows-release.md)
+- **Pagpapanatili at release:** [Disenyo ng Codex-native Runtime](../2026-07-03-codex-native-agent-runtime-design.md) · [Desktop release runbook](../operations/vishnucreator-desktop-release-runbook.md) · [Gabay sa Windows Desktop release](../operations/vishnucreator-desktop-windows-release.md)
 
 <a id="translation-convention"></a>
 
@@ -679,9 +679,9 @@ Ang root na `README.md` ang pamantayang dokumento sa English. Nasa `docs/<locale
 
 ## Komunidad
 
-<p>May GitHub user mula sa <strong>hindi bababa sa 105 bansa at rehiyon</strong> na nag-star sa OpenCreator.</p>
+<p>May GitHub user mula sa <strong>hindi bababa sa 105 bansa at rehiyon</strong> na nag-star sa Vishnu Creator.</p>
 
-<img src="../images/star-coverage-map.svg" alt="Mapa ng mga bansa at rehiyon na may nag-star sa OpenCreator sa GitHub" width="760" />
+<img src="../images/star-coverage-map.svg" alt="Mapa ng mga bansa at rehiyon na may nag-star sa Vishnu Creator sa GitHub" width="760" />
 
 <a id="the-crew"></a>
 
@@ -694,7 +694,7 @@ Bawat kasapi ang responsable sa pamantayan, pagsusuri at pag-merge ng kontribusy
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/wulien.svg" width="64" height="64" alt="wulien avatar" /><br /><a href="https://github.com/wulien">wulien</a><br />Code &amp; pag-aayos ng bug</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/dle-kb.svg" width="64" height="64" alt="DLe-kb avatar" /><br /><a href="https://github.com/DLe-kb">DLe-kb</a><br />Mga template</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/xiaheyuan.svg" width="64" height="64" alt="xiaheyuan avatar" /><br /><a href="https://github.com/xiaheyuan">xiaheyuan</a><br />Disenyo &amp; asset</td>
-    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/krillinai.svg" width="64" height="64" alt="krillinai avatar" /><br /><a href="https://github.com/krillinai">krillinai</a><br />Skills &amp; dokumentasyon</td>
+    <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/vishnuai.svg" width="64" height="64" alt="vishnuai avatar" /><br /><a href="https://github.com/vishnuai">vishnuai</a><br />Skills &amp; dokumentasyon</td>
     <td align="center" valign="middle" width="160" height="160"><img src="../images/contributors/hbxugang.svg" width="64" height="64" alt="hbxugang avatar" /><br /><a href="https://github.com/hbxugang">hbxugang</a><br />Enterprise deployment</td>
   </tr>
 </table>
@@ -710,7 +710,7 @@ Hiwalay na pinananatili ang listahang ito sa awtomatikong Contributors graph ng 
   <a href="https://github.com/maranello-o"><img src="../images/contributors/maranello-o.svg" width="48" height="48" alt="maranello-o" /></a>
   <a href="https://github.com/wulien"><img src="../images/contributors/wulien.svg" width="48" height="48" alt="wulien" /></a>
   <a href="https://github.com/puji4810"><img src="../images/contributors/puji4810.svg" width="48" height="48" alt="puji4810" /></a>
-  <a href="https://github.com/krillinai"><img src="../images/contributors/krillinai.svg" width="48" height="48" alt="krillinai" /></a>
+  <a href="https://github.com/vishnuai"><img src="../images/contributors/vishnuai.svg" width="48" height="48" alt="vishnuai" /></a>
   <a href="https://github.com/PairZhu"><img src="../images/contributors/pairzhu.svg" width="48" height="48" alt="PairZhu" /></a>
   <a href="https://github.com/Mijaelx"><img src="../images/contributors/mijaelx.svg" width="48" height="48" alt="Mijaelx" /></a>
   <a href="https://github.com/OutisLi"><img src="../images/contributors/outisli.svg" width="48" height="48" alt="OutisLi" /></a>
@@ -726,7 +726,7 @@ Hiwalay na pinananatili ang listahang ito sa awtomatikong Contributors graph ng 
   <a href="https://github.com/DLe-kb"><img src="../images/contributors/dle-kb.svg" width="48" height="48" alt="DLe-kb" /></a>
   <a href="https://github.com/liupig"><img src="../images/contributors/liupig.svg" width="48" height="48" alt="liupig" /></a>
   <a href="https://github.com/alextavares" title="alextavares"><img src="../images/contributors/alextavares.svg" width="48" height="48" alt="alextavares" /></a>
-  <a href="https://github.com/krillinai/OpenCreator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
+  <a href="https://github.com/vishnuai/Vishnu Creator/commit/a89cff0ac5d91540f03e361af50b286ee57691ae" title="卡皮巴拉"><img src="../images/contributors/kapibala.svg" width="48" height="48" alt="卡皮巴拉" /></a>
   <a href="https://github.com/mifan100g" title="mifan100g (米饭二两)"><img src="../images/contributors/mifan100g.svg" width="48" height="48" alt="mifan100g (米饭二两)" /></a>
   <a href="https://github.com/askalf"><img src="../images/contributors/askalf.svg" width="48" height="48" alt="askalf" /></a>
   <a href="https://github.com/Yi-111-a"><img src="../images/contributors/yi-111-a.svg" width="48" height="48" alt="Yi-111-a" /></a>
@@ -753,9 +753,9 @@ Nasa [CONTRIBUTING.md](../../CONTRIBUTING.md) ang buong gabay sa lokal na setup,
 
 ## Kasaysayan ng star
 
-Dating KrillinAI ang OpenCreator. Saklaw ng chart ang buong kasaysayan ng repository bago at pagkatapos ng pagpapalit ng pangalan.
+Dating VishnuAI ang Vishnu Creator. Saklaw ng chart ang buong kasaysayan ng repository bago at pagkatapos ng pagpapalit ng pangalan.
 
-[![Kasaysayan ng star ng OpenCreator](https://api.star-history.com/svg?repos=krillinai/OpenCreator&type=date)](https://www.star-history.com/?type=date&repos=krillinai%2FOpenCreator)
+[![Kasaysayan ng star ng Vishnu Creator](https://api.star-history.com/svg?repos=vishnuai/Vishnu Creator&type=date)](https://www.star-history.com/?type=date&repos=vishnuai%2FVishnu Creator)
 
 <a id="related-projects"></a>
 
@@ -777,6 +777,6 @@ Dating KrillinAI ang OpenCreator. Saklaw ng chart ang buong kasaysayan ng reposi
 
 <div align="center">
 
-**OpenCreator · Lumikha nang lokal, magtrabaho nang tuloy-tuloy.**
+**Vishnu Creator · Lumikha nang lokal, magtrabaho nang tuloy-tuloy.**
 
 </div>

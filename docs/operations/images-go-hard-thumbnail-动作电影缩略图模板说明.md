@@ -28,16 +28,16 @@
 ```bash
 pnpm templates:validate
 pnpm templates:compile
-pnpm --filter @opencreator/daemon exec vitest run test/unit/images-go-hard-thumbnail-preset.test.ts test/unit/creator-image-executor.test.ts test/unit/creator-preset-registry.test.ts test/integration/creator-cover-generation.test.ts
-pnpm --filter @opencreator/daemon exec tsc -p tsconfig.json --noEmit
-pnpm --filter @opencreator/daemon exec tsc -p tsconfig.test.json
+pnpm --filter @vishnucreator/daemon exec vitest run test/unit/images-go-hard-thumbnail-preset.test.ts test/unit/creator-image-executor.test.ts test/unit/creator-preset-registry.test.ts test/integration/creator-cover-generation.test.ts
+pnpm --filter @vishnucreator/daemon exec tsc -p tsconfig.json --noEmit
+pnpm --filter @vishnucreator/daemon exec tsc -p tsconfig.test.json
 ```
 
 本次结果：模板校验与编译通过；上述 4 个测试文件共 21 项测试通过；Daemon 源码及测试类型检查通过。运行中的本地工作台已加载新模板，中英文目录接口均返回正确模板和提示词；实际浏览器检查了 1440×1000 首页与详情页、390×844 详情页，封面与完整预览图片正常加载，窄屏没有横向溢出。仅在确认无运行中的任务后重启了对应 Daemon，Web 服务未重启，后台健康检查通过。
 
 没有执行 Web 生产构建、Web/Desktop 一致性测试或实际打包 App 验证。本次仅确认源码接入与本地 Web 工作台展示，不声明已安装的 Desktop App 已同步或可发布。
 
-模板沿用用户已配置的图像服务，不额外固定供应商或模型。来源页面的模型标签不代表 OpenCreator 已接入该模型，也不保证其他模型能复现相同画面。没有为添加模板调用付费生图服务，生成质量、文字准确度和标志还原效果仍需真实生图审查。
+模板沿用用户已配置的图像服务，不额外固定供应商或模型。来源页面的模型标签不代表 Vishnu Creator 已接入该模型，也不保证其他模型能复现相同画面。没有为添加模板调用付费生图服务，生成质量、文字准确度和标志还原效果仍需真实生图审查。
 
 来源归属不等于素材商业使用授权。实际发布时应确认示例素材和 OpenAI 标志的使用条件，不暗示官方背书；如更换标题、角色或品牌，应同步修改原提示词和自定义风格，避免与主标题字段冲突。
 

@@ -60,16 +60,16 @@ importers:
       '@modelcontextprotocol/sdk':
         specifier: 1.32.0
         version: 1.32.0(zod@4.6.6)
-      '@opencreator/config':
+      '@vishnucreator/config':
         specifier: workspace:*
         version: link:../../packages/config
-      '@opencreator/protocol':
+      '@vishnucreator/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
-      '@opencreator/skill-market':
+      '@vishnucreator/skill-market':
         specifier: workspace:*
         version: link:../../packages/skill-market
-      '@opencreator/writing-templates':
+      '@vishnucreator/writing-templates':
         specifier: workspace:*
         version: link:../../packages/writing-templates
       better-sqlite3:
@@ -148,7 +148,7 @@ importers:
 
   apps/desktop:
     dependencies:
-      '@opencreator/config':
+      '@vishnucreator/config':
         specifier: workspace:*
         version: link:../../packages/config
       electron-updater:
@@ -197,7 +197,7 @@ importers:
 
   apps/harness:
     dependencies:
-      '@opencreator/protocol':
+      '@vishnucreator/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
 
@@ -239,13 +239,13 @@ importers:
       '@codemirror/view':
         specifier: ^6.43.6
         version: 6.43.6
-      '@opencreator/protocol':
+      '@vishnucreator/protocol':
         specifier: workspace:*
         version: link:../../packages/protocol
-      '@opencreator/skill-market':
+      '@vishnucreator/skill-market':
         specifier: workspace:*
         version: link:../../packages/skill-market
-      '@opencreator/writing-templates':
+      '@vishnucreator/writing-templates':
         specifier: workspace:*
         version: link:../../packages/writing-templates
       fuse.js:
@@ -309,7 +309,7 @@ importers:
       '@iarna/toml':
         specifier: 2.2.5
         version: 2.2.5
-      '@opencreator/protocol':
+      '@vishnucreator/protocol':
         specifier: workspace:*
         version: link:../protocol
     devDependencies:
@@ -323,7 +323,7 @@ importers:
 
   packages/stickman-remotion:
     dependencies:
-      '@opencreator/protocol':
+      '@vishnucreator/protocol':
         specifier: workspace:*
         version: link:../protocol
       react:

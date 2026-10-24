@@ -112,7 +112,7 @@ describe('Desktop Codex resolver', () => {
   });
 
   it('accepts only an explicit native Codex file for external mode', () => {
-    tempDir = mkdtempSync(join(tmpdir(), 'opencreator-codex-resolver-'));
+    tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-codex-resolver-'));
     const executable = join(tempDir, executableName());
     const wrapper = join(tempDir, process.platform === 'win32' ? 'codex.cmd' : 'codex-wrapper');
     writeFileSync(executable, 'codex');
@@ -144,7 +144,7 @@ describe('Desktop Codex resolver', () => {
 
 function createBundledFixture() {
   if (tempDir) rmSync(tempDir, { recursive: true, force: true });
-  tempDir = mkdtempSync(join(tmpdir(), 'opencreator-codex-resolver-'));
+  tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-codex-resolver-'));
   const runtimeRoot = join(tempDir, 'codex-runtime');
   const userDataDir = join(tempDir, 'user-data');
   const binary = join(runtimeRoot, 'bin', executableName());

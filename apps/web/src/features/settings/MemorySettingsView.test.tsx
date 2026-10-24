@@ -1,5 +1,5 @@
 import { selectOption } from '../../test/select-option.js';
-import type { ConversationSummary, MemoryEntry } from '@opencreator/protocol';
+import type { ConversationSummary, MemoryEntry } from '@vishnucreator/protocol';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { describe, expect, it, vi } from 'vitest';

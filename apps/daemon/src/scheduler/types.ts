@@ -8,7 +8,7 @@ import type {
   ScheduleMisfirePolicy,
   ScheduleOperationStatus,
   ScheduleOperationType
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export type LegacyMisfirePolicy = ScheduleMisfirePolicy | 'run_once';
 

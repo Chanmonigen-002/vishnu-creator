@@ -2,7 +2,7 @@ import { z } from 'zod/v3';
 import {
   stickmanCanvasForRatio,
   stickmanRatios
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 
 export const stickmanRatioSchema = z.enum(stickmanRatios);
 

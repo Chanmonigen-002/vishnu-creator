@@ -1,7 +1,7 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
 import { chmod, mkdir, mkdtemp, readdir, rm, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
-import type { ConnectionPlatform, PlatformConnectionState } from '@opencreator/protocol';
+import type { ConnectionPlatform, PlatformConnectionState } from '@vishnucreator/protocol';
 import { readPrivateJsonFile, writePrivateJsonFile } from '../config/private-json-file.js';
 import type { YtDlpRuntime } from '../creator/yt-dlp/runtime.js';
 import { listBrowserProfiles, readBrowserPlatformCookies, type BrowserProfile } from './browser.js';

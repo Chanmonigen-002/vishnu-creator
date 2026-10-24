@@ -4,7 +4,7 @@ import type {
   MemoryListQuery,
   MemoryScope,
   RunContextItem
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import type Database from 'better-sqlite3';
 
 type MemoryRow = {

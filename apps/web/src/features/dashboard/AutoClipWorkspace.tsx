@@ -3,7 +3,7 @@ import {
   type CreatorArtifact,
   type CreatorJson,
   type CreatorStageRun
-} from '@opencreator/protocol';
+} from '@vishnucreator/protocol';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import {
   Check,

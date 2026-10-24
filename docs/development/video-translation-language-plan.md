@@ -1,4 +1,4 @@
-# KrillinAI 视频翻译多语言扩展实施方案
+# VishnuAI 视频翻译多语言扩展实施方案
 
 日期：2026-10-16。依据：[变更前流程与语言支持评估](./video-translation-language-support.md)。用户已批准实施；语言目录、能力检查、后端映射、复杂文字渲染及字体交付已落地。实际验证范围及 52 项语言矩阵见[实施与验收记录](./video-translation-language-validation.md)。本文保留方案要求，不能将下述验收目标理解为全部通过。
 
@@ -6,7 +6,7 @@
 
 ## 1. 交付目标
 
-沿用现有 KrillinAI 翻译、原译配对和时间映射主体，补齐语言目录、识别能力、后端代码适配、复杂文字渲染和字体交付。Web 与 Desktop 使用同一套 Web 页面、Daemon 业务判断和 Runtime 实现。
+沿用现有 VishnuAI 翻译、原译配对和时间映射主体，补齐语言目录、识别能力、后端代码适配、复杂文字渲染和字体交付。Web 与 Desktop 使用同一套 Web 页面、Daemon 业务判断和 Runtime 实现。
 
 完整功能应满足以下条件：
 
@@ -147,7 +147,7 @@ Daemon 统一解析实际生效的服务绑定，包括官方服务、任务选�
 
 字体源 manifest 升级为可表达回退字体的版本，新读取器同时兼容现有 v1。资源准备、Go 校验、Web 构建及打包校验同步支持新版本；不能只修改源 manifest。重点去除“总字体只能有 9 个”的假设，改为校验 9 个主样式别名和独立的回退字体集合。
 
-同时更新实际交付的 Krillin CLI 构建与 Runtime 资源清单，验证新 CLI 与新字体 manifest 配套。旧 CLI 不认识新 manifest 时应升级对应 Runtime，不能只替换字体后继续调用旧二进制；新代码读取旧任务和旧 v1 资源的兼容路径另作测试。
+同时更新实际交付的 Vishnu CLI 构建与 Runtime 资源清单，验证新 CLI 与新字体 manifest 配套。旧 CLI 不认识新 manifest 时应升级对应 Runtime，不能只替换字体后继续调用旧二进制；新代码读取旧任务和旧 v1 资源的兼容路径另作测试。
 
 Web 字体按文字范围按需加载，FFmpeg 从 Runtime 字体目录加载；字幕预览与正式渲染使用同一套字体资产和选择规则。既有预览返回 Runtime 渲染图，应继续复用该路径，避免前端另做一套字体塑形逻辑。
 
@@ -159,10 +159,10 @@ Web 字体按文字范围按需加载，FFmpeg 从 Runtime 字体目录加载；
 | --- | --- | --- |
 | 目录源数据 | 新增 `assets/creator-languages/catalog.json` 及生成脚本 | 语言名称、别名、文字系统与用途；生成 TS／Go 表 |
 | 共享协议 | `packages/protocol/src/creator-services.ts`，新增语言目录导出，相关错误类型 | 可选模型语言能力、共享规范化与稳定错误码 |
-| 能力接口 | `apps/daemon/src/creator/krillin/capabilities.ts`、`api/routes.creator-services.ts` | 按模型提供能力及实际服务解析 |
-| 启动与回退检查 | `apps/daemon/src/creator/preflight.ts`、`krillin/adapter.ts`、`execution-plan.ts`、`cli-runner.ts` | 基于实际路径和实际模型检查、保留重试与结果快照 |
+| 能力接口 | `apps/daemon/src/creator/vishnu/capabilities.ts`、`api/routes.creator-services.ts` | 按模型提供能力及实际服务解析 |
+| 启动与回退检查 | `apps/daemon/src/creator/preflight.ts`、`vishnu/adapter.ts`、`execution-plan.ts`、`cli-runner.ts` | 基于实际路径和实际模型检查、保留重试与结果快照 |
 | 前端 | `apps/web/src/features/dashboard/VideoTranslationWorkspace.tsx`、`services/creator-services-service.ts`、Preflight 文案与语言资源 | 统一选项、检索、兼容提示、草稿与历史值 |
-| Go 目录与 ASR | `runtime/krillinai/internal/types/language.go`、`internal/service/audio2subtitle.go`、`pkg/whisper*`、`pkg/funasr`、`pkg/aliyun`、`pkg/volcengine` | 名称表、后端代码映射、独立 CLI 的边界验证 |
+| Go 目录与 ASR | `runtime/vishnuai/internal/types/language.go`、`internal/service/audio2subtitle.go`、`pkg/whisper*`、`pkg/funasr`、`pkg/aliyun`、`pkg/volcengine` | 名称表、后端代码映射、独立 CLI 的边界验证 |
 | 字幕与时间轴 | `internal/service/subtitle_text.go`、`subtitle_timing.go`、`paired_translation.go`、`srt_embed.go` | Unicode 边界、源字幕空格、横竖屏渲染一致性 |
 | 字体与交付 | `assets/creator-subtitle-fonts`、`apps/web/vite.config.ts`、`apps/desktop/scripts/prepare-creator-runtime.mjs`、`package-release.mjs`、`verify-package.mjs`、Go `render_stage.go` | 回退字体、版本兼容、许可证、资源清单与哈希验证 |
 

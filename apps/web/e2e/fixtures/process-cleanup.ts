@@ -6,7 +6,7 @@ import { setTimeout as delay } from 'node:timers/promises';
 export function readRuntimePid(dataDir: string): number | undefined {
   let value: string;
   try {
-    value = readFileSync(join(dataDir, 'opencreator-runtime.lock'), 'utf8').trim();
+    value = readFileSync(join(dataDir, 'vishnucreator-runtime.lock'), 'utf8').trim();
   } catch (error) {
     if ((error as NodeJS.ErrnoException).code === 'ENOENT') return undefined;
     throw error;

@@ -1,4 +1,4 @@
-import type { CreatorRuntimeComponentsResponse, CreatorYtDlpStatus } from '@opencreator/protocol';
+import type { CreatorRuntimeComponentsResponse, CreatorYtDlpStatus } from '@vishnucreator/protocol';
 import { act, renderHook, waitFor } from '@testing-library/react';
 import { describe, expect, it, vi } from 'vitest';
 import { ApiClientError } from '../runtime/client.js';
