@@ -9,7 +9,7 @@ export const vishnuCreatorAccentColors = [
 ] as const;
 
 export type VishnuCreatorAccentColor = typeof vishnuCreatorAccentColors[number];
-export const vishnuCreatorLanguages = ['zh-CN', 'zh-TW', 'en-US', 'sv-SE', 'ja-JP', 'ko-KR', 'es-ES', 'fr-FR', 'de-DE', 'pt-BR', 'it-IT', 'ru-RU', 'tr-TR', 'id-ID', 'vi-VN', 'hi-IN', 'th-TH', 'fil-PH', 'bn-BD', 'pl-PL', 'uk-UA', 'nl-NL', 'ms-MY', 'da-DK', 'nb-NO', 'fi-FI', 'cs-CZ', 'ro-RO', 'hu-HU', 'el-GR', 'ta-IN', 'te-IN', 'bg-BG', 'sk-SK', 'hr-HR', 'sr-RS', 'ar-SA', 'fa-IR', 'ur-PK', 'he-IL', 'mr-IN', 'gu-IN', 'pa-IN'] as const;
+export const vishnuCreatorLanguages = ['zh-CN', 'zh-TW', 'en-US', 'km-KH', 'sv-SE', 'ja-JP', 'ko-KR', 'es-ES', 'fr-FR', 'de-DE', 'pt-BR', 'it-IT', 'ru-RU', 'tr-TR', 'id-ID', 'vi-VN', 'hi-IN', 'th-TH', 'fil-PH', 'bn-BD', 'pl-PL', 'uk-UA', 'nl-NL', 'ms-MY', 'da-DK', 'nb-NO', 'fi-FI', 'cs-CZ', 'ro-RO', 'hu-HU', 'el-GR', 'ta-IN', 'te-IN', 'bg-BG', 'sk-SK', 'hr-HR', 'sr-RS', 'ar-SA', 'fa-IR', 'ur-PK', 'he-IL', 'mr-IN', 'gu-IN', 'pa-IN'] as const;
 export type VishnuCreatorLanguage = typeof vishnuCreatorLanguages[number];
 export const vishnuCreatorLanguagePreferences = ['system', ...vishnuCreatorLanguages] as const;
 export type VishnuCreatorLanguagePreference = typeof vishnuCreatorLanguagePreferences[number];

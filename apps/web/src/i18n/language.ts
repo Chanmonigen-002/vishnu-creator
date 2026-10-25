@@ -9,6 +9,7 @@ export const appLanguageOptions: ReadonlyArray<AppLanguageOption> = ([
   { value: 'zh-CN', label: '简体中文', englishName: 'Chinese (Simplified)' },
   { value: 'zh-TW', label: '繁體中文', englishName: 'Chinese (Traditional)' },
   { value: 'en-US', label: 'English', englishName: 'English' },
+  { value: 'km-KH', label: 'ភាសាខ្មែរ', englishName: 'Khmer' },
   { value: 'sv-SE', label: 'Svenska', englishName: 'Swedish' },
   { value: 'ja-JP', label: '日本語', englishName: 'Japanese' },
   { value: 'ko-KR', label: '한국어', englishName: 'Korean' },
