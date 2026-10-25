@@ -6,6 +6,7 @@ export const additionalLanguageCatalogs: Readonly<typeof catalogs> = catalogs;
 
 const catalogLoaders = {
   'ja-JP': () => import('./locales/ja-JP.json'),
+  'km-KH': () => import('./locales/km-KH.json'),
   'sv-SE': () => import('./locales/sv-SE.json'),
   'ko-KR': () => import('./locales/ko-KR.json'),
   'es-ES': () => import('./locales/es-ES.json'),

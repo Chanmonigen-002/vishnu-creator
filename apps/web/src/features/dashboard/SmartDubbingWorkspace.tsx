@@ -128,8 +128,8 @@ export default function SmartDubbingWorkspace(props: {
         setProvider(selectedProvider);
         if (selectedProvider === 'edge-tts') {
           setModel('');
-          setVoice('');
-          setVoiceName('');
+          setVoice(readString(session?.state.voiceCode) || '');
+          setVoiceName(readString(session?.state.voiceName) || '');
           return;
         }
         const selectedConfig = response.config.tts[selectedProvider];
@@ -560,7 +560,7 @@ function formatGenerationError(error: unknown, l: (zh: string, en: string) => st
     return l('请先在设置的配音服务中配置当前服务商的 API Key', 'Configure the selected TTS provider API key in Settings first');
   }
   if (code === 'SMART_DUBBING_PROVIDER_UNSUPPORTED' || code === 'unsupported_capability') {
-    return l('当前配音服务商不支持文本转语音，请在设置中选择阿里云百炼、OpenAI 或 MiniMax', 'Select Alibaba Cloud, OpenAI, or MiniMax for Text to Speech.');
+    return l('当前配音服务商不支持文本转语音，请在设置中选择阿里云百炼、OpenAI、MiniMax 或 Edge-TTS', 'Select Alibaba Cloud, OpenAI, MiniMax, or Edge-TTS for Text to Speech.');
   }
   if (
     code === 'SMART_DUBBING_UPSTREAM_ERROR'

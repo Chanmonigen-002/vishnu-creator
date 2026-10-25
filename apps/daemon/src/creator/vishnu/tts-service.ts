@@ -169,7 +169,7 @@ export function createVishnuTtsService(input: {
         ...(languages ? { previewLanguages: languages[id] ?? [] } : {}) })) };
     }
     if (provider === 'edge-tts') {
-      return { provider, model: '', voices: [] };
+      return { provider, model: '', voices: listBundledTtsVoices(provider, '') ?? [] };
     }
     const prepared = prepareConfig(config, provider, model);
     const bundledVoices = listBundledTtsVoices(provider, prepared.model);

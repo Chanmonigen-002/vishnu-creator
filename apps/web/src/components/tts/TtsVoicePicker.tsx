@@ -56,7 +56,7 @@ export function TtsVoicePicker(props: {
 
   useEffect(() => {
     let active = true;
-    if (props.service === null || props.provider === 'edge-tts') {
+    if (props.service === null) {
       setVoices([]);
       setLoading(false);
       pageIssues.resolveOperation('tts.load-voices');
@@ -212,7 +212,6 @@ export function TtsVoicePicker(props: {
     }
     if (
       props.service === null
-      || props.provider === 'edge-tts'
       || !voiceId
       || props.disabled
       || loading
@@ -270,7 +269,7 @@ export function TtsVoicePicker(props: {
       placeholder={loading ? l('正在加载语言', 'Loading languages') : l('暂无可试听语言', 'No preview languages available')}
       searchLabel={l('搜索语言', 'Search languages')}
       emptyLabel={l('未找到匹配语言', 'No matching languages')}
-      disabled={props.disabled || loading || !previewLanguages.length || props.service === null || props.provider === 'edge-tts'}
+      disabled={props.disabled || loading || !previewLanguages.length || props.service === null}
       onChange={language => { stopPreview(); setSampleLanguage(''); setPreviewLanguageOverride(language); }} />
     <small role="status">{sampleLanguage
       ? sampleLanguage.toLowerCase().split('-')[0] !== previewLanguage.toLowerCase().split('-')[0]
@@ -290,7 +289,7 @@ export function TtsVoicePicker(props: {
           placeholder={l('例如 S_xxxxxxxx 或官方音色 ID', 'e.g. S_xxxxxxxx or an official voice ID')}
           spellCheck={false}
           autoComplete="off"
-          disabled={props.disabled || props.provider === 'edge-tts'}
+          disabled={props.disabled}
           onChange={event => setCustomId(event.target.value)}
           onBlur={() => commitCustomVoice(customId)}
           onKeyDown={event => {
@@ -332,7 +331,7 @@ export function TtsVoicePicker(props: {
         detail={selected && !selectedHasPreview && previewLanguage
           ? l('此语言暂无该音色样音，可重新选择音色', 'No sample in this language. Choose another voice to preview.')
           : selected ? voiceDetail(selected, l, appLanguage, '') : undefined}
-        disabled={props.disabled || props.provider === 'edge-tts'}
+        disabled={props.disabled}
         resetKey={`${props.provider}:${props.model}:${appLanguage}:${previewLanguage}`}
         onClose={stopPreview}
       >{close => <>
@@ -343,9 +342,9 @@ export function TtsVoicePicker(props: {
           value={props.value}
           options={libraryOptions}
           loading={loading}
-          disabled={props.disabled || props.provider === 'edge-tts'}
-          canRefresh={props.service !== null && props.provider !== 'edge-tts'}
-          canPreview={props.service !== null && props.provider !== 'edge-tts'}
+          disabled={props.disabled}
+          canRefresh={props.service !== null}
+          canPreview={props.service !== null}
           previewVoiceId={previewVoiceId}
           previewing={previewing}
           playing={playing}
@@ -370,14 +369,14 @@ export function TtsVoicePicker(props: {
               : allowCustomVoice
                 ? l('请填写下方 Speaker ID', 'Enter a speaker ID below')
                 : l('暂无可用音色', 'No voices available')}
-            disabled={props.disabled || loading || props.provider === 'edge-tts'}
+            disabled={props.disabled || loading || props.service === null}
             onChange={selectVoice}
           />
         </div>
         <div className="tts-voice-picker-actions">
           <button
             type="button"
-            disabled={props.disabled || loading || props.service === null || props.provider === 'edge-tts'}
+            disabled={props.disabled || loading || props.service === null}
             aria-label={l('刷新音色列表', 'Refresh voices')}
             title={l('刷新音色列表', 'Refresh voices')}
             onClick={() => { stopPreview(); setReloadToken(current => current + 1); }}
@@ -388,7 +387,7 @@ export function TtsVoicePicker(props: {
           </button>
           <button
             type="button"
-            disabled={props.disabled || loading || !selected || props.service === null || props.provider === 'edge-tts' || previewing || !selectedHasPreview}
+            disabled={props.disabled || loading || !selected || props.service === null || previewing || !selectedHasPreview}
             aria-label={playing ? l('暂停音色试听', 'Pause voice preview') : l('试听当前音色', 'Preview selected voice')}
             title={playing ? l('暂停', 'Pause') : l('试听', 'Preview')}
             onClick={() => void preview()}

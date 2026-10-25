@@ -4,6 +4,11 @@ import type {
 } from '@vishnucreator/protocol';
 import { listVolcengineTtsVoices } from './volcengine-tts-catalog.js';
 
+const EDGE_TTS_VOICES: CreatorTtsVoice[] = [
+  { id: 'km-KH-SreymomNeural', name: 'Sreymom', language: 'km-KH', gender: 'female', provider: 'edge-tts', scenario: '自然', kind: 'builtin', recommended: true },
+  { id: 'km-KH-PisethNeural', name: 'Piseth', language: 'km-KH', gender: 'male', provider: 'edge-tts', scenario: '自然', kind: 'builtin' },
+];
+
 const QWEN3_TTS_FLASH = 'qwen3-tts-flash';
 const QWEN3_TTS_FLASH_2025_11_27 = 'qwen3-tts-flash-2025-11-27';
 const QWEN3_TTS_FLASH_2025_09_18 = 'qwen3-tts-flash-2025-09-18';
@@ -85,9 +90,12 @@ const currentQwen3Voices: AliyunVoiceDefinition[] = [
 ];
 
 export function listBundledTtsVoices(
-  provider: Exclude<CreatorTtsProvider, 'edge-tts'>,
+  provider: CreatorTtsProvider,
   model: string
 ): CreatorTtsVoice[] | undefined {
+  if (provider === 'edge-tts') {
+    return EDGE_TTS_VOICES.map(voice => ({ ...voice }));
+  }
   if (provider === 'openai') {
     return openAiVoices.map(voice => ({ ...voice }));
   }
