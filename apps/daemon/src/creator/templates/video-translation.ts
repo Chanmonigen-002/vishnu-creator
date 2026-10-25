@@ -25,7 +25,7 @@ function createVideoTranslationTemplateDefinition(version: 1 | 2): CreatorTempla
       importedSourceSubtitleId: z.string().nullable().optional(),
       importedTargetSubtitleId: z.string().nullable().optional(),
       sourceLanguage: z.string().default('zh_cn'),
-      targetLanguage: z.string().default('en'),
+      targetLanguage: z.string().default('km'),
       preferPlatformCaptions: z.boolean().default(true),
       skipVideoDownload: z.boolean().default(false),
       bilingual: z.boolean().default(true),
