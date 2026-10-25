@@ -1,16 +1,22 @@
 import { stringify } from '@iarna/toml';
 import type { AliyunOssConfig, CreatorServicesConfig } from '@vishnucreator/protocol';
+import { getKhmerRules } from './khmer-translation-rules.js';
 
 export function createVishnuConfigToml(
   config: CreatorServicesConfig,
   llmOverride?: { baseUrl: string; apiKey: string; model: string },
   officialTranscriptionModel?: string,
   officialTextModel?: { id: string; name: string },
-  llmFallback?: { baseUrl: string; apiKey: string; model: string; modelName?: string }
+  llmFallback?: { baseUrl: string; apiKey: string; model: string; modelName?: string },
+  targetLanguage?: string
 ): string {
   const llm = llmOverride ?? config.llm;
+  const khmerRules = targetLanguage === undefined ? '' : getKhmerRules(targetLanguage);
   const document = compact({
     app: { proxy: officialTranscriptionModel ? '' : config.proxy },
+    translation: {
+      khmer_rules: khmerRules.length > 0 ? khmerRules : undefined,
+    },
     llm: {
       base_url: llm.baseUrl,
       api_key: llm.apiKey,

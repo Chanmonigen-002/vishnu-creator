@@ -1,0 +1,341 @@
+"""Vishnu Dub Engine — FastAPI application with versioned routes."""
+
+import asyncio
+import os
+import platform
+import subprocess
+import sys
+import uuid
+from contextlib import asynccontextmanager
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+import psutil
+from fastapi import FastAPI, HTTPException, Request
+from fastapi.responses import JSONResponse
+from pydantic import BaseModel, Field
+
+from vishnu_dub.config import get_settings, Settings
+from vishnu_dub.jobs import JobManager, JobStatus, JobProgress
+
+
+# ─── Models ──────────────────────────────────────────────────────────────
+
+
+class HardwareProfile(BaseModel):
+    cpu_cores: int
+    cpu_threads: int
+    cpu_avx2: bool
+    cpu_avx512: bool
+    ram_total_gb: float
+    ram_free_gb: float
+    gpu_name: Optional[str] = None
+    gpu_vram_gb: Optional[float] = None
+    cuda_version: Optional[str] = None
+    gpu_compute_capability: Optional[str] = None
+    disk_free_gb: Dict[str, float] = Field(default_factory=dict)
+    tier: str = "T0"
+    tier_description: str = ""
+
+
+class DubRequest(BaseModel):
+    source_url: str
+    source_language: str = "en"
+    target_language: str = "km"
+    tts_provider: str = "edge-tts"
+    tts_voice_id: Optional[str] = None
+    tts_style: Optional[str] = None
+    tts_speed: float = 1.0
+    separate_vocals: bool = True
+    bilingual_subtitles: bool = True
+    compose_video: bool = True
+
+
+class DubResponse(BaseModel):
+    job_id: str
+    status: str
+    message: str
+
+
+class JobStatusResponse(BaseModel):
+    job_id: str
+    status: str
+    progress: Optional[JobProgress] = None
+    result_url: Optional[str] = None
+    error: Optional[str] = None
+
+
+class BenchmarkRequest(BaseModel):
+    duration_seconds: int = 10
+    tts_sentences: int = 3
+
+
+class BenchmarkResponse(BaseModel):
+    asr_time_seconds: float
+    translation_time_seconds: float
+    tts_time_seconds: float
+    separation_time_seconds: float
+    total_time_seconds: float
+    tier: str
+
+
+# ─── App State ───────────────────────────────────────────────────────────
+
+
+settings: Optional[Settings] = None
+job_manager: Optional[JobManager] = None
+
+
+def detect_hardware() -> HardwareProfile:
+    """Detect hardware capabilities and assign tier."""
+    cpu_cores = psutil.cpu_count(logical=False) or 1
+    cpu_threads = psutil.cpu_count(logical=True) or 1
+    ram = psutil.virtual_memory()
+    ram_total_gb = ram.total / (1024**3)
+    ram_free_gb = ram.available / (1024**3)
+
+    # CPU features
+    cpu_avx2 = False
+    cpu_avx512 = False
+    try:
+        import cpuinfo
+        info = cpuinfo.get_cpu_info()
+        flags = info.get("flags", [])
+        cpu_avx2 = "avx2" in flags
+        cpu_avx512 = any(f.startswith("avx512") for f in flags)
+    except Exception:
+        pass
+
+    # GPU detection
+    gpu_name = None
+    gpu_vram_gb = None
+    cuda_version = None
+    gpu_compute_capability = None
+
+    try:
+        import torch
+        if torch.cuda.is_available():
+            gpu_name = torch.cuda.get_device_name(0)
+            gpu_vram_gb = torch.cuda.get_device_properties(0).total_memory / (1024**3)
+            cuda_version = torch.version.cuda
+            gpu_compute_capability = f"{torch.cuda.get_device_properties(0).major}.{torch.cuda.get_device_properties(0).minor}"
+    except Exception:
+        pass
+
+    # Disk space
+    disk_free_gb = {}
+    for partition in psutil.disk_partitions():
+        try:
+            usage = psutil.disk_usage(partition.mountpoint)
+            disk_free_gb[partition.device] = usage.free / (1024**3)
+        except Exception:
+            pass
+
+    # Tier assignment
+    tier = "T0"
+    tier_description = "Minimal — API-only mode, no local models"
+
+    if gpu_vram_gb is not None and gpu_vram_gb >= 12:
+        tier = "T3"
+        tier_description = "High — GPU ≥ 12 GB VRAM, all local models"
+    elif gpu_vram_gb is not None and gpu_vram_gb >= 8:
+        tier = "T2"
+        tier_description = "Mid — GPU 8–12 GB VRAM, int8 models, one at a time"
+    elif gpu_vram_gb is None and ram_total_gb >= 16:
+        tier = "T1"
+        tier_description = "Low — CPU only, RAM ≥ 16 GB, one model at a time"
+    elif ram_total_gb < 16:
+        tier = "T0"
+        tier_description = "Minimal — RAM < 16 GB, API-only mode"
+
+    return HardwareProfile(
+        cpu_cores=cpu_cores,
+        cpu_threads=cpu_threads,
+        cpu_avx2=cpu_avx2,
+        cpu_avx512=cpu_avx512,
+        ram_total_gb=round(ram_total_gb, 1),
+        ram_free_gb=round(ram_free_gb, 1),
+        gpu_name=gpu_name,
+        gpu_vram_gb=round(gpu_vram_gb, 1) if gpu_vram_gb else None,
+        cuda_version=cuda_version,
+        gpu_compute_capability=gpu_compute_capability,
+        disk_free_gb={k: round(v, 1) for k, v in disk_free_gb.items()},
+        tier=tier,
+        tier_description=tier_description,
+    )
+
+
+# ─── App Lifecycle ───────────────────────────────────────────────────────
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    global settings, job_manager
+
+    settings = Settings()
+    get_settings.__globals__["_settings"] = settings
+
+    # Ensure directories exist
+    settings.model_store_path.mkdir(parents=True, exist_ok=True)
+    settings.jobs_path.mkdir(parents=True, exist_ok=True)
+
+    job_manager = JobManager(settings)
+    await job_manager.start()
+
+    yield
+
+    if job_manager:
+        await job_manager.stop()
+
+
+app = FastAPI(
+    title="Vishnu Dub Engine",
+    version="0.1.0",
+    lifespan=lifespan,
+)
+
+
+# ─── Routes ──────────────────────────────────────────────────────────────
+
+
+@app.get("/v1/hardware", response_model=HardwareProfile)
+async def get_hardware():
+    """Return hardware profile and assigned tier."""
+    return detect_hardware()
+
+
+@app.post("/v1/dub", response_model=DubResponse)
+async def create_dub_job(request: DubRequest):
+    """Submit a new dubbing job."""
+    if not job_manager:
+        raise HTTPException(503, "Job manager not initialized")
+
+    job_id = str(uuid.uuid4())[:8]
+    job = await job_manager.create_job(
+        job_id=job_id,
+        source_url=request.source_url,
+        source_language=request.source_language,
+        target_language=request.target_language,
+        tts_provider=request.tts_provider,
+        tts_voice_id=request.tts_voice_id,
+        tts_style=request.tts_style,
+        tts_speed=request.tts_speed,
+        separate_vocals=request.separate_vocals,
+        bilingual_subtitles=request.bilingual_subtitles,
+        compose_video=request.compose_video,
+    )
+
+    return DubResponse(
+        job_id=job_id,
+        status=job.status.value,
+        message="Job created successfully",
+    )
+
+
+@app.get("/v1/dub/{job_id}", response_model=JobStatusResponse)
+async def get_job_status(job_id: str):
+    """Get job status and progress."""
+    if not job_manager:
+        raise HTTPException(503, "Job manager not initialized")
+
+    job = await job_manager.get_job(job_id)
+    if not job:
+        raise HTTPException(404, "Job not found")
+
+    result_url = None
+    if job.status == JobStatus.COMPLETED and job.result_path:
+        result_url = f"/v1/dub/{job_id}/download"
+
+    return JobStatusResponse(
+        job_id=job_id,
+        status=job.status.value,
+        progress=job.progress,
+        result_url=result_url,
+        error=job.error,
+    )
+
+
+@app.get("/v1/dub/{job_id}/progress")
+async def get_job_progress(job_id: str, request: Request):
+    """SSE endpoint for real-time job progress."""
+    if not job_manager:
+        raise HTTPException(503, "Job manager not initialized")
+
+    job = await job_manager.get_job(job_id)
+    if not job:
+        raise HTTPException(404, "Job not found")
+
+    async def event_generator():
+        last_progress = None
+        while True:
+            job = await job_manager.get_job(job_id)
+            if not job:
+                break
+
+            if job.progress != last_progress:
+                yield f"data: {job.progress.model_dump_json()}\n\n"
+                last_progress = job.progress
+
+            if job.status in (JobStatus.COMPLETED, JobStatus.FAILED, JobStatus.CANCELLED):
+                break
+
+            await asyncio.sleep(0.5)
+
+    return StreamingResponse(event_generator(), media_type="text/event-stream")
+
+
+@app.post("/v1/benchmark", response_model=BenchmarkResponse)
+async def run_benchmark(request: BenchmarkRequest):
+    """Run a quick benchmark: 10s ASR + 3 TTS sentences."""
+    if not job_manager:
+        raise HTTPException(503, "Job manager not initialized")
+
+    hardware = detect_hardware()
+    benchmark_job = await job_manager.run_benchmark(
+        duration_seconds=request.duration_seconds,
+        tts_sentences=request.tts_sentences,
+    )
+
+    return BenchmarkResponse(
+        asr_time_seconds=benchmark_job.asr_time,
+        translation_time_seconds=benchmark_job.translation_time,
+        tts_time_seconds=benchmark_job.tts_time,
+        separation_time_seconds=benchmark_job.separation_time,
+        total_time_seconds=benchmark_job.total_time,
+        tier=hardware.tier,
+    )
+
+
+@app.get("/v1/dub/{job_id}/download")
+async def download_result(job_id: str):
+    """Download the completed dubbing result."""
+    if not job_manager:
+        raise HTTPException(503, "Job manager not initialized")
+
+    job = await job_manager.get_job(job_id)
+    if not job or job.status != JobStatus.COMPLETED or not job.result_path:
+        raise HTTPException(404, "Result not found")
+
+    from fastapi.responses import FileResponse
+    return FileResponse(
+        job.result_path,
+        media_type="video/mp4",
+        filename=f"dub_{job_id}.mp4",
+    )
+
+
+@app.get("/health")
+async def health_check():
+    return {"status": "ok", "version": "0.1.0"}
+
+
+# ─── Main ────────────────────────────────────────────────────────────────
+
+
+def main():
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8765)
+
+
+if __name__ == "__main__":
+    main()

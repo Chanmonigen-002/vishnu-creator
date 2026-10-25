@@ -1,0 +1,122 @@
+[project]
+name = "vishnu-dub"
+version = "0.1.0"
+description = "Vishnu Creator Dub Engine — ASR, translation, TTS, mixing, assembly"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = {text = "Apache-2.0"}
+authors = [{name = "Vishnu Creator Team"}]
+classifiers = [
+    "Programming Language :: Python :: 3.11",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+]
+
+dependencies = [
+    "fastapi>=0.115,<0.116",
+    "uvicorn[standard]>=0.32,<0.33",
+    "pydantic>=2.10,<3",
+    "pydantic-settings>=2.7,<3",
+    "pydub>=0.25,<1",
+    "soundfile>=0.13,<1",
+    "srt>=3.5,<4",
+    "python-dotenv>=1.0,<2",
+    "httpx>=0.28,<1",
+    "psutil>=7.0,<8",
+]
+
+[project.optional-dependencies]
+core = [
+    "fastapi>=0.115,<0.116",
+    "uvicorn[standard]>=0.32,<0.33",
+    "pydantic>=2.10,<3",
+    "pydantic-settings>=2.7,<3",
+    "pydub>=0.25,<1",
+    "soundfile>=0.13,<1",
+    "srt>=3.5,<4",
+    "python-dotenv>=1.0,<2",
+    "httpx>=0.28,<1",
+    "psutil>=7.0,<8",
+]
+asr = [
+    "faster-whisper>=1.1,<2",
+    "whisperx>=3.3,<4",
+]
+tts-voxcpm = [
+    "torch>=2.5,<3",
+    "torchaudio>=2.5,<3",
+]
+separation = [
+    "demucs>=4.0,<5",
+]
+optional = [
+    "google-api-python-client>=2.120,<3",
+]
+
+dev = [
+    "pytest>=8.3,<9",
+    "pytest-asyncio>=0.23,<1",
+    "pytest-cov>=6.0,<7",
+    "ruff>=0.9,<1",
+    "mypy>=1.14,<2",
+    "uv>=0.6,<1",
+]
+
+[project.scripts]
+vishnu-dub = "vishnu_dub.api:main"
+vishnu-dub-benchmark = "vishnu_dub.benchmark:main"
+
+[tool.uv]
+dev-dependencies = ["pytest", "pytest-asyncio", "pytest-cov", "ruff", "mypy"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"
+select = ["E", "F", "I", "UP", "W", "C4", "N", "D", "T20", "ANN", "ARG", "SIM", "RET"]
+ignore = ["D100", "D101", "D102", "D103", "D104", "D107", "ANN001", "ANN002", "ANN003", "ARG001", "ARG002"]
+per-file-ignores = { "tests/*" = ["D100", "D101", "D102", "D103", "S101"] }
+
+[tool.mypy]
+python_version = "3.12"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = false
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "faster_whisper"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "whisperx"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "torch"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "cpuinfo"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "psutil"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "demucs"
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "voxcpm"
+ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_functions = ["test_*"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

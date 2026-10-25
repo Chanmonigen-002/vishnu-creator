@@ -148,7 +148,8 @@ export async function runVishnuCli(input: RunVishnuCliInput): Promise<VishnuResu
   await writeFile(
     join(configDir, 'config.toml'),
     createVishnuConfigToml(cliConfig, input.llmOverride, officialBinding?.models.transcription,
-      officialTextModel?.name === undefined ? undefined : { id: cliConfig.llm.model, name: officialTextModel.name }, llmFallback),
+      officialTextModel?.name === undefined ? undefined : { id: cliConfig.llm.model, name: officialTextModel.name }, llmFallback,
+      stringOption(input.options, 'targetLanguage')),
     { mode: 0o600 }
   );
   await writeFile(join(dependencyBin, '.yt-dlp-last-check'), new Date().toISOString(), { mode: 0o600 });

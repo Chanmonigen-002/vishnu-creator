@@ -21,8 +21,9 @@ const cases=[
  {id:'thai-portrait',w:540,h:960,text:'สวัสดี นี่คือการทดสอบคำบรรยายภาษาไทยและการแสดงผล',source:'Thai portrait subtitle rendering.'},
  {id:'japanese-korean',w:720,h:1280,text:'日本語の字幕と句読点を確認します。',source:'한국어 자막도 같은 글꼴로 표시됩니다.'},
  {id:'converted-titles',w:720,h:1280,text:'横转竖字幕。',source:'Landscape to portrait.',converted:true,title:'横转竖标题',minor:'Subtitle composition'},
- {id:'literal-overlap',w:640,h:360,text:'Literal {\\pos(0,0)} and \\N, {braces}',source:'ASS tags must stay literal.',overlap:true}
-];
+ {id:'literal-overlap',w:640,h:360,text:'Literal {\\pos(0,0)} and \\N, {braces}',source:'ASS tags must stay literal.',overlap:true},
+ {id:'khmer',w:960,h:540,text:'សួស្តីក្រុងបណ្ដោះអាសន្ន។លើកទឹកមក។',source:'Hello Phnom Penh. Water comes.',preset:'serif',shadow:false},
+ ];
 const browser=await chromium.launch({headless:true}); const results=[];
 const requestedCases=new Set(process.argv.slice(2));
 try {
