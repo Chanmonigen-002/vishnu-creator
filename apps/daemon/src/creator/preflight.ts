@@ -463,13 +463,10 @@ async function checkProviderConfig(
       add(gateway.models.video ? 'ready' : 'blocked', { id: 'video-provider', title: 'Official video service', message: gateway.models.video ? `${gateway.models.video} is configured.` : 'The official service has no available video model', executionMode: 'remote' });
       if (job.artifacts.some(artifact => artifact.kind === 'reference_image' && artifact.status === 'completed') && !gateway.capabilities?.video?.includes('image_to_video')) add('blocked', { id:'reference-image-capability',title:'Reference image capability mismatch',message:'The official video model does not support reference images.',executionMode:'remote' });
     } else {
-      const provider = readVideoProvider(job, config);
-      const settings = config.video[provider];
-      const hasKey = providerCredentials(settings, provider);
-      if (!hasKey || !settings.model.trim() || !settings.baseUrl.trim()) add('blocked', {
-        id: 'video-provider', title: 'Video service configuration incomplete', message: `Configure the Base URL, model, and credentials for ${provider}.`, executionMode: 'remote'
-      }, { label: 'Open AI service settings', deepLink: '#/settings?tab=ai-services&section=video' });
-      else add('ready', { id: 'video-provider', title: 'Video service', message: `${provider} / ${settings.model} is configured.`, executionMode: 'remote' });
+      // Video provider credentials are validated by checkPresetRequirements in the stage runner.
+      // Preflight does not block on missing credentials to allow the job to enter needs_input
+      // with the appropriate deep link for the user to configure the provider.
+      add('ready', { id: 'video-provider', title: 'Video service', message: 'Video provider configuration will be validated when the stage runs.', executionMode: 'remote' });
     }
   }
   if (stage.executor === 'vishnuai' && stage.id === 'subtitle' && job.state.sourceType !== 'subtitle' && !hasImportedSubtitle(job)) {

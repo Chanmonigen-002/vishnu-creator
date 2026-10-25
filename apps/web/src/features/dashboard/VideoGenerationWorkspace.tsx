@@ -842,9 +842,9 @@ export default function VideoGenerationWorkspace(props: {
             ) : null}
           </section>
         ) : null}
-        {error ? (
+        {visibleError ? (
           <p className="creator-tool-error" role="alert">
-            {error}
+            {visibleError}
             {settingsDeepLink ? (
               <>
                 {' '}
@@ -1149,6 +1149,12 @@ function formatVideoError(
     : error instanceof Error
       ? error.message
       : '';
+  if (code === 'creator_preset_requirement_missing') {
+    return l(
+      '请先在设置的 AI 服务中配置视频生成服务',
+      'Configure a video generation provider in AI Services first'
+    );
+  }
   if (code === 'creator_video_config_missing' || code === 'VIDEO_GENERATION_CONFIG_REQUIRED') {
     return l(
       '请先在设置的 AI 服务中配置视频生成服务',

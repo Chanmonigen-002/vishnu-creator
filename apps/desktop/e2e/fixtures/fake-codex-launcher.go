@@ -39,11 +39,17 @@ func loadFixtureEnvironment() {
 		return
 	}
 	must(err)
-	var environment map[string]string
-	must(json.Unmarshal(data, &environment))
+	var environment map[string]any
+	if err := json.Unmarshal(data, &environment); err != nil {
+		// Config may have complex structure (arrays, objects) for fake-codex.mjs.
+		// Only extract string values for VISHNUCREATOR_E2E_* keys.
+		return
+	}
 	for name, value := range environment {
-		if strings.HasPrefix(name, "VISHNUCREATOR_E2E_") && os.Getenv(name) == "" {
-			must(os.Setenv(name, value))
+		if strings.HasPrefix(name, "VISHNUCREATOR_E2E_") {
+			if strVal, ok := value.(string); ok && os.Getenv(name) == "" {
+				must(os.Setenv(name, strVal))
+			}
 		}
 	}
 }

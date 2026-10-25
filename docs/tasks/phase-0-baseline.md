@@ -1,6 +1,6 @@
 # Phase 0 — Stabilize the baseline
 
-**Status:** Not started · **Default risk tier:** P1 (see `AGENTS.md`) · **Estimate:** ≈1 day · **Depends on:** —
+**Status:** doing · **Default risk tier:** P1 (see `AGENTS.md`) · **Estimate:** ≈1 day · **Depends on:** —
 **Plan:** [master-plan.md §4](../project/master-plan.md#4-phases)
 
 ## Goal
@@ -13,7 +13,7 @@ Status: `todo` · `doing` · `blocked` · `done`. A task is `done` only when **E
 
 | ID | Task | Status | Evidence |
 |---|---|---|---|
-| T0.1 | Review the 75 uncommitted changes (F11); commit legit ones, revert accidental ones (rename-script fallout in `.webp`/fixtures) | todo | |
+| T0.1 | Review the 75 uncommitted changes (F11); commit legit ones, revert accidental ones (rename-script fallout in `.webp`/fixtures) | doing | |
 | T0.2 | `pnpm install && pnpm typecheck && pnpm test && pnpm build` — record results in `docs/development/baseline-2026-10.md` | todo | |
 | T0.3 | Fix every failure found in 0.2 (no skipping tests) | todo | |
 | T0.4 | `pnpm e2e` (Playwright) against the running app; save report | todo | |

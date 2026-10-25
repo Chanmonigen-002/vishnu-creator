@@ -488,6 +488,23 @@ export async function stubVideoDownloadProbe(page: Page, runtime: RuntimeFixture
     };
     await route.fulfill({ json: response });
   });
+  // Stub video-metadata endpoint to avoid 502 errors from external services
+  await page.route('**/runtime/video-metadata*', async route => {
+    const url = new URL(route.request().url());
+    const videoUrl = url.searchParams.get('url') ?? '';
+    await route.fulfill({
+      json: {
+        id: 'stub-probe',
+        title: `youtube.com · ${new URL(videoUrl).searchParams.get('v') ?? 'test'}`,
+        url: videoUrl,
+        requestedUrl: videoUrl,
+        platform: 'youtube',
+        duration: 120,
+        formats: [],
+        options: [{ id: 'video-1080', mediaType: 'video', container: 'mp4', height: 1080, videoFormatId: '399', audioFormatId: '140' }]
+      }
+    });
+  });
   function withProbe(job: CreatorJob): CreatorJob {
     if (!completedProbes.has(job.id)) return job;
     const url = String(job.state.sourceUrl);
@@ -563,28 +580,14 @@ async function reservePort(): Promise<number> {
 }
 
 function writeFakeCodexLauncher(targetPath: string): void {
-  if (process.platform !== 'win32') {
-    writeFileSync(
-      targetPath,
-      `#!/bin/sh\nexec "${process.execPath}" "${fakeCodexScript}" "$@"\n`,
-      { mode: 0o755 }
-    );
-    return;
-  }
-
-  const cacheDir = join(repoRoot, 'apps/web/.cache/e2e');
-  const cachedLauncher = join(cacheDir, 'fake-codex-launcher.exe');
-  mkdirSync(cacheDir, { recursive: true });
-  if (
-    !existsSync(cachedLauncher)
-    || statSync(cachedLauncher).mtimeMs < statSync(fakeCodexLauncherSource).mtimeMs
-  ) {
-    execFileSync('go', ['build', '-trimpath', '-o', cachedLauncher, fakeCodexLauncherSource], {
-      cwd: repoRoot,
-      stdio: 'inherit'
-    });
-  }
-  copyFileSync(cachedLauncher, targetPath);
+  // Use the Node.js fake-codex.mjs directly on all platforms to avoid
+  // needing a Go toolchain to build the Windows launcher. The .mjs script
+  // already handles --version and all capability probes correctly.
+  writeFileSync(
+    targetPath,
+    `#!/bin/sh\nexec "${process.execPath}" "${fakeCodexScript}" "\$@"\n`,
+    { mode: 0o755 }
+  );
 }
 
 function prepareDaemonDevelopment(packageManagerScript: string | undefined): void {

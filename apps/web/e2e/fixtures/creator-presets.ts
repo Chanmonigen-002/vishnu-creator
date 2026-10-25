@@ -162,8 +162,7 @@ function addMissingVideoRequirementPreset(sourceRoot: string): void {
     },
     requirements: {
       service: 'video',
-      provider: 'veo',
-      model: 'veo-3.1-generate-preview'
+      capabilities: ['text-to-video']
     },
     defaults: {
       prompt: '需要配置服务的视频广告镜头',
