@@ -126,7 +126,7 @@ describe('VishnuCreatorSidebar', () => {
   it('renders global actions, projects with nested conversations, and the settings footer action', () => {
     renderSidebar();
 
-    expect(screen.getByText('VishnuCreator')).toHaveClass('sidebar-logo-word');
+    expect(screen.getByText('Vishnu Creator')).toHaveClass('sidebar-logo-word');
     expect(screen.queryByText('v1.0')).not.toBeInTheDocument();
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
     expect(screen.getByText('整理本周项目进...')).toHaveClass('conversation-title-hover');
@@ -236,7 +236,7 @@ describe('VishnuCreatorSidebar', () => {
     const { container } = renderSidebar({ colorMode: 'light' });
 
     expect(screen.queryByRole('img')).not.toBeInTheDocument();
-    expect(screen.getByText('VishnuCreator')).toHaveClass('sidebar-logo-word');
+    expect(screen.getByText('Vishnu Creator')).toHaveClass('sidebar-logo-word');
     expect(container.querySelector('.sidebar-logo-image')).not.toBeInTheDocument();
     expect(screen.queryByText('v1.0')).not.toBeInTheDocument();
   });
@@ -567,7 +567,7 @@ describe('VishnuCreatorSidebar', () => {
     await user.click(remove);
 
     expect(screen.getByRole('alertdialog', { name: '移除项目' })).toBeInTheDocument();
-    expect(screen.getByText('确认从 VishnuCreator 中移除“content-design”？项目目录和文件不会被删除。'))
+    expect(screen.getByText('确认从 Vishnu Creator 中移除“content-design”？项目目录和文件不会被删除。'))
       .toBeInTheDocument();
     expect(onArchiveProject).not.toHaveBeenCalled();
     await user.click(screen.getByRole('button', { name: '移除项目' }));
@@ -688,12 +688,12 @@ describe('VishnuCreatorSidebar', () => {
     expect(screen.getByRole('button', { name: '展开侧栏' })).toBeInTheDocument();
     expect(container.querySelector('.sidebar-logo-image')).toBeInTheDocument();
     expect(screen.queryByText('OC')).not.toBeInTheDocument();
-    expect(screen.queryByText('VishnuCreator')).not.toBeInTheDocument();
+    expect(screen.queryByText('Vishnu Creator')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '收起侧栏' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: '我的项目' })).toHaveAttribute('title', '我的项目');
     expect(screen.queryByText('折叠时隐藏的任务')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '登录' })).not.toBeInTheDocument();
-    expect(screen.getByRole('navigation', { name: 'VishnuCreator' })).toHaveAttribute('data-collapsed', 'true');
+    expect(screen.getByRole('navigation', { name: 'Vishnu Creator' })).toHaveAttribute('data-collapsed', 'true');
 
     await user.click(screen.getByRole('button', { name: '展开侧栏' }));
 

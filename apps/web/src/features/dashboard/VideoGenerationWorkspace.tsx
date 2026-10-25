@@ -178,15 +178,17 @@ export default function VideoGenerationWorkspace(props: {
       ? ''
       : formatVideoError(session.error, l, selectedModelLabel, provider);
   const previewError = previewFailed ? l(
-    '视频预览加载失败，可以稍后重试或直接下载',
-    'The video preview failed to load. Retry later or download the file.'
-  ) : '';
-  const visibleError = error || runtimeError || previewError;
+      '视频预览加载失败，可以稍后重试或直接下载',
+      'The video preview failed to load. Retry later or download the file.'
+    ) : '';
+    const visibleError = error || previewError;
+    const currentIssue = error || runtimeError || previewError;
   useEffect(() => {
     if (latestStage?.status === 'failed' || latestStage?.status === 'interrupted') setNotice('');
   }, [latestStage?.id, latestStage?.status]);
   const settingsDeepLink = readNeedsInputDeepLink(session?.state.needsInput);
-  const activeReferenceArtifact = findArtifact(
+    const needsInputError = settingsDeepLink && runtimeError ? runtimeError : '';
+    const activeReferenceArtifact = findArtifact(
     session?.job.artifacts ?? [],
     session?.state.referenceImageArtifactId,
     'reference_image'
@@ -632,7 +634,7 @@ export default function VideoGenerationWorkspace(props: {
       onCommand={handleCommand}
       pageClassName="video-generation-workspace-page"
       contentClassName="media-generation-workspace-content"
-      currentIssue={visibleError || undefined}
+      currentIssue={currentIssue || undefined}
       onCancelTask={generating ? () => void cancelTask() : undefined}
       onResumeTask={resumable ? () => void resumeTask() : undefined}
       taskControlPending={taskControlPending}
@@ -842,17 +844,17 @@ export default function VideoGenerationWorkspace(props: {
             ) : null}
           </section>
         ) : null}
-        {visibleError ? (
-          <p className="creator-tool-error" role="alert">
-            {visibleError}
-            {settingsDeepLink ? (
-              <>
-                {' '}
-                <a href={settingsDeepLink}>{l('打开 AI 服务设置', 'Open AI service settings')}</a>
-              </>
-            ) : null}
-          </p>
-        ) : null}
+        {visibleError || needsInputError ? (
+                  <p className="creator-tool-error" role="alert">
+                    {visibleError || needsInputError}
+                    {settingsDeepLink ? (
+                      <>
+                        {' '}
+                        <a href={settingsDeepLink}>{l('打开 AI 服务设置', 'Open AI service settings')}</a>
+                      </>
+                    ) : null}
+                  </p>
+                ) : null}
         {notice ? <p className="creator-tool-notice" role="status">{notice}</p> : null}
       </div>
     </CreatorToolShell>

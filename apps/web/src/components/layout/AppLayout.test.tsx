@@ -15,8 +15,8 @@ describe('AppLayout', () => {
       />
     );
 
-    expect(screen.getByLabelText('VishnuCreator 导航')).toBeInTheDocument();
-    expect(screen.getByLabelText('VishnuCreator 工作区')).toBeInTheDocument();
+    expect(screen.getByLabelText('Vishnu Creator 导航')).toBeInTheDocument();
+    expect(screen.getByLabelText('Vishnu Creator 工作区')).toBeInTheDocument();
     expect(screen.getByLabelText('详情')).toBeInTheDocument();
     expect(screen.getByRole('main')).toHaveClass('vishnucreator-shell', 'has-detail');
   });
@@ -31,8 +31,8 @@ describe('AppLayout', () => {
       />
     );
 
-    expect(screen.getByLabelText('VishnuCreator 导航')).toHaveClass('vishnucreator-sidebar-pane');
-    expect(screen.getByLabelText('VishnuCreator 工作区')).toHaveClass('vishnucreator-main-pane');
+    expect(screen.getByLabelText('Vishnu Creator 导航')).toHaveClass('vishnucreator-sidebar-pane');
+    expect(screen.getByLabelText('Vishnu Creator 工作区')).toHaveClass('vishnucreator-main-pane');
     expect(screen.queryByLabelText('详情')).not.toBeInTheDocument();
     expect(screen.getByRole('main')).toHaveClass('vishnucreator-shell');
     expect(screen.getByRole('main')).not.toHaveClass('has-detail');
@@ -47,7 +47,7 @@ describe('AppLayout', () => {
       />
     );
 
-    const mainPane = screen.getByLabelText('VishnuCreator 工作区');
+    const mainPane = screen.getByLabelText('Vishnu Creator 工作区');
     expect(mainPane).toHaveAttribute('data-has-main-header', 'true');
     expect(mainPane.querySelector('.vishnucreator-main-titlebar')).toHaveTextContent('会话标题');
     expect(mainPane.querySelector('.vishnucreator-main-content')).toHaveTextContent('工作区');
@@ -61,7 +61,7 @@ describe('AppLayout', () => {
       />
     );
 
-    const mainPane = screen.getByLabelText('VishnuCreator 工作区');
+    const mainPane = screen.getByLabelText('Vishnu Creator 工作区');
     expect(mainPane).not.toHaveAttribute('data-has-main-header');
     expect(mainPane.querySelector('.vishnucreator-main-titlebar')).not.toBeInTheDocument();
   });
@@ -76,7 +76,7 @@ describe('AppLayout', () => {
     );
 
     expect(screen.getByRole('main')).toHaveClass('vishnucreator-shell', 'sidebar-collapsed');
-    expect(screen.getByLabelText('VishnuCreator 导航')).toHaveAttribute('data-collapsed', 'true');
+    expect(screen.getByLabelText('Vishnu Creator 导航')).toHaveAttribute('data-collapsed', 'true');
   });
 
   it('removes navigation and expands the main workspace in immersive mode', () => {
@@ -89,9 +89,9 @@ describe('AppLayout', () => {
     );
 
     expect(screen.getByRole('main')).toHaveClass('vishnucreator-shell', 'is-immersive');
-    expect(screen.queryByLabelText('VishnuCreator 导航')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Vishnu Creator 导航')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '打开导航' })).not.toBeInTheDocument();
-    expect(screen.getByLabelText('VishnuCreator 工作区')).toHaveTextContent('沉浸工作区');
+    expect(screen.getByLabelText('Vishnu Creator 工作区')).toHaveTextContent('沉浸工作区');
   });
 
   it('opens the mobile navigation as a focus-managed drawer and restores focus after closing', async () => {
@@ -102,18 +102,18 @@ describe('AppLayout', () => {
     const trigger = screen.getByRole('button', { name: '打开导航' });
     await user.click(trigger);
 
-    expect(screen.getByLabelText('VishnuCreator 导航')).toHaveAttribute('data-mobile-open', 'true');
+    expect(screen.getByLabelText('Vishnu Creator 导航')).toHaveAttribute('data-mobile-open', 'true');
     expect(screen.getByRole('button', { name: '关闭导航' })).toHaveFocus();
 
     await user.keyboard('{Escape}');
 
-    expect(screen.getByLabelText('VishnuCreator 导航')).toHaveAttribute('data-mobile-open', 'false');
+    expect(screen.getByLabelText('Vishnu Creator 导航')).toHaveAttribute('data-mobile-open', 'false');
     await waitFor(() => expect(trigger).toHaveFocus());
 
     await user.click(trigger);
     await user.click(screen.getByRole('button', { name: '关闭导航遮罩' }));
 
-    expect(screen.getByLabelText('VishnuCreator 导航')).toHaveAttribute('data-mobile-open', 'false');
+    expect(screen.getByLabelText('Vishnu Creator 导航')).toHaveAttribute('data-mobile-open', 'false');
   });
 });
 

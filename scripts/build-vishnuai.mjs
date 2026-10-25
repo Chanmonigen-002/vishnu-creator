@@ -141,16 +141,13 @@ function canReuseBuild(path) {
       manifest.version !== 1
       || manifest.component !== 'vishnucreator-vishnuai'
       || manifest.componentVersion !== version
-      || manifest.sourceCommit !== sourceCommit
-      || manifest.sourceSha256 !== sourceSha256
-      || manifest.buildRecipeSha256 !== buildRecipeSha256
       || manifest.platform !== targetPlatform
       || manifest.arch !== targetArch
       || manifest.buildVcs !== false
     ) {
       return false;
     }
-    return Object.values(manifest.binaries ?? {}).every(binary => {
+    const hasBinaries = Object.values(manifest.binaries ?? {}).every(binary => {
       const path = resolve(outputRoot, binary.path);
       const artifact = resolve(outputRoot, binary.artifact);
       return existsSync(path)
@@ -158,6 +155,30 @@ function canReuseBuild(path) {
         && hashFile(path) === binary.sha256
         && hashFile(artifact) === binary.sha256;
     }) && Object.keys(manifest.binaries ?? {}).length === targets.length;
+
+    if (!hasBinaries) return false;
+
+    if (!hasCommand('go')) {
+      return true;
+    }
+
+    if (
+      manifest.sourceSha256 !== sourceSha256
+      || manifest.buildRecipeSha256 !== buildRecipeSha256
+    ) {
+      return false;
+    }
+
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function hasCommand(command) {
+  try {
+    execFileSync(command, ['version'], { stdio: 'ignore', windowsHide: true });
+    return true;
   } catch {
     return false;
   }

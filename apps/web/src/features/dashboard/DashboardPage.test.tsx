@@ -1036,7 +1036,7 @@ describe('DashboardPage', () => {
     openBlankWorkspace('视频翻译', '空白视频翻译');
 
     expect(screen.getByRole('heading', { name: '视频翻译配音' })).toBeInTheDocument();
-    expect(screen.getByRole('complementary', { name: 'VishnuCreator' })).toBeInTheDocument();
+    expect(screen.getByRole('complementary', { name: 'Vishnu Creator' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '拖放视频到这里' })).toBeInTheDocument();
     expect(screen.getByRole('list', { name: '支持的平台' }).querySelectorAll('li')).toHaveLength(10);
     fireEvent.change(screen.getByRole('textbox', { name: '视频链接' }), {
@@ -1805,7 +1805,7 @@ describe('DashboardPage', () => {
     fireEvent.click(screen.getByRole('radio', { name: '温暖' }));
 
     const summary = screen.getByLabelText('任务摘要');
-    expect(summary).toHaveTextContent('星语');
+    expect(summary).toHaveTextContent('nova');
     expect(summary).toHaveTextContent('温暖');
     expect(summary).toHaveTextContent('1.00x');
     expect(summary).toHaveTextContent('MP3');
@@ -1857,7 +1857,7 @@ describe('DashboardPage', () => {
 
     expect(await screen.findAllByText('请先在设置的配音服务中配置当前服务商的 API Key'))
       .not.toHaveLength(0);
-    expect(screen.getByRole('complementary', { name: 'VishnuCreator' })).toHaveTextContent('请先在设置的配音服务中配置当前服务商的 API Key');
+    expect(screen.getByRole('complementary', { name: 'Vishnu Creator' })).toHaveTextContent('请先在设置的配音服务中配置当前服务商的 API Key');
   });
 
   it('generates image assets through the Creator Runtime', async () => {

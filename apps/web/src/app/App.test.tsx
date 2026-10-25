@@ -153,8 +153,8 @@ describe('App', () => {
     };
 
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch} />);
-    expect(await screen.findByRole('heading', { name: 'VishnuCreator' })).toBeInTheDocument();
-    expect(screen.queryByLabelText('VishnuCreator 导航')).not.toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Vishnu Creator' })).toBeInTheDocument();
+    expect(screen.queryByLabelText('Vishnu Creator 导航')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '稍后配置，进入本地模式' }));
     expect(await screen.findByText('Agent 尚未配置，暂时无法发送任务。')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '配置 Agent' }));
@@ -171,7 +171,7 @@ describe('App', () => {
     await user.type(screen.getByLabelText('API Key'), 'secret');
     await user.click(screen.getByRole('button', { name: '保存并开始使用' }));
     await waitFor(() => {
-      expect(screen.queryByRole('heading', { name: 'VishnuCreator' })).not.toBeInTheDocument();
+      expect(screen.queryByRole('heading', { name: 'Vishnu Creator' })).not.toBeInTheDocument();
       expect(window.location.hash).toBe('#/new');
     });
     expect(screen.queryByText('Agent 尚未配置，暂时无法发送任务。')).not.toBeInTheDocument();
@@ -180,9 +180,9 @@ describe('App', () => {
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch} />);
     await waitFor(() => {
       expect(screen.queryByText('正在检查 Agent 配置…')).not.toBeInTheDocument();
-      expect(screen.getByLabelText('VishnuCreator 导航')).toBeInTheDocument();
+      expect(screen.getByLabelText('Vishnu Creator 导航')).toBeInTheDocument();
     });
-    expect(screen.queryByRole('heading', { name: 'VishnuCreator' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Vishnu Creator' })).not.toBeInTheDocument();
     }
   );
 
@@ -213,11 +213,11 @@ describe('App', () => {
     };
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch}/>);
     await user.click(await screen.findByRole('button', { name: '登录模式' }));
-    await waitFor(() => expect(screen.getByRole('button', { name: '登录 VishnuCreator' })).toBeEnabled());
+    await waitFor(() => expect(screen.getByRole('button', { name: '登录 Vishnu Creator' })).toBeEnabled());
     expect(screen.queryByLabelText('Base URL')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('API Key')).not.toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: '登录 VishnuCreator' }));
-    await waitFor(() => expect(screen.getByLabelText('VishnuCreator 导航')).toBeInTheDocument());
+    await user.click(screen.getByRole('button', { name: '登录 Vishnu Creator' }));
+    await waitFor(() => expect(screen.getByLabelText('Vishnu Creator 导航')).toBeInTheDocument());
     expect(screen.queryByRole('region', { name: '开始使用 Agent' })).not.toBeInTheDocument();
     expect(screen.queryByText('Agent 尚未配置，暂时无法发送任务。')).not.toBeInTheDocument();
     if (activationState === 'ready') {
@@ -270,19 +270,19 @@ describe('App', () => {
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch} />);
     await user.click(await screen.findByRole('button', { name: '本地模式' }));
     expect(await screen.findByText('已找到本机 Codex')).toBeInTheDocument();
-    expect(screen.queryByLabelText('VishnuCreator 导航')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Vishnu Creator 导航')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '使用本机 Codex，继续' }));
-    await waitFor(() => expect(screen.queryByRole('heading', { name: 'VishnuCreator' })).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByRole('heading', { name: 'Vishnu Creator' })).not.toBeInTheDocument());
 
     cleanup();
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch} />);
-    await waitFor(() => expect(screen.getByLabelText('VishnuCreator 导航')).toBeInTheDocument());
-    expect(screen.queryByRole('heading', { name: 'VishnuCreator' })).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.getByLabelText('Vishnu Creator 导航')).toBeInTheDocument());
+    expect(screen.queryByRole('heading', { name: 'Vishnu Creator' })).not.toBeInTheDocument();
 
     cleanup();
     signedIn = false;
     render(<App hostBridge={hostBridge} runtimeFetch={runtimeFetch} />);
-    expect(await screen.findByRole('heading', { name: 'VishnuCreator' })).toBeInTheDocument();
+    expect(await screen.findByRole('heading', { name: 'Vishnu Creator' })).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '本地模式' }));
     expect(screen.getByRole('combobox', { name: '供应商' })).toBeInTheDocument();
   });
@@ -845,7 +845,7 @@ describe('App', () => {
     const user = userEvent.setup();
     render(<App />);
 
-    const navigation = await screen.findByLabelText('VishnuCreator 导航');
+    const navigation = await screen.findByLabelText('Vishnu Creator 导航');
     await user.click(screen.getByRole('button', { name: '打开导航' }));
     expect(navigation).toHaveAttribute('data-mobile-open', 'true');
 
@@ -885,7 +885,7 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: '关闭导航' }));
 
     expect(back).toHaveBeenCalledTimes(1);
-    expect(screen.getByLabelText('VishnuCreator 导航')).toHaveAttribute('data-mobile-open', 'false');
+    expect(screen.getByLabelText('Vishnu Creator 导航')).toHaveAttribute('data-mobile-open', 'false');
   });
 
   it('replaces the temporary mobile drawer entry when navigating from the drawer', async () => {
@@ -910,7 +910,7 @@ describe('App', () => {
     await waitFor(() => expect(window.location.hash).toBe('#/dashboard'));
     expect(back).not.toHaveBeenCalled();
     expect(window.history.state?.vishnucreatorMobileNavigation).not.toBe(true);
-    expect(screen.getByLabelText('VishnuCreator 导航')).toHaveAttribute('data-mobile-open', 'false');
+    expect(screen.getByLabelText('Vishnu Creator 导航')).toHaveAttribute('data-mobile-open', 'false');
   });
 
   afterEach(() => {
@@ -977,7 +977,7 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: /^视频翻译/ }));
 
     expect(await screen.findByRole('heading', { name: '视频翻译配音' })).toBeInTheDocument();
-    expect(screen.queryByLabelText('VishnuCreator 导航')).not.toBeInTheDocument();
+    expect(screen.queryByLabelText('Vishnu Creator 导航')).not.toBeInTheDocument();
     const agentInput = screen.getByRole('textbox', { name: '告诉 Agent 你的要求' });
     expect(agentInput).toHaveAttribute(
       'placeholder',
@@ -987,7 +987,7 @@ describe('App', () => {
     await user.click(within(
       screen.getByRole('region', { name: '视频翻译操作区' })
     ).getByRole('button', { name: '返回' }));
-    expect(await screen.findByLabelText('VishnuCreator 导航')).toBeInTheDocument();
+    expect(await screen.findByLabelText('Vishnu Creator 导航')).toBeInTheDocument();
     await waitFor(() => expect(window.location.hash).toBe('#/workbench'));
   });
 
@@ -1694,7 +1694,7 @@ describe('App', () => {
     await user.click(screen.getByRole('button', { name: '定时任务' }));
 
     expect(await screen.findByRole('heading', { name: '每日总结' })).toBeInTheDocument();
-    expect(screen.queryByRole('heading', { name: 'VishnuCreator：已安排' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Vishnu Creator：已安排' })).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: '查看上次运行' }));
 
@@ -3110,7 +3110,7 @@ describe('App', () => {
         />
       );
 
-      expect(await screen.findByLabelText('VishnuCreator 导航')).toBeInTheDocument();
+      expect(await screen.findByLabelText('Vishnu Creator 导航')).toBeInTheDocument();
       expect(screen.queryByText('登录即可享受云端协作')).not.toBeInTheDocument();
       expect(screen.queryByRole('button', { name: 'Sign in to' })).not.toBeInTheDocument();
     }
@@ -3194,7 +3194,7 @@ describe('App', () => {
 
     navigateToTestRoute('#/plugins');
     await waitFor(() => expect(recordRequests).toBe(1));
-    expect(screen.queryByRole('heading', { name: 'VishnuCreator：插件' })).not.toBeInTheDocument();
+    expect(screen.queryByRole('heading', { name: 'Vishnu Creator：插件' })).not.toBeInTheDocument();
     expect(await screen.findByRole('region', { name: '技能目录' })).toBeInTheDocument();
     await waitFor(() => expect(screen.getAllByTestId('skill-market-card')).toHaveLength(12));
     await showSkillMarketCard(user, 'frontend-slides');
@@ -3908,7 +3908,7 @@ describe('App', () => {
     expect(screen.queryByText(/当前动态/)).not.toBeInTheDocument();
 
     await user.click(screen.getByRole('button', { name: '设置' }));
-    await user.click(await screen.findByRole('button', { name: '关于 VishnuCreator' }));
+    await user.click(await screen.findByRole('button', { name: '关于 Vishnu Creator' }));
 
     expect(await screen.findByText('高级信息')).toBeInTheDocument();
     expect(screen.getAllByText('codex-cli test').length).toBeGreaterThan(0);
@@ -6696,7 +6696,7 @@ describe('App', () => {
     );
 
     expect(await screen.findByRole('status', { name: '本地运行内核正常' })).toBeInTheDocument();
-    const navigation = screen.getByLabelText('VishnuCreator 导航');
+    const navigation = screen.getByLabelText('Vishnu Creator 导航');
     expect(navigation).toHaveAttribute('data-collapsed', 'false');
     await user.click(await screen.findByRole('button', { name: /真实文件会话/ }));
     await user.click(screen.getByRole('button', { name: '文件' }));
@@ -7899,7 +7899,7 @@ describe('App', () => {
 
     render(<App fileService={createFileService()} hostBridge={hostBridge} />);
     await user.click(await screen.findByRole('button', { name: '设置' }));
-    await user.click(screen.getByRole('button', { name: '关于 VishnuCreator' }));
+    await user.click(screen.getByRole('button', { name: '关于 Vishnu Creator' }));
 
     expect(await screen.findByText('3.2.1')).toBeInTheDocument();
     expect(hostBridge.readAppVersion).toHaveBeenCalledOnce();

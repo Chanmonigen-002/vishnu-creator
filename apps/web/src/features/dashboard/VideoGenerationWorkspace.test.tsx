@@ -30,7 +30,7 @@ describe('VideoGenerationWorkspace', () => {
     expect(within(form).getByRole('combobox', { name: '画幅' })).toHaveValue('720x1280');
     expect(within(form).getByRole('combobox', { name: '视频时长' })).toHaveValue('8');
     expect(within(form).getByRole('button', { name: '开始生成' })).toBeEnabled();
-    const agent = screen.getByRole('complementary', { name: 'VishnuCreator' });
+    const agent = screen.getByRole('complementary', { name: 'Vishnu Creator' });
     expect(within(agent).getByRole('complementary', { name: '任务摘要' })).toHaveTextContent('Veo 3.1 · 9:16 · 8s');
     expect(document.querySelector('.creator-workspace-main .creator-task-summary')).toBeNull();
     expect(screen.queryByRole('navigation', { name: '视频生成流程' })).not.toBeInTheDocument();
@@ -104,7 +104,7 @@ describe('VideoGenerationWorkspace', () => {
     expect(within(form).getByRole('combobox', { name: copy.model })).toBeInTheDocument();
     expect(within(form).getByRole('button', { name: copy.generate })).toBeInTheDocument();
     expect(within(form).getByRole('button', { name: copy.clear })).toBeDisabled();
-    expect(within(screen.getByRole('complementary', { name: 'VishnuCreator' })).getByRole('complementary', { name: copy.summary })).toBeInTheDocument();
+    expect(within(screen.getByRole('complementary', { name: 'Vishnu Creator' })).getByRole('complementary', { name: copy.summary })).toBeInTheDocument();
   });
 
   it('shows model-native video sizes and durations beyond the custom provider presets', () => {
@@ -158,7 +158,7 @@ describe('VideoGenerationWorkspace', () => {
       await act(async () => { await vi.advanceTimersByTimeAsync(5_000); });
       expect(document.querySelector('.creator-collaboration-stage[data-status="running"]')).toBeNull();
       expect(document.querySelector('.creator-collaboration-stage[data-status="failed"]')).not.toBeNull();
-      const panel = screen.getByRole('complementary', { name: 'VishnuCreator' });
+      const panel = screen.getByRole('complementary', { name: 'Vishnu Creator' });
       expect(panel).toHaveTextContent('InputImageSensitiveContentDetected.PrivacyInformation');
       expect(panel).toHaveTextContent('Input image may contain real person');
       expect(screen.queryByText('视频生成任务已提交，可以离开当前页面，完成后会保留在项目中')).not.toBeInTheDocument();
@@ -190,7 +190,7 @@ describe('VideoGenerationWorkspace', () => {
         upstreamMessage: 'Reference image was rejected', requestId: 'provider-request-123' }
     }];
     renderWorkspace(failed, { language });
-    const panel = screen.getByRole('complementary', { name: 'VishnuCreator' });
+    const panel = screen.getByRole('complementary', { name: 'Vishnu Creator' });
     expect(panel).toHaveTextContent('HTTP 400');
     expect(panel).toHaveTextContent('InputImageSensitiveContentDetected.SensitiveContent');
     expect(panel).toHaveTextContent('Reference image was rejected');
@@ -591,7 +591,7 @@ describe('VideoGenerationWorkspace', () => {
     expect(screen.getByRole('textbox', { name: '提示词' })).toBeEnabled();
     expect(screen.queryByRole('button', { name: /项目 V/ })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: '开始生成' })).toBeInTheDocument();
-    expect(screen.getByRole('complementary', { name: 'VishnuCreator' })).toHaveTextContent('视频生成未完成，请检查模型服务配置后重试');
+    expect(screen.getByRole('complementary', { name: 'Vishnu Creator' })).toHaveTextContent('视频生成未完成，请检查模型服务配置后重试');
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();
     expect(screen.queryByText('The provider rejected the prompt')).not.toBeInTheDocument();
   });
@@ -640,7 +640,7 @@ describe('VideoGenerationWorkspace', () => {
       ))
     });
 
-    expect(screen.getByRole('complementary', { name: 'VishnuCreator' })).toHaveTextContent(
+    expect(screen.getByRole('complementary', { name: 'Vishnu Creator' })).toHaveTextContent(
       '当前账号未开通 Seedance 2.5，请切换模型版本或前往方舟控制台开通'
     );
     expect(screen.queryByRole('alert')).not.toBeInTheDocument();

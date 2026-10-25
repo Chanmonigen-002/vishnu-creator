@@ -487,7 +487,7 @@ describe('Timeline', () => {
 
     expect(screen.getByText('please inspect the run')).toBeInTheDocument();
     expect(screen.getByText('I am checking the logs')).toBeInTheDocument();
-    expect(screen.queryByText('VishnuCreator')).not.toBeInTheDocument();
+    expect(screen.queryByText('Vishnu Creator')).not.toBeInTheDocument();
     expect(container.querySelector('.timeline-user_message .timeline-item-header')).not.toBeInTheDocument();
     expect(container.querySelector('.timeline-assistant_message .timeline-item-header')).not.toBeInTheDocument();
     expect(container.querySelector('.timeline-assistant_message .timeline-avatar-logo')).not.toBeInTheDocument();
@@ -563,7 +563,7 @@ describe('Timeline', () => {
 
     expect(container.querySelector('.timeline-process')).toBeInTheDocument();
     expect(screen.getByText('正在思考')).toBeInTheDocument();
-    expect(screen.queryByText(/等待 VishnuCreator 返回过程/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/等待 Vishnu Creator 返回过程/)).not.toBeInTheDocument();
     expect(screen.queryByText(/当前动态/)).not.toBeInTheDocument();
     expect(screen.queryByText('运行详情')).not.toBeInTheDocument();
     expect(container.querySelector('.process-detail')).not.toBeInTheDocument();
@@ -1724,7 +1724,7 @@ describe('Timeline', () => {
     render(<Timeline items={[]} />);
 
     expect(screen.getByText('暂无任务记录')).toBeInTheDocument();
-    expect(screen.getByText('发送任务后，VishnuCreator 会在这里展示处理过程和结果。')).toBeInTheDocument();
+    expect(screen.getByText('发送任务后，Vishnu Creator 会在这里展示处理过程和结果。')).toBeInTheDocument();
   });
 
   it('keeps long histories virtualized and exposes older-page loading', async () => {

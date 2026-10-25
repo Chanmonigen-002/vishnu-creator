@@ -213,7 +213,7 @@ describe('ImageGenerationWorkspace', () => {
     expect(within(form).getByRole('combobox', { name: copy.format })).toBeInTheDocument();
     expect(within(form).getByRole('button', { name: copy.generate })).toBeEnabled();
     expect(within(form).getByRole('button', { name: copy.clear })).toBeDisabled();
-    expect(within(screen.getByRole('complementary', { name: 'VishnuCreator' })).getByRole('complementary', { name: copy.summary })).toBeInTheDocument();
+    expect(within(screen.getByRole('complementary', { name: 'Vishnu Creator' })).getByRole('complementary', { name: copy.summary })).toBeInTheDocument();
   });
 
   it('places model selection before the editor and the reference banner above the prompt', () => {

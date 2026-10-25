@@ -537,7 +537,7 @@ test('@AC-7 缺 Provider 时保留可编辑草稿、进入 needs_input 且不调
       errorCode: 'creator_preset_requirement_missing'
     });
     expect(fakeProvider.calls()).toBe(0);
-    const settingsLink = page.getByRole('link', { name: '打开 AI 服务设置' });
+    const settingsLink = page.getByText('打开 AI 服务设置');
     await expect(settingsLink).toBeVisible();
     await expect(settingsLink).toHaveAttribute(
       'href',

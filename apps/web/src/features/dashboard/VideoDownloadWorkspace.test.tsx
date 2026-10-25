@@ -308,7 +308,7 @@ describe('VideoDownloadWorkspace', () => {
     expect(screen.queryByRole('tab', { name: '视频信息' })).not.toBeInTheDocument();
     expect(screen.getByText('Creator Download')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '更换链接' })).toBeInTheDocument();
-    const panel = screen.getByRole('complementary', { name: 'VishnuCreator' });
+    const panel = screen.getByRole('complementary', { name: 'Vishnu Creator' });
     const summary = within(panel).getByRole('complementary', { name: '任务摘要' });
     expect(screen.getAllByRole('complementary', { name: '任务摘要' })).toHaveLength(1);
     expect(summary.querySelector('details')).not.toHaveAttribute('open');
@@ -549,7 +549,7 @@ describe('VideoDownloadWorkspace', () => {
 
     expect(await screen.findByText('可重新加载预览或保存到本机'))
       .toBeInTheDocument();
-    expect(screen.getByRole('complementary', { name: 'VishnuCreator' }).querySelector('.creator-collaboration-issue')).toBeInTheDocument();
+    expect(screen.getByRole('complementary', { name: 'Vishnu Creator' }).querySelector('.creator-collaboration-issue')).toBeInTheDocument();
     expect(screen.queryByText(/诊断编号：OC-/)).not.toBeInTheDocument();
     expect(screen.queryByText('preview unavailable')).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: '重新加载' }));
