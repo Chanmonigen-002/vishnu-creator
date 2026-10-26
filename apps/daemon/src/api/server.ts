@@ -70,6 +70,7 @@ import {
 import { createVideoExecutor } from '../creator/video/executor.js';
 import { createClipExecutor } from '../creator/clip/executor.js';
 import { createSmartDubbingExecutor } from '../creator/smart-dubbing/executor.js';
+import { createDubEngineService } from '../dub-engine/service.js';
 import { createXiaohongshuPostExecutor } from '../creator/xiaohongshu/executor.js';
 import { createShortVideoScriptExecutor } from '../creator/short-video-script/executor.js';
 import { createWechatArticleExecutor } from '../creator/article/executor.js';
@@ -1008,6 +1009,25 @@ export async function buildServer(input: BuildServerInput) {
   } catch (error) {
     console.warn(`Creator optional runtime executors are unavailable: ${formatError(error)}`);
   }
+  let dubEngineService: ReturnType<typeof createDubEngineService> | undefined;
+  try {
+    const creatorServicesConfig = await creatorServicesConfigStore.read();
+    if (creatorServicesConfig.dubEngine?.enabled) {
+      dubEngineService = createDubEngineService({
+        config: creatorServicesConfig.dubEngine,
+        onEngineStarted: () => console.log('[dub-engine] engine started'),
+        onEngineStopped: () => console.log('[dub-engine] engine stopped'),
+        onEngineCrashed: (err) => console.warn('[dub-engine] engine crashed:', err.message)
+      });
+      if (creatorServicesConfig.dubEngine.autoStart) {
+        dubEngineService.start().catch(err =>
+          console.warn('[dub-engine] autostart failed:', err instanceof Error ? err.message : String(err))
+        );
+      }
+    }
+  } catch (error) {
+    console.warn('[dub-engine] service wiring skipped:', error instanceof Error ? error.message : String(error));
+  }
   if (input.creatorExecutors === undefined) {
     creatorExecutors.push(createXiaohongshuPostExecutor({
       configStore: creatorServicesConfigStore
@@ -1017,7 +1037,8 @@ export async function buildServer(input: BuildServerInput) {
     }));
     creatorExecutors.push(createSmartDubbingExecutor({
       ttsService: vishnuTtsService,
-      isOfficial: () => gatewayAccount.peekState().source === 'gateway'
+      isOfficial: () => gatewayAccount.peekState().source === 'gateway',
+      ...(dubEngineService === undefined ? {} : { dubEngineService })
     }));
     creatorExecutors.push(createImageExecutor({
       ledger: creatorProviderRequestLedger,

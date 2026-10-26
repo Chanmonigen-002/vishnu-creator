@@ -116,7 +116,7 @@ function baseUrlFromConfig(config: DubEngineConfig): string {
 
 function headersFor(config: DubEngineConfig): HeadersInit {
   const headers: Record<string, string> = { 'Content-Type': 'application/json' };
-  if (config.token) headers['Authorization'] = `*** ${config.token}`;
+  if (config.token) headers['Authorization'] = `Bearer ${config.token}`;
   return headers;
 }
 
@@ -255,15 +255,25 @@ export class DubEngineClient {
   }
 
   async getHardware(): Promise<DubHardwareProfile> {
-    return this.request<DubHardwareProfile>('GET', '/v1/hardware');
+    const body = await this.request<Record<string, unknown>>('GET', '/v1/hardware');
+    return fromSnakeHardware(body);
   }
 
   async createDubJob(request: DubJobRequest): Promise<DubJobResponse> {
-    return this.request<DubJobResponse>('POST', '/v1/dub', request);
+    const body = await this.request<Record<string, unknown>>(
+      'POST',
+      '/v1/dub',
+      toSnakeDubRequest(request)
+    );
+    return fromSnakeJobResponse(body);
   }
 
   async getJobStatus(jobId: string): Promise<DubJobStatusResponse> {
-    return this.request<DubJobStatusResponse>('GET', `/v1/dub/${encodeURIComponent(jobId)}`);
+    const body = await this.request<Record<string, unknown>>(
+      'GET',
+      `/v1/dub/${encodeURIComponent(jobId)}`
+    );
+    return fromSnakeJobStatus(body);
   }
 
   async *jobProgressStream(
@@ -325,7 +335,7 @@ export class DubEngineClient {
           if (!data || data === '[DONE]') continue;
 
           try {
-            const parsed = JSON.parse(data) as DubJobProgress;
+            const parsed = fromSnakeProgress(JSON.parse(data) as Record<string, unknown>);
             onProgress?.(parsed);
             yield parsed;
             if (parsed.percent >= 100) return;
@@ -343,10 +353,15 @@ export class DubEngineClient {
     durationSeconds: number,
     ttsSentences: number
   ): Promise<DubBenchmarkResponse> {
-    return this.request<DubBenchmarkResponse>('POST', '/v1/benchmark', {
-      durationSeconds,
-      ttsSentences,
-    });
+    const body = await this.request<Record<string, unknown>>(
+      'POST',
+      '/v1/benchmark',
+      {
+        duration_seconds: durationSeconds,
+        tts_sentences: ttsSentences,
+      }
+    );
+    return fromSnakeBenchmark(body);
   }
 
   async downloadResult(jobId: string, signal?: AbortSignal): Promise<Buffer> {
@@ -418,4 +433,112 @@ export function isDubEngineError(error: unknown): error is DubEngineError {
 export function dubEngineErrorCode(error: unknown): string {
   if (isDubEngineError(error)) return error.code;
   return 'ENGINE_UNKNOWN_ERROR';
+}
+
+// ─── snake_case (engine wire format) ↔ camelCase (daemon) mappers ─────────
+
+function asRecord(body: unknown): Record<string, unknown> {
+  return body && typeof body === 'object' && !Array.isArray(body)
+    ? (body as Record<string, unknown>)
+    : {};
+}
+
+function readStringOrNull(value: unknown): string | null {
+  return typeof value === 'string' ? value : null;
+}
+
+function readNumber(value: unknown): number {
+  return typeof value === 'number' ? value : 0;
+}
+
+function readBoolean(value: unknown): boolean {
+  return typeof value === 'boolean' ? value : false;
+}
+
+export function toSnakeDubRequest(request: DubJobRequest): Record<string, unknown> {
+  return {
+    source_url: request.sourceUrl,
+    source_language: request.sourceLanguage,
+    target_language: request.targetLanguage,
+    tts_provider: request.ttsProvider,
+    tts_voice_id: request.ttsVoiceId ?? null,
+    tts_style: request.ttsStyle ?? null,
+    tts_speed: request.ttsSpeed,
+    separate_vocals: request.separateVocals,
+    bilingual_subtitles: request.bilingualSubtitles,
+    compose_video: request.composeVideo,
+  };
+}
+
+export function fromSnakeJobResponse(body: unknown): DubJobResponse {
+  const record = asRecord(body);
+  return {
+    jobId: typeof record.job_id === 'string' ? record.job_id : '',
+    status: (typeof record.status === 'string' ? record.status : 'queued') as DubJobStatus,
+    message: typeof record.message === 'string' ? record.message : '',
+  };
+}
+
+export function fromSnakeProgress(body: unknown): DubJobProgress {
+  const record = asRecord(body);
+  const message = typeof record.message === 'string' && record.message.length > 0
+    ? record.message
+    : undefined;
+  return {
+    phase: typeof record.stage === 'string' ? record.stage : '',
+    percent: readNumber(record.percent),
+    ...(message !== undefined ? { message } : {}),
+  };
+}
+
+export function fromSnakeJobStatus(body: unknown): DubJobStatusResponse {
+  const record = asRecord(body);
+  const progress = record.progress === null || record.progress === undefined
+    ? null
+    : fromSnakeProgress(record.progress);
+  return {
+    jobId: typeof record.job_id === 'string' ? record.job_id : '',
+    status: (typeof record.status === 'string' ? record.status : 'queued') as DubJobStatus,
+    progress,
+    resultUrl: readStringOrNull(record.result_url),
+    error: readStringOrNull(record.error),
+  };
+}
+
+export function fromSnakeHardware(body: unknown): DubHardwareProfile {
+  const record = asRecord(body);
+  const diskFreeGb: Record<string, number> = {};
+  const rawDisk = record.disk_free_gb;
+  if (rawDisk && typeof rawDisk === 'object' && !Array.isArray(rawDisk)) {
+    for (const [key, value] of Object.entries(rawDisk as Record<string, unknown>)) {
+      if (typeof value === 'number') diskFreeGb[key] = value;
+    }
+  }
+  return {
+    cpuCores: readNumber(record.cpu_cores),
+    cpuThreads: readNumber(record.cpu_threads),
+    cpuAvx2: readBoolean(record.cpu_avx2),
+    cpuAvx512: readBoolean(record.cpu_avx512),
+    ramTotalGb: readNumber(record.ram_total_gb),
+    ramFreeGb: readNumber(record.ram_free_gb),
+    gpuName: readStringOrNull(record.gpu_name),
+    gpuVramGb: typeof record.gpu_vram_gb === 'number' ? record.gpu_vram_gb : null,
+    cudaVersion: readStringOrNull(record.cuda_version),
+    gpuComputeCapability: readStringOrNull(record.gpu_compute_capability),
+    diskFreeGb,
+    tier: typeof record.tier === 'string' ? record.tier : 'unknown',
+    tierDescription: typeof record.tier_description === 'string' ? record.tier_description : '',
+  };
+}
+
+export function fromSnakeBenchmark(body: unknown): DubBenchmarkResponse {
+  const record = asRecord(body);
+  return {
+    asrTimeSeconds: readNumber(record.asr_time_seconds),
+    translationTimeSeconds: readNumber(record.translation_time_seconds),
+    ttsTimeSeconds: readNumber(record.tts_time_seconds),
+    separationTimeSeconds: readNumber(record.separation_time_seconds),
+    totalTimeSeconds: readNumber(record.total_time_seconds),
+    tier: typeof record.tier === 'string' ? record.tier : 'unknown',
+  };
 }

@@ -53,6 +53,20 @@ export type DubEngineServiceOptions = {
   onEngineCrashed?: (error: Error) => void;
 };
 
+export type {
+  DubJobRequest,
+  DubJobStatus,
+  DubJobProgress,
+  DubJobResponse,
+  DubJobStatusResponse,
+  DubHardwareProfile,
+  DubBenchmarkResponse,
+  DubEngineHealth,
+  DubEngineClient,
+  defaultDubEngineConfig,
+};
+export { DubEngineError };
+
 export class DubEngineService {
   private config: DubEngineConfig;
   private client: DubEngineClient;
