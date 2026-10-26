@@ -50,6 +50,30 @@ export function createCreatorServicesService(client: ClientLike) {
       if (model?.trim()) query.set('model', model.trim());
       return client.get(`/creator-services/tts/voices?${query.toString()}`);
     },
+    testDubEngineConnection(config: {
+      mode: 'local' | 'remote';
+      url: string;
+      port: number;
+      token: string;
+    }): Promise<{
+      connected: boolean;
+      version?: string;
+      tier?: string;
+      ramTotalGb?: number;
+      ramFreeGb?: number;
+      gpuName?: string | null;
+    }> {
+      return client.rawRequest('/creator-services/dub-engine/test', {
+        method: 'POST',
+        body: config
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        return response.json();
+      });
+    },
     previewTtsVoice(request: CreatorTtsPreviewRequest): Promise<Response> {
       return client.rawRequest('/creator-services/tts/preview', {
         method: 'POST',

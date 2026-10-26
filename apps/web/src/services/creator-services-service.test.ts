@@ -76,4 +76,44 @@ describe('creator services service', () => {
       }
     });
   });
+
+  it('POSTs dub engine connection test to the Runtime', async () => {
+    const rawRequest = vi.fn(async (_path: string, init: { method: string; body: unknown }) => {
+      if (_path === '/creator-services/dub-engine/test') {
+        return Promise.resolve(new Response(JSON.stringify({
+          connected: true,
+          version: '0.1.0',
+          tier: 'T1',
+          ramTotalGb: 31.8,
+          ramFreeGb: 17.7,
+          gpuName: null
+        })));
+      }
+      throw new Error(`unexpected path ${_path}`);
+    });
+    const service = createCreatorServicesService({
+      get: async () => { throw new Error('unexpected get'); },
+      patch: async () => { throw new Error('unexpected patch'); },
+      delete: async () => { throw new Error('unexpected delete'); },
+      rawRequest
+    });
+    const result = await service.testDubEngineConnection({
+      mode: 'local',
+      url: 'http://127.0.0.1:8765',
+      port: 8765,
+      token: ''
+    });
+    expect(rawRequest).toHaveBeenCalledWith('/creator-services/dub-engine/test', {
+      method: 'POST',
+      body: { mode: 'local', url: 'http://127.0.0.1:8765', port: 8765, token: '' }
+    });
+    expect(result).toEqual({
+      connected: true,
+      version: '0.1.0',
+      tier: 'T1',
+      ramTotalGb: 31.8,
+      ramFreeGb: 17.7,
+      gpuName: null
+    });
+  });
 });

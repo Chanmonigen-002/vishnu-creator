@@ -34,6 +34,7 @@ import {
   Languages,
   LoaderCircle,
   Mic2,
+  RefreshCcw,
   RotateCcw,
   Save
 } from 'lucide-react';
@@ -54,7 +55,7 @@ const CodexImageStatusNotice = lazy(async () => {
   return { default: module.CodexImageStatusNotice };
 });
 
-export type CreatorServicesSection = 'text' | 'transcription' | 'tts' | 'image' | 'video';
+export type CreatorServicesSection = 'text' | 'transcription' | 'tts' | 'image' | 'video' | 'dubEngine';
 type ModelSettingsService = Pick<ConnectionService, 'getCodexProvider' | 'updateCodexProvider'> & {
   getCodexModels?: ConnectionService['getCodexModels'];
 };
@@ -92,6 +93,37 @@ export function CreatorServicesSettingsView(props: {
   const [modelFieldErrors, setModelFieldErrors] = useState<ModelFieldErrors>({});
   const [notice, setNotice] = useState<string>();
   const [reloadToken, setReloadToken] = useState(0);
+  const [dubEngineTest, setDubEngineTest] = useState<{
+    connected: boolean;
+    version?: string;
+    tier?: string;
+    ramTotalGb?: number;
+    ramFreeGb?: number;
+    gpuName?: string | null;
+  } | null>(null);
+  const [dubEngineTesting, setDubEngineTesting] = useState(false);
+  const [dubEngineTestError, setDubEngineTestError] = useState<string>();
+
+  async function testDubEngine() {
+    if (config === undefined || props.service === null) return;
+    const engine = config.dubEngine;
+    setDubEngineTesting(true);
+    setDubEngineTestError(undefined);
+    setDubEngineTest(null);
+    try {
+      const result = await props.service.testDubEngineConnection({
+        mode: engine.mode,
+        url: engine.url,
+        port: engine.port,
+        token: engine.token
+      });
+      setDubEngineTest(result);
+    } catch (cause) {
+      setDubEngineTestError(cause instanceof Error ? cause.message : 'Dub engine connection test failed');
+    } finally {
+      setDubEngineTesting(false);
+    }
+  }
   const pageIssues = usePageIssueState('settings-creator-services');
 
   useEffect(() => {
@@ -212,6 +244,7 @@ export function CreatorServicesSettingsView(props: {
     { id: 'text', label: l('模型服务', 'Models'), icon: Languages },
     { id: 'transcription', label: l('语音识别', 'Transcription'), icon: Mic2 },
     { id: 'tts', label: l('配音服务', 'Voice'), icon: AudioLines },
+    { id: 'dubEngine', label: l('本地配音引擎', 'Dub Engine'), icon: HardDriveDownload },
     { id: 'image', label: l('图像生成', 'Images'), icon: Image },
     { id: 'video', label: l('视频生成', 'Video'), icon: Clapperboard }
   ];
@@ -471,6 +504,16 @@ export function CreatorServicesSettingsView(props: {
           ) : null}
           {activeSection === 'video' ? (
             <VideoSettings config={config} update={updateConfig} configuredCredentials={configuredCredentials} />
+          ) : null}
+          {activeSection === 'dubEngine' ? (
+            <DubEngineSettings
+              config={config}
+              update={updateConfig}
+              testing={dubEngineTesting}
+              result={dubEngineTest}
+              error={dubEngineTestError}
+              onTest={testDubEngine}
+            />
           ) : null}
 
           <footer className="creator-services-actions">
@@ -1777,4 +1820,138 @@ function formatRuntimeLabel(platform: string, arch: string): string {
         ? 'ARM64'
         : arch;
   return `${platformLabel} · ${archLabel}`;
+}
+
+function DubEngineSettings(props: {
+  config: { dubEngine: NonNullable<CreatorServicesConfig>['dubEngine'] };
+  update: (mutator: (draft: CreatorServicesConfig) => void) => void;
+  testing: boolean;
+  result: {
+    connected: boolean;
+    version?: string;
+    tier?: string;
+    ramTotalGb?: number;
+    ramFreeGb?: number;
+    gpuName?: string | null;
+  } | null;
+  error: string | undefined;
+  onTest(): void;
+}) {
+  const l = useLocalizedCopy();
+  const engine = props.config.dubEngine;
+  const local = engine.mode === 'local';
+  return (
+    <div className="creator-services-panel creator-services-dub-engine">
+      <h2>
+        <HardDriveDownload size={17} strokeWidth={1.8} aria-hidden="true" />
+        {l('本地配音引擎', 'Local / Remote Dub Engine')}
+      </h2>
+      <p>{l(
+        '将视频配音任务交给本地或远程运行的 Vishnu Dub 引擎；关闭后，配音使用云端 TTS 合成。',
+        'Send dubbing jobs to a local or remote Vishnu Dub engine; when off, cloud TTS synthesis is used.'
+      )}</p>
+      <div className="settings-field">
+        <label>
+          <input
+            type="checkbox"
+            checked={engine.enabled}
+            onChange={event => props.update(draft => { draft.dubEngine.enabled = event.target.checked; })}
+          />
+          {l('启用本地/远程配音引擎', 'Enable dub engine')}
+        </label>
+      </div>
+      <div className="settings-field">
+        <label>{l('运行模式', 'Mode')}</label>
+        <AppSelect
+          value={engine.mode}
+          onChange={event => props.update(draft => { draft.dubEngine.mode = event.target.value as 'local' | 'remote'; })}
+        >
+          <option value="local">{l('本地引擎 (127.0.0.1)', 'Local engine (127.0.0.1)')}</option>
+          <option value="remote">{l('远程引擎 (URL + 令牌)', 'Remote engine (URL + token)')}</option>
+        </AppSelect>
+      </div>
+      {local ? (
+        <>
+          <div className="settings-field">
+            <label>{l('监听端口', 'Port')}</label>
+            <input
+              type="number"
+              min={1}
+              max={65535}
+              value={engine.port}
+              onChange={event => props.update(draft => {
+                draft.dubEngine.port = Number(event.target.value) || 8765;
+              })}
+            />
+          </div>
+          <div className="settings-field">
+            <label>{l('Python 路径', 'Python path')}</label>
+            <input
+              value={engine.pythonPath}
+              onChange={event => props.update(draft => { draft.dubEngine.pythonPath = event.target.value; })}
+            />
+          </div>
+          <div className="settings-field">
+            <label>{l('引擎目录', 'Engine directory')}</label>
+            <input
+              value={engine.enginePath}
+              onChange={event => props.update(draft => { draft.dubEngine.enginePath = event.target.value; })}
+            />
+          </div>
+          <div className="settings-field">
+            <label>
+              <input
+                type="checkbox"
+                checked={engine.autoStart}
+                onChange={event => props.update(draft => { draft.dubEngine.autoStart = event.target.checked; })}
+              />
+              {l('Runtime 启动时自动启动引擎', 'Auto-start engine with Runtime')}
+            </label>
+          </div>
+        </>
+      ) : (
+        <div className="settings-field">
+          <label>{l('引擎地址', 'Engine URL')}</label>
+          <input
+            value={engine.url}
+            onChange={event => props.update(draft => { draft.dubEngine.url = event.target.value; })}
+          />
+        </div>
+      )}
+      <div className="settings-field">
+        <label>{l('访问令牌', 'Access token')}</label>
+        <input
+          type="password"
+          value={engine.token}
+          onChange={event => props.update(draft => { draft.dubEngine.token = event.target.value; })}
+        />
+      </div>
+      <div className="settings-field settings-actions">
+        <button
+          className="settings-secondary-button"
+          type="button"
+          disabled={props.testing}
+          onClick={props.onTest}
+        >
+          {props.testing ? (
+            <LoaderCircle className="creator-services-spinner" size={15} aria-hidden="true" />
+          ) : (
+            <RefreshCcw size={15} aria-hidden="true" />
+          )}
+          {props.testing ? l('测试中', 'Testing') : l('测试连接', 'Test Connection')}
+        </button>
+        {props.error !== undefined ? (
+          <p className="settings-error" role="alert">{props.error}</p>
+        ) : null}
+        {props.result !== null && props.result.connected ? (
+          <div className="settings-notice" role="status">
+            <Check size={14} aria-hidden="true" />
+            {l('已连接', 'Connected')} — {props.result.version ?? ''}
+            {props.result.tier !== undefined ? ` · ${l('算力等级', 'Tier')} ${props.result.tier}` : ''}
+            {props.result.ramTotalGb !== undefined ? ` · ${l('内存', 'RAM')} ${props.result.ramTotalGb.toFixed(1)} GB` : ''}
+          </div>
+        ) : null}
+      </div>
+    </div>
+  );
 }
