@@ -29,6 +29,7 @@ open-design-main/
 /codex/
 /runtime/vishnuai/bin/
 /runtime/vishnuai/models/
+/models/
 /runtime/vishnuai/uploads/
 /runtime/vishnuai/config/config.toml
 /apps/daemon/.runtime-test-*/

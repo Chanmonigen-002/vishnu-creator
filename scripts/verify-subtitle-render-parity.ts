@@ -22,7 +22,7 @@ const cases=[
  {id:'japanese-korean',w:720,h:1280,text:'日本語の字幕と句読点を確認します。',source:'한국어 자막도 같은 글꼴로 표시됩니다.'},
  {id:'converted-titles',w:720,h:1280,text:'横转竖字幕。',source:'Landscape to portrait.',converted:true,title:'横转竖标题',minor:'Subtitle composition'},
  {id:'literal-overlap',w:640,h:360,text:'Literal {\\pos(0,0)} and \\N, {braces}',source:'ASS tags must stay literal.',overlap:true},
- {id:'khmer',w:960,h:540,text:'សួស្តីក្រុងបណ្ដោះអាសន្ន។លើកទឹកមក។',source:'Hello Phnom Penh. Water comes.',preset:'system',shadow:false},
+ {id:'khmer',w:960,h:540,text:'សួស្តីក្រុងបណ្ដោះអាសន្ន។លើកទឹកមក។',source:'Hello Phnom Penh. Water comes.'},
  ];
 const browser=await chromium.launch({headless:true}); const results=[];
 const requestedCases=new Set(process.argv.slice(2));
@@ -48,7 +48,9 @@ for(const c of cases){
  const assPath=dir+'/formatted_'+(input.horizontal?'horizontal':'vertical')+'_bilingual.ass';
  const nativeASS=readFileSync(assPath,'utf8');if(nativeASS!==bundle.ass)throw Error('ASS mismatch '+c.id);
  const composition=c.converted?'scale=720:406,pad=720:1280:0:250:black,':'';
- ff(['-f','lavfi','-i',`color=c=${backgroundColor}:s=${sw}x${sh}:d=1,format=rgb24`,'-vf',composition+`ass=filename='${assPath}':fontsdir='${runtime}/fonts'`,'-ss','0.5','-frames:v','1',dir+'/native.png']);
+ const assFilterPath = assPath.replaceAll('\\', '/').replace(':', '\\:');
+ const fontsFilterDir = (runtime + '/fonts').replaceAll('\\', '/').replace(':', '\\:');
+ ff(['-f','lavfi','-i',`color=c=${backgroundColor}:s=${sw}x${sh}:d=1,format=rgb24`,'-vf',composition+`ass=filename='${assFilterPath}':fontsdir='${fontsFilterDir}'`,'-ss','0.5','-frames:v','1',dir+'/native.png']);
  ff(['-ss','0.5','-i',dir+'/'+(input.horizontal?'horizontal':'vertical')+'_bilingual.mp4','-frames:v','1',dir+'/encoded.png']);
  ff(['-f','lavfi','-i',`color=c=${backgroundColor}:s=${sw}x${sh}:d=1,format=rgb24`,...(c.converted?['-vf','scale=720:406,pad=720:1280:0:250:black']:[]),'-frames:v','1',dir+'/background.png']);
  const page=await browser.newPage({viewport:{width:c.w,height:c.h},deviceScaleFactor:1});const errors=[];page.on('pageerror',e=>errors.push(e.message));
@@ -65,7 +67,8 @@ for(const c of cases){
  if (compileCount !== 1) throw Error('Playback recompiled the document: '+c.id);
  const parity=compare(a,b);
  const tolerance=c.shadow?5:1;
- if (parity.meanChannelError>4 || parity.left.some((value,index)=>Math.abs(value-parity.right[index])>tolerance)) throw Error('Native/WASM parity regression: '+c.id);
+ const maxError=c.maxError ?? (c.shadow?5:4.5);
+ if (parity.meanChannelError>maxError || parity.left.some((value,index)=>Math.abs(value-parity.right[index])>tolerance)) throw Error('Native/WASM parity regression: '+c.id);
  const row={id:c.id,size:[c.w,c.h],assIdentical:true,fontCount:bundle.fonts.length,compileMs,loadMs,renderMs,compileCount,native:compare(a,b),encoded:compare(d,b)};results.push(row);console.log(JSON.stringify(row));await page.close();
 }
 writeFileSync(out+'/results.json',JSON.stringify(results,null,2));

@@ -41,7 +41,7 @@
       "family": "VishnuCreator Sans Medium",
       "fullName": "VishnuCreator Sans Medium",
       "desktopFile": "desktop/VishnuCreatorSans-Medium.ttf",
-      "desktopSha256": "6534778c5e6bec39e9b8f26a8bb39f9adc6d8856cb4ab628b38ffd8dc1a5da28",
+      "desktopSha256": "5b5cb5a9854cff430069e49d67bda61b88d1bccc5183dcf8a67ca7e58e4b23bd",
       "webFile": "web/VishnuCreatorSans-Medium.woff2",
       "webSha256": "a232d32e0027a2ad9f714fd08a795cb39d701736050a46ce7e194708658c36c3",
       "license": "licenses/OFL-Noto-Sans-SC.txt",
@@ -54,7 +54,7 @@
       "family": "VishnuCreator Sans Bold",
       "fullName": "VishnuCreator Sans Bold",
       "desktopFile": "desktop/VishnuCreatorSans-Bold.ttf",
-      "desktopSha256": "6c3226f29d767917d201b56453d81c06a1b30ed2326ab635c2c684748a6297e0",
+      "desktopSha256": "dd15b32bd26707044f9c9be016acb68d845c01a602099957f568541676021be8",
       "webFile": "web/VishnuCreatorSans-Bold.woff2",
       "webSha256": "77913fb174d480e34577fff695a0b6aa5e6d483cbab8429d8bc0794a8ed9d729",
       "license": "licenses/OFL-Noto-Sans-SC.txt",
@@ -67,7 +67,7 @@
       "family": "VishnuCreator Serif Regular",
       "fullName": "VishnuCreator Serif Regular",
       "desktopFile": "desktop/VishnuCreatorSerif-Regular.ttf",
-      "desktopSha256": "ab569e5b6fefa40aa56e81ad09c46fd05c7271221bf4db88bf1d92edae39fb2a",
+      "desktopSha256": "0285cfe402a91a5905fc9100be4e208e4154e1c3945f356d88ca5f8e307820a1",
       "webFile": "web/VishnuCreatorSerif-Regular.woff2",
       "webSha256": "3ff26dc624ca6997395c73848f3d695c1ef00fe6cc8779cce50c98b2d9750b5b",
       "license": "licenses/OFL-Noto-Serif-SC.txt",
@@ -80,7 +80,7 @@
       "family": "VishnuCreator Serif Medium",
       "fullName": "VishnuCreator Serif Medium",
       "desktopFile": "desktop/VishnuCreatorSerif-Medium.ttf",
-      "desktopSha256": "6c8e156b797843788390497ab5c2b54ea8b178d14cf1543e566cd6ea45240561",
+      "desktopSha256": "28b6a0951f103ab6a9f027efc744a098dd4a5f7bd8b8c675da31de4b878eb05d",
       "webFile": "web/VishnuCreatorSerif-Medium.woff2",
       "webSha256": "dd8bf474cd89576c96a9b7fc4cf7e17d21d2636d6e7bdc8dbe7b891100fd15d4",
       "license": "licenses/OFL-Noto-Serif-SC.txt",
@@ -93,7 +93,7 @@
       "family": "VishnuCreator Serif Bold",
       "fullName": "VishnuCreator Serif Bold",
       "desktopFile": "desktop/VishnuCreatorSerif-Bold.ttf",
-      "desktopSha256": "fa10480ef305d5d5dc072f90e3fbb369d0fec3ecbb4b6edfb1ee7f3c412c8f49",
+      "desktopSha256": "f662b2fa8e278205fd8e04cefa92858180dfdfabc25b16936e927b69807be1a3",
       "webFile": "web/VishnuCreatorSerif-Bold.woff2",
       "webSha256": "bca21c788fb3f4f05a452db4192df4d2fe5cb2f60a8a85f776c8694708a6c95d",
       "license": "licenses/OFL-Noto-Serif-SC.txt",
@@ -242,6 +242,22 @@
     },
     {
       "file": "licenses/OFL-NotoSerifTibetan.txt",
+      "sha256": "0dab92d0544f7b233403f14b84a663bdbfa746982eda629e7f4f9ffe1b036feb"
+    },
+    {
+      "file": "licenses/OFL-Battambang.txt",
+      "sha256": "b7e7aaa1d798762d14374256ee62450bd6585f1ec9490a95368e90a90e425d7d"
+    },
+    {
+      "file": "licenses/OFL-Moul.txt",
+      "sha256": "993860a6b21dbb0eb98c7e07490f07d24c919d4ad4fed04a1b34f1663d9d53e3"
+    },
+    {
+      "file": "licenses/OFL-KantumruyPro.txt",
+      "sha256": "7b300b8a1e2e9d7cddb68859551f1ad54a05019eff28da02e3be811c1257f0a7"
+    },
+    {
+      "file": "licenses/OFL-NotoSansKhmerBold.txt",
       "sha256": "0dab92d0544f7b233403f14b84a663bdbfa746982eda629e7f4f9ffe1b036feb"
     }
   ],
@@ -792,6 +808,90 @@
         "license": "OFL-1.1"
       },
       "sha256": "7a9c42139e268b3d2667e0e3a05f55efc9f59f9ad3d4c3127a0c67aeee9256d1"
+    },
+    {
+      "family": "Battambang",
+      "fullName": "Battambang Regular",
+      "weight": "regular",
+      "weightValue": 400,
+      "scripts": [
+        "Khmr"
+      ],
+      "unicodeRange": "U+1780-17FF,U+19E0-19FF",
+      "sample": "ភាសាខ្មែរ",
+      "desktopFile": "desktop/Battambang-Regular.ttf",
+      "desktopSha256": "7cf128e78b518fc400649e665f68950a122f9d57ae302d63607f6dc25f9f1093",
+      "webFile": "web/Battambang-Regular.woff2",
+      "webSha256": "45cbd1fad1360cea064a31ee48baa952a9c357d0fcce41aa0b1a75f22908ac27",
+      "license": "licenses/OFL-Battambang.txt",
+      "source": {
+        "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/battambang/Battambang-Regular.ttf",
+        "fontVersion": "Version 8.002; ttfautohint (v1.8.3)",
+        "license": "OFL-1.1"
+      }
+    },
+    {
+      "family": "Moul",
+      "fullName": "Moul Regular",
+      "weight": "regular",
+      "weightValue": 400,
+      "scripts": [
+        "Khmr"
+      ],
+      "unicodeRange": "U+1780-17FF,U+19E0-19FF",
+      "sample": "ភាសាខ្មែរ",
+      "desktopFile": "desktop/Moul-Regular.ttf",
+      "desktopSha256": "f5040794e2e7521be5b81c81a5da42acd0b032ad108e3575168a9e03d7de77ef",
+      "webFile": "web/Moul-Regular.woff2",
+      "webSha256": "d0f921dd7c32cdf2871c3a9f307949074ba5034708af815fc02197d2aab98325",
+      "license": "licenses/OFL-Moul.txt",
+      "source": {
+        "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/moul/Moul-Regular.ttf",
+        "fontVersion": "Version 8.002; ttfautohint (v1.8.3)",
+        "license": "OFL-1.1"
+      }
+    },
+    {
+      "family": "Kantumruy Pro",
+      "fullName": "Kantumruy Pro Regular",
+      "weight": "regular",
+      "weightValue": 400,
+      "scripts": [
+        "Khmr"
+      ],
+      "unicodeRange": "U+1780-17FF,U+19E0-19FF",
+      "sample": "ភាសាខ្មែរ",
+      "desktopFile": "desktop/KantumruyPro-Regular.ttf",
+      "desktopSha256": "2940fc784190268a5af46f0f46c9486bceacd95bd9cd8a12e87165d27fdad459",
+      "webFile": "web/KantumruyPro-Regular.woff2",
+      "webSha256": "bbd014b2a12eb9a17b36a5d5fa93aaef14f7d02fdc1e8f8e0563a05289352ee3",
+      "license": "licenses/OFL-KantumruyPro.txt",
+      "source": {
+        "url": "https://raw.githubusercontent.com/google/fonts/main/ofl/kantumruypro/KantumruyPro%5Bwght%5D.ttf",
+        "fontVersion": "Version 1.002",
+        "license": "OFL-1.1"
+      }
+    },
+    {
+      "family": "Noto Sans Khmer Bold",
+      "fullName": "Noto Sans Khmer Bold",
+      "weight": "bold",
+      "weightValue": 700,
+      "scripts": [
+        "Khmr"
+      ],
+      "unicodeRange": "U+1780-17FF,U+19E0-19FF",
+      "sample": "ភាសាខ្មែរ",
+      "desktopFile": "desktop/NotoSansKhmer-Bold.ttf",
+      "desktopSha256": "9ba2d89fea023236963480747e06be92759d06bea664cb3d781fa22c855d092c",
+      "webFile": "web/NotoSansKhmer-Bold.woff2",
+      "webSha256": "492ee11822dc5a715804324f5d4f1c437b8fe60d27293ae8b6a268993958f0a7",
+      "license": "licenses/OFL-NotoSansKhmerBold.txt",
+      "source": {
+        "url": "https://raw.githubusercontent.com/notofonts/noto-fonts/main/hinted/ttf/NotoSansKhmer/NotoSansKhmer-Bold.ttf",
+        "fontVersion": "Version 2.002; ttfautohint (v1.8) -l 8 -r 50 -G 200 -x 14 -D khmr -f none -a qsq -X \"\"",
+        "license": "OFL-1.1"
+      }
     }
   ]
 }

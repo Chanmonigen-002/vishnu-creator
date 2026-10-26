@@ -12,7 +12,7 @@ describe('packaged multilingual subtitle fonts', () => {
   it('preserves nine presets and validates fallback coverage, shaping, hashes and licenses', () => {
     expect(manifest.version).toBe(2);
     expect(manifest.fonts).toHaveLength(9);
-    expect(manifest.fallbackFonts).toHaveLength(23);
+    expect(manifest.fallbackFonts).toHaveLength(27);
     for (const entry of entries) {
       for (const kind of ['desktop', 'web']) {
         const path = resolve(root, entry[`${kind}File`]);
