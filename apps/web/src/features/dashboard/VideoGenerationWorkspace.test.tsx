@@ -10,6 +10,7 @@ import type {
   CreatorStageRun,
   GatewayAccountState
 } from '@vishnucreator/protocol';
+import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import type { ReactNode } from 'react';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
@@ -963,6 +964,7 @@ function createVideoConfig() {
         appId: ''
       }
     },
+    dubEngine: createDefaultCreatorServicesConfig().dubEngine,
     image: {
       provider: 'openai' as const,
       openai: { baseUrl: '', apiKey: '', model: '' },
