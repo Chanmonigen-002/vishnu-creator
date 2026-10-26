@@ -62,10 +62,8 @@ export type {
   DubHardwareProfile,
   DubBenchmarkResponse,
   DubEngineHealth,
-  DubEngineClient,
-  defaultDubEngineConfig,
 };
-export { DubEngineError };
+export { DubEngineError, DubEngineClient, defaultDubEngineConfig };
 
 export class DubEngineService {
   private config: DubEngineConfig;
