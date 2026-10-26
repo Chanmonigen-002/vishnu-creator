@@ -15,6 +15,31 @@ export type CreatorTtsProvider = (typeof creatorTtsProviders)[number];
 export const creatorDubEngineProviders = ['local-engine', 'remote-engine'] as const;
 export type CreatorDubEngineProvider = (typeof creatorDubEngineProviders)[number];
 
+export const creatorVoiceKinds = ['preset', 'cloned', 'designed'] as const;
+export type CreatorVoiceKind = (typeof creatorVoiceKinds)[number];
+
+export function isCreatorVoiceKind(value: unknown): value is CreatorVoiceKind {
+  return creatorVoiceKinds.some(kind => kind === value);
+}
+
+export type CreatorDubEngineCapabilities = {
+  transcription: boolean;
+  translation: boolean;
+  tts: boolean;
+  vocalSeparation: boolean;
+  videoComposition: boolean;
+  benchmark: boolean;
+};
+
+export const defaultCreatorDubEngineCapabilities = (): CreatorDubEngineCapabilities => ({
+  transcription: true,
+  translation: true,
+  tts: true,
+  vocalSeparation: true,
+  videoComposition: true,
+  benchmark: true,
+});
+
 export function isCreatorDubEngineProvider(value: unknown): value is CreatorDubEngineProvider {
   return creatorDubEngineProviders.some(provider => provider === value);
 }
