@@ -170,7 +170,7 @@ async function runEngineDub(
         throw new CreatorExecutorError('creator_stage_canceled', 'Creator stage was canceled');
       }
       stage.reportProgress({
-        phase: progress.phase,
+        phase: mapEngineStageToCreatorPhase(progress.phase),
         percent: Math.min(95, 20 + Math.floor(progress.percent * 0.75)),
         ...(progress.message !== undefined ? { message: progress.message } : {})
       });
@@ -290,4 +290,22 @@ function readRequest(state: Record<string, CreatorJson>): {
 
 function readString(value: CreatorJson | undefined): string | undefined {
   return typeof value === 'string' && value.trim().length > 0 ? value.trim() : undefined;
+}
+
+// Maps engine pipeline stages (vishnu_dub/jobs.py) to creator progress phases
+// per phase-3 task T3.7: validate → transcribe → translate → fit →
+// synthesize → mix → assemble.
+const ENGINE_STAGE_TO_CREATOR_PHASE: Readonly<Record<string, string>> = {
+  initializing: 'validating',
+  download: 'downloading_source',
+  asr: 'transcribing',
+  translation: 'translating',
+  tts: 'synthesizing_voice',
+  separation: 'mixing',
+  assembly: 'assembling',
+  completed: 'completed'
+};
+
+function mapEngineStageToCreatorPhase(stage: string): string {
+  return ENGINE_STAGE_TO_CREATOR_PHASE[stage] ?? stage;
 }
