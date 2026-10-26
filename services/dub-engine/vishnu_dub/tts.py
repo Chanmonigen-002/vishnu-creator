@@ -230,6 +230,13 @@ class VoxCPM2Backend(TTSBackend):
         self._model = None
         self._khmer_lora = False
 
+    def unload(self) -> None:
+        if self._model is not None:
+            self._model = None
+            self._khmer_lora = False
+            import gc
+            gc.collect()
+
     def is_available(self) -> bool:
         try:
             import torch

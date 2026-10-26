@@ -402,6 +402,10 @@ class JobManager:
                     json.dump(source_segments, f, ensure_ascii=False, indent=2)
                 self._write_srt(source_srt, source_segments)
                 job.asr_time = time.time() - asr_start
+                if hasattr(asr_backend, "unload"):
+                    asr_backend.unload()
+                from vishnu_dub.models import ModelManager
+                ModelManager.get_instance().release_current_model()
 
             job.srt_path = str(source_srt)
             write_checkpoint("asr")
@@ -511,6 +515,10 @@ class JobManager:
                     raise RuntimeError(f"Failed to concatenate TTS segments: {stderr.decode(errors='replace')}")
 
             job.tts_time = time.time() - tts_start
+            if hasattr(tts_backend, "unload"):
+                tts_backend.unload()
+            from vishnu_dub.models import ModelManager
+            ModelManager.get_instance().release_current_model()
 
             # Stage 5: Vocal / BGM separation (when enabled and Demucs is available)
             instrumental_path: Optional[Path] = None
@@ -525,6 +533,7 @@ class JobManager:
                     job.music_path = str(sep_result.instrumental_path)
                     instrumental_path = sep_result.instrumental_path
                     job.separation_time = time.time() - sep_start
+                    ModelManager.get_instance().release_current_model()
                 write_checkpoint("separation", completed_tts_segments=len(km_segments))
 
             # Stage 6: Audio Mixing & Video Assembly

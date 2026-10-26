@@ -163,28 +163,28 @@ def detect_hardware() -> HardwareProfile:
 
     # Tier assignment (per ADR-0003 & master-plan §2A)
     tier = "T0"
-    tier_description = "Minimal — API-only mode, no local models"
+    tier_description = "Minimal - API-only mode, no local models"
     recommended_tts = "edge-tts"
     recommended_whisper = "openai-whisper-api"
 
     if gpu_vram_gb is not None and gpu_vram_gb >= 12:
         tier = "T3"
-        tier_description = "High — GPU ≥ 12 GB VRAM, all local models"
+        tier_description = "High - GPU >= 12 GB VRAM, all local models"
         recommended_tts = "voxcpm2"
         recommended_whisper = "faster-whisper-large-v3-turbo-fp16"
     elif gpu_vram_gb is not None and gpu_vram_gb >= 8:
         tier = "T2"
-        tier_description = "Mid — GPU 8–12 GB VRAM, int8 models, one at a time"
+        tier_description = "Mid - GPU 8-12 GB VRAM, int8 models, one at a time"
         recommended_tts = "voxcpm2"
         recommended_whisper = "faster-whisper-large-v3-turbo-int8"
     elif ram_total_gb >= 16:
         tier = "T1"
-        tier_description = "Low — GPU < 8 GB or CPU only, RAM ≥ 16 GB, one model at a time"
+        tier_description = "Low - GPU < 8 GB or CPU only, RAM >= 16 GB, one model at a time"
         recommended_tts = "edge-tts"
         recommended_whisper = "faster-whisper-small-int8"
     else:
         tier = "T0"
-        tier_description = "Minimal — RAM < 16 GB, API-only mode"
+        tier_description = "Minimal - RAM < 16 GB, API-only mode"
         recommended_tts = "edge-tts"
         recommended_whisper = "openai-whisper-api"
 

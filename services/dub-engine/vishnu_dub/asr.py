@@ -62,6 +62,12 @@ class FasterWhisperBackend(ASRBackend):
     def name(self) -> str:
         return "faster-whisper"
 
+    def unload(self) -> None:
+        if self._model is not None:
+            self._model = None
+            import gc
+            gc.collect()
+
     async def transcribe(
         self,
         audio_path: Path,
@@ -72,9 +78,10 @@ class FasterWhisperBackend(ASRBackend):
             raise RuntimeError("faster-whisper not installed")
 
         from faster_whisper import WhisperModel
+        from vishnu_dub.models import select_device_and_threads
 
         if self._model is None:
-            device = "cuda" if self.config.enable_gpu else "cpu"
+            device, cores = select_device_and_threads(enable_gpu=self.config.enable_gpu)
             compute_type = "float16" if device == "cuda" else "int8"
             whisper_dir = self.settings.model_store_path / "whisper"
             whisper_dir.mkdir(parents=True, exist_ok=True)
@@ -82,6 +89,7 @@ class FasterWhisperBackend(ASRBackend):
                 self.config.whisper_cpp_model,
                 device=device,
                 compute_type=compute_type,
+                cpu_threads=cores,
                 download_root=str(whisper_dir),
             )
 

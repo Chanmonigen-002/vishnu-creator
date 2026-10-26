@@ -142,8 +142,8 @@ class Settings(BaseSettings):
     tts: TTSConfig = Field(default_factory=TTSConfig)
     image: ImageConfig = Field(default_factory=ImageConfig)
 
-    # Model store path (defaults to largest free drive)
-    model_store_path: Path = Path.cwd() / "models"
+    # Model store path (defaults to largest free drive via resolve_model_store_path)
+    model_store_path: Path = Field(default_factory=lambda: __import__("vishnu_dub.models", fromlist=["resolve_model_store_path"]).resolve_model_store_path())
 
     # Job store path
     jobs_path: Path = Path.cwd() / "jobs"
