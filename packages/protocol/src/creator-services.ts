@@ -12,6 +12,75 @@ export type OpenAiCompatibleConfig = {
 export const creatorTtsProviders = ['openai', 'aliyun', 'edge-tts', 'minimax', 'volcengine'] as const;
 export type CreatorTtsProvider = (typeof creatorTtsProviders)[number];
 
+export const creatorDubEngineProviders = ['local-engine', 'remote-engine'] as const;
+export type CreatorDubEngineProvider = (typeof creatorDubEngineProviders)[number];
+
+export function isCreatorDubEngineProvider(value: unknown): value is CreatorDubEngineProvider {
+  return creatorDubEngineProviders.some(provider => provider === value);
+}
+
+export type CreatorDubEngineConfig = {
+  enabled: boolean;
+  mode: 'local' | 'remote';
+  url: string;
+  port: number;
+  token: string;
+  enginePath: string;
+  pythonPath: string;
+  autoStart: boolean;
+};
+
+export type DubJobStatus = 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
+
+export type DubJobProgress = {
+  phase: string;
+  percent: number;
+  message?: string;
+};
+
+export type DubJobRequest = {
+  sourceUrl: string;
+  sourceLanguage: string;
+  targetLanguage: string;
+  ttsProvider: string;
+  ttsVoiceId?: string;
+  ttsStyle?: string;
+  ttsSpeed: number;
+  separateVocals: boolean;
+  bilingualSubtitles: boolean;
+  composeVideo: boolean;
+};
+
+export type DubJobResponse = {
+  jobId: string;
+  status: DubJobStatus;
+  message: string;
+};
+
+export type DubJobStatusResponse = {
+  jobId: string;
+  status: DubJobStatus;
+  progress: DubJobProgress | null;
+  resultUrl: string | null;
+  error: string | null;
+};
+
+export type DubHardwareProfile = {
+  cpuCores: number;
+  cpuThreads: number;
+  cpuAvx2: boolean;
+  cpuAvx512: boolean;
+  ramTotalGb: number;
+  ramFreeGb: number;
+  gpuName: string | null;
+  gpuVramGb: number | null;
+  cudaVersion: string | null;
+  gpuComputeCapability: string | null;
+  diskFreeGb: Record<string, number>;
+  tier: string;
+  tierDescription: string;
+};
+
 export function isCreatorTtsProvider(value: unknown): value is CreatorTtsProvider {
   return creatorTtsProviders.some(provider => provider === value);
 }
@@ -148,6 +217,7 @@ export type CreatorServicesConfig = {
     kling: KlingAiConfig;
     veo: OpenAiCompatibleConfig;
   };
+  dubEngine: CreatorDubEngineConfig;
 };
 
 export type CreatorServicesConfigResponse = {
@@ -262,7 +332,8 @@ export type CreatorServicesCredentialField =
   | 'video.seedance.apiKey'
   | 'video.kling.accessKey'
   | 'video.kling.secretKey'
-  | 'video.veo.apiKey';
+  | 'video.veo.apiKey'
+  | 'dubEngine.token';
 
 export const defaultVolcengineSpeechBaseUrl = 'https://openspeech.bytedance.com';
 export const defaultVolcengineAsrResourceId = 'volc.seedasr.auc';
@@ -373,6 +444,16 @@ export function createDefaultCreatorServicesConfig(): CreatorServicesConfig {
         apiKey: '',
         model: defaultVideoGenerationModels.veo
       }
+    },
+    dubEngine: {
+      enabled: false,
+      mode: 'local',
+      url: 'http://127.0.0.1:8765',
+      port: 8765,
+      token: '',
+      enginePath: '',
+      pythonPath: '',
+      autoStart: false
     }
   };
 }
