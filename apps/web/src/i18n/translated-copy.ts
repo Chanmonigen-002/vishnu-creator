@@ -60,6 +60,8 @@ export function loadLanguageCatalog(language: AppLanguage): Promise<void> {
   if (pending !== undefined) return pending;
   const load = catalogLoaders[language as keyof typeof catalogLoaders]().then(module => {
     catalogs[language] = module.default;
+    translationCache.delete(language);
+    templateMatchers.delete(language);
   }).finally(() => {
     pendingCatalogs.delete(language);
   });
@@ -69,6 +71,7 @@ export function loadLanguageCatalog(language: AppLanguage): Promise<void> {
 
 type TemplateMatcher = { pattern: RegExp; slots: string[]; translation: string };
 const templateMatchers = new Map<AppLanguage, TemplateMatcher[]>();
+const translationCache = new Map<AppLanguage, Map<string, string>>();
 
 export function translateTraditionalChinese(english: string): string | undefined {
   const translated = translateEnglishCopy('zh-TW', english);
@@ -78,7 +81,19 @@ export function translateTraditionalChinese(english: string): string | undefined
 export function translateEnglishCopy(language: AppLanguage, english: string): string {
   const catalog = additionalLanguageCatalogs[language];
   if (!catalog) return english;
-  if (Object.hasOwn(catalog, english)) return catalog[english]!;
+  let cache = translationCache.get(language);
+  if (!cache) {
+    cache = new Map<string, string>();
+    translationCache.set(language, cache);
+  }
+  const cached = cache.get(english);
+  if (cached !== undefined) return cached;
+
+  if (Object.hasOwn(catalog, english)) {
+    const translation = catalog[english]!;
+    cache.set(english, translation);
+    return translation;
+  }
 
   let matchers = templateMatchers.get(language);
   if (!matchers) {
@@ -100,7 +115,10 @@ export function translateEnglishCopy(language: AppLanguage, english: string): st
   for (const { pattern, slots, translation } of matchers) {
     const match = pattern.exec(english);
     if (!match) continue;
-    return translation.replace(/\{\{\d+\}\}/g, slot => match[slots.indexOf(slot) + 1] ?? slot);
+    const result = translation.replace(/\{\{\d+\}\}/g, slot => match[slots.indexOf(slot) + 1] ?? slot);
+    cache.set(english, result);
+    return result;
   }
+  cache.set(english, english);
   return english;
 }

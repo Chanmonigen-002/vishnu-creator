@@ -6,7 +6,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 
 export const DEFAULT_VISHNUCREATOR_APPLE_TEAM_ID = 'NVRH5R5DJ5';
-export const DEFAULT_NOTARY_KEYCHAIN_PROFILE = 'clawee-notary';
+export const DEFAULT_NOTARY_KEYCHAIN_PROFILE = 'vishnucreator-notary';
 
 // Prepare one keychain before standalone component signing and keep it alive
 // through Electron Builder. CSC_KEYCHAIN avoids a second certificate import.

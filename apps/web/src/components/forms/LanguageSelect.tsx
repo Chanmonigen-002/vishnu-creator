@@ -158,7 +158,17 @@ export default function LanguageSelect(props: {
       <div id={listId} role="listbox" aria-label={props.label}>
         {filtered.map((option, index) => <div key={option.value} id={optionId(index)} role="option" aria-selected={props.value === option.value}
           data-value={option.value} className={`language-select-option${index === currentIndex ? ' is-active' : ''}`}
-          onMouseDown={event => event.preventDefault()}
+          onMouseDown={event => {
+            event.preventDefault();
+            if (option.value !== 'system' && !hasLanguageCatalog(option.value)) {
+              void loadLanguageCatalog(option.value);
+            }
+          }}
+          onPointerEnter={() => {
+            if (option.value !== 'system' && !hasLanguageCatalog(option.value)) {
+              void loadLanguageCatalog(option.value);
+            }
+          }}
           onPointerMove={event => {
             if (event.pointerType === 'mouse') {
               setActiveIndex(index);

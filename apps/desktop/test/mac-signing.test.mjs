@@ -202,7 +202,7 @@ describe('macOS directory signing', () => {
     });
   });
 
-  it('supports the existing Clawee signing identity and notary profile locally', () => {
+  it('supports the release signing identity and notary profile locally', () => {
     const validateNotaryProfile = vi.fn();
     const result = configureMacReleaseSigning({
       platform: 'darwin',
@@ -216,13 +216,13 @@ describe('macOS directory signing', () => {
       mode: 'developer-id',
       teamId: 'NVRH5R5DJ5',
       identity,
-      notarizationArgs: ['--keychain-profile', 'clawee-notary']
+      notarizationArgs: ['--keychain-profile', 'vishnucreator-notary']
     });
     expect(result.builderEnv.CSC_NAME).toBe(
       'Junxi YIN (NVRH5R5DJ5)'
     );
     expect(validateNotaryProfile).toHaveBeenCalledWith(
-      'clawee-notary',
+      'vishnucreator-notary',
       undefined
     );
   });
@@ -251,8 +251,8 @@ describe('macOS directory signing', () => {
       {},
       'NVRH5R5DJ5'
     )).toEqual({
-      args: ['--keychain-profile', 'clawee-notary'],
-      profile: 'clawee-notary'
+      args: ['--keychain-profile', 'vishnucreator-notary'],
+      profile: 'vishnucreator-notary'
     });
   });
 

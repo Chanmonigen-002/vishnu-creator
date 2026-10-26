@@ -1456,6 +1456,7 @@ export function AppController(props: AppControllerProps) {
     };
   }, [connectionState.status, hostBridge, projectService, threadService]);
 
+  const creatorPresetLocale = language === 'zh-CN' ? 'zh-CN' : 'en-US';
   useEffect(() => {
     let canceled = false;
     if (connectionState.status !== 'connected' || creatorService === null) {
@@ -1469,7 +1470,7 @@ export function AppController(props: AppControllerProps) {
       setCreatorPresetsLoading(true);
     }
     setCreatorPresetsError(undefined);
-    void creatorService.listPresets(language === 'zh-CN' ? 'zh-CN' : 'en-US')
+    void creatorService.listPresets(creatorPresetLocale)
       .then(response => {
         if (!canceled) setCreatorPresets(response.presets);
       })
@@ -1490,9 +1491,9 @@ export function AppController(props: AppControllerProps) {
     };
   }, [
     connectionState.status,
+    creatorPresetLocale,
     creatorPresetsReloadKey,
-    creatorService,
-    language
+    creatorService
   ]);
 
   useEffect(() => {

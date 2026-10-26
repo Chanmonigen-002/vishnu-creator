@@ -565,6 +565,7 @@ export function LanguageProvider(props: PropsWithChildren<{
     const sys = resolveAppLanguage('system');
     if (!hasLanguageCatalog(sys)) void loadLanguageCatalog(sys);
     if (!hasLanguageCatalog('km-KH')) void loadLanguageCatalog('km-KH');
+    if (!hasLanguageCatalog(language)) void loadLanguageCatalog(language);
   }, []);
 
   useEffect(() => {
@@ -579,8 +580,10 @@ export function LanguageProvider(props: PropsWithChildren<{
   }, [language]);
 
   useEffect(() => {
-    applyAppLanguage(language);
-  }, [language]);
+    if (hasLanguageCatalog(language)) {
+      applyAppLanguage(language);
+    }
+  }, [language, loadedLanguage]);
 
   useEffect(() => {
     if (preference !== 'system') return;

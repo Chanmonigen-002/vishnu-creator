@@ -71,7 +71,7 @@ describe('Apple notarization polling', () => {
 
     await expect(submitAndWaitForNotarization(
       '/tmp/VishnuCreator.zip',
-      ['--keychain-profile', 'clawee-notary'],
+      ['--keychain-profile', 'vishnucreator-notary'],
       { delay, logger, maxPolls: 3, pollIntervalMs: 1, runJson }
     )).resolves.toEqual({
       id: 'submission-id',
