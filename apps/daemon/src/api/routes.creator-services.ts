@@ -16,6 +16,7 @@ import {
   type CreatorServicesConfigStore
 } from '../creator-services/config-store.js';
 import { createVishnuCreatorServicesCapabilities } from '../creator/vishnu/capabilities.js';
+import { DubEngineClient, DubEngineError } from '../dub-engine/client.js';
 import {
   VishnuTtsServiceError,
   type VishnuTtsService
@@ -157,6 +158,49 @@ export async function registerCreatorServicesRoutes(
         return { connected: true, model, models, capabilities: ['audio.transcriptions'] };
       } finally { clearTimeout(timer); }
     } catch (error) { return reply.code(502).send(apiError('SMART_DUBBING_UPSTREAM_ERROR', error instanceof Error && error.name === 'AbortError' ? 'FunASR connection timed out' : 'FunASR connection failed')); }
+  });
+
+  server.post<{ Body: unknown }>('/creator-services/dub-engine/test', async (request, reply) => {
+    try {
+      const body = (request.body ?? null) as {
+        mode?: unknown; url?: unknown; port?: unknown; token?: unknown;
+      } | null;
+      const saved = await store.read();
+      const mode = body?.mode === 'local' || body?.mode === 'remote'
+        ? body.mode
+        : saved.dubEngine.mode;
+      const url = typeof body?.url === 'string' && body.url.trim().length > 0
+        ? body.url.trim()
+        : saved.dubEngine.url;
+      const port = typeof body?.port === 'number' && Number.isInteger(body.port)
+        && body.port >= 1 && body.port <= 65535
+        ? body.port
+        : saved.dubEngine.port;
+      const token = typeof body?.token === 'string' && body.token.length > 0
+        ? body.token
+        : saved.dubEngine.token;
+      const client = new DubEngineClient({
+        enabled: true,
+        mode,
+        url,
+        port,
+        token,
+        enginePath: saved.dubEngine.enginePath,
+        pythonPath: saved.dubEngine.pythonPath,
+        autoStart: false
+      });
+      const health = await client.getHealth();
+      const hardware = await client.getHardware();
+      return { connected: true, version: health.version, hardware };
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_UNREACHABLE',
+        'Dub engine connection failed'
+      ));
+    }
   });
 
   server.delete('/creator-services/config', async (_request, reply) => {
