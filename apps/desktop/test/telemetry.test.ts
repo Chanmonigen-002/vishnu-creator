@@ -120,7 +120,7 @@ describe('desktop telemetry', () => {
     expect(requests.at(-1)?.body).not.toHaveProperty('conversation');
   });
 
-  it('uses the production endpoint only for official builds', () => {
+  it('requires an explicit HTTPS or localhost endpoint override and never defaults to upstream telemetry', () => {
     expect(resolveTelemetryEndpoint('https://admin.example.com/report', false))
       .toBe('https://admin.example.com/report');
     expect(resolveTelemetryEndpoint('http://127.0.0.1:8790/report', false))
@@ -128,8 +128,7 @@ describe('desktop telemetry', () => {
     expect(resolveTelemetryEndpoint('http://public.example.com/report', false))
       .toBeUndefined();
     expect(resolveTelemetryEndpoint(undefined, false)).toBeUndefined();
-    expect(resolveTelemetryEndpoint(undefined, true))
-      .toBe('https://admin.clawee.work/api/v1/public/desktop-usage');
+    expect(resolveTelemetryEndpoint(undefined, true)).toBeUndefined();
   });
 
   it('sends the report through a real local HTTP connection', async () => {
@@ -190,7 +189,8 @@ describe('desktop telemetry', () => {
       settings,
       logger: logger(),
       appVersion: '3.0.1',
-        isOfficialBuild: true,
+      isOfficialBuild: true,
+      endpointOverride: 'https://telemetry.example.com/api/v1/public/desktop-usage',
       isWindowActive: () => true,
       fetchImpl,
       persistence: telemetryMemory.persistence as TelemetryPersistence
@@ -218,6 +218,7 @@ describe('desktop telemetry', () => {
       logger: logger(),
       appVersion: '3.0.1',
       isOfficialBuild: true,
+      endpointOverride: 'https://telemetry.example.com/api/v1/public/desktop-usage',
       now: () => new Date('2026-09-07T02:00:00Z'),
       isWindowActive: () => false,
       fetchImpl: async (_url, init) => {
@@ -251,7 +252,8 @@ describe('desktop telemetry', () => {
         settings: memorySettings(),
         logger: logger(),
         appVersion: '3.0.1',
-      isOfficialBuild: true,
+        isOfficialBuild: true,
+        endpointOverride: 'https://telemetry.example.com/api/v1/public/desktop-usage',
         isWindowActive: () => true,
         now: () => new Date('2026-09-07T02:00:00Z'),
         fetchImpl: async (_url, init) => {
@@ -287,6 +289,7 @@ describe('desktop telemetry', () => {
       logger: logger(),
       appVersion: '3.0.1',
       isOfficialBuild: true,
+      endpointOverride: 'https://telemetry.example.com/api/v1/public/desktop-usage',
       isWindowActive: () => true,
       now: () => new Date('2026-09-07T02:00:00Z'),
       fetchImpl,
@@ -329,6 +332,7 @@ describe('desktop telemetry', () => {
       logger: logger(),
       appVersion: '3.0.1',
       isOfficialBuild: true,
+      endpointOverride: 'https://telemetry.example.com/api/v1/public/desktop-usage',
       now: () => new Date('2026-09-07T02:00:00Z'),
       isWindowActive: () => false,
       fetchImpl: vi.fn(async (_url, init) => {

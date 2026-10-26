@@ -4006,7 +4006,7 @@ describe('App', () => {
     await user.type(screen.getByRole('textbox', { name: '输入任务' }), prompt);
     await user.click(screen.getByRole('button', { name: '发送' }));
 
-    expect(await screen.findByText('允许 VishnuCreator 执行这条命令？')).toBeInTheDocument();
+    expect(await screen.findByText('允许 Vishnu Creator 执行这条命令？')).toBeInTheDocument();
     expect(document.querySelector('.composer-approval-overlay')).toBeInTheDocument();
     await user.click(screen.getByText('查看操作详情'));
     expect(screen.getByText('rm -rf build')).toBeInTheDocument();

@@ -1,9 +1,66 @@
 """Vishnu Dub Engine — configuration management."""
 
+import os
+import platform
+import shutil
+import sys
 from pathlib import Path
 from typing import Optional
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
+
+
+def _repo_root() -> Path:
+    return Path(__file__).resolve().parents[3]
+
+
+def _vendor_runtime_dir() -> Path:
+    plat = "win32" if sys.platform == "win32" else ("darwin" if sys.platform == "darwin" else "linux")
+    machine = platform.machine().lower()
+    arch = "arm64" if ("arm" in machine or "aarch64" in machine) else "x64"
+    return _repo_root() / ".runtime" / "vendor" / "creator-runtime" / f"{plat}-{arch}"
+
+
+def resolve_ffmpeg_path(configured: Optional[str] = None) -> str:
+    if configured:
+        if Path(configured).exists() or shutil.which(configured):
+            return configured
+    found = shutil.which("ffmpeg")
+    if found:
+        return found
+    exe = "ffmpeg.exe" if sys.platform == "win32" else "ffmpeg"
+    bundled = _vendor_runtime_dir() / exe
+    if bundled.exists():
+        return str(bundled)
+    return "ffmpeg"
+
+
+def resolve_ffprobe_path(configured: Optional[str] = None) -> str:
+    if configured:
+        probe_candidate = Path(configured).with_name("ffprobe.exe" if sys.platform == "win32" else "ffprobe")
+        if probe_candidate.exists():
+            return str(probe_candidate)
+    found = shutil.which("ffprobe")
+    if found:
+        return found
+    exe = "ffprobe.exe" if sys.platform == "win32" else "ffprobe"
+    bundled = _vendor_runtime_dir() / exe
+    if bundled.exists():
+        return str(bundled)
+    return "ffprobe"
+
+
+def resolve_ytdlp_path(configured: Optional[str] = None) -> str:
+    if configured and (Path(configured).exists() or shutil.which(configured)):
+        return configured
+    found = shutil.which("yt-dlp")
+    if found:
+        return found
+    exe = "yt-dlp.exe" if sys.platform == "win32" else "yt-dlp"
+    bundled = _vendor_runtime_dir() / exe
+    if bundled.exists():
+        return str(bundled)
+    return "yt-dlp"
 
 
 class ASRConfig(BaseSettings):
@@ -92,7 +149,7 @@ class Settings(BaseSettings):
     jobs_path: Path = Path.cwd() / "jobs"
 
     # FFmpeg path (auto-detected if not set)
-    ffmpeg_path: Optional[str] = None
+    ffmpeg_path: Optional[str] = Field(default_factory=resolve_ffmpeg_path)
 
 
 _settings: Optional[Settings] = None

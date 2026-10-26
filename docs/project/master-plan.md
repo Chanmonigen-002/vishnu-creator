@@ -67,7 +67,7 @@
 | ID | Decision | Status | Record |
 |---|---|---|---|
 | D1 | Where heavy AI runs | **Accepted** — adaptive compute tiers | [ADR-0003](../adr/0003-adaptive-compute-tiers.md) |
-| D2 | ZastTranslate license / reuse rights (F9) | **Open** — blocks T2.1, T2.4 | [ADR-0005](../adr/0005-zasttranslate-code-reuse.md) |
+| D2 | ZastTranslate license / reuse rights (F9) | **Accepted** — clean re-implementation (Option 3) | [ADR-0005](../adr/0005-zasttranslate-code-reuse.md) |
 | D3 | YouTube auto-publish | Open — blocks T6.3 | — |
 | D4 | Qwen-Image thumbnails (needs a big GPU) | Open — blocks T6.4 | — |
 

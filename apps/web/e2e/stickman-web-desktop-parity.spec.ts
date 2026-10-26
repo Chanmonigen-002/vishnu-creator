@@ -451,7 +451,7 @@ async function compareScreenshots(
 
 async function installPlatformEnvironment(page: Page, platform: Platform): Promise<void> {
   await page.addInitScript(({ currentPlatform }) => {
-    localStorage.setItem('clawee.preferences.dynamicBackground', 'false');
+    localStorage.setItem('vishnucreator.preferences.dynamicBackground', 'false');
     localStorage.setItem('vishnucreator.preferences.colorMode', 'dark');
     localStorage.setItem('vishnucreator.preferences.language', 'zh-CN');
     Object.defineProperty(window, '__vishnucreatorStickmanDirectorySelections', {

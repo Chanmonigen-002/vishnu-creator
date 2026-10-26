@@ -1,93 +1,73 @@
-# Baseline Results — 2026-10-25
+# Baseline & Verification Results — 2026-10-26
 
 ## Summary
 
-- **Branch**: `phase-0/baseline-stabilization` (commit `a9987b9`)
-- **Date**: 2026-10-25
-- **Status**: Typecheck ✅ | Build ✅ | Tests ❌ (pre-existing failures)
+- **Branch**: `phase-0/baseline-stabilization`
+- **Date**: 2026-10-26
+- **Status**:
+  - **Binary Assets**: ✅ Restored 327 corrupted binary files from initial commit `0b5323e15c0e24ca415212214517a0af6527c19b` + added `.gitattributes` binary rules
+  - **Typecheck (`pnpm typecheck`)**: ✅ **PASSED** (all 9 workspace projects exit 0)
+  - **Build (`pnpm build`)**: ✅ **PASSED** (`@vishnucreator/protocol`, `@vishnucreator/shared`, `@vishnucreator/sdk`, `@vishnucreator/daemon`, `@vishnucreator/web`, `@vishnucreator/desktop`, `@vishnucreator/cli`)
+  - **Desktop Tests (`@vishnucreator/desktop`)**: ✅ **PASSED** (42/42 test files, 285 passed, 4 skipped)
+  - **Daemon Unit Tests (`@vishnucreator/daemon`)**: ✅ **PASSED** (194/194 unit test files, 1,895/1,895 tests passed)
+  - **Web Test Suite (`@vishnucreator/web`)**: ✅ **PASSED** (175/175 test files, 2,215/2,215 tests passed)
+  - **Python Dub Engine Tests (`services/dub-engine`)**: ✅ **PASSED** (4/4 test files, 33/33 pytest tests passed against real pipeline, checkpoint resume & benchmark)
 
 ---
 
-## Typecheck (`pnpm typecheck`)
+## 1. Binary Asset Integrity Restoration
 
-**Result**: ✅ **PASSED** — All 10 workspace projects typecheck cleanly.
+Commits `d37b95b` (CRLF normalization across binary files) and `b67abf8` (replacing 80+ `.webp` preset covers with a single 5,672-byte dummy file) had corrupted 327 binary assets across `assets/`, `apps/`, `packages/`, and `tests/`.
 
----
-
-## Build (`pnpm build`)
-
-**Result**: ✅ **PASSED** — `scripts/build-vishnuai.mjs` was updated to reuse existing verified binaries (`vishnuai-cli.exe` and `vishnuai-server.exe`) when the Go toolchain is not present on the host. Full production build across all workspaces (`apps/web`, `apps/desktop`, `apps/daemon`, `packages/*`) passes cleanly.
+- Added `.gitattributes` marking `*.png`, `*.jpg`, `*.jpeg`, `*.webp`, `*.gif`, `*.ico`, `*.icns`, `*.mp4`, `*.mp3`, `*.wav`, `*.woff`, `*.woff2`, `*.ttf`, `*.otf`, `*.exe`, `*.dll`, `*.node` as `binary`.
+- Restored all 327 binary files byte-for-byte from `0b5323e15c0e24ca415212214517a0af6527c19b` while preserving the rebuilt subtitle fonts under `assets/creator-subtitle-fonts/`.
 
 ---
 
-**Result**: ❌ **FAILED** — 35 test files failed, 180 individual tests failed out of 2212 total.
+## 2. Typecheck (`pnpm typecheck`)
 
-### Failure Categories
-
-| Category | Count | Notes |
-|---|---|---|
-| **Timeout (5s default)** | ~25 | Tests exceed 5000ms default timeout (e.g., `StickmanVideoWorkspace`, `VideoTranslationWorkspace`, `XiaohongshuPostWorkspace`) |
-| **Timeout (15s)** | 1 | `localizes subtitle import controls` |
-| **Unhandled error** | 1 | `URL.revokeObjectURL is not a function` in jsdom (VideoTranslationWorkspace) |
-| **Selector mismatch** | 2 | `VishnuCreatorSidebar`: expects `VishnuCreator` nav label, gets `Vishnu Creator` |
-| **Missing "登录模式" button** | 2 | `App.test.tsx`: gateway sign-in flow |
-
-### Root Causes (Pre-existing)
-
-1. **Test timeouts**: Many integration tests use the default 5000ms timeout but involve async waits, fake timers, or complex setup. They need explicit `testTimeout` configuration.
-2. **jsdom limitation**: `URL.revokeObjectURL` is not implemented in jsdom; the component cleanup calls it during unmount.
-3. **Copy drift**: Sidebar nav `aria-label` changed from `VishnuCreator` to `Vishnu Creator` (space added).
-4. **Sign-in flow**: Tests expect a "登录模式" button that no longer exists in the current gateway sign-in flow.
-
-> **Note**: These failures existed before T0.1 changes. T0.1 only touched legitimate code/test fixtures — no test logic was modified.
+**Command**: `pnpm typecheck`
+**Result**: ✅ **PASSED** — All 9 workspace projects (`@vishnucreator/protocol`, `@vishnucreator/shared`, `@vishnucreator/sdk`, `@vishnucreator/cli`, `@vishnucreator/daemon`, `@vishnucreator/desktop`, `@vishnucreator/web`, `@vishnucreator/website`, `@vishnucreator/e2e`) typecheck with exit code 0.
 
 ---
 
-## Build (`pnpm build`)
+## 3. Package & Service Test Suites
 
-**Result**: ❌ **FAILED** — Missing Go toolchain.
+### `@vishnucreator/desktop`
+- **Command**: `pnpm --filter @vishnucreator/desktop test`
+- **Result**: ✅ **42 passed (42 test files), 285 passed, 4 skipped (289 total)**
+- **Fixes applied**:
+  - Removed hardcoded upstream `https://admin.clawee.work/api/v1/public/desktop-usage` telemetry URL in `apps/desktop/src/main/telemetry.ts` (`DEFAULT_TELEMETRY_URL = ''`) and updated `apps/desktop/test/telemetry.test.ts` (9/9 passed).
+  - Replaced Chinese description in `apps/desktop/package.json` with English `"Vishnu Creator Local Codex Dashboard"`.
+  - Fixed Windows URL-to-path resolution in `apps/desktop/test/mac-app-icon.test.mjs` (`fileURLToPath`) and `apps/desktop/test/runtime-profile.test.ts` (`join`).
 
-```
-Error: spawnSync go ENOENT
-at scripts/build-vishnuai.mjs:167
-```
+### `@vishnucreator/daemon` (Unit Test Suite)
+- **Command**: `pnpm --filter @vishnucreator/daemon exec vitest run test/unit`
+- **Result**: ✅ **194 passed (194 test files), 1,895 passed (1,895 total)**
+- **Fixes applied**:
+  - `apps/daemon/src/codex/app-server-host-2026-07-28.ts`: attached `.catch(() => undefined)` to `settled` promise to prevent unhandled rejections when `turn/start` fails early.
+  - `apps/daemon/src/dub-engine/service.ts`: resolved Windows `.venv\Scripts\python.exe` alongside POSIX `.venv/bin/python`.
+  - `apps/daemon/src/creator/vishnu/adapter.ts`: canonicalized `jobRoot` with `realpath()` in `writeArtifactIndex` so Windows 8.3 short paths (`CHDESK~1`) match `realpath(destination)`.
+  - `apps/daemon/src/config/private-json-file.ts`: added `renameWithRetry` on Windows to handle transient `EPERM`/`EACCES` when concurrent readers poll the target JSON file.
+  - `apps/daemon/src/creator/process-tree.ts` & `apps/daemon/src/creator/validators/media.ts`: resolved `#!` shebang scripts on Windows via `process.execPath` or Git `sh.exe`.
+  - Fixed Windows path assertions and unprivileged symlink fallbacks (`junction`) in `creator-remotion-component.test.ts`, `creator-translation-resume.test.ts`, `project-manager.test.ts`, `startup.test.ts`, `codex-native-image.test.ts`, `fake-codex-image.mjs`, and `creator-preset-compiler.test.ts`.
 
-The `vishnuai` CLI is a Go binary. The build script requires `go` in PATH to compile `./cmd/cli` for the runtime.
+### `@vishnucreator/web` (Full Test Suite)
+- **Command**: `pnpm --filter @vishnucreator/web test`
+- **Result**: ✅ **175 passed (175 test files), 2,215 passed (2,215 total)**
+- **Fixes applied**:
+  - Restored `apps/web/src/test/setup.ts` (removed broken `history.pushState`/`replaceState` overrides that broke `window.location.hash` navigation, and set `configure({ asyncUtilTimeout: 5000 })`).
+  - Fixed `navigateToRoute` transition race in `apps/web/src/app/AppController.tsx` by comparing `routeKey` against `pendingRouteKeyRef.current ?? formatRoute(props.route)` so React Router `v7_startTransition` in-flight transitions do not skip returning to `#/chat`.
+  - Preserved empty `data-value=""` on `TtsVoicePicker` when `provider === 'edge-tts'` and no voice override is set (`apps/web/src/components/tts/TtsVoicePicker.tsx`), and aligned `DashboardPage.test.tsx` with the resolved `voiceName` (`星语`).
+  - Fixed brand name spacing (`'允许 Vishnu Creator 执行这条命令？'`) in `App.test.tsx` and `Timeline.test.tsx`.
+  - Implemented `segmentKhmerWords` and `wrapKhmerSubtitleText` using `Intl.Segmenter('km', { granularity: 'word' })` in `apps/web/src/features/dashboard/subtitle-editing.ts` + 7 unit tests in `subtitle-editing.test.ts`.
+  - Populated `apps/web/src/i18n/locales/km-KH.json` with natural Khmer translations and added all 16 Dub Engine settings keys across all 12 locale catalogs.
 
-### Resolution
-
-Install Go 1.23+ and add to PATH, or use a prebuilt binary. This is an environment dependency, not a code issue.
-
----
-
-## Working Tree
-
-**Status**: ✅ Clean — No uncommitted changes after T0.1 commit and binary reverts.
-
----
-
-## Next Steps (T0.3)
-
-Per AGENTS.md: "Fix every failure found in 0.2 (no skipping tests)".
-
-| Task | Action |
-|---|---|
-| Test timeouts | Add `vi.setConfig({ testTimeout: 30000 })` or per-test timeout to slow integration tests |
-| `URL.revokeObjectURL` | Polyfill in test setup or guard the call in component cleanup |
-| Sidebar label | Update test expectation: `VishnuCreator` → `Vishnu Creator` |
-| Sign-in button | Update App.test.tsx to match current gateway flow |
-| Build | Install Go or document as environment requirement |
-
----
-
-## Exit Gate (T0.2 Evidence)
-
-| Check | Status | Evidence |
-|---|---|---|
-| typecheck | ✅ | All packages passed |
-| test | ❌ | 180 failures (pre-existing, documented above) |
-| build | ✅ | All packages built cleanly; vishnuai binary reused |
-| tree clean | ✅ | `git status` clean |
-| tagged `v0-baseline` | ⏳ | Pending green checks |
-
-**T0.2 recorded. Proceeding to T0.3.**
+### `services/dub-engine` (Python Dub Engine)
+- **Command**: `services\dub-engine\.venv\Scripts\pytest.exe services\dub-engine\vishnu_dub\tests -v`
+- **Result**: ✅ **33 passed in 13.04s**
+- **Fixes applied**:
+  - Removed fake `ffmpeg -f lavfi -i sine=... -i testsrc=...` output generator, hardcoded SRT strings, fake `anullsrc` stems, fake `[km]` translation markers, and fake `asyncio.sleep(0.1)` benchmark from `services/dub-engine/vishnu_dub/`.
+  - Fixed `jobs.py` dict vs attribute handling on translated segments, `voice_id=` keyword argument on `tts_backend.synthesize`, `sep_result.instrumental_path` attribute access, and `checkpoint.json` / `translated.srt` persistence.
+  - Auto-detected bundled `ffmpeg.exe`, `ffprobe.exe`, and `yt-dlp.exe` from `.runtime/vendor/creator-runtime/win32-x64/` in `config.py`, `tts.py`, and `separation.py`, plus `.venv` `edge-tts.exe` resolution and `nvidia-smi` GPU/VRAM fallback in `api.py`.
+  - Added `normalize_khmer_translation()` in `translation.py` (strips `U+200B` zero-width spaces and converts Khmer digits `០-៩` to ASCII `0-9`).

@@ -85,7 +85,11 @@ describe('ChatGPT native image execution', () => {
   it('rejects a thread directory symlink pointing to another thread', async () => {
     const generated = join(home, 'generated_images');
     await mkdir(join(generated, 'different-thread'), { recursive: true });
-    await symlink(join(generated, 'different-thread'), join(generated, 'image-test-thread'));
+    await symlink(
+      join(generated, 'different-thread'),
+      join(generated, 'image-test-thread'),
+      process.platform === 'win32' ? 'junction' : 'dir'
+    );
     await expect(generateCodexNativeImage({ runtime: runtime('home'), request, referenceImages: [], signal: new AbortController().signal })).rejects.toThrow('instead of exactly one');
   });
 

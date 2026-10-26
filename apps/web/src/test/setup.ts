@@ -1,44 +1,10 @@
 import '@testing-library/jest-dom/vitest';
 import 'fake-indexeddb/auto';
+import { configure } from '@testing-library/react';
 import { appLanguageOptions } from '../i18n/language.js';
 import { loadLanguageCatalog } from '../i18n/translated-copy.js';
-import { act } from 'react-dom/test-utils';
 
-// Make act available globally for testing-library
-(globalThis as { act?: typeof act }).act = act;
-
-// Mock localStorage and sessionStorage for tests
-const createStorageMock = () => {
-  const store = new Map<string, string>();
-  return {
-    getItem: (key: string) => store.get(key) ?? null,
-    setItem: (key: string, value: string) => { store.set(key, value); },
-    removeItem: (key: string) => { store.delete(key); },
-    clear: () => { store.clear(); },
-    get length() { return store.size; },
-    key: (index: number) => Array.from(store.keys())[index] ?? null,
-  };
-};
-
-Object.defineProperty(globalThis, 'localStorage', {
-  configurable: true,
-  value: createStorageMock(),
-});
-
-Object.defineProperty(globalThis, 'sessionStorage', {
-  configurable: true,
-  value: createStorageMock(),
-});
-
-// Mock window.history methods
-Object.defineProperty(globalThis, 'history', {
-  configurable: true,
-  value: {
-    ...globalThis.history,
-    replaceState: vi.fn(),
-    pushState: vi.fn(),
-  },
-});
+configure({ asyncUtilTimeout: 5000 });
 
 // Component tests exercise initialized copy; cold loading is covered separately.
 await Promise.all(appLanguageOptions.map(({ value }) => loadLanguageCatalog(value)));

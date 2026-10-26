@@ -2,7 +2,7 @@
   "name": "@vishnucreator/desktop",
   "version": "3.2.9",
   "private": true,
-  "description": "Vishnu Creator 本地 Codex Dashboard",
+  "description": "Vishnu Creator Local Codex Dashboard",
   "author": "Vishnu",
   "type": "module",
   "main": "dist/main/main.js",

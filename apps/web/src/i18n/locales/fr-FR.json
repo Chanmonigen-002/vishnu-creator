@@ -3338,5 +3338,21 @@
   "Subtitle preview progress": "Progression de l’aperçu des sous-titres",
   "Adjust timing": "Ajuster le minutage",
   "Enter the required credentials for the selected dubbing service to continue.": "Saisissez les identifiants requis pour le service de doublage sélectionné afin de continuer.",
-  "Save and continue composing": "Enregistrer et poursuivre la composition vidéo"
+  "Save and continue composing": "Enregistrer et poursuivre la composition vidéo",
+  "Dub Engine": "Dub Engine",
+  "Local / Remote Dub Engine": "Local / Remote Dub Engine",
+  "Send dubbing jobs to a local or remote Vishnu Dub engine; when off, cloud TTS synthesis is used.": "Send dubbing jobs to a local or remote Vishnu Dub engine; when off, cloud TTS synthesis is used.",
+  "Enable dub engine": "Enable dub engine",
+  "Local engine (127.0.0.1)": "Local engine (127.0.0.1)",
+  "Remote engine (URL + token)": "Remote engine (URL + token)",
+  "Port": "Port",
+  "Python path": "Python path",
+  "Engine directory": "Engine directory",
+  "Auto-start engine with Runtime": "Auto-start engine with Runtime",
+  "Engine URL": "Engine URL",
+  "Access token": "Access token",
+  "Testing": "Testing",
+  "Test Connection": "Test Connection",
+  "Tier": "Tier",
+  "RAM": "RAM"
 }

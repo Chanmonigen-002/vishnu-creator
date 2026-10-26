@@ -61,7 +61,7 @@ describe('project manager', () => {
     expect(created).toMatchObject({
       id: 'project_managed',
       name: '产品官网',
-      cwd: expect.stringMatching(join(managedProjectRoot, 'project-')),
+      cwd: expect.stringContaining(join(managedProjectRoot, 'project-')),
       directoryState: 'available'
     });
     expect(existsSync(created.cwd)).toBe(true);

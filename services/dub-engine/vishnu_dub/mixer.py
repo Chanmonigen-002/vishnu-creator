@@ -7,6 +7,8 @@ from typing import List, Optional
 
 from pydantic import BaseModel
 
+from vishnu_dub.config import resolve_ffmpeg_path, resolve_ffprobe_path
+
 
 class MixResult(BaseModel):
     output_path: Path
@@ -32,16 +34,17 @@ class AudioMixer:
         vocals_volume: float = 1.0,
         instrumental_volume: float = 0.3,
         background_volume: float = 0.1,
+        ffmpeg_path: Optional[str] = None,
     ) -> "MixResult":
         output_path.parent.mkdir(parents=True, exist_ok=True)
+        ffmpeg_bin = resolve_ffmpeg_path(ffmpeg_path)
+        ffprobe_bin = resolve_ffprobe_path(ffmpeg_bin)
 
-        # Build filter complex
         inputs = []
         filter_parts = []
 
-        # Vocals (primary)
         inputs.append(["-i", str(vocals_path)])
-        filter_parts.append("[0:a]volume=1.0[vocal]")
+        filter_parts.append(f"[0:a]volume={vocals_volume}[vocal]")
 
         input_idx = 1
         filter_inputs = ["[vocal]"]
@@ -58,10 +61,9 @@ class AudioMixer:
             filter_inputs.append("[bg]")
             input_idx += 1
 
-        # Mix all
         filter_parts.append(f"{''.join(filter_inputs)}amix=inputs={len(filter_inputs)}:duration=first:dropout_transition=3[mixed]")
 
-        cmd = ["ffmpeg", "-y"]
+        cmd = [ffmpeg_bin, "-y"]
         for inp in inputs:
             cmd.extend(inp)
         cmd.extend([
@@ -80,21 +82,23 @@ class AudioMixer:
         stdout, stderr = await proc.communicate()
 
         if proc.returncode != 0:
-            raise RuntimeError(f"ffmpeg mix failed: {stderr.decode()}")
+            raise RuntimeError(f"ffmpeg mix failed: {stderr.decode(errors='replace')}")
 
         if not output_path.exists():
             raise RuntimeError("Mix failed to produce output")
 
-        # Get duration
-        import subprocess
-        result = subprocess.run([
-            "ffprobe", "-v", "error",
-            "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1",
-            str(output_path)
-        ], capture_output=True, text=True, timeout=10)
-
-        duration = float(result.stdout.strip()) if result.stdout.strip() else 0.0
+        duration = 0.0
+        try:
+            result = subprocess.run([
+                ffprobe_bin, "-v", "error",
+                "-show_entries", "format=duration",
+                "-of", "default=noprint_wrappers=1:nokey=1",
+                str(output_path)
+            ], capture_output=True, text=True, timeout=10)
+            if result.stdout.strip():
+                duration = float(result.stdout.strip())
+        except Exception:
+            duration = 0.0
 
         return MixResult(output_path=output_path, duration=duration)
 
@@ -111,22 +115,21 @@ class VideoAssembler:
         resolution: str = "1280x720",
         fps: float = 30,
         subtitle_style: Optional[dict] = None,
+        ffmpeg_path: Optional[str] = None,
     ) -> "AssemblyResult":
         output_path.parent.mkdir(parents=True, exist_ok=True)
+        ffmpeg_bin = resolve_ffmpeg_path(ffmpeg_path)
+        ffprobe_bin = resolve_ffprobe_path(ffmpeg_bin)
 
-        cmd = ["ffmpeg", "-y", "-i", str(video_path), "-i", str(audio_path)]
+        cmd = [ffmpeg_bin, "-y", "-i", str(video_path), "-i", str(audio_path)]
 
         filter_parts = []
-        map_video = "0:v"
-        map_audio = "1:a"
-
         if subtitle_path and subtitle_path.exists():
-            # Burn subtitles
             style = ""
             if subtitle_style:
                 style = f":force_style='Fontsize={subtitle_style.get('fontsize', 24)},PrimaryColour={subtitle_style.get('color', '&HFFFFFF')},Outline={subtitle_style.get('outline', 2)}'"
-
-            filter_parts.append(f"subtitles={subtitle_path}{style}")
+            escaped_sub = str(subtitle_path).replace("\\", "/").replace(":", "\\:")
+            filter_parts.append(f"subtitles='{escaped_sub}'{style}")
             cmd.extend(["-vf", ",".join(filter_parts)])
 
         cmd.extend([
@@ -151,30 +154,30 @@ class VideoAssembler:
         stdout, stderr = await proc.communicate()
 
         if proc.returncode != 0:
-            raise RuntimeError(f"ffmpeg assembly failed: {stderr.decode()}")
+            raise RuntimeError(f"ffmpeg assembly failed: {stderr.decode(errors='replace')}")
 
         if not output_path.exists():
             raise RuntimeError("Assembly failed to produce output")
 
-        # Get duration and resolution
-        import subprocess
-        result = subprocess.run([
-            "ffprobe", "-v", "error",
-            "-select_streams", "v:0",
-            "-show_entries", "stream=width,height,avg_frame_rate,duration",
-            "-of", "default=noprint_wrappers=1:nokey=1",
-            str(output_path)
-        ], capture_output=True, text=True, timeout=10)
-
-        width = height = fps_val = duration = 0
-        if result.stdout.strip():
-            lines = result.stdout.strip().split("\n")
-            if len(lines) >= 4:
-                width = int(lines[0])
-                height = int(lines[1])
-                fps_parts = lines[2].split("/")
-                fps_val = float(fps_parts[0]) / float(fps_parts[1]) if len(fps_parts) == 2 else 30
-                duration = float(lines[3])
+        width, height, fps_val, duration = 1280, 720, fps, 0.0
+        try:
+            result = subprocess.run([
+                ffprobe_bin, "-v", "error",
+                "-select_streams", "v:0",
+                "-show_entries", "stream=width,height,avg_frame_rate,duration",
+                "-of", "default=noprint_wrappers=1:nokey=1",
+                str(output_path)
+            ], capture_output=True, text=True, timeout=10)
+            if result.stdout.strip():
+                lines = result.stdout.strip().split("\n")
+                if len(lines) >= 4:
+                    width = int(lines[0])
+                    height = int(lines[1])
+                    fps_parts = lines[2].split("/")
+                    fps_val = float(fps_parts[0]) / float(fps_parts[1]) if len(fps_parts) == 2 and float(fps_parts[1]) != 0 else fps
+                    duration = float(lines[3]) if lines[3] != "N/A" else 0.0
+        except Exception:
+            pass
 
         return AssemblyResult(
             output_path=output_path,

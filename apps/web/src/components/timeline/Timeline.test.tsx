@@ -86,7 +86,7 @@ describe('Timeline', () => {
     );
 
     expect(container.querySelector('.timeline-approval-overlay')).not.toBeInTheDocument();
-    expect(screen.queryByText('允许 VishnuCreator 执行这条命令？')).not.toBeInTheDocument();
+    expect(screen.queryByText('允许 Vishnu Creator 执行这条命令？')).not.toBeInTheDocument();
     expect(container.querySelector('.timeline-approval')).not.toBeInTheDocument();
     expect(screen.getByTestId('virtuoso-scroller').scrollTop).toBe(0);
   });

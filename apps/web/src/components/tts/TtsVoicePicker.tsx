@@ -362,7 +362,7 @@ export function TtsVoicePicker(props: {
             id={props.id}
             labelId={`${props.id}-label`}
             value={props.value}
-            fallbackName={selected ? voiceName(selected, l) : props.value || undefined}
+            fallbackName={selected ? voiceName(selected, l) : props.value || (props.provider === 'edge-tts' ? l('按目标语言自动匹配', 'Auto-match by target language') : undefined)}
             groups={selectGroups}
             placeholder={loading
               ? l('正在加载音色', 'Loading voices')

@@ -4,6 +4,7 @@ import { createPortal } from 'react-dom';
 import { appLanguageOptions, type AppLanguagePreference } from '../../i18n/language.js';
 import { useAppLanguage } from '../../i18n/LanguageProvider.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
+import { hasLanguageCatalog, loadLanguageCatalog } from '../../i18n/translated-copy.js';
 import './language-select.css';
 
 type MenuPosition = { left: number; top: number; width: number; maxHeight: number; above: boolean };
@@ -60,7 +61,6 @@ export default function LanguageSelect(props: {
     setOpen(true);
   }
   function select(value: AppLanguagePreference) {
-    inputRef.current?.focus();
     close();
     if (value !== props.value) props.onChange(value);
   }
@@ -105,8 +105,14 @@ export default function LanguageSelect(props: {
   }, [open]);
 
   useEffect(() => {
-    if (open && currentIndex >= 0) document.getElementById(optionId(currentIndex))?.scrollIntoView?.({ block: 'nearest' });
-  }, [open, currentIndex, query]);
+    if (open && currentIndex >= 0) {
+      document.getElementById(optionId(currentIndex))?.scrollIntoView?.({ block: 'nearest' });
+      const activeOption = filtered[currentIndex];
+      if (activeOption && activeOption.value !== 'system' && !hasLanguageCatalog(activeOption.value)) {
+        void loadLanguageCatalog(activeOption.value);
+      }
+    }
+  }, [open, currentIndex, filtered, query]);
 
   function onKeyDown(event: KeyboardEvent<HTMLInputElement>) {
     if (event.nativeEvent.isComposing) return;
@@ -153,7 +159,14 @@ export default function LanguageSelect(props: {
         {filtered.map((option, index) => <div key={option.value} id={optionId(index)} role="option" aria-selected={props.value === option.value}
           data-value={option.value} className={`language-select-option${index === currentIndex ? ' is-active' : ''}`}
           onMouseDown={event => event.preventDefault()}
-          onPointerMove={event => { if (event.pointerType === 'mouse') setActiveIndex(index); }} onClick={() => select(option.value)}>
+          onPointerMove={event => {
+            if (event.pointerType === 'mouse') {
+              setActiveIndex(index);
+              if (option.value !== 'system' && !hasLanguageCatalog(option.value)) {
+                void loadLanguageCatalog(option.value);
+              }
+            }
+          }} onClick={() => select(option.value)}>
           <span><bdi lang={option.value === 'system' ? undefined : option.value}>{option.label}</bdi>{option.value !== 'system' && option.label !== option.englishName ? <small lang="en" dir="ltr">{option.englishName}</small> : null}</span>
           {props.value === option.value ? <Check size={16} aria-hidden="true" /> : null}
         </div>)}

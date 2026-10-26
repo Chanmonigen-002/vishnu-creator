@@ -24,11 +24,21 @@ Don't create plan or TODO files in the repo root. Update the existing ones above
 3. Check that the task's phase dependencies and any blocking ADR are resolved. If not, mark the task `blocked` and stop.
 4. Work on a branch named `phase-<n>/<short-name>` (or `docs/<short-name>` for docs-only work). Never commit directly to `main`.
 
-### Evidence-only completion (no bypass, no fake build)
+### Evidence-only completion (no guessing, no fake app, no fake design, no fake API, no fake performance)
 
+- **Mandatory Workflow Gate (Clone / Verify → Build → Run Tests → Apply Final Result)**:
+  1. **Clone / Copy Verification**: Verify that any cloned or copied code and binary assets (`.png`, `.webp`, `.jpg`, `.woff2`, `.ttf`, `.ico`, `.icns`, `.mp4`) match their source integrity with zero CRLF byte corruption or dummy placeholder substitution.
+  2. **Build**: Run the real build (`pnpm build`) and typecheck (`pnpm typecheck`) across affected workspaces.
+  3. **Run Tests**: Run the real test suites (`pnpm test` for TypeScript workspaces and `pytest` inside `services/dub-engine/.venv`) and fix root causes before applying final results.
+  4. **Synchronize Docs & Task Boards**: Update both [`docs/tasks/README.md`](docs/tasks/README.md) and the corresponding [`docs/tasks/phase-<n>-*.md`](docs/tasks/README.md) file together so status counts and task evidence never drift.
+- **Strict Prohibition of Fake Implementations**:
+  - **No Fake App**: Never comment out pipeline stages or short-circuit state machines to mark jobs `completed` without executing the real pipeline.
+  - **No Fake Design / Assets**: Never replace corrupted or missing images, fonts, or UI states with tiny placeholder files or stub components just to pass an asset check. Restore or build the real asset.
+  - **No Fake API**: Production endpoints and job runners (`apps/daemon`, `services/dub-engine`) must never return hardcoded subtitles, synthetic `ffmpeg` `testsrc`/`sine` videos, or `anullsrc` silence stems pretending to be real transcription, translation, TTS, or vocal separation. If a source file, model, or dependency is unavailable, fail honestly with a clear error.
+  - **No Fake Performance**: Benchmark routes (`/v1/benchmark`) and performance checks must never use `sleep()` timers or hardcoded numbers (`0.1s`). Always measure real execution against actual backends.
 - A task is `done` only when its **Evidence** column holds the exact command run and its real result, or a link to a saved report or screenshot.
 - Never mark a check as passed that was not run. Never stub, mock or hard-code a result to make a gate pass. Mocks are allowed only in unit tests and must be named as mocks.
-- Acceptance tests run against the real engine and real models on the stated hardware tier (ADR-0003). If a check can't run here, say what wasn't verified and why.
+- Acceptance tests run against the real engine and real models on the stated hardware tier (ADR-0003). If a check can't run here, say what wasn't verified and why, and keep the task `todo`, `doing`, or `blocked`.
 - Don't skip, delete or weaken a failing test to get green. Fix the cause, or record the failure in the task's evidence and mark the task `blocked`.
 - Validation depth follows the risk tiers below (P0/P1/P2). Each task file states its default tier.
 

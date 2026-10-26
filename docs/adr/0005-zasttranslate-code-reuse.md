@@ -1,7 +1,7 @@
 # ADR-0005: How ZastTranslate code may be reused
 
-- **Status:** Proposed — decision needed from the project owner
-- **Date:** 2026-10-25
+- **Status:** Accepted — Option 3 (clean re-implementation; no ZastTranslate source files copied verbatim)
+- **Date:** 2026-10-26
 - **Deciders:** Project owner
 
 ## Context

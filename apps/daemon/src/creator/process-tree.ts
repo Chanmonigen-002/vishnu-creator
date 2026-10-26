@@ -1,4 +1,5 @@
 import { spawn, type ChildProcess, type SpawnOptions } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
 
 /** Keeps a stage's process group alive while its download is paused. */
 export class CreatorProcessControl {
@@ -72,7 +73,8 @@ export function spawnCreatorProcess(
   signal: AbortSignal,
   control?: CreatorProcessControl
 ): ChildProcess {
-  const child = spawn(command, args, {
+  const [resolvedCommand, resolvedArgs] = resolveExecutableCommand(command, args);
+  const child = spawn(resolvedCommand, resolvedArgs, {
     ...options,
     detached: process.platform !== 'win32',
     windowsHide: true
@@ -83,6 +85,27 @@ export function spawnCreatorProcess(
   else signal.addEventListener('abort', abort, { once: true });
   child.once('exit', () => signal.removeEventListener('abort', abort));
   return child;
+}
+
+function resolveExecutableCommand(command: string, args: string[]): [string, string[]] {
+  if (process.platform !== 'win32' || /\.(?:exe|cmd|bat|com)$/i.test(command)) {
+    return [command, args];
+  }
+  try {
+    const firstLine = readFileSync(command, 'utf8').split(/\r?\n/, 1)[0] ?? '';
+    if (firstLine.startsWith('#!')) {
+      if (/\bnode\b/i.test(firstLine)) {
+        return [process.execPath, [command, ...args]];
+      }
+      if (/\b(?:sh|bash)\b/i.test(firstLine)) {
+        const gitSh = 'C:\\Program Files\\Git\\bin\\sh.exe';
+        return [existsSync(gitSh) ? gitSh : 'sh', [command, ...args]];
+      }
+    }
+  } catch {
+    // Fall back to direct execution.
+  }
+  return [command, args];
 }
 
 export async function terminateProcessTree(pid: number | undefined): Promise<void> {

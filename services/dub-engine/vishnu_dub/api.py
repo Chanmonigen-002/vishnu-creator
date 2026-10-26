@@ -12,7 +12,7 @@ from typing import Any, Dict, List, Optional
 
 import psutil
 from fastapi import FastAPI, HTTPException, Request
-from fastapi.responses import JSONResponse
+from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
 from vishnu_dub.config import get_settings, Settings
@@ -36,6 +36,8 @@ class HardwareProfile(BaseModel):
     disk_free_gb: Dict[str, float] = Field(default_factory=dict)
     tier: str = "T0"
     tier_description: str = ""
+    recommended_tts: str = "edge-tts"
+    recommended_whisper: str = "faster-whisper-small-int8"
 
 
 class DubRequest(BaseModel):
@@ -62,6 +64,10 @@ class JobStatusResponse(BaseModel):
     status: str
     progress: Optional[JobProgress] = None
     result_url: Optional[str] = None
+    srt_url: Optional[str] = None
+    km_srt_url: Optional[str] = None
+    vocals_url: Optional[str] = None
+    music_url: Optional[str] = None
     error: Optional[str] = None
 
 
@@ -122,6 +128,30 @@ def detect_hardware() -> HardwareProfile:
     except Exception:
         pass
 
+    if gpu_name is None:
+        try:
+            import subprocess
+            smi = subprocess.run(
+                [
+                    "nvidia-smi",
+                    "--query-gpu=name,memory.total,compute_cap",
+                    "--format=csv,noheader,nounits",
+                ],
+                capture_output=True,
+                text=True,
+                timeout=5,
+            )
+            if smi.returncode == 0 and smi.stdout.strip():
+                first_line = smi.stdout.strip().splitlines()[0]
+                parts = [p.strip() for p in first_line.split(",")]
+                if len(parts) >= 2:
+                    gpu_name = parts[0]
+                    gpu_vram_gb = float(parts[1]) / 1024.0
+                if len(parts) >= 3 and parts[2]:
+                    gpu_compute_capability = parts[2]
+        except Exception:
+            pass
+
     # Disk space
     disk_free_gb = {}
     for partition in psutil.disk_partitions():
@@ -131,22 +161,32 @@ def detect_hardware() -> HardwareProfile:
         except Exception:
             pass
 
-    # Tier assignment
+    # Tier assignment (per ADR-0003 & master-plan §2A)
     tier = "T0"
     tier_description = "Minimal — API-only mode, no local models"
+    recommended_tts = "edge-tts"
+    recommended_whisper = "openai-whisper-api"
 
     if gpu_vram_gb is not None and gpu_vram_gb >= 12:
         tier = "T3"
         tier_description = "High — GPU ≥ 12 GB VRAM, all local models"
+        recommended_tts = "voxcpm2"
+        recommended_whisper = "faster-whisper-large-v3-turbo-fp16"
     elif gpu_vram_gb is not None and gpu_vram_gb >= 8:
         tier = "T2"
         tier_description = "Mid — GPU 8–12 GB VRAM, int8 models, one at a time"
-    elif gpu_vram_gb is None and ram_total_gb >= 16:
+        recommended_tts = "voxcpm2"
+        recommended_whisper = "faster-whisper-large-v3-turbo-int8"
+    elif ram_total_gb >= 16:
         tier = "T1"
-        tier_description = "Low — CPU only, RAM ≥ 16 GB, one model at a time"
-    elif ram_total_gb < 16:
+        tier_description = "Low — GPU < 8 GB or CPU only, RAM ≥ 16 GB, one model at a time"
+        recommended_tts = "edge-tts"
+        recommended_whisper = "faster-whisper-small-int8"
+    else:
         tier = "T0"
         tier_description = "Minimal — RAM < 16 GB, API-only mode"
+        recommended_tts = "edge-tts"
+        recommended_whisper = "openai-whisper-api"
 
     return HardwareProfile(
         cpu_cores=cpu_cores,
@@ -162,6 +202,8 @@ def detect_hardware() -> HardwareProfile:
         disk_free_gb={k: round(v, 1) for k, v in disk_free_gb.items()},
         tier=tier,
         tier_description=tier_description,
+        recommended_tts=recommended_tts,
+        recommended_whisper=recommended_whisper,
     )
 
 
@@ -243,14 +285,31 @@ async def get_job_status(job_id: str):
         raise HTTPException(404, "Job not found")
 
     result_url = None
-    if job.status == JobStatus.COMPLETED and job.result_path:
-        result_url = f"/v1/dub/{job_id}/download"
+    srt_url = None
+    km_srt_url = None
+    vocals_url = None
+    music_url = None
+    if job.status == JobStatus.COMPLETED:
+        if job.result_path:
+            result_url = f"/v1/dub/{job_id}/download"
+        if job.srt_path:
+            srt_url = f"/v1/dub/{job_id}/artifacts/source.srt"
+        if job.km_srt_path:
+            km_srt_url = f"/v1/dub/{job_id}/artifacts/km.srt"
+        if job.vocals_path:
+            vocals_url = f"/v1/dub/{job_id}/artifacts/vocals.wav"
+        if job.music_path:
+            music_url = f"/v1/dub/{job_id}/artifacts/music.wav"
 
     return JobStatusResponse(
         job_id=job_id,
         status=job.status.value,
         progress=job.progress,
         result_url=result_url,
+        srt_url=srt_url,
+        km_srt_url=km_srt_url,
+        vocals_url=vocals_url,
+        music_url=music_url,
         error=job.error,
     )
 
@@ -308,7 +367,7 @@ async def run_benchmark(request: BenchmarkRequest):
 
 @app.get("/v1/dub/{job_id}/download")
 async def download_result(job_id: str):
-    """Download the completed dubbing result."""
+    """Download the completed dubbing result (MP4)."""
     if not job_manager:
         raise HTTPException(503, "Job manager not initialized")
 
@@ -316,11 +375,40 @@ async def download_result(job_id: str):
     if not job or job.status != JobStatus.COMPLETED or not job.result_path:
         raise HTTPException(404, "Result not found")
 
-    from fastapi.responses import FileResponse
     return FileResponse(
         job.result_path,
         media_type="video/mp4",
         filename=f"dub_{job_id}.mp4",
+    )
+
+
+@app.get("/v1/dub/{job_id}/artifacts/{filename}")
+async def download_artifact(job_id: str, filename: str):
+    """Download a specific artifact (SRT, stems, etc.)."""
+    if not job_manager:
+        raise HTTPException(503, "Job manager not initialized")
+
+    job = await job_manager.get_job(job_id)
+    if not job or job.status != JobStatus.COMPLETED:
+        raise HTTPException(404, "Job not found or not completed")
+
+    artifact_map = {
+        "source.srt": job.srt_path,
+        "km.srt": job.km_srt_path,
+        "vocals.wav": job.vocals_path,
+        "music.wav": job.music_path,
+    }
+
+    path = artifact_map.get(filename)
+    if not path:
+        raise HTTPException(404, f"Artifact '{filename}' not available for this job")
+
+    media_type = "text/plain; charset=utf-8" if filename.endswith(".srt") else "audio/wav"
+
+    return FileResponse(
+        path,
+        media_type=media_type,
+        filename=filename,
     )
 
 

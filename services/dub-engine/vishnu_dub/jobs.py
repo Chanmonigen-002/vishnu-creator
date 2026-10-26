@@ -2,14 +2,16 @@
 
 import asyncio
 import json
+import shutil
+import subprocess
 import time
-import uuid
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from enum import Enum
 from pathlib import Path
 from typing import Any, Dict, List, Optional
+from urllib.parse import unquote, urlparse
 
-from vishnu_dub.config import Settings
+from vishnu_dub.config import Settings, resolve_ffmpeg_path, resolve_ytdlp_path
 
 
 class JobStatus(str, Enum):
@@ -28,6 +30,9 @@ class JobProgress:
     message: str = ""
     current_step: int = 0
     total_steps: int = 0
+
+    def model_dump_json(self) -> str:
+        return json.dumps(asdict(self))
 
 
 @dataclass
@@ -48,6 +53,10 @@ class Job:
     progress: JobProgress = field(default_factory=JobProgress)
     error: Optional[str] = None
     result_path: Optional[str] = None
+    srt_path: Optional[str] = None
+    km_srt_path: Optional[str] = None
+    vocals_path: Optional[str] = None
+    music_path: Optional[str] = None
 
     # Timing
     created_at: float = field(default_factory=time.time)
@@ -63,7 +72,6 @@ class Job:
 
     # Paths
     work_dir: Optional[str] = None
-    result_path: Optional[str] = None
 
     def to_dict(self) -> Dict[str, Any]:
         return {
@@ -88,6 +96,10 @@ class Job:
             },
             "error": self.error,
             "result_path": self.result_path,
+            "srt_path": self.srt_path,
+            "km_srt_path": self.km_srt_path,
+            "vocals_path": self.vocals_path,
+            "music_path": self.music_path,
             "created_at": self.created_at,
             "started_at": self.started_at,
             "completed_at": self.completed_at,
@@ -96,6 +108,7 @@ class Job:
             "tts_time": self.tts_time,
             "separation_time": self.separation_time,
             "total_time": self.total_time,
+            "work_dir": self.work_dir,
         }
 
     @classmethod
@@ -117,6 +130,10 @@ class Job:
         job.progress = JobProgress(**data.get("progress", {}))
         job.error = data.get("error")
         job.result_path = data.get("result_path")
+        job.srt_path = data.get("srt_path")
+        job.km_srt_path = data.get("km_srt_path")
+        job.vocals_path = data.get("vocals_path")
+        job.music_path = data.get("music_path")
         job.created_at = data.get("created_at", 0)
         job.started_at = data.get("started_at")
         job.completed_at = data.get("completed_at")
@@ -125,6 +142,7 @@ class Job:
         job.tts_time = data.get("tts_time", 0.0)
         job.separation_time = data.get("separation_time", 0.0)
         job.total_time = data.get("total_time", 0.0)
+        job.work_dir = data.get("work_dir")
         return job
 
 
@@ -137,10 +155,10 @@ class JobManager:
         self._lock = asyncio.Lock()
 
     async def start(self):
+        self.settings.jobs_path.mkdir(parents=True, exist_ok=True)
+        await self._load_jobs()
         self._running = True
         self._worker_task = asyncio.create_task(self._worker())
-        # Load persisted jobs
-        await self._load_jobs()
 
     async def stop(self):
         self._running = False
@@ -155,19 +173,24 @@ class JobManager:
         return self.settings.jobs_path / f"{job_id}.json"
 
     async def _load_jobs(self):
+        if not self.settings.jobs_path.exists():
+            return
         for job_file in self.settings.jobs_path.glob("*.json"):
             try:
-                with open(job_file) as f:
+                with open(job_file, encoding="utf-8") as f:
                     data = json.load(f)
                 job = Job.from_dict(data)
+                if not job.work_dir:
+                    job.work_dir = str(self.settings.jobs_path / job.job_id)
                 self.jobs[job.job_id] = job
             except Exception as e:
                 print(f"Failed to load job {job_file}: {e}")
 
     async def _save_job(self, job: "Job"):
+        self.settings.jobs_path.mkdir(parents=True, exist_ok=True)
         path = self._get_job_path(job.job_id)
         tmp = path.with_suffix(".tmp")
-        with open(tmp, "w") as f:
+        with open(tmp, "w", encoding="utf-8") as f:
             json.dump(job.to_dict(), f, indent=2)
         tmp.replace(path)
 
@@ -228,110 +251,334 @@ class JobManager:
         return job
 
     async def _worker(self):
-        while True:
+        while self._running:
             try:
-                await asyncio.sleep(1)
-                # Process pending jobs
+                await asyncio.sleep(0.2)
                 for job in list(self.jobs.values()):
                     if job.status == JobStatus.PENDING:
                         await self._run_job(job)
-                    elif job.status == JobStatus.RUNNING:
-                        # Check for completion
-                        pass
             except asyncio.CancelledError:
                 break
             except Exception as e:
                 print(f"Worker error: {e}")
-                await asyncio.sleep(5)
+                await asyncio.sleep(2)
+
+    def _fmt_srt(self, seconds: float) -> str:
+        """Format seconds as SRT timestamp (HH:MM:SS,mmm)."""
+        total_ms = int(round(seconds * 1000))
+        hours = total_ms // 3_600_000
+        minutes = (total_ms % 3_600_000) // 60_000
+        secs = (total_ms % 60_000) // 1_000
+        millis = total_ms % 1_000
+        return f"{hours:02d}:{minutes:02d}:{secs:02d},{millis:03d}"
+
+    def _write_srt(self, path: Path, segments: List[Dict[str, Any]], bilingual_source: Optional[List[Dict[str, Any]]] = None) -> None:
+        with open(path, "w", encoding="utf-8") as f:
+            for i, seg in enumerate(segments, 1):
+                f.write(f"{i}\n")
+                f.write(f"{self._fmt_srt(float(seg['start']))} --> {self._fmt_srt(float(seg['end']))}\n")
+                if bilingual_source and i - 1 < len(bilingual_source):
+                    src_text = bilingual_source[i - 1].get("text", "").strip()
+                    if src_text and src_text != seg["text"].strip():
+                        f.write(f"{seg['text']}\n{src_text}\n\n")
+                        continue
+                f.write(f"{seg['text']}\n\n")
+
+    async def _prepare_source(self, job: "Job", work_dir: Path, ffmpeg_bin: str) -> tuple[Path, Path]:
+        source_video = work_dir / "source_video.mp4"
+        source_audio = work_dir / "source_audio.wav"
+
+        if not source_video.exists() or source_video.stat().st_size == 0:
+            raw_url = (job.source_url or "").strip()
+            if not raw_url:
+                raise ValueError("source_url is required")
+
+            local_candidate: Optional[Path] = None
+            if raw_url.startswith("file://"):
+                parsed = urlparse(raw_url)
+                file_path = unquote(parsed.path)
+                if file_path.startswith("/") and len(file_path) > 2 and file_path[2] == ":":
+                    file_path = file_path[1:]
+                local_candidate = Path(file_path)
+            elif not raw_url.startswith(("http://", "https://")):
+                local_candidate = Path(raw_url)
+
+            if local_candidate is not None:
+                if not local_candidate.exists() or not local_candidate.is_file():
+                    raise FileNotFoundError(f"Local source media not found: {local_candidate}")
+                shutil.copy2(local_candidate, source_video)
+            else:
+                ytdlp_bin = resolve_ytdlp_path()
+                proc = await asyncio.create_subprocess_exec(
+                    ytdlp_bin,
+                    "-f", "bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best",
+                    "--merge-output-format", "mp4",
+                    "-o", str(source_video),
+                    raw_url,
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE,
+                )
+                _, stderr = await proc.communicate()
+                if proc.returncode != 0 or not source_video.exists():
+                    raise RuntimeError(f"Failed to download source media from {raw_url}: {stderr.decode(errors='replace')}")
+
+        if not source_audio.exists() or source_audio.stat().st_size == 0:
+            proc = await asyncio.create_subprocess_exec(
+                ffmpeg_bin, "-y",
+                "-i", str(source_video),
+                "-vn", "-acodec", "pcm_s16le", "-ar", "16000", "-ac", "1",
+                str(source_audio),
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            _, stderr = await proc.communicate()
+            if proc.returncode != 0 or not source_audio.exists():
+                raise RuntimeError(f"Failed to extract audio with ffmpeg: {stderr.decode(errors='replace')}")
+
+        return source_video, source_audio
 
     async def _run_job(self, job: "Job"):
-        """Run the full dubbing pipeline."""
-        job.status = "running"
-        job.started_at = time.time()
+        """Run the full dubbing pipeline with stage and segment checkpointing."""
+        from vishnu_dub.asr import get_asr_backend
+        from vishnu_dub.mixer import AudioMixer, VideoAssembler
+        from vishnu_dub.separation import SeparationBackend
+        from vishnu_dub.translation import get_translation_backend
+        from vishnu_dub.tts import get_tts_backend
+
+        job.status = JobStatus.RUNNING
+        if job.started_at is None:
+            job.started_at = time.time()
         job.progress = JobProgress(stage="initializing", percent=5, message="Initializing...")
         await self._save_job(job)
 
-        work_dir = Path(job.work_dir)
+        work_dir = Path(job.work_dir or (self.settings.jobs_path / job.job_id))
         work_dir.mkdir(parents=True, exist_ok=True)
+        ffmpeg_bin = resolve_ffmpeg_path(getattr(self.settings, "ffmpeg_path", None))
 
         try:
-            # Stage 1: Download source
-            job.progress = JobProgress(stage="download", percent=10, message="Downloading source...")
-            await self._save_job(job)
-            # await self._download_source(job)
+            checkpoint_file = work_dir / "checkpoint.json"
 
-            # Stage 2: ASR / Transcription
-            job.progress = JobProgress(stage="asr", percent=20, message="Transcribing audio...")
-            await self._save_job(job)
-            # await self._run_asr(job)
+            def write_checkpoint(stage: str, completed_tts_segments: int = 0) -> None:
+                with open(checkpoint_file, "w", encoding="utf-8") as cf:
+                    json.dump(
+                        {
+                            "job_id": job.job_id,
+                            "stage": stage,
+                            "completed_tts_segments": completed_tts_segments,
+                            "updated_at": time.time(),
+                        },
+                        cf,
+                        indent=2,
+                    )
 
-            # Stage 3: Translation
-            job.progress = JobProgress(stage="translation", percent=40, message="Translating...")
+            # Stage 1: Download / Prepare source media & extract 16kHz audio
+            job.progress = JobProgress(stage="download", percent=10, message="Preparing source media...")
             await self._save_job(job)
-            # await self._run_translation(job)
+            source_video, source_audio = await self._prepare_source(job, work_dir, ffmpeg_bin)
+            write_checkpoint("download")
 
-            # Stage 4: TTS
-            job.progress = JobProgress(stage="tts", percent=60, message="Generating speech...")
+            # Stage 2: ASR / Transcription (checkpointed via segments.json)
+            job.progress = JobProgress(stage="asr", percent=25, message="Transcribing audio...")
             await self._save_job(job)
-            # await self._run_tts(job)
+            segments_json = work_dir / "segments.json"
+            source_srt = work_dir / "source.srt"
 
-            # Stage 5: Separation (optional)
-            job.progress = JobProgress(stage="separation", percent=75, message="Separating vocals...")
+            if segments_json.exists() and source_srt.exists():
+                with open(segments_json, encoding="utf-8") as f:
+                    source_segments = json.load(f)
+            else:
+                asr_start = time.time()
+                asr_backend = get_asr_backend(self.settings)
+                lang = None if job.source_language in ("", "auto") else job.source_language
+                asr_result = await asr_backend.transcribe(source_audio, language=lang)
+                source_segments = [
+                    {"start": float(seg.start), "end": float(seg.end), "text": seg.text.strip()}
+                    for seg in asr_result.segments
+                    if seg.text.strip()
+                ]
+                if not source_segments:
+                    raise RuntimeError("ASR produced no speech segments from source audio")
+                with open(segments_json, "w", encoding="utf-8") as f:
+                    json.dump(source_segments, f, ensure_ascii=False, indent=2)
+                self._write_srt(source_srt, source_segments)
+                job.asr_time = time.time() - asr_start
+
+            job.srt_path = str(source_srt)
+            write_checkpoint("asr")
             await self._save_job(job)
-            # await self._run_separation(job)
 
-            # Stage 7: Assembly
-            job.progress = JobProgress(stage="assembly", percent=90, message="Assembling video...")
+            # Stage 3: Translation to target language (checkpointed via km_segments.json)
+            job.progress = JobProgress(stage="translation", percent=45, message="Translating subtitles...")
             await self._save_job(job)
-            # await self._run_assembly(job)
+            km_segments_json = work_dir / "km_segments.json"
+            km_srt = work_dir / "km.srt"
+            translated_srt = work_dir / "translated.srt"
 
-            # Complete
-            job.status = "completed"
+            if km_segments_json.exists() and km_srt.exists():
+                with open(km_segments_json, encoding="utf-8") as f:
+                    km_segments = json.load(f)
+            else:
+                trans_start = time.time()
+                translation_backend = get_translation_backend(self.settings)
+                translated = await translation_backend.translate(
+                    source_segments,
+                    job.source_language,
+                    job.target_language,
+                )
+                km_segments = []
+                for seg in translated:
+                    seg_start = float(seg["start"] if isinstance(seg, dict) else seg.start)
+                    seg_end = float(seg["end"] if isinstance(seg, dict) else seg.end)
+                    seg_text = str(seg["text"] if isinstance(seg, dict) else seg.text).strip()
+                    if seg_text:
+                        km_segments.append({"start": seg_start, "end": seg_end, "text": seg_text})
+                if not km_segments:
+                    raise RuntimeError("Translation produced no subtitle segments")
+                with open(km_segments_json, "w", encoding="utf-8") as f:
+                    json.dump(km_segments, f, ensure_ascii=False, indent=2)
+                bilingual_src = source_segments if job.bilingual_subtitles else None
+                self._write_srt(km_srt, km_segments, bilingual_source=bilingual_src)
+                self._write_srt(translated_srt, km_segments, bilingual_source=bilingual_src)
+                job.translation_time = time.time() - trans_start
+
+            job.km_srt_path = str(km_srt)
+            write_checkpoint("translation")
+            await self._save_job(job)
+
+            # Stage 4: TTS — synthesize per-segment audio with checkpoint resume
+            job.progress = JobProgress(
+                stage="tts",
+                percent=60,
+                message="Generating speech...",
+                current_step=0,
+                total_steps=len(km_segments),
+            )
+            await self._save_job(job)
+
+            tts_dir = work_dir / "tts_segments"
+            tts_dir.mkdir(parents=True, exist_ok=True)
+            tts_backend = get_tts_backend(
+                job.tts_provider,
+                {
+                    "api_key": getattr(self.settings, "llm_api_key", None),
+                    "base_url": getattr(self.settings, "llm_base_url", None),
+                },
+            )
+            voice_id = job.tts_voice_id or "km-KH-SreymomNeural"
+            tts_start = time.time()
+            segment_files: List[Path] = []
+            synthesized_any = False
+
+            for idx, seg in enumerate(km_segments):
+                seg_path = tts_dir / f"seg_{idx:04d}.mp3"
+                if not seg_path.exists() or seg_path.stat().st_size == 0:
+                    await tts_backend.synthesize(
+                        seg["text"],
+                        voice_id=voice_id,
+                        output_path=seg_path,
+                        speed=job.tts_speed,
+                    )
+                    synthesized_any = True
+                segment_files.append(seg_path)
+                write_checkpoint("tts", completed_tts_segments=idx + 1)
+                job.progress = JobProgress(
+                    stage="tts",
+                    percent=60 + round(15 * (idx + 1) / max(1, len(km_segments)), 1),
+                    message=f"Synthesized {idx + 1}/{len(km_segments)} segments",
+                    current_step=idx + 1,
+                    total_steps=len(km_segments),
+                )
+                await self._save_job(job)
+
+            tts_track_wav = work_dir / "tts_track.wav"
+            if synthesized_any or not tts_track_wav.exists() or tts_track_wav.stat().st_size == 0:
+                concat_list = tts_dir / "concat.txt"
+                with open(concat_list, "w", encoding="utf-8") as f:
+                    for seg_file in segment_files:
+                        escaped = str(seg_file.resolve()).replace("'", "'\\''")
+                        f.write(f"file '{escaped}'\n")
+                proc = await asyncio.create_subprocess_exec(
+                    ffmpeg_bin, "-y",
+                    "-f", "concat", "-safe", "0",
+                    "-i", str(concat_list),
+                    "-acodec", "pcm_s16le", "-ar", "24000", "-ac", "1",
+                    str(tts_track_wav),
+                    stdout=asyncio.subprocess.PIPE,
+                    stderr=asyncio.subprocess.PIPE,
+                )
+                _, stderr = await proc.communicate()
+                if proc.returncode != 0 or not tts_track_wav.exists():
+                    raise RuntimeError(f"Failed to concatenate TTS segments: {stderr.decode(errors='replace')}")
+
+            job.tts_time = time.time() - tts_start
+
+            # Stage 5: Vocal / BGM separation (when enabled and Demucs is available)
+            instrumental_path: Optional[Path] = None
+            if job.separate_vocals:
+                job.progress = JobProgress(stage="separation", percent=80, message="Separating vocals...")
+                await self._save_job(job)
+                sep_backend = SeparationBackend()
+                if sep_backend.is_available():
+                    sep_start = time.time()
+                    sep_result = await sep_backend.separate(source_audio, work_dir / "stems")
+                    job.vocals_path = str(sep_result.vocals_path)
+                    job.music_path = str(sep_result.instrumental_path)
+                    instrumental_path = sep_result.instrumental_path
+                    job.separation_time = time.time() - sep_start
+                write_checkpoint("separation", completed_tts_segments=len(km_segments))
+
+            # Stage 6: Audio Mixing & Video Assembly
+            job.progress = JobProgress(stage="assembly", percent=90, message="Assembling final output...")
+            await self._save_job(job)
+
+            mixed_audio = work_dir / "mixed_audio.m4a"
+            await AudioMixer.mix(
+                vocals_path=tts_track_wav,
+                output_path=mixed_audio,
+                instrumental_path=instrumental_path,
+                ffmpeg_path=ffmpeg_bin,
+            )
+
+            if job.compose_video:
+                output_mp4 = work_dir / "output.mp4"
+                await VideoAssembler.assemble(
+                    video_path=source_video,
+                    audio_path=mixed_audio,
+                    output_path=output_mp4,
+                    subtitle_path=km_srt,
+                    ffmpeg_path=ffmpeg_bin,
+                )
+                job.result_path = str(output_mp4)
+            else:
+                job.result_path = str(mixed_audio)
+
+            write_checkpoint("completed", completed_tts_segments=len(km_segments))
+            job.status = JobStatus.COMPLETED
             job.completed_at = time.time()
-            job.total_time = job.completed_at - job.created_at
+            job.total_time = job.completed_at - (job.started_at or job.created_at)
             job.progress = JobProgress(stage="completed", percent=100, message="Completed")
-            job.result_path = str(Path(job.work_dir) / "output.mp4")
 
         except Exception as e:
-            job.status = "failed"
+            job.status = JobStatus.FAILED
             job.error = str(e)
             job.completed_at = time.time()
+            job.progress = JobProgress(
+                stage=job.progress.stage or "failed",
+                percent=job.progress.percent,
+                message=f"Failed: {e}",
+            )
 
         await self._save_job(job)
 
     async def run_benchmark(self, duration_seconds: int = 10, tts_sentences: int = 3):
-        """Run a quick benchmark."""
-        from dataclasses import dataclass
+        """Run the real engine benchmark against configured backends."""
+        from vishnu_dub.benchmark import run_benchmark as _run_real_benchmark
 
-        @dataclass
-        class BenchmarkJob:
-            asr_time: float = 0.0
-            translation_time: float = 0.0
-            tts_time: float = 0.0
-            separation_time: float = 0.0
-            total_time: float = 0.0
-
-        bench = BenchmarkJob()
-        start = time.time()
-
-        # Simulate ASR benchmark
-        await asyncio.sleep(0.1)
-        bench.asr_time = 0.1
-
-        # Simulate translation benchmark
-        await asyncio.sleep(0.1)
-        bench.translation_time = 0.1
-
-        # Simulate TTS benchmark
-        await asyncio.sleep(0.1)
-        bench.tts_time = 0.1
-
-        # Simulate separation benchmark
-        await asyncio.sleep(0.1)
-        bench.separation_time = 0.1
-
-        bench.total_time = time.time() - start
-        return bench
+        return await _run_real_benchmark(
+            duration_seconds=duration_seconds,
+            tts_sentences=tts_sentences,
+            settings=self.settings,
+        )
 
     def get_all_jobs(self) -> List[Any]:
         return list(self.jobs.values())

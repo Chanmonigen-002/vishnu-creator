@@ -10,7 +10,8 @@
  */
 
 import { spawn, ChildProcess } from 'node:child_process';
-import { join } from 'node:path';
+import { existsSync } from 'node:fs';
+import { join, resolve } from 'node:path';
 import { createHash } from 'node:crypto';
 import { DubEngineClient } from './client.js';
 import {
@@ -152,8 +153,17 @@ export class DubEngineService {
   private async startLocal(): Promise<void> {
     if (this.isRunning()) return;
 
-    const pythonPath = this.config.pythonPath || 'python';
-    const engineDir = join(process.cwd(), 'services', 'dub-engine');
+    const engineDir = this.config.enginePath
+      ? resolve(this.config.enginePath)
+      : join(process.cwd(), 'services', 'dub-engine');
+    const venvPython = join(
+      engineDir,
+      '.venv',
+      process.platform === 'win32' ? 'Scripts' : 'bin',
+      process.platform === 'win32' ? 'python.exe' : 'python'
+    );
+    const pythonPath =
+      this.config.pythonPath || (existsSync(venvPython) ? venvPython : 'python');
 
     this.child = spawn(pythonPath, ['-m', 'vishnu_dub.api'], {
       cwd: engineDir,

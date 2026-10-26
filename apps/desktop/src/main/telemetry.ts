@@ -4,7 +4,7 @@ import { dirname } from 'node:path';
 import type { DesktopLogger } from './logger.js';
 import type { SettingsStore } from './settings-store.js';
 
-const DEFAULT_TELEMETRY_URL = 'https://admin.clawee.work/api/v1/public/desktop-usage';
+const DEFAULT_TELEMETRY_URL = '';
 const ACTIVE_INTERVAL_MS = 60_000;
 const REPORT_INTERVAL_MS = 6 * 60 * 60 * 1000;
 const REPORT_TIMEOUT_MS = 5_000;

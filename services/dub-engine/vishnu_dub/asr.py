@@ -76,10 +76,13 @@ class FasterWhisperBackend(ASRBackend):
         if self._model is None:
             device = "cuda" if self.config.enable_gpu else "cpu"
             compute_type = "float16" if device == "cuda" else "int8"
+            whisper_dir = self.settings.model_store_path / "whisper"
+            whisper_dir.mkdir(parents=True, exist_ok=True)
             self._model = WhisperModel(
                 self.config.whisper_cpp_model,
                 device=device,
                 compute_type=compute_type,
+                download_root=str(whisper_dir),
             )
 
         segments, info = self._model.transcribe(

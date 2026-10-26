@@ -3338,5 +3338,21 @@
   "Subtitle preview progress": "پیشرفت پیش‌نمایش زیرنویس",
   "Adjust timing": "تنظیم زمان‌بندی",
   "Enter the required credentials for the selected dubbing service to continue.": "برای ادامه، اطلاعات احراز هویت موردنیاز سرویس دوبله انتخاب‌شده را وارد کنید.",
-  "Save and continue composing": "ذخیره و ادامه ساخت ویدیو"
+  "Save and continue composing": "ذخیره و ادامه ساخت ویدیو",
+  "Dub Engine": "Dub Engine",
+  "Local / Remote Dub Engine": "Local / Remote Dub Engine",
+  "Send dubbing jobs to a local or remote Vishnu Dub engine; when off, cloud TTS synthesis is used.": "Send dubbing jobs to a local or remote Vishnu Dub engine; when off, cloud TTS synthesis is used.",
+  "Enable dub engine": "Enable dub engine",
+  "Local engine (127.0.0.1)": "Local engine (127.0.0.1)",
+  "Remote engine (URL + token)": "Remote engine (URL + token)",
+  "Port": "Port",
+  "Python path": "Python path",
+  "Engine directory": "Engine directory",
+  "Auto-start engine with Runtime": "Auto-start engine with Runtime",
+  "Engine URL": "Engine URL",
+  "Access token": "Access token",
+  "Testing": "Testing",
+  "Test Connection": "Test Connection",
+  "Tier": "Tier",
+  "RAM": "RAM"
 }

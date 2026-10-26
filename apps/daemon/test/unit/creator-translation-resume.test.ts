@@ -1,3 +1,4 @@
+import { join } from 'node:path';
 import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
 import { describe, expect, it, vi } from 'vitest';
 import { translationResumeStage } from '../../src/creator/vishnu/translation-resume.js';
@@ -7,7 +8,7 @@ import type { CreatorExecutorInput } from '../../src/creator/executor.js';
 function fixture(id: string): CreatorExecutorInput {
   return { job: { id: 'job', templateId: 'video-translation', templateVersion: 1, state: { sourceType: 'url' }, stages: [] },
     stageRun: { id, stageId: 'subtitle', status: 'running', progress: {} }, inputArtifacts: [],
-    workdir: `/jobs/job/${id}`, reportProgress: vi.fn(), signal: new AbortController().signal } as unknown as CreatorExecutorInput;
+    workdir: join('/jobs', 'job', id), reportProgress: vi.fn(), signal: new AbortController().signal } as unknown as CreatorExecutorInput;
 }
 
 describe('translation recovery and result report', () => {

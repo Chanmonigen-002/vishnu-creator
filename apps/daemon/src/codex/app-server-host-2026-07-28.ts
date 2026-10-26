@@ -337,6 +337,7 @@ export function createCodexAppServerHost(
       resolveResult = resolve;
       rejectResult = reject;
     });
+    void result.catch(() => undefined);
     const job: ActiveJob = {
       generation: ++generationSequence,
       input: turnInput,

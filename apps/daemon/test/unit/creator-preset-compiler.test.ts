@@ -76,7 +76,17 @@ describe('creator preset compiler', () => {
     const outside = join(tempDir, 'outside.webp');
     writeFileSync(outside, readFileSync(cover));
     rmSync(cover);
-    symlinkSync(outside, cover);
+    try {
+      symlinkSync(outside, cover);
+    } catch (error) {
+      if ((error as NodeJS.ErrnoException)?.code === 'EPERM') {
+        const outsideDir = join(tempDir, 'outside-dir');
+        mkdirSync(outsideDir, { recursive: true });
+        symlinkSync(outsideDir, cover, 'junction');
+      } else {
+        throw error;
+      }
+    }
     await expect(validateCreatorPresets(fixture)).rejects.toThrow(
       'symbolic links are not allowed'
     );

@@ -1,6 +1,16 @@
 import { describe, expect, it } from 'vitest';
 import type { SubtitleCue } from './VideoTranslationResultWorkspace.js';
-import { mergeSubtitle, retimeSubtitle, sameSubtitleCues, splitSubtitle, subtitleSeconds, subtitleTimestamp, waveformPeaks } from './subtitle-editing.js';
+import {
+  mergeSubtitle,
+  retimeSubtitle,
+  sameSubtitleCues,
+  segmentKhmerWords,
+  splitSubtitle,
+  subtitleSeconds,
+  subtitleTimestamp,
+  waveformPeaks,
+  wrapKhmerSubtitleText
+} from './subtitle-editing.js';
 
 const cues: SubtitleCue[] = [
   { id: 4, start: '00:00:01,250', end: '00:00:05,750', text: 'Hello world, welcome home.', sourceText: '你好世界，欢迎回家。' },
@@ -57,5 +67,32 @@ describe('subtitle editing', () => {
     expect(waveformPeaks([new Float32Array([0, -.8, 0, 0]), new Float32Array([0, 0, 0, .5])], 2)).toEqual([expect.closeTo(.8), .5]);
     expect(waveformPeaks([new Float32Array(10)], 4)).toEqual([0, 0, 0, 0]);
     expect(waveformPeaks([])).toEqual([]);
+  });
+
+  it('segments and wraps unspaced Khmer sentences at word boundaries without splitting coeng clusters', () => {
+    const sentence = 'សូមស្វាគមន៍មកកាន់កម្មវិធីបកប្រែវីដេអូភាសាខ្មែរ។';
+    const words = segmentKhmerWords(sentence);
+    expect(words.length).toBeGreaterThan(3);
+    expect(words.join('')).toBe(sentence);
+    for (const word of words) {
+      // A segmented Khmer word must never start with a coeng sign (U+17D2) or dependent vowel (U+17B6..U+17C5)
+      expect(word[0]).not.toMatch(/[\u17b6-\u17d3]/);
+    }
+
+    const wrapped = wrapKhmerSubtitleText(sentence, 20);
+    const lines = wrapped.split('\n');
+    expect(lines.length).toBeGreaterThanOrEqual(2);
+    expect(lines.join('')).toBe(sentence);
+    for (const line of lines) {
+      expect(line[0]).not.toMatch(/[\u17b6-\u17d3]/);
+    }
+
+    const khmerCues: SubtitleCue[] = [
+      { id: 1, start: '00:00:00,000', end: '00:00:04,000', text: sentence, sourceText: 'Welcome to the Khmer video translation app.' }
+    ];
+    const split = splitSubtitle(khmerCues, 1, 2.0);
+    expect(split).toHaveLength(2);
+    expect(split[0]!.text + split[1]!.text).toBe(sentence);
+    expect(split[1]!.text[0]).not.toMatch(/[\u17b6-\u17d3]/);
   });
 });

@@ -1,3 +1,4 @@
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import { resolveDesktopUserDataPath } from '../src/main/runtime-profile.js';
 
@@ -13,6 +14,6 @@ describe('Desktop runtime profile', () => {
     expect(resolveDesktopUserDataPath(
       '/Users/demo/Library/Application Support/VishnuCreator',
       true
-    )).toBe('/Users/demo/Library/Application Support/VishnuCreator Development');
+    )).toBe(join('/Users/demo/Library/Application Support', 'VishnuCreator Development'));
   });
 });

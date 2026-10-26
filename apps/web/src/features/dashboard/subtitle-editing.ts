@@ -26,7 +26,72 @@ export function retimeSubtitle(cues: SubtitleCue[], id: number, start: number, e
     .sort((a, b) => subtitleSeconds(a.start) - subtitleSeconds(b.start));
 }
 
+const khmerWordSegmenter =
+  typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function'
+    ? new Intl.Segmenter('km', { granularity: 'word' })
+    : undefined;
+
+const KHMER_SCRIPT_RE = /[\u1780-\u17ff\u19e0-\u19ff]/;
+
+export function segmentKhmerWords(text: string): string[] {
+  if (!text) return [];
+  if (!khmerWordSegmenter) return Array.from(text);
+  const segments: string[] = [];
+  for (const part of khmerWordSegmenter.segment(text)) {
+    if (part.segment) segments.push(part.segment);
+  }
+  return segments;
+}
+
+export function wrapKhmerSubtitleText(text: string, maxCharsPerLine = 42): string {
+  if (!text || maxCharsPerLine <= 0) return text;
+  const paragraphs = text.split('\n');
+  return paragraphs
+    .map(paragraph => {
+      if (!KHMER_SCRIPT_RE.test(paragraph)) return paragraph;
+      const tokens = segmentKhmerWords(paragraph);
+      const lines: string[] = [];
+      let current = '';
+      for (const token of tokens) {
+        const currentLen = Array.from(current).length;
+        const tokenLen = Array.from(token).length;
+        if (currentLen > 0 && currentLen + tokenLen > maxCharsPerLine) {
+          lines.push(current.trim());
+          current = token.trimStart();
+        } else {
+          current += token;
+        }
+      }
+      if (current.trim().length > 0 || lines.length === 0) {
+        lines.push(current.trim());
+      }
+      return lines.join('\n');
+    })
+    .join('\n');
+}
+
 function splitText(text: string, fraction: number): [string, string] {
+  if (KHMER_SCRIPT_RE.test(text) && khmerWordSegmenter) {
+    const tokens = segmentKhmerWords(text);
+    if (tokens.length >= 2) {
+      const totalChars = Array.from(text).length;
+      const targetChars = Math.max(1, Math.min(totalChars - 1, Math.round(totalChars * fraction)));
+      let bestIndex = 1;
+      let bestDiff = Number.POSITIVE_INFINITY;
+      let acc = 0;
+      for (let i = 0; i < tokens.length - 1; i++) {
+        acc += Array.from(tokens[i]!).length;
+        const diff = Math.abs(acc - targetChars);
+        if (diff < bestDiff) {
+          bestDiff = diff;
+          bestIndex = i + 1;
+        }
+      }
+      const left = tokens.slice(0, bestIndex).join('').trim();
+      const right = tokens.slice(bestIndex).join('').trim();
+      if (left && right) return [left, right];
+    }
+  }
   const chars = Array.from(text);
   if (chars.length < 2) return [text, text];
   let at = Math.max(1, Math.min(chars.length - 1, Math.round(chars.length * fraction)));

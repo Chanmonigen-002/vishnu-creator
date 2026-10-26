@@ -54,8 +54,20 @@ if (!args.includes('--ignore-user-config') || !args.includes('image_generation')
     const path = join(directory, 'image.png');
     await writeFile(path, mode === 'invalid' ? Buffer.from('not an image') : png);
     if (mode === 'old') await utimes(path, new Date(0), new Date(0));
-    const outputPath = mode === 'symlink' ? join(process.cwd(), 'output', 'linked.png') : path;
-    if (mode === 'symlink') await symlink(path, outputPath);
+    let outputPath = mode === 'symlink' ? join(process.cwd(), 'output', 'linked.png') : path;
+    if (mode === 'symlink') {
+      try {
+        await symlink(path, outputPath);
+      } catch (error) {
+        if (error && typeof error === 'object' && 'code' in error && error.code === 'EPERM') {
+          const linkedDir = join(process.cwd(), 'output', 'linked-dir');
+          await symlink(directory, linkedDir, 'junction');
+          outputPath = join(linkedDir, 'image.png');
+        } else {
+          throw error;
+        }
+      }
+    }
     if (mode !== 'cli-only') emit({ type: 'item.completed', item: { type: 'image_generation', status: 'completed', ...(mode === 'home' || mode === 'other-thread' ? {} : { saved_path: outputPath }) } });
     else emit({ type: 'item.completed', item: { type: 'agent_message', text: 'Saved the generated image.' } });
     emit({ type: 'turn.completed' });

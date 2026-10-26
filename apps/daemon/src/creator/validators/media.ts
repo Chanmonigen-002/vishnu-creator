@@ -1,4 +1,5 @@
 import { execFile } from 'node:child_process';
+import { existsSync, readFileSync } from 'node:fs';
 import { stat } from 'node:fs/promises';
 
 export type MediaProbe = {
@@ -43,10 +44,32 @@ export async function validateMediaFile(
 }
 
 function execFileText(command: string, args: string[]): Promise<string> {
+  const [resolvedCommand, resolvedArgs] = resolveExecutableCommand(command, args);
   return new Promise((resolve, reject) => {
-    execFile(command, args, { windowsHide: true, maxBuffer: 4 * 1024 * 1024 }, (error, stdout) => {
+    execFile(resolvedCommand, resolvedArgs, { windowsHide: true, maxBuffer: 4 * 1024 * 1024 }, (error, stdout) => {
       if (error) reject(error);
       else resolve(stdout);
     });
   });
+}
+
+function resolveExecutableCommand(command: string, args: string[]): [string, string[]] {
+  if (process.platform !== 'win32' || /\.(?:exe|cmd|bat|com)$/i.test(command)) {
+    return [command, args];
+  }
+  try {
+    const firstLine = readFileSync(command, 'utf8').split(/\r?\n/, 1)[0] ?? '';
+    if (firstLine.startsWith('#!')) {
+      if (/\bnode\b/i.test(firstLine)) {
+        return [process.execPath, [command, ...args]];
+      }
+      if (/\b(?:sh|bash)\b/i.test(firstLine)) {
+        const gitSh = 'C:\\Program Files\\Git\\bin\\sh.exe';
+        return [existsSync(gitSh) ? gitSh : 'sh', [command, ...args]];
+      }
+    }
+  } catch {
+    // Fall back to direct execution.
+  }
+  return [command, args];
 }

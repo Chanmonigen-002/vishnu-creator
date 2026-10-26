@@ -1805,7 +1805,7 @@ describe('DashboardPage', () => {
     fireEvent.click(screen.getByRole('radio', { name: '温暖' }));
 
     const summary = screen.getByLabelText('任务摘要');
-    expect(summary).toHaveTextContent('nova');
+    expect(summary).toHaveTextContent('星语');
     expect(summary).toHaveTextContent('温暖');
     expect(summary).toHaveTextContent('1.00x');
     expect(summary).toHaveTextContent('MP3');

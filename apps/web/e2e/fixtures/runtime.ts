@@ -120,7 +120,7 @@ export const test = base.extend<TestFixtures>({
     const stateDir = join(rootDir, 'fake-codex-state');
     const projectDir = join(rootDir, 'workspace');
     const configPath = join(rootDir, 'fake-codex-config.json');
-    const wrapperPath = join(rootDir, process.platform === 'win32' ? 'fake-codex.exe' : 'fake-codex');
+    const wrapperPath = join(rootDir, process.platform === 'win32' ? 'fake-codex.cmd' : 'fake-codex');
     const serverLogPath = join(rootDir, 'server.log');
     mkdirSync(dataDir, { recursive: true });
     mkdirSync(codexHome, { recursive: true });
@@ -162,14 +162,20 @@ export const test = base.extend<TestFixtures>({
     prepareDaemonDevelopment(packageManagerScript);
     let presetCatalogRoot = process.env.VISHNUCREATOR_E2E_PRESET_CATALOG_ROOT;
     const startRuntime = () => {
+      const isWin = process.platform === 'win32';
+      const command = packageManagerScript === undefined
+        ? (isWin ? 'pnpm.cmd' : 'pnpm')
+        : process.execPath;
+      const cmdArgs = packageManagerScript === undefined
+        ? packageManagerArgs
+        : [packageManagerScript, ...packageManagerArgs];
       const next = spawn(
-        packageManagerScript === undefined ? 'pnpm' : process.execPath,
-        packageManagerScript === undefined
-          ? packageManagerArgs
-          : [packageManagerScript, ...packageManagerArgs],
+        command,
+        cmdArgs,
         {
           cwd: repoRoot,
-          detached: process.platform !== 'win32',
+          detached: !isWin,
+          shell: isWin && packageManagerScript === undefined,
           env: {
             ...process.env,
             VISHNUCREATOR_DATA_DIR: dataDir,
@@ -583,6 +589,13 @@ function writeFakeCodexLauncher(targetPath: string): void {
   // Use the Node.js fake-codex.mjs directly on all platforms to avoid
   // needing a Go toolchain to build the Windows launcher. The .mjs script
   // already handles --version and all capability probes correctly.
+  if (process.platform === 'win32') {
+    writeFileSync(
+      targetPath,
+      `@"${process.execPath}" "${fakeCodexScript}" %*\r\n`
+    );
+    return;
+  }
   writeFileSync(
     targetPath,
     `#!/bin/sh\nexec "${process.execPath}" "${fakeCodexScript}" "\$@"\n`,
@@ -601,7 +614,8 @@ function prepareDaemonDevelopment(packageManagerScript: string | undefined): voi
   } else {
     execFileSync(process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm', args, {
       cwd: repoRoot,
-      stdio: 'inherit'
+      stdio: 'inherit',
+      shell: process.platform === 'win32'
     });
   }
   daemonDevelopmentPrepared = true;

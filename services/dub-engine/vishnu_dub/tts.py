@@ -53,7 +53,18 @@ class EdgeTTSBackend(TTSBackend):
     }
 
     def __init__(self, command: str = "edge-tts"):
-        self.command = command
+        if command == "edge-tts":
+            import shutil
+            import sys
+            venv_candidate = Path(sys.executable).parent / (
+                "edge-tts.exe" if sys.platform == "win32" else "edge-tts"
+            )
+            if venv_candidate.exists():
+                self.command = str(venv_candidate)
+            else:
+                self.command = shutil.which("edge-tts") or command
+        else:
+            self.command = command
 
     async def synthesize(self,
         text: str,
@@ -73,7 +84,9 @@ class EdgeTTSBackend(TTSBackend):
             "--write-media", str(output_path),
         ]
         if speed != 1.0:
-            cmd.extend(["--rate", f"{int((speed - 1) * 100)}%"])
+            rate_pct = int(round((speed - 1.0) * 100))
+            if rate_pct != 0:
+                cmd.extend(["--rate", f"{rate_pct:+d}%"])
 
         proc = await asyncio.create_subprocess_exec(
             *cmd,
@@ -89,15 +102,18 @@ class EdgeTTSBackend(TTSBackend):
             raise RuntimeError("edge-tts produced empty output")
 
         # Get duration via ffprobe
-        import subprocess
-        result = subprocess.run([
-            "ffprobe", "-v", "error",
-            "-show_entries", "format=duration",
-            "-of", "default=noprint_wrappers=1:nokey=1",
-            str(output_path)
-        ], capture_output=True, text=True, timeout=10)
-
-        duration = float(result.stdout.strip()) if result.stdout.strip() else 0.0
+        from vishnu_dub.config import resolve_ffprobe_path
+        ffprobe_bin = resolve_ffprobe_path()
+        try:
+            result = subprocess.run([
+                ffprobe_bin, "-v", "error",
+                "-show_entries", "format=duration",
+                "-of", "default=noprint_wrappers=1:nokey=1",
+                str(output_path)
+            ], capture_output=True, text=True, timeout=10)
+            duration = float(result.stdout.strip()) if result.stdout.strip() else 0.0
+        except Exception:
+            duration = 0.0
 
         return TTSResult(
             audio_path=output_path,
@@ -184,15 +200,18 @@ class OpenAITTSBackend(TTSBackend):
                 f.write(response.content)
 
             # Get duration
-            import subprocess
-            result = subprocess.run([
-                "ffprobe", "-v", "error",
-                "-show_entries", "format=duration",
-                "-of", "default=noprint_wrappers=1:nokey=1",
-                str(output_path)
-            ], capture_output=True, text=True, timeout=10)
-
-            duration = float(result.stdout.strip()) if result.stdout.strip() else 0.0
+            from vishnu_dub.config import resolve_ffprobe_path
+            ffprobe_bin = resolve_ffprobe_path()
+            try:
+                result = subprocess.run([
+                    ffprobe_bin, "-v", "error",
+                    "-show_entries", "format=duration",
+                    "-of", "default=noprint_wrappers=1:nokey=1",
+                    str(output_path)
+                ], capture_output=True, text=True, timeout=10)
+                duration = float(result.stdout.strip()) if result.stdout.strip() else 0.0
+            except Exception:
+                duration = 0.0
 
             return TTSResult(
                 audio_path=output_path,

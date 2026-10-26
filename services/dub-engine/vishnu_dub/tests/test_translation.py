@@ -15,6 +15,7 @@ from vishnu_dub.translation import (
     TranslationSegment,
     TranslationResult,
     EdgeTTSTranslationBackend,
+    normalize_khmer_translation,
 )
 
 KHMER_RULES = LLMTranslationBackend.KHMER_RULES
@@ -89,14 +90,14 @@ def test_edge_tts_same_language_returns_segments():
     assert out == segs
 
 
-def test_edge_tts_foreign_language_marks_target():
+def test_edge_tts_foreign_language_requires_llm_credentials():
     backend = EdgeTTSTranslationBackend()
+    assert backend.is_available() is False
     segs = [{"start": 0.0, "end": 2.0, "text": "Hello"}]
-    out = asyncio.run(backend.translate(
-        segs, source_language="en", target_language="km", cps=13.0
-    ))
-    assert out[0]["text"] == "[km] Hello"
-    assert out[0]["source_text"] == "Hello"
+    with pytest.raises(RuntimeError, match="Translation backend not configured"):
+        asyncio.run(backend.translate(
+            segs, source_language="en", target_language="km", cps=13.0
+        ))
 
 
 # ── Khmer text handling ──────────────────────────────────────────────
@@ -121,9 +122,11 @@ def test_khmer_ends_with_punctuation():
 
 
 def test_khmer_numerals_are_arabic():
-    """Numbers are written as Arabic numerals per the rules."""
-    text = "មានទី១២៣ ប្រាំពីរ។"
-    assert re.search(r"\d+", text) is not None
+    """Numbers are normalized to ASCII Arabic numerals (0-9) and U+200B is stripped."""
+    text = normalize_khmer_translation("មានទី១២៣\u200bប្រាំពីរ។")
+    assert "\u200b" not in text
+    assert re.search(r"[0-9]+", text) is not None
+    assert "123" in text
 
 
 # ── LLMTranslationBackend rules selection ────────────────────────────

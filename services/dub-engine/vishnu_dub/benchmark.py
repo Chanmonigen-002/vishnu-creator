@@ -4,9 +4,9 @@ import asyncio
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Optional
+from typing import Any, Optional
 
-from vishnu_dub.config import get_settings
+from vishnu_dub.config import get_settings, resolve_ffmpeg_path
 from vishnu_dub.jobs import JobManager, JobStatus
 from vishnu_dub.asr import get_asr_backend
 from vishnu_dub.translation import get_translation_backend
@@ -35,7 +35,6 @@ async def run_benchmark(
 ) -> "BenchmarkResults":
     """Run a comprehensive benchmark of the dub engine."""
     if settings is None:
-        from vishnu_dub.config import get_settings
         settings = get_settings()
 
     from vishnu_dub.api import detect_hardware
@@ -54,8 +53,9 @@ async def run_benchmark(
     try:
         # Generate test audio (10 seconds of silence with a tone)
         import subprocess
+        ffmpeg_bin = resolve_ffmpeg_path(getattr(settings, "ffmpeg_path", None))
         subprocess.run([
-            "ffmpeg", "-y", "-f", "lavfi", "-i",
+            ffmpeg_bin, "-y", "-f", "lavfi", "-i",
             f"sine=frequency=440:duration={duration_seconds}",
             "-ar", "16000", "-ac", "1", str(test_audio)
         ], check=True, capture_output=True)
@@ -93,17 +93,25 @@ async def run_benchmark(
         # Benchmark TTS
         print("Benchmarking TTS...")
         tts_backend = get_tts_backend("edge-tts", {})
-        test_text = "សួស្តីអ្នកប្រុសសួស្តីអ្នកស្រី សួស្តីមនុស្សទាំងអស់"
+        sample_sentences = [
+            "សួស្តីអ្នកទាំងអស់គ្នា សូមស្វាគមន៍មកកាន់កម្មវិធីបកប្រែវីដេអូ។",
+            "ប្រព័ន្ធនេះប្រើប្រាស់បច្ចេកវិទ្យាសំឡេងភាសាខ្មែរដោយស្វ័យប្រវត្តិ។",
+            "សូមអរគុណសម្រាប់ការទស្សនាវីដេអូនេះរហូតដល់ចប់។",
+        ]
         start = time.time()
         if tts_backend.is_available():
-            with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
-                tts_output = Path(f.name)
-            await tts_backend.synthesize(
-                test_text, "km-KH-SreymomNeural", tts_output
-            )
+            for idx in range(max(1, tts_sentences)):
+                sentence = sample_sentences[idx % len(sample_sentences)]
+                with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as f:
+                    tts_output = Path(f.name)
+                try:
+                    await tts_backend.synthesize(
+                        sentence, "km-KH-SreymomNeural", tts_output
+                    )
+                finally:
+                    tts_output.unlink(missing_ok=True)
             results.tts_time = time.time() - start
-            print(f"TTS: {results.tts_time:.2f}s")
-            tts_output.unlink(missing_ok=True)
+            print(f"TTS ({max(1, tts_sentences)} sentences): {results.tts_time:.2f}s")
         else:
             print("TTS backend not available, skipping")
             results.tts_time = 0.0
@@ -132,6 +140,28 @@ async def run_benchmark(
         results.tts_time,
         results.separation_time,
     ])
+
+    try:
+        import json
+        out_dir = Path(getattr(settings, "jobs_path", Path.cwd()))
+        out_dir.mkdir(parents=True, exist_ok=True)
+        report_path = out_dir / "benchmark_results.json"
+        with open(report_path, "w", encoding="utf-8") as bf:
+            json.dump(
+                {
+                    "tier": results.tier,
+                    "asr_time": round(results.asr_time, 4),
+                    "translation_time": round(results.translation_time, 4),
+                    "tts_time": round(results.tts_time, 4),
+                    "separation_time": round(results.separation_time, 4),
+                    "total_time": round(results.total_time, 4),
+                    "hardware_profile": results.hardware_profile,
+                },
+                bf,
+                indent=2,
+            )
+    except Exception:
+        pass
 
     return results
 

@@ -1465,7 +1465,9 @@ export function AppController(props: AppControllerProps) {
       };
     }
 
-    setCreatorPresetsLoading(true);
+    if (creatorPresets.length === 0 || creatorPresetsReloadKey > 0) {
+      setCreatorPresetsLoading(true);
+    }
     setCreatorPresetsError(undefined);
     void creatorService.listPresets(language === 'zh-CN' ? 'zh-CN' : 'en-US')
       .then(response => {
@@ -2975,7 +2977,8 @@ export function AppController(props: AppControllerProps) {
       mobileSidebarHistoryEntryRef.current = false;
       setMobileSidebarOpen(false);
     }
-    if (routeKey === formatRoute(props.route) && !replaceMobileSidebarEntry) return;
+    const currentRouteKey = pendingRouteKeyRef.current ?? formatRoute(props.route);
+    if (routeKey === currentRouteKey && !replaceMobileSidebarEntry) return;
     pendingRouteKeyRef.current = routeKey;
     props.onNavigate(route, {
       ...options,

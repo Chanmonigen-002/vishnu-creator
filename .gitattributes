@@ -1,3 +1,21 @@
+* text=auto eol=lf
+*.png binary
+*.ico binary
+*.icns binary
+*.webp binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ttf binary
+*.otf binary
+*.woff binary
+*.woff2 binary
+*.mp3 binary
+*.mp4 binary
+*.wav binary
+*.gz binary
+*.zip binary
 apps/daemon/src/codex/generated/** text eol=lf
 packages/protocol/src/creator-languages.generated.ts text eol=lf
 runtime/vishnuai/internal/types/language_catalog.generated.go text eol=lf
+

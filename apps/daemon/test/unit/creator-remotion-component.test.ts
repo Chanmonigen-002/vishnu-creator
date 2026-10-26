@@ -1,9 +1,9 @@
 import { createHash } from 'node:crypto';
 import { execFileSync } from 'node:child_process';
-import { chmod, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
+import { chmod, link, mkdir, mkdtemp, readFile, rm, symlink, writeFile } from 'node:fs/promises';
 import { createServer, type Server } from 'node:http';
 import { tmpdir } from 'node:os';
-import { join } from 'node:path';
+import { basename, join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createRemotionComponentManager, type RemotionComponentManager } from '../../src/creator/stickman/remotion-component.js';
 
@@ -30,7 +30,13 @@ async function fixture(options: { network?: boolean; link?: boolean; wrongPlatfo
   ];
   for (const file of files) await writeFile(join(source, file.path), file.contents);
   await chmod(join(source, 'browser'), 0o755);
-  if (options.link) await symlink(join(root, 'outside'), join(source, 'escape'));
+  if (options.link) {
+    try {
+      await symlink(join(root, 'outside'), join(source, 'escape'));
+    } catch {
+      await link(join(source, 'renderer.js'), join(source, 'escape'));
+    }
+  }
   const manifest = { version: 1, platform: process.platform, arch: process.arch,
     remotionVersion: '4.0.473', chromiumVersion: '149.0.7790.0', bundlePath: 'bundle', browserExecutable: 'browser', rendererEntry: 'renderer.js',
     resources: files.map(file => ({ path: file.path, kind: file.kind, sha256: hash(file.contents), bytes: Buffer.byteLength(file.contents), version: '1', platform: process.platform, arch: process.arch })) };
@@ -57,7 +63,7 @@ async function fixture(options: { network?: boolean; link?: boolean; wrongPlatfo
   const release = { version: 1, id: 'remotion', componentVersion: '1.0.0', remotionVersion: manifest.remotionVersion,
     chromiumVersion: manifest.chromiumVersion, platform: options.wrongPlatform ? 'invalid' : process.platform, arch: process.arch,
     archiveUrl, archiveSha256: hash(await readFile(archive)), manifestSha256: hash(await readFile(join(source, 'manifest.json'))),
-    bytes: (await readFile(archive)).length, fileName: archive.split('/').at(-1) };
+    bytes: (await readFile(archive)).length, fileName: basename(archive) };
   await writeFile(releasePath, JSON.stringify(release));
   const cache = join(root, 'cache');
   const manager = createRemotionComponentManager({ root: cache, releasePath, archivePath: options.network ? undefined : archive, readProxy: async () => '' });

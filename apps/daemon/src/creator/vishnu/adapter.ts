@@ -450,8 +450,9 @@ async function writeArtifactIndex(
   jobsRoot: string,
   input: CreatorExecutorInput
 ): Promise<Array<{ id: string; kind: string; path: string }>> {
-  const jobRoot = resolve(jobsRoot, input.job.id);
-  await mkdir(jobRoot, { recursive: true });
+  const rawJobRoot = resolve(jobsRoot, input.job.id);
+  await mkdir(rawJobRoot, { recursive: true });
+  const jobRoot = await realpath(rawJobRoot);
   const entries: Array<{ id: string; kind: string; relativePath: string; path: string }> = [];
   for (const artifact of input.inputArtifacts) {
     if (artifact.path === null) continue;

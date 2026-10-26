@@ -3338,5 +3338,21 @@
   "Subtitle preview progress": "자막 미리보기 진행 상황",
   "Adjust timing": "타이밍 조정",
   "Enter the required credentials for the selected dubbing service to continue.": "계속하려면 선택한 더빙 서비스에 필요한 인증 정보를 입력하세요.",
-  "Save and continue composing": "저장하고 영상 합성 계속"
+  "Save and continue composing": "저장하고 영상 합성 계속",
+  "Dub Engine": "Dub Engine",
+  "Local / Remote Dub Engine": "Local / Remote Dub Engine",
+  "Send dubbing jobs to a local or remote Vishnu Dub engine; when off, cloud TTS synthesis is used.": "Send dubbing jobs to a local or remote Vishnu Dub engine; when off, cloud TTS synthesis is used.",
+  "Enable dub engine": "Enable dub engine",
+  "Local engine (127.0.0.1)": "Local engine (127.0.0.1)",
+  "Remote engine (URL + token)": "Remote engine (URL + token)",
+  "Port": "Port",
+  "Python path": "Python path",
+  "Engine directory": "Engine directory",
+  "Auto-start engine with Runtime": "Auto-start engine with Runtime",
+  "Engine URL": "Engine URL",
+  "Access token": "Access token",
+  "Testing": "Testing",
+  "Test Connection": "Test Connection",
+  "Tier": "Tier",
+  "RAM": "RAM"
 }

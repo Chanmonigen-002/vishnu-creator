@@ -47,6 +47,24 @@ class TranslationBackend(ABC):
         pass
 
 
+_KHMER_TO_ARABIC_DIGITS = str.maketrans("០១២៣៤៥៦៧៨៩", "0123456789")
+
+
+def normalize_khmer_translation(text: str) -> str:
+    """Normalize Khmer translation text for TTS & subtitle rendering.
+
+    - Removes Zero-Width Spaces (U+200B..U+200D, U+FEFF).
+    - Converts Khmer digits (០-៩) to ASCII Arabic numerals (0-9).
+    """
+    cleaned = (
+        text.replace("\u200b", "")
+        .replace("\u200c", "")
+        .replace("\u200d", "")
+        .replace("\ufeff", "")
+    )
+    return cleaned.translate(_KHMER_TO_ARABIC_DIGITS).strip()
+
+
 class LLMTranslationBackend(TranslationBackend):
     """LLM-based translation with Khmer rules."""
 
@@ -139,6 +157,8 @@ ABSOLUTE RULES:
                 response.raise_for_status()
                 data = response.json()
                 result = data["choices"][0]["message"]["content"].strip()
+                if target_language.lower() in ("km", "khmer"):
+                    result = normalize_khmer_translation(result)
 
             results.append({
                 "start": seg.get("start", 0),
@@ -155,10 +175,10 @@ class EdgeTTSTranslationBackend(TranslationBackend):
 
     @property
     def name(self) -> str:
-        return "edge-tts-translation"
+        return "passthrough-translation"
 
     def is_available(self) -> bool:
-        return True
+        return False
 
     async def translate(
         self,
@@ -167,20 +187,17 @@ class EdgeTTSTranslationBackend(TranslationBackend):
         target_language: str,
         cps: float = 13.0,
     ) -> List[dict]:
-        # For same-language, just return original
+        # Same-language passthrough requires no external translation model
         if source_language == target_language:
             return segments
 
-        # Otherwise, this would need an actual translation service
-        # For now, return segments with a marker
-        return [{
-            **seg,
-            "text": f"[{target_language}] {seg.get('text', '')}",
-            "source_text": seg.get("text", ""),
-        } for seg in segments]
+        raise RuntimeError(
+            f"Translation backend not configured: cannot translate '{source_language}' to '{target_language}' "
+            "without LLM API credentials (set llm.api_key and llm.base_url)."
+        )
 
 
 def get_translation_backend(config: Settings) -> TranslationBackend:
-    if config.llm.source == "codex" and config.llm.api_key:
+    if config.llm.api_key:
         return LLMTranslationBackend(config.llm)
     return EdgeTTSTranslationBackend()

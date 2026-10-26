@@ -562,6 +562,12 @@ export function LanguageProvider(props: PropsWithChildren<{
   const [loadedLanguage, setLoadedLanguage] = useState<AppLanguage>();
 
   useEffect(() => {
+    const sys = resolveAppLanguage('system');
+    if (!hasLanguageCatalog(sys)) void loadLanguageCatalog(sys);
+    if (!hasLanguageCatalog('km-KH')) void loadLanguageCatalog('km-KH');
+  }, []);
+
+  useEffect(() => {
     if (hasLanguageCatalog(language)) return;
     let active = true;
     void loadLanguageCatalog(language).then(() => {
@@ -585,6 +591,14 @@ export function LanguageProvider(props: PropsWithChildren<{
 
   const setPreference = useCallback((nextPreference: AppLanguagePreference) => {
     writeLanguagePreference(nextPreference);
+    const targetLang = nextPreference === 'system' ? resolveAppLanguage('system') : nextPreference;
+    if (!hasLanguageCatalog(targetLang)) {
+      void loadLanguageCatalog(targetLang).then(() => {
+        setLoadedLanguage(targetLang);
+      }).catch(error => {
+        console.error('Failed to preload display language', error);
+      });
+    }
     setPreferenceState(nextPreference);
     if (nextPreference === 'system') setSystemLanguage(resolveAppLanguage('system'));
   }, []);

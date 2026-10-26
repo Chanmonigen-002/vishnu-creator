@@ -39,11 +39,26 @@ export async function writePrivateJsonFile(
       mode: 0o600
     });
     await enforceMode(temporary, 0o600);
-    await rename(temporary, path);
+    await renameWithRetry(temporary, path);
     await enforceMode(path, 0o600);
   } catch (error) {
     await rm(temporary, { force: true }).catch(() => undefined);
     throw error;
+  }
+}
+
+async function renameWithRetry(source: string, destination: string): Promise<void> {
+  for (let attempt = 0; ; attempt += 1) {
+    try {
+      await rename(source, destination);
+      return;
+    } catch (error) {
+      const code = (error as NodeJS.ErrnoException)?.code;
+      if (process.platform !== 'win32' || (code !== 'EPERM' && code !== 'EACCES') || attempt >= 20) {
+        throw error;
+      }
+      await new Promise<void>(resolve => setImmediate(resolve));
+    }
   }
 }
 

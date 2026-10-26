@@ -1,3 +1,4 @@
+import { join, resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import {
   createProductionServerInput,
@@ -103,31 +104,33 @@ describe('daemon production startup', () => {
   });
 
   it('resolves the default VishnuCreator layout without a Codex home segment', () => {
+    const appHome = resolve('/Users/demo', '.vishnucreator');
     expect(resolveProductionRuntimePaths({}, {
       homeDir: '/Users/demo'
     })).toEqual({
-      appHome: '/Users/demo/.vishnucreator',
-      dataDir: '/Users/demo/.vishnucreator/data',
-      configFile: '/Users/demo/.vishnucreator/config.toml',
-      credentialsFile: '/Users/demo/.vishnucreator/credentials.json',
-      runtimeDir: '/Users/demo/.vishnucreator/runtime',
-      creatorDir: '/Users/demo/.vishnucreator/creator',
-      codexHome: '/Users/demo/.vishnucreator/runtime/codex'
+      appHome,
+      dataDir: join(appHome, 'data'),
+      configFile: join(appHome, 'config.toml'),
+      credentialsFile: join(appHome, 'credentials.json'),
+      runtimeDir: join(appHome, 'runtime'),
+      creatorDir: join(appHome, 'creator'),
+      codexHome: join(appHome, 'runtime', 'codex')
     });
   });
 
   it('resolves an isolated development layout', () => {
+    const appHome = resolve('/Users/demo', '.vishnucreator', 'development');
     expect(resolveProductionRuntimePaths({}, {
       homeDir: '/Users/demo',
       runtimeChannel: 'development'
     })).toEqual({
-      appHome: '/Users/demo/.vishnucreator/development',
-      dataDir: '/Users/demo/.vishnucreator/development/data',
-      configFile: '/Users/demo/.vishnucreator/development/config.toml',
-      credentialsFile: '/Users/demo/.vishnucreator/development/credentials.json',
-      runtimeDir: '/Users/demo/.vishnucreator/development/runtime',
-      creatorDir: '/Users/demo/.vishnucreator/development/creator',
-      codexHome: '/Users/demo/.vishnucreator/development/runtime/codex'
+      appHome,
+      dataDir: join(appHome, 'data'),
+      configFile: join(appHome, 'config.toml'),
+      credentialsFile: join(appHome, 'credentials.json'),
+      runtimeDir: join(appHome, 'runtime'),
+      creatorDir: join(appHome, 'creator'),
+      codexHome: join(appHome, 'runtime', 'codex')
     });
   });
 
@@ -141,14 +144,16 @@ describe('daemon production startup', () => {
   });
 
   it('keeps isolated test configuration next to an explicit data directory', () => {
+    const appHome = resolve('/tmp/vishnucreator-e2e');
+    const dataDir = resolve('/tmp/vishnucreator-e2e/runtime');
     expect(resolveProductionRuntimePaths({
       dataDir: '/tmp/vishnucreator-e2e/runtime'
     })).toMatchObject({
-      appHome: '/tmp/vishnucreator-e2e',
-      dataDir: '/tmp/vishnucreator-e2e/runtime',
-      configFile: '/tmp/vishnucreator-e2e/config.toml',
-      credentialsFile: '/tmp/vishnucreator-e2e/credentials.json',
-      codexHome: '/tmp/vishnucreator-e2e/runtime/codex'
+      appHome,
+      dataDir,
+      configFile: join(appHome, 'config.toml'),
+      credentialsFile: join(appHome, 'credentials.json'),
+      codexHome: join(dataDir, 'codex')
     });
   });
 });
