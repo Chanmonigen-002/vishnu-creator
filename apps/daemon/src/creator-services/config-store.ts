@@ -151,7 +151,26 @@ export const creatorServicesConfigSchema = z.object({
   }).strict(),
   tts: ttsConfigSchema,
   image: z.union([imageConfigSchema, legacyImageConfigSchema]),
-  video: z.union([videoConfigSchema, legacyVideoConfigSchema]).default(videoConfigDefault)
+  video: z.union([videoConfigSchema, legacyVideoConfigSchema]).default(videoConfigDefault),
+  dubEngine: z.object({
+    enabled: z.boolean().default(false),
+    mode: z.enum(['local', 'remote']).default('local'),
+    url: boundedString(2048).default('http://127.0.0.1:8765'),
+    port: z.number().int().min(1).max(65535).default(8765),
+    token: boundedString(2048).default(''),
+    enginePath: boundedString(2048).default(''),
+    pythonPath: boundedString(2048).default(''),
+    autoStart: z.boolean().default(false),
+  }).strict().default({
+    enabled: false,
+    mode: 'local',
+    url: 'http://127.0.0.1:8765',
+    port: 8765,
+    token: '',
+    enginePath: '',
+    pythonPath: '',
+    autoStart: false,
+  })
 }).strict();
 
 export type CreatorServicesConfigStore = {
@@ -439,6 +458,7 @@ export function presentCreatorServicesConfig(
   redact('video.kling.accessKey', redacted.video.kling.accessKey, () => { redacted.video.kling.accessKey = ''; });
   redact('video.kling.secretKey', redacted.video.kling.secretKey, () => { redacted.video.kling.secretKey = ''; });
   redact('video.veo.apiKey', redacted.video.veo.apiKey, () => { redacted.video.veo.apiKey = ''; });
+  redact('dubEngine.token', redacted.dubEngine.token, () => { redacted.dubEngine.token = ''; });
 
   return { config: redacted, configuredCredentials };
 }
