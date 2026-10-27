@@ -10,6 +10,7 @@ import type { CreatorServicesConfigStore } from '../../src/creator-services/conf
 import { registerCreatorServicesRoutes } from '../../src/api/routes.creator-services.js';
 import { createVishnuCreatorServicesCapabilities } from '../../src/creator/vishnu/capabilities.js';
 import type { VishnuTtsService } from '../../src/creator/vishnu/tts-service.js';
+import { DubEngineClient } from '../../src/dub-engine/client.js';
 
 describe('creator services API', () => {
   let server: FastifyInstance;
@@ -307,5 +308,60 @@ describe('creator services API', () => {
       language: 'ja-JP',
       text: '试听文本'
     });
+  });
+
+  it('resynthesizes a segment via dub-engine and validates required text', async () => {
+    const bad = await server.inject({
+      method: 'POST',
+      url: '/creator-services/dub-engine/resynthesize-segment',
+      payload: {
+        text: '   '
+      }
+    });
+    expect(bad.statusCode).toBe(400);
+    expect(bad.json().error.code).toBe('VALIDATION_FAILED');
+
+    const spy = vi.spyOn(DubEngineClient.prototype, 'resynthesizeSegment').mockResolvedValueOnce({
+      ok: true,
+      segmentIndex: 0,
+      text: 'សួស្តី ភ្នំពេញ',
+      audioUrl: '/v1/dub/job-1/resynthesized_0.mp3',
+      duration: 1.85
+    });
+
+    const good = await server.inject({
+      method: 'POST',
+      url: '/creator-services/dub-engine/resynthesize-segment',
+      payload: {
+        jobId: 'job-1',
+        segmentIndex: 0,
+        text: 'សួស្តី ភ្នំពេញ',
+        targetLanguage: 'km'
+      }
+    });
+
+    expect(good.statusCode).toBe(200);
+    expect(good.json()).toEqual({
+      ok: true,
+      segmentIndex: 0,
+      text: 'សួស្តី ភ្នំពេញ',
+      audioUrl: '/creator-services/dub-engine/artifacts/job-1/resynthesized_0.mp3',
+      duration: 1.85
+    });
+    expect(spy).toHaveBeenCalledWith(expect.objectContaining({
+      jobId: 'job-1',
+      segmentIndex: 0,
+      text: 'សួស្តី ភ្នំពេញ',
+      targetLanguage: 'km'
+    }));
+
+    vi.spyOn(DubEngineClient.prototype, 'downloadArtifact').mockResolvedValueOnce(Buffer.from('mock-audio-data'));
+    const art = await server.inject({
+      method: 'GET',
+      url: '/creator-services/dub-engine/artifacts/job-1/resynthesized_0.mp3'
+    });
+    expect(art.statusCode).toBe(200);
+    expect(art.headers['content-type']).toBe('audio/mpeg');
+    expect(art.rawPayload).toEqual(Buffer.from('mock-audio-data'));
   });
 });

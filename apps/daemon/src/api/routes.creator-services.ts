@@ -260,6 +260,91 @@ export async function registerCreatorServicesRoutes(
     }
   });
 
+  server.post<{
+    Body: {
+      jobId?: string;
+      segmentIndex?: number;
+      text?: string;
+      voiceId?: string;
+      provider?: string;
+      speed?: number;
+      targetLanguage?: string;
+    };
+  }>('/creator-services/dub-engine/resynthesize-segment', async (request, reply) => {
+    try {
+      const { jobId, segmentIndex, text, voiceId, provider, speed, targetLanguage } = request.body || {};
+      if (typeof text !== 'string' || !text.trim()) {
+        return reply.code(400).send(apiError('VALIDATION_FAILED', 'Text is required for re-synthesis'));
+      }
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      const result = await client.resynthesizeSegment({
+        jobId,
+        segmentIndex: segmentIndex ?? 0,
+        text: text.trim(),
+        voiceId,
+        provider,
+        speed,
+        targetLanguage,
+      });
+      const filename = result.audioUrl ? result.audioUrl.split('/').pop() || '' : '';
+      const safeJobId = jobId || 'segment_cache';
+      const proxyAudioUrl = filename
+        ? `/creator-services/dub-engine/artifacts/${encodeURIComponent(safeJobId)}/${encodeURIComponent(filename)}`
+        : result.audioUrl;
+      return {
+        ...result,
+        audioUrl: proxyAudioUrl,
+      };
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Re-synthesis failed'
+      ));
+    }
+  });
+
+  server.get<{
+    Params: {
+      jobId: string;
+      filename: string;
+    };
+  }>('/creator-services/dub-engine/artifacts/:jobId/:filename', async (request, reply) => {
+    try {
+      const { jobId, filename } = request.params;
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      const buffer = await client.downloadArtifact(jobId, filename);
+      const mime = filename.endsWith('.mp3')
+        ? 'audio/mpeg'
+        : filename.endsWith('.srt')
+          ? 'text/plain; charset=utf-8'
+          : 'audio/wav';
+      return reply
+        .header('Content-Type', mime)
+        .header('Content-Length', String(buffer.length))
+        .header('Cache-Control', 'public, max-age=3600')
+        .send(buffer);
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(error.statusCode === 404 ? 404 : 502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Artifact download failed'
+      ));
+    }
+  });
+
   server.delete('/creator-services/config', async (_request, reply) => {
     try {
       const proxy = networkStore !== store ? (await networkStore.read()).proxy : undefined;

@@ -371,6 +371,46 @@ export class DubEngineClient {
     return fromSnakeBenchmark(body);
   }
 
+  async resynthesizeSegment(params: {
+    jobId?: string;
+    segmentIndex: number;
+    text: string;
+    voiceId?: string;
+    provider?: string;
+    speed?: number;
+    targetLanguage?: string;
+  }): Promise<{
+    ok: boolean;
+    segmentIndex: number;
+    audioUrl: string;
+    audioDataUrl?: string;
+    duration: number;
+    text: string;
+  }> {
+    const body = await this.request<Record<string, unknown>>(
+      'POST',
+      '/v1/dub/resynthesize-segment',
+      {
+        job_id: params.jobId ?? null,
+        segment_index: params.segmentIndex,
+        text: params.text,
+        voice_id: params.voiceId ?? null,
+        provider: params.provider ?? 'edge-tts',
+        speed: params.speed ?? 1.0,
+        target_language: params.targetLanguage ?? 'km',
+      }
+    );
+    const rec = asRecord(body);
+    return {
+      ok: readBoolean(rec.ok),
+      segmentIndex: readNumber(rec.segment_index),
+      audioUrl: typeof rec.audio_url === 'string' ? rec.audio_url : '',
+      audioDataUrl: typeof rec.audio_data_url === 'string' ? rec.audio_data_url : undefined,
+      duration: readNumber(rec.duration),
+      text: typeof rec.text === 'string' ? rec.text : params.text,
+    };
+  }
+
   async downloadResult(jobId: string, signal?: AbortSignal): Promise<Buffer> {
     const controller = new AbortController();
     const linkedSignal = signal

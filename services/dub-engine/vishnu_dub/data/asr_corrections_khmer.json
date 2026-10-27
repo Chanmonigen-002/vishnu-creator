@@ -1,0 +1,254 @@
+[
+  {
+    "pattern": "ភ្នុំពេញ",
+    "replacement": "ភ្នំពេញ",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "ភ្នុមពេញ",
+    "replacement": "ភ្នំពេញ",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "ភ្នំពេង",
+    "replacement": "ភ្នំពេញ",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "សៀមរៀប",
+    "replacement": "សៀមរាប",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "បាត់ដំបូង",
+    "replacement": "បាត់ដំបង",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "កំពុងចាម",
+    "replacement": "កំពង់ចាម",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "កំពុងធំ",
+    "replacement": "កំពង់ធំ",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "កំពុងស្ពឺ",
+    "replacement": "កំពង់ស្ពឺ",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "កំពុងឆ្នាំង",
+    "replacement": "កំពង់ឆ្នាំង",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "ព្រះស៊ីហនុ",
+    "replacement": "ព្រះសីហនុ",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "កំពត់",
+    "replacement": "កំពត",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "កណ្ដាល់",
+    "replacement": "កណ្តាល",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "ស្វាយរាង",
+    "replacement": "ស្វាយរៀង",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "ពោធិសាត់",
+    "replacement": "ពោធិ៍សាត់",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "បន្ទាយមានជយ",
+    "replacement": "បន្ទាយមានជ័យ",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "ប៉ាលិន",
+    "replacement": "ប៉ៃលិន",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "ឧត្តមានជ័យ",
+    "replacement": "ឧត្តរមានជ័យ",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "ព្រះវិហា",
+    "replacement": "ព្រះវិហារ",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "ក្រចេ",
+    "replacement": "ក្រចេះ",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "រតនៈគិរី",
+    "replacement": "រតនគិរី",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "មណ្ឌលៈគិរី",
+    "replacement": "មណ្ឌលគិរី",
+    "case_sensitive": false,
+    "category": "geography"
+  },
+  {
+    "pattern": "អ៊ិនធឺណិត",
+    "replacement": "អ៊ីនធឺណិត",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "អ៊ីនធឺណែត",
+    "replacement": "អ៊ីនធឺណិត",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "កុំព្យូទរ",
+    "replacement": "កុំព្យូទ័រ",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "វិដេអូ",
+    "replacement": "វីដេអូ",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "អូដ្យូ",
+    "replacement": "អូឌីយ៉ូ",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "សូហ្វវែ",
+    "replacement": "សូហ្វវែរ",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "ហាដវែ",
+    "replacement": "ហាដវែរ",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "ម៉ូឌែល",
+    "replacement": "ម៉ូដែល",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "អាល់ហ្គូរីតឹម",
+    "replacement": "អាល់ហ្គោរីតឹម",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "វ៉ិបសាយ",
+    "replacement": "វេបសាយ",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "ហ្វេសបុក",
+    "replacement": "ហ្វេសប៊ុក",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "តិកតុក",
+    "replacement": "ទីកតុក",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "ឆាត់ជីភីធី",
+    "replacement": "ឆាតជីភីធី",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "អូភិនអេអាយ",
+    "replacement": "អូផិនអេអាយ",
+    "case_sensitive": false,
+    "category": "tech_loanword"
+  },
+  {
+    "pattern": "វិស្ណុ\\s*ក្រីអេតទ័រ",
+    "replacement": "Vishnu Creator",
+    "case_sensitive": false,
+    "category": "tech_brand"
+  },
+  {
+    "pattern": "វិស្ណុក្រីអេតទ័រ",
+    "replacement": "Vishnu Creator",
+    "case_sensitive": false,
+    "category": "tech_brand"
+  },
+  {
+    "pattern": "យូធូប",
+    "replacement": "YouTube",
+    "case_sensitive": false,
+    "category": "tech_brand"
+  },
+  {
+    "pattern": "ឌីបស៊ីក",
+    "replacement": "DeepSeek",
+    "case_sensitive": false,
+    "category": "tech_brand"
+  },
+  {
+    "pattern": "ភីថតឆ៍",
+    "replacement": "PyTorch",
+    "case_sensitive": false,
+    "category": "tech_brand"
+  },
+  {
+    "pattern": "ផាយថុន",
+    "replacement": "Python",
+    "case_sensitive": false,
+    "category": "tech_brand"
+  },
+  {
+    "pattern": "ហ្គីតហាប់",
+    "replacement": "GitHub",
+    "case_sensitive": false,
+    "category": "tech_brand"
+  }
+]

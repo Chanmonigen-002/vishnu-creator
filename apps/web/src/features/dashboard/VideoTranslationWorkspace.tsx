@@ -4078,6 +4078,22 @@ export default function VideoTranslationWorkspace(props: {
               version={resultVersion}
               versions={resultVersions.map(({ value, description }) => ({ value, description }))}
               targetLanguage={selectedTargetLanguageLabel}
+              targetLanguageCode={selectedResultSettings ? selectedResultSettings.targetLanguage : targetLanguage}
+              onResynthesizeSegment={async (cue, index) => {
+                if (props.creatorServicesService?.resynthesizeSegment) {
+                  const res = await props.creatorServicesService.resynthesizeSegment({
+                    jobId: creatorSession?.job.id,
+                    segmentIndex: index,
+                    text: cue.text,
+                    targetLanguage: selectedResultSettings?.targetLanguage || targetLanguage || 'km',
+                  });
+                  const audioSrc = res.audioDataUrl || res.audioUrl;
+                  if (audioSrc) {
+                    const audio = new Audio(audioSrc);
+                    audio.play().catch(() => {});
+                  }
+                }
+              }}
               outputLabel={selectedOutputLabel}
               subtitleStyleLabel={selectedSubtitleStyleLabel}
               dubbing={dubbing}

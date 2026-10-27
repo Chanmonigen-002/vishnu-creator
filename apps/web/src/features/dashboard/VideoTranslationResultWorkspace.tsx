@@ -1,6 +1,7 @@
 import {
   useEffect,
   useLayoutEffect,
+  useMemo,
   useRef,
   useState,
   type CSSProperties,
@@ -38,6 +39,7 @@ import SubtitleTimeline from './SubtitleTimeline.js';
 import SubtitleFindReplace from './SubtitleFindReplace.js';
 import { sameSubtitleCues, subtitleSeconds } from './subtitle-editing.js';
 import { beginPaneResize, paneInlineDirection } from '../../components/layout/pane-resize-2026-07-29.js';
+import { calculateCueCps, calculateJobQualityReport, type CueCpsInfo, type JobQualityReport } from '@vishnucreator/protocol';
 import './subtitle-editor.css';
 
 export type VideoTranslationResultTab = 'video' | 'subtitles' | 'voice';
@@ -132,6 +134,7 @@ export default function VideoTranslationResultWorkspace(props: {
   version: number;
   versions: VersionItem[];
   targetLanguage: string;
+  targetLanguageCode?: string;
   outputLabel: string;
   subtitleStyleLabel: string;
   dubbing: boolean;
@@ -156,6 +159,7 @@ export default function VideoTranslationResultWorkspace(props: {
   onImmersiveChange?(value: boolean): void;
   onToggleAssistant?(): void;
   onSubtitleCuesChange?(variant: SubtitleResultVariant, cues: SubtitleCue[]): void;
+  onResynthesizeSegment?(cue: SubtitleCue, index: number): Promise<void> | void;
   nextVersion: number;
   affectedArtifacts: string[];
   hasPendingChanges: boolean;
@@ -270,6 +274,66 @@ export default function VideoTranslationResultWorkspace(props: {
   const subtitleCueGroups = activeSubtitleOutput === undefined
     ? []
     : groupSubtitleCues(activeSubtitleOutput.cues, activeSubtitleOutput.variant);
+
+  const effectiveTargetLang = props.targetLanguageCode || props.targetLanguage || 'km';
+  const [showQualityReport, setShowQualityReport] = useState(false);
+  const [reDubbingCueId, setReDubbingCueId] = useState<number | null>(null);
+  const [reDubNotice, setReDubNotice] = useState<string | null>(null);
+
+  const qualityReport = useMemo(() => {
+    if (!activeSubtitleOutput?.cues?.length) return null;
+    return calculateJobQualityReport(activeSubtitleOutput.cues, effectiveTargetLang);
+  }, [activeSubtitleOutput?.cues, effectiveTargetLang]);
+
+  const handleResynthesizeSegment = async (cue: SubtitleCue, index: number) => {
+    if (reDubbingCueId !== null) return;
+    setReDubbingCueId(cue.id);
+    try {
+      if (props.onResynthesizeSegment) {
+        await props.onResynthesizeSegment(cue, index);
+      } else {
+        const payload = JSON.stringify({
+          segmentIndex: index,
+          text: cue.text,
+          targetLanguage: effectiveTargetLang,
+          provider: 'edge-tts',
+          speed: 1.0,
+        });
+        const headers = { 'Content-Type': 'application/json' };
+        let res = await fetch('/creator-services/dub-engine/resynthesize-segment', {
+          method: 'POST',
+          headers,
+          body: payload
+        });
+        if (res.status === 404) {
+          // Dev runtime proxy fallback when accessed on dev server
+          res = await fetch('/.vishnucreator/runtime/creator-services/dub-engine/resynthesize-segment', {
+            method: 'POST',
+            headers,
+            body: payload
+          });
+        }
+        if (!res.ok) {
+          const errBody = await res.json().catch(() => ({}));
+          throw new Error(errBody?.error?.message || errBody?.message || `HTTP ${res.status}`);
+        }
+        const data = await res.json().catch(() => undefined);
+        const audioSrc = data?.audioDataUrl || data?.audioUrl;
+        if (audioSrc) {
+          const audio = new Audio(audioSrc);
+          audio.play().catch(() => {});
+        }
+      }
+      setReDubNotice(l(`第 ${index + 1} 句配音合成完成`, `Cue ${index + 1} re-dubbed successfully`));
+      setTimeout(() => setReDubNotice(null), 4000);
+    } catch (err) {
+      setReDubNotice(l(`重新合成失败: ${err instanceof Error ? err.message : String(err)}`, `Re-dub failed: ${err instanceof Error ? err.message : String(err)}`));
+      setTimeout(() => setReDubNotice(null), 5000);
+    } finally {
+      setReDubbingCueId(null);
+    }
+  };
+
   const generatedArtifactCount = props.videoOutputs.length
     + props.subtitleOutputs.length
     + (props.voiceOutput === undefined ? 0 : 1);
@@ -910,6 +974,24 @@ export default function VideoTranslationResultWorkspace(props: {
                 onClick={() => props.onExport('subtitles', download.artifactId)}>
                 <Download size={15} aria-hidden="true" /><span>{download.label}</span>
               </button>)}
+              {qualityReport ? (
+                <button
+                  type="button"
+                  className={`video-subtitle-quality-badge quality-status-${qualityReport.status}`}
+                  data-testid="quality-report-toggle"
+                  onClick={() => setShowQualityReport(prev => !prev)}
+                  aria-expanded={showQualityReport}
+                  title={l('查看质量分析报告', 'View Dub Quality Report')}
+                >
+                  <span className="quality-icon" aria-hidden="true">📊</span>
+                  <span>{l('质量报告', 'Quality Report')}</span>
+                  <span className="quality-summary-pill">
+                    {qualityReport.overlongCuesCount === 0
+                      ? `✓ ${l('达标', 'Fit')}`
+                      : `${qualityReport.overlongCuesCount} ${l('句偏长', 'Overlong')}`}
+                  </span>
+                </button>
+              ) : null}
               {availableSubtitleVariants.length > 1 && !(props.immersive && props.editorSettings?.output !== undefined) ? (
                 <div className="video-result-subtitle-variants" role="radiogroup" aria-label={l('字幕画幅', 'Subtitle format')}>
                   {availableSubtitleVariants.map(variant => (
@@ -943,6 +1025,42 @@ export default function VideoTranslationResultWorkspace(props: {
               {props.immersive && !settingsOpen ? regenerationControls : null}
             </div>
           </header>
+          {reDubNotice ? (
+            <p className="video-result-notice" role="status" data-testid="redub-notice">{reDubNotice}</p>
+          ) : null}
+          {showQualityReport && qualityReport ? (
+            <div className="video-subtitle-quality-card" role="region" aria-label={l('质量分析报告', 'Quality Analysis Report')}>
+              <div className="quality-card-header">
+                <h4>📊 {l('AI 配音与字幕质量报告 (A/B Quality Report)', 'AI Dubbing & Subtitle Quality Report')}</h4>
+                <button
+                  type="button"
+                  className="quality-card-close"
+                  onClick={() => setShowQualityReport(false)}
+                  aria-label={l('关闭', 'Close')}
+                >
+                  <X size={15} />
+                </button>
+              </div>
+              <div className="quality-metrics-grid">
+                <div className="quality-metric-item">
+                  <span className="quality-metric-label">{l('时间漂移 (Timing Drift)', 'Timing Drift')}</span>
+                  <span className="quality-metric-value">{qualityReport.timingDriftMs} ms</span>
+                </div>
+                <div className="quality-metric-item">
+                  <span className="quality-metric-label">{l('超长字幕片段 (Overlong Cues)', 'Overlong Cues')}</span>
+                  <span className="quality-metric-value">{qualityReport.overlongCuesCount} / {qualityReport.totalCues}</span>
+                </div>
+                <div className="quality-metric-item">
+                  <span className="quality-metric-label">{l('高棉语平均语速 (Khmer CPS)', 'Average Khmer CPS')}</span>
+                  <span className="quality-metric-value">{qualityReport.averageKhmerCps} CPS</span>
+                </div>
+                <div className="quality-metric-item">
+                  <span className="quality-metric-label">{l('字错率预估 (CER Estimate)', 'CER Estimate')}</span>
+                  <span className="quality-metric-value">{qualityReport.cerEstimatePercent}%</span>
+                </div>
+              </div>
+            </div>
+          ) : null}
           {props.taskProgress}
           {activeSubtitleOutput !== undefined ? (
             <div className="video-result-subtitle-preview-layout" ref={previewLayoutRef} data-subtitle-only={props.subtitleOnly || undefined}
@@ -1067,11 +1185,44 @@ export default function VideoTranslationResultWorkspace(props: {
                                   aria-label={props.subtitleOnly ? `${activeSubtitleLabel} ${index + 1}` : `${subtitleVariantLabel(activeSubtitleOutput.variant, l)} ${index + 1}`}
                                 />
                               );
+                              const cpsInfo = calculateCueCps(cue, effectiveTargetLang);
+                              const cueActions = (
+                                <div className="video-subtitle-cue-actions" key={`actions-${cue.id}`}>
+                                  <span
+                                    className={`video-subtitle-cps-badge video-subtitle-cps-${cpsInfo.status}`}
+                                    data-testid={`cue-cps-${cue.id}`}
+                                    title={`${l('语速', 'Speed')}: ${cpsInfo.cps} CPS (${l(cpsInfo.status === 'normal' ? '正常' : cpsInfo.status === 'fast' ? '偏快' : '超长', cpsInfo.status === 'normal' ? 'Normal' : cpsInfo.status === 'fast' ? 'Fast' : 'Overlong')}) · ${l('时长', 'Duration')}: ${cpsInfo.durationSeconds}s · ${l('字数', 'Chars')}: ${cpsInfo.charCount}`}
+                                  >
+                                    {cpsInfo.cps} CPS · {l(
+                                      cpsInfo.status === 'normal' ? '正常' : cpsInfo.status === 'fast' ? '偏快' : '超长',
+                                      cpsInfo.status === 'normal' ? 'Normal' : cpsInfo.status === 'fast' ? 'Fast' : 'Overlong'
+                                    )}
+                                  </span>
+                                  {!editReadOnly ? (
+                                    <button
+                                      type="button"
+                                      className="video-subtitle-redub-btn"
+                                      data-testid={`cue-redub-${cue.id}`}
+                                      disabled={reDubbingCueId === cue.id || !cue.text.trim()}
+                                      onClick={() => handleResynthesizeSegment(cue, index)}
+                                      aria-label={l(`重新合成第 ${index + 1} 句配音`, `Re-dub cue ${index + 1}`)}
+                                      title={l('重新合成该句配音', 'Re-synthesize speech for this line')}
+                                    >
+                                      {reDubbingCueId === cue.id ? (
+                                        <span className="video-subtitle-redub-loading">⚡ {l('合成中…', 'Synthesizing…')}</span>
+                                      ) : (
+                                        <span>⚡ {l('重新合成', 'Re-dub')}</span>
+                                      )}
+                                    </button>
+                                  ) : null}
+                                </div>
+                              );
                               return (
                                 <div className="video-subtitle-cue-pair" key={cue.id}>
                                   {props.immersive || activeSubtitleOutput.translationPosition === 'bottom' ? sourceLine : null}
                                   {translationLine}
                                   {!props.immersive && activeSubtitleOutput.translationPosition !== 'bottom' ? sourceLine : null}
+                                  {cueActions}
                                 </div>
                               );
                             })}

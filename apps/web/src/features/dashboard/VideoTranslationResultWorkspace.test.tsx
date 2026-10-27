@@ -1109,4 +1109,148 @@ describe('VideoTranslationResultWorkspace', () => {
     expect(onVersionChange).toHaveBeenCalledWith(2);
     expect(screen.queryByRole('menu')).not.toBeInTheDocument();
   });
+
+  it('renders live CPS speed badge and triggers per-segment re-dubbing', async () => {
+    const onResynthesize = vi.fn().mockResolvedValue(undefined);
+    render(
+      <VideoTranslationResultWorkspace
+        {...baseProps}
+        activeTab="subtitles"
+        targetLanguage="km"
+        onResynthesizeSegment={onResynthesize}
+        subtitleOutputs={[{
+          artifactId: 'subtitle-horizontal-v1',
+          variant: 'horizontal',
+          artifactVersion: 1,
+          fileName: 'horizontal.srt',
+          cues: [
+            { id: 101, start: '00:00:00,000', end: '00:00:02,000', text: 'សួស្តី ភ្នំពេញ' },
+            { id: 102, start: '00:00:02,040', end: '00:00:03,040', text: 'នេះជាឃ្លាវែងខ្លាំងណាស់សម្រាប់ការសាកល្បង语速' },
+          ],
+          readOnly: false
+        }]}
+      />
+    );
+
+    // 1. Live CPS badge
+    const badge1 = screen.getByTestId('cue-cps-101');
+    expect(badge1).toHaveTextContent(/CPS/);
+    expect(badge1.className).toContain('video-subtitle-cps-');
+
+    // 2. Re-dub action button
+    const redubBtn = screen.getByTestId('cue-redub-101');
+    expect(redubBtn).toHaveTextContent(/重新合成|Re-dub/);
+    await act(async () => {
+      fireEvent.click(redubBtn);
+    });
+    expect(onResynthesize).toHaveBeenCalledWith(
+      expect.objectContaining({ id: 101, text: 'សួស្តី ភ្នំពេញ' }),
+      0
+    );
+  });
+
+  it('toggles interactive Quality Report panel displaying drift, overlong cues, Khmer CPS and CER', () => {
+    render(
+      <VideoTranslationResultWorkspace
+        {...baseProps}
+        activeTab="subtitles"
+        targetLanguage="km"
+        subtitleOutputs={[{
+          artifactId: 'subtitle-horizontal-v1',
+          variant: 'horizontal',
+          artifactVersion: 1,
+          fileName: 'horizontal.srt',
+          cues: [
+            { id: 1, start: '00:00:00,000', end: '00:00:02,000', text: 'សួស្តី ភ្នំពេញ' },
+            { id: 2, start: '00:00:02,050', end: '00:00:04,500', text: 'កម្ពុជាស្រស់ស្អាត' },
+          ],
+          readOnly: false
+        }]}
+      />
+    );
+
+    const toggle = screen.getByTestId('quality-report-toggle');
+    expect(toggle).toHaveTextContent(/质量报告|Quality Report/);
+
+    // Panel is initially closed
+    expect(screen.queryByRole('region', { name: /质量分析报告|Quality Analysis Report/ })).toBeNull();
+
+    // Click toggle to open Quality Report
+    fireEvent.click(toggle);
+    const panel = screen.getByRole('region', { name: /质量分析报告|Quality Analysis Report/ });
+    expect(panel).toBeInTheDocument();
+    expect(panel).toHaveTextContent(/Timing Drift/i);
+    expect(panel).toHaveTextContent(/Overlong Cues/i);
+    expect(panel).toHaveTextContent(/Khmer CPS/i);
+    expect(panel).toHaveTextContent(/CER/i);
+
+    // Close panel
+    fireEvent.click(within(panel).getByRole('button', { name: /关闭|Close/i }));
+    expect(screen.queryByRole('region', { name: /质量分析报告|Quality Analysis Report/ })).toBeNull();
+  });
+
+  it('displays error notice when per-segment re-dub fails instead of false success', async () => {
+    const onResynthesize = vi.fn().mockRejectedValue(new Error('TTS connection timed out'));
+    render(
+      <VideoTranslationResultWorkspace
+        {...baseProps}
+        activeTab="subtitles"
+        targetLanguage="km"
+        onResynthesizeSegment={onResynthesize}
+        subtitleOutputs={[{
+          artifactId: 'subtitle-horizontal-v1',
+          variant: 'horizontal',
+          artifactVersion: 1,
+          fileName: 'horizontal.srt',
+          cues: [
+            { id: 201, start: '00:00:00,000', end: '00:00:02,000', text: 'សួស្តី ភ្នំពេញ' },
+          ],
+          readOnly: false
+        }]}
+      />
+    );
+
+    const redubBtn = screen.getByTestId('cue-redub-201');
+    await act(async () => {
+      fireEvent.click(redubBtn);
+    });
+
+    const notice = screen.getByTestId('redub-notice');
+    expect(notice).toHaveTextContent(/重新合成失败|Re-dub failed/i);
+    expect(notice).toHaveTextContent('TTS connection timed out');
+  });
+
+  it('calibrates CPS correctly when targetLanguage is a localized label like 高棉语 (Khmer)', () => {
+    render(
+      <VideoTranslationResultWorkspace
+        {...baseProps}
+        activeTab="subtitles"
+        targetLanguage="高棉语 (Khmer)"
+        targetLanguageCode="km"
+        subtitleOutputs={[{
+          artifactId: 'subtitle-horizontal-v1',
+          variant: 'horizontal',
+          artifactVersion: 1,
+          fileName: 'horizontal.srt',
+          cues: [
+            // 13 Khmer characters in 1.0s = 13.0 CPS (Normal for Khmer <= 14.5)
+            { id: 301, start: '00:00:00,000', end: '00:00:01,000', text: 'សួស្តី ភ្នំពេញ' },
+            // 18 Khmer characters in 1.1s = 16.4 CPS (Fast for Khmer: 14.5 < CPS <= 19.0; whereas Latin <= 17 is normal)
+            { id: 302, start: '00:00:01,040', end: '00:00:02,140', text: 'សួស្តីភ្នំពេញកម្ពុ' },
+          ],
+          readOnly: false
+        }]}
+      />
+    );
+
+    const badgeNormal = screen.getByTestId('cue-cps-301');
+    expect(badgeNormal).toHaveTextContent(/14(\.0)? CPS/);
+    expect(badgeNormal).toHaveTextContent(/正常|Normal/);
+    expect(badgeNormal.className).toContain('video-subtitle-cps-normal');
+
+    const badgeFast = screen.getByTestId('cue-cps-302');
+    expect(badgeFast).toHaveTextContent(/16\.4 CPS/);
+    expect(badgeFast).toHaveTextContent(/偏快|Fast/);
+    expect(badgeFast.className).toContain('video-subtitle-cps-fast');
+  });
 });

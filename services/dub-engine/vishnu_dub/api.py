@@ -85,6 +85,25 @@ class BenchmarkResponse(BaseModel):
     tier: str
 
 
+class ResynthesizeSegmentRequest(BaseModel):
+    job_id: Optional[str] = None
+    segment_index: int = 0
+    text: str
+    voice_id: Optional[str] = None
+    provider: str = "edge-tts"
+    speed: float = 1.0
+    target_language: str = "km"
+
+
+class ResynthesizeSegmentResponse(BaseModel):
+    ok: bool
+    segment_index: int
+    audio_url: str
+    audio_data_url: Optional[str] = None
+    duration: float
+    text: str
+
+
 # ─── App State ───────────────────────────────────────────────────────────
 
 
@@ -365,6 +384,59 @@ async def run_benchmark(request: BenchmarkRequest):
     )
 
 
+@app.post("/v1/dub/resynthesize-segment", response_model=ResynthesizeSegmentResponse)
+@app.post("/v1/dub/{job_id}/resynthesize-segment", response_model=ResynthesizeSegmentResponse)
+async def resynthesize_segment(request: ResynthesizeSegmentRequest, job_id: Optional[str] = None):
+    """Re-synthesize speech for a single segment (per-segment dub review editor)."""
+    target_job_id = job_id or request.job_id
+    text = (request.text or "").strip()
+    if not text:
+        raise HTTPException(400, "Text is required for re-synthesis")
+
+    from vishnu_dub.tts import get_tts_backend
+
+    tts_backend = get_tts_backend(request.provider)
+    voice = request.voice_id
+    if not voice:
+        lang_lower = (request.target_language or "km").strip().lower()
+        is_khmer = (
+            lang_lower.startswith("km")
+            or "khmer" in lang_lower
+            or "高棉" in lang_lower
+            or any("\u1780" <= c <= "\u17ff" for c in text)
+        )
+        voice = "km-KH-PisethNeural" if is_khmer else "en-US-AndrewMultilingualNeural"
+
+    safe_job_id = Path(target_job_id).name if target_job_id else "segment_cache"
+    cache_dir = Path(settings.jobs_path if settings else "jobs") / safe_job_id
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    out_file = cache_dir / f"seg_{request.segment_index}_{uuid.uuid4().hex[:8]}.mp3"
+
+    tts_result = await tts_backend.synthesize(
+        text=text,
+        voice_id=voice,
+        output_path=out_file,
+        speed=request.speed,
+    )
+
+    audio_data_url = None
+    if out_file.exists():
+        import base64
+        audio_bytes = out_file.read_bytes()
+        audio_data_url = f"data:audio/mp3;base64,{base64.b64encode(audio_bytes).decode('ascii')}"
+
+    audio_url = f"/v1/dub/{safe_job_id}/artifacts/{out_file.name}"
+
+    return ResynthesizeSegmentResponse(
+        ok=True,
+        segment_index=request.segment_index,
+        audio_url=audio_url,
+        audio_data_url=audio_data_url,
+        duration=tts_result.duration,
+        text=text,
+    )
+
+
 @app.get("/v1/dub/{job_id}/download")
 async def download_result(job_id: str):
     """Download the completed dubbing result (MP4)."""
@@ -384,31 +456,45 @@ async def download_result(job_id: str):
 
 @app.get("/v1/dub/{job_id}/artifacts/{filename}")
 async def download_artifact(job_id: str, filename: str):
-    """Download a specific artifact (SRT, stems, etc.)."""
-    if not job_manager:
-        raise HTTPException(503, "Job manager not initialized")
+    """Download a specific artifact (SRT, stems, resynthesized audio, etc.)."""
+    safe_job_id = Path(job_id).name
+    safe_filename = Path(filename).name
 
-    job = await job_manager.get_job(job_id)
-    if not job or job.status != JobStatus.COMPLETED:
-        raise HTTPException(404, "Job not found or not completed")
+    path = None
+    if job_manager:
+        job = await job_manager.get_job(safe_job_id)
+        if job:
+            artifact_map = {
+                "source.srt": job.srt_path,
+                "km.srt": job.km_srt_path,
+                "vocals.wav": job.vocals_path,
+                "music.wav": job.music_path,
+            }
+            path = artifact_map.get(safe_filename)
 
-    artifact_map = {
-        "source.srt": job.srt_path,
-        "km.srt": job.km_srt_path,
-        "vocals.wav": job.vocals_path,
-        "music.wav": job.music_path,
-    }
-
-    path = artifact_map.get(filename)
     if not path:
-        raise HTTPException(404, f"Artifact '{filename}' not available for this job")
+        base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
+        custom_candidate = (base_jobs_dir / safe_job_id / safe_filename).resolve()
+        try:
+            if custom_candidate.is_relative_to(base_jobs_dir) and custom_candidate.exists() and custom_candidate.is_file():
+                path = str(custom_candidate)
+        except (ValueError, RuntimeError):
+            pass
 
-    media_type = "text/plain; charset=utf-8" if filename.endswith(".srt") else "audio/wav"
+    if not path:
+        raise HTTPException(404, f"Artifact '{safe_filename}' not available for this job")
+
+    if safe_filename.endswith(".srt"):
+        media_type = "text/plain; charset=utf-8"
+    elif safe_filename.endswith(".mp3"):
+        media_type = "audio/mpeg"
+    else:
+        media_type = "audio/wav"
 
     return FileResponse(
         path,
         media_type=media_type,
-        filename=filename,
+        filename=safe_filename,
     )
 
 

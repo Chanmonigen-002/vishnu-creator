@@ -425,3 +425,166 @@ body:has(.video-translation-page[data-subtitle-immersive="true"]) .tts-voice-lib
   .subtitle-timeline-time-field { gap: 3px; }
   .subtitle-timeline-time-field input { width: 66px; }
 }
+
+/* Quality Report Badge & Panel */
+.video-subtitle-quality-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  transition: all 0.15s ease;
+}
+.video-subtitle-quality-badge:hover {
+  background: var(--surface-3);
+  border-color: var(--border-strong);
+}
+.video-subtitle-quality-badge.quality-status-passed {
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #10b981;
+}
+.video-subtitle-quality-badge.quality-status-warning {
+  border-color: rgba(245, 158, 11, 0.4);
+  color: #f59e0b;
+}
+.video-subtitle-quality-badge.quality-status-needs_attention {
+  border-color: rgba(239, 68, 68, 0.45);
+  color: #ef4444;
+}
+.video-subtitle-quality-badge .quality-summary-pill {
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  background: color-mix(in srgb, currentColor 14%, transparent);
+}
+
+.video-subtitle-quality-card {
+  margin: 12px 18px;
+  padding: 14px 18px;
+  background: var(--surface-2);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.quality-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.quality-card-header h4 {
+  margin: 0;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.quality-card-close {
+  background: none;
+  border: 0;
+  cursor: pointer;
+  color: var(--muted);
+  padding: 2px 4px;
+}
+.quality-card-close:hover {
+  color: var(--text);
+}
+.quality-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 12px;
+}
+.quality-metric-item {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 8px 10px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+.quality-metric-label {
+  font-size: 11px;
+  color: var(--muted);
+}
+.quality-metric-value {
+  font-size: 14px;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  color: var(--text);
+}
+
+/* CPS Speed Badge */
+.video-subtitle-cps-badge {
+  display: inline-flex;
+  align-items: center;
+  font-size: 10.5px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  user-select: none;
+}
+.video-subtitle-cps-normal {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+.video-subtitle-cps-fast {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+.video-subtitle-cps-overlong {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+/* Per-segment Re-dub button */
+.video-subtitle-cue-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 4px;
+}
+.video-subtitle-redub-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 10.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.video-subtitle-redub-btn:hover:not(:disabled) {
+  background: var(--surface-3);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.video-subtitle-redub-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.video-subtitle-redub-loading {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+}
+

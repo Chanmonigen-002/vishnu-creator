@@ -149,24 +149,54 @@ def seconds_from_srt_timestamp(ts: str) -> float:
     return float(normalized)
 
 
-def load_asr_corrections(config_path: Optional[str] = None) -> List[Dict[str, Any]]:
-    """Load external/built-in ASR corrections from data/asr_corrections.json."""
+def load_khmer_asr_corrections() -> List[Dict[str, Any]]:
+    """Load built-in Khmer ASR corrections from data/asr_corrections_khmer.json."""
+    khmer_data_path = Path(__file__).parent / "data" / "asr_corrections_khmer.json"
+    if khmer_data_path.exists() and khmer_data_path.is_file():
+        try:
+            with open(khmer_data_path, "r", encoding="utf-8") as f:
+                data = json.load(f)
+                if isinstance(data, list):
+                    return data
+        except Exception as e:
+            print(f"[subtitles] Error loading {khmer_data_path}: {e}")
+    return []
+
+
+def load_asr_corrections(
+    config_path: Optional[str] = None,
+    lang_code: Optional[str] = None,
+) -> List[Dict[str, Any]]:
+    """
+    Load external/built-in ASR corrections from data/asr_corrections.json and
+    data/asr_corrections_khmer.json.
+    """
     candidate_paths: List[Path] = []
     if config_path:
         candidate_paths.append(Path(config_path))
     default_data_path = Path(__file__).parent / "data" / "asr_corrections.json"
     candidate_paths.append(default_data_path)
 
+    loaded_corrections: List[Dict[str, Any]] = []
     for p in candidate_paths:
         if p.exists() and p.is_file():
             try:
                 with open(p, "r", encoding="utf-8") as f:
                     data = json.load(f)
                     if isinstance(data, list):
-                        return data
+                        loaded_corrections.extend(data)
+                        break
             except Exception as e:
                 print(f"[subtitles] Error loading {p}: {e}")
-    return []
+
+    # Load Khmer corrections if lang_code is "km" or None (included by default for full coverage)
+    norm_lang = (lang_code or "").lower()[:2]
+    if norm_lang == "km" or not lang_code:
+        khmer_corrs = load_khmer_asr_corrections()
+        loaded_corrections.extend(khmer_corrs)
+
+    return loaded_corrections
+
 
 
 # ============================================================================
@@ -1015,7 +1045,8 @@ def stabilize_subtitles(
     cues = fix_inter_cue_casing(cues, text_key=text_key, lang_code=lang_code)
 
     # Step 7: Cross-cue vocabulary / dictionary repairs
-    cues = apply_asr_corrections_cross_cues(cues, text_key=text_key, corrections=corrections)
+    effective_corrections = corrections if corrections is not None else load_asr_corrections(lang_code=lang_code)
+    cues = apply_asr_corrections_cross_cues(cues, text_key=text_key, corrections=effective_corrections)
 
     # Step 8: Broadcast-compliant line wrapping & timecode normalization
     cues = split_into_ergonomic_cues(cues, max_chars_per_line=max_chars_per_line, text_key=text_key)

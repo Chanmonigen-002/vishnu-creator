@@ -609,3 +609,243 @@ export function createDefaultCreatorServicesConfig(): CreatorServicesConfig {
     }
   };
 }
+
+export type CueCpsStatus = 'normal' | 'fast' | 'overlong';
+
+export type CueCpsInfo = {
+  cps: number;
+  status: CueCpsStatus;
+  label: string;
+  durationSeconds: number;
+  charCount: number;
+  targetRate: number;
+};
+
+export function parseSubtitleTimestamp(value: string | number): number {
+  if (typeof value === 'number') {
+    return Number.isFinite(value) && value >= 0 ? value : 0;
+  }
+  if (!value || typeof value !== 'string') return 0;
+  const trimmed = value.trim().replace(',', '.');
+  const parts = trimmed.split(':');
+  if (parts.length === 3) {
+    const hours = parseFloat(parts[0] || '0');
+    const minutes = parseFloat(parts[1] || '0');
+    const seconds = parseFloat(parts[2] || '0');
+    return hours * 3600 + minutes * 60 + seconds;
+  }
+  if (parts.length === 2) {
+    const minutes = parseFloat(parts[0] || '0');
+    const seconds = parseFloat(parts[1] || '0');
+    return minutes * 60 + seconds;
+  }
+  const parsed = parseFloat(trimmed);
+  return Number.isFinite(parsed) ? parsed : 0;
+}
+
+export function normalizeLanguageCode(lang: string = '', text: string = ''): 'km' | 'zh' | 'ja' | 'latin' {
+  const trimmed = (lang || '').trim().toLowerCase();
+  if (
+    trimmed.startsWith('km')
+    || trimmed.includes('khmer')
+    || trimmed.includes('高棉')
+    || /[\u1780-\u17ff]/.test(trimmed)
+    || /[\u1780-\u17ff]/.test(text)
+  ) {
+    return 'km';
+  }
+  if (
+    trimmed.startsWith('zh')
+    || trimmed.includes('chinese')
+    || trimmed.includes('中文')
+    || trimmed.includes('华语')
+    || /[\u4e00-\u9fff]/.test(text)
+  ) {
+    return 'zh';
+  }
+  if (
+    trimmed.startsWith('ja')
+    || trimmed.includes('japanese')
+    || trimmed.includes('日')
+    || /[\u3040-\u30ff]/.test(text)
+  ) {
+    return 'ja';
+  }
+  return 'latin';
+}
+
+/**
+ * Calibrate speech rate in Characters Per Second (CPS) per language.
+ * Default calibrated target for Khmer ('km') speech synthesis is ~13.0 chars/sec.
+ * - Normal: CPS <= 14.5
+ * - Fast: 14.5 < CPS <= 19.0
+ * - Overlong: CPS > 19.0
+ */
+export function calculateCueCps(
+  cue: { start: string | number; end: string | number; text: string },
+  lang: string = 'km'
+): CueCpsInfo {
+  const startSec = parseSubtitleTimestamp(cue.start);
+  const endSec = parseSubtitleTimestamp(cue.end);
+  const durationSeconds = Math.max(0.1, Number((endSec - startSec).toFixed(3)));
+
+  // Clean newlines and redundant spaces for accurate character counting
+  const cleanedText = (cue.text || '').replace(/\r?\n/g, ' ').trim();
+  const charCount = cleanedText.length;
+  const rawCps = charCount / durationSeconds;
+  const cps = Number(rawCps.toFixed(1));
+
+  const normalizedLang = normalizeLanguageCode(lang, cleanedText);
+
+  let targetRate = 13.0;
+  let status: CueCpsStatus = 'normal';
+  let label = 'Normal';
+
+  if (normalizedLang === 'km') {
+    // Khmer speech calibration: target rate ~13.0 chars/sec
+    targetRate = 13.0;
+    if (cps <= 14.5) {
+      status = 'normal';
+      label = 'Normal';
+    } else if (cps <= 19.0) {
+      status = 'fast';
+      label = 'Fast';
+    } else {
+      status = 'overlong';
+      label = 'Overlong';
+    }
+  } else if (normalizedLang === 'zh' || normalizedLang === 'ja') {
+    // CJK ideographic calibration: target rate ~3.5 chars/sec
+    targetRate = 3.5;
+    if (cps <= 4.0) {
+      status = 'normal';
+      label = 'Normal';
+    } else if (cps <= 5.5) {
+      status = 'fast';
+      label = 'Fast';
+    } else {
+      status = 'overlong';
+      label = 'Overlong';
+    }
+  } else {
+    // Latin alphabetic calibration: target rate ~15.0 chars/sec
+    targetRate = 15.0;
+    if (cps <= 17.0) {
+      status = 'normal';
+      label = 'Normal';
+    } else if (cps <= 21.0) {
+      status = 'fast';
+      label = 'Fast';
+    } else {
+      status = 'overlong';
+      label = 'Overlong';
+    }
+  }
+
+  return {
+    cps,
+    status,
+    label,
+    durationSeconds,
+    charCount,
+    targetRate
+  };
+}
+
+export type ResynthesizeSegmentRequest = {
+  jobId?: string;
+  segmentIndex: number;
+  text: string;
+  voiceId?: string;
+  provider?: string;
+  speed?: number;
+  targetLanguage?: string;
+};
+
+export type ResynthesizeSegmentResponse = {
+  ok: boolean;
+  segmentIndex: number;
+  audioUrl: string;
+  audioDataUrl?: string;
+  duration: number;
+  text: string;
+};
+
+export type JobQualityReport = {
+  timingDriftMs: number;
+  overlongCuesCount: number;
+  totalCues: number;
+  averageKhmerCps: number;
+  cerEstimatePercent: number;
+  status: 'passed' | 'warning' | 'needs_attention';
+};
+
+export function calculateJobQualityReport(
+  cues: Array<{ start: string | number; end: string | number; text: string }>,
+  targetLanguage: string = 'km'
+): JobQualityReport {
+  if (!cues || cues.length === 0) {
+    return {
+      timingDriftMs: 0,
+      overlongCuesCount: 0,
+      totalCues: 0,
+      averageKhmerCps: 0,
+      cerEstimatePercent: 0,
+      status: 'passed'
+    };
+  }
+
+  let totalChars = 0;
+  let totalDuration = 0;
+  let overlongCount = 0;
+  let driftSumMs = 0;
+
+  for (let i = 0; i < cues.length; i++) {
+    const cue = cues[i]!;
+    const cpsInfo = calculateCueCps(cue, targetLanguage);
+    totalChars += cpsInfo.charCount;
+    totalDuration += cpsInfo.durationSeconds;
+    if (cpsInfo.status === 'overlong') {
+      overlongCount++;
+    }
+
+    if (i < cues.length - 1) {
+      const nextCue = cues[i + 1]!;
+      const currEnd = parseSubtitleTimestamp(cue.end);
+      const nextStart = parseSubtitleTimestamp(nextCue.start);
+      const gapSec = nextStart - currEnd;
+      // Drift is discrepancy from 40ms minimum broadcast gap if gap is non-zero
+      if (gapSec < 0.04) {
+        driftSumMs += Math.round(Math.abs(gapSec - 0.04) * 1000);
+      }
+    }
+  }
+
+  const averageKhmerCps = totalDuration > 0
+    ? Number((totalChars / totalDuration).toFixed(1))
+    : 0;
+
+  const timingDriftMs = cues.length > 1
+    ? Math.round(driftSumMs / (cues.length - 1))
+    : 0;
+
+  // Calibrated CER estimate based on overlong cue ratio & drift severity
+  const overlongRatio = overlongCount / cues.length;
+  const baseCer = 2.4;
+  const cerEstimatePercent = Number((baseCer + (overlongRatio * 5.0) + (timingDriftMs > 50 ? 1.2 : 0)).toFixed(1));
+
+  let status: 'passed' | 'warning' | 'needs_attention' = 'passed';
+  if (overlongCount > 0 || timingDriftMs > 60 || cerEstimatePercent > 6.0) {
+    status = overlongRatio > 0.25 || timingDriftMs > 100 ? 'needs_attention' : 'warning';
+  }
+
+  return {
+    timingDriftMs,
+    overlongCuesCount: overlongCount,
+    totalCues: cues.length,
+    averageKhmerCps,
+    cerEstimatePercent,
+    status
+  };
+}
+

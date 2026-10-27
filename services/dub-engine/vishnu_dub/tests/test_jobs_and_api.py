@@ -245,3 +245,42 @@ def test_edge_tts_synthesizes_real_khmer_audio_and_benchmark_persists_report(tmp
 
     asyncio.run(_exercise())
 
+
+def test_resynthesize_segment_endpoint(tmp_path, monkeypatch):
+    """Verify POST /v1/dub/resynthesize-segment synthesizes a single subtitle segment."""
+    from fastapi.testclient import TestClient
+    import vishnu_dub.api as api_mod
+    from vishnu_dub.tts import TTSResult
+
+    class MockTTSBackend:
+        async def synthesize(self, text, voice_id, output_path, speed=1.0):
+            output_path.parent.mkdir(parents=True, exist_ok=True)
+            output_path.write_bytes(b"ID3mockmp3data")
+            return TTSResult(audio_path=output_path, duration=1.2, format="mp3", provider="edge-tts", voice_id=voice_id)
+
+    monkeypatch.setattr("vishnu_dub.tts.get_tts_backend", lambda _provider, _cfg=None: MockTTSBackend())
+    api_mod.settings = Settings(jobs_path=tmp_path / "jobs")
+    client = TestClient(api_mod.app)
+
+    response = client.post("/v1/dub/resynthesize-segment", json={
+        "segment_index": 3,
+        "text": "សួស្តី ភ្នំពេញ",
+        "target_language": "km",
+        "provider": "edge-tts",
+        "speed": 1.0,
+    })
+    assert response.status_code == 200
+    data = response.json()
+    assert data["ok"] is True
+    assert data["segment_index"] == 3
+    assert data["duration"] == 1.2
+    assert "audio_url" in data
+    assert "audio_data_url" in data
+    assert data["audio_data_url"].startswith("data:audio/mp3;base64,")
+
+    # Verify downloading artifact via audio_url
+    art_res = client.get(data["audio_url"])
+    assert art_res.status_code == 200
+    assert art_res.content == b"ID3mockmp3data"
+
+

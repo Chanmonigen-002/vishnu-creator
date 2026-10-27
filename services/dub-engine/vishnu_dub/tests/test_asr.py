@@ -12,6 +12,8 @@ from vishnu_dub.asr import (
     TranscriptionResult,
     TranscriptionSegment,
     get_asr_backend,
+    get_asr_initial_prompt,
+    apply_asr_corrections_to_segments,
 )
 from vishnu_dub.config import Settings, ASRConfig
 
@@ -106,3 +108,28 @@ def test_get_asr_backend_default():
     settings.transcription.provider = "unknown"
     backend = get_asr_backend(settings)
     assert backend.name == "faster-whisper"
+
+
+def test_asr_prompt_includes_khmer_vocabulary_when_lang_is_km():
+    """Verify that ASR prompt builder adds Cambodian provinces and tech loanwords for km."""
+    en_prompt = get_asr_initial_prompt(language="en")
+    assert "Vishnu Creator" in en_prompt
+    assert "ភ្នំពេញ" not in en_prompt
+
+    km_prompt = get_asr_initial_prompt(language="km")
+    assert "ភ្នំពេញ" in km_prompt
+    assert "សៀមរាប" in km_prompt
+    assert "បាត់ដំបង" in km_prompt
+    assert "យូធូប" in km_prompt
+
+
+def test_apply_asr_corrections_to_segments():
+    """Verify that transcribed segments are cleaned with phonetic and geographical corrections."""
+    segments = [
+        TranscriptionSegment(start=0.0, end=2.0, text="ខ្ញុំទៅ ភ្នុំពេញ និង កំពុងចាម"),
+        TranscriptionSegment(start=2.0, end=4.0, text="មើល យូធូប នៅលើ កុំព្យូទរ"),
+    ]
+    corrected = apply_asr_corrections_to_segments(segments, lang_code="km")
+    assert corrected[0].text == "ខ្ញុំទៅ ភ្នំពេញ និង កំពង់ចាម"
+    assert "YouTube" in corrected[1].text
+    assert "កុំព្យូទ័រ" in corrected[1].text

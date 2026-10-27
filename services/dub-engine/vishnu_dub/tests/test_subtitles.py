@@ -30,6 +30,7 @@ from vishnu_dub.subtitles import (
     fix_inter_cue_casing,
     format_timestamp,
     load_asr_corrections,
+    load_khmer_asr_corrections,
     merge_sentence_fragments,
     normalize_timecodes,
     remove_empty_cues_and_redistribute,
@@ -352,3 +353,33 @@ def test_exporters_srt_vtt_sbv():
     assert format_timestamp(3661.123, decimal_sep=".") == "01:01:01.123"
     assert abs(seconds_from_srt_timestamp("01:01:01,123") - 3661.123) < 0.001
     assert abs(seconds_from_srt_timestamp("01:01:01.123") - 3661.123) < 0.001
+
+
+def test_khmer_asr_corrections_and_stabilization():
+    """Verify loading and applying Khmer ASR correction rules for provinces and tech loanwords."""
+    khmer_rules = load_khmer_asr_corrections()
+    assert len(khmer_rules) >= 30, f"Expected >= 30 Khmer correction rules, got {len(khmer_rules)}"
+
+    # Test geography corrections (mis-recognized city/province names)
+    sample_cues = [
+        {"start": 0.0, "end": 2.5, "text": "ខ្ញុំរស់នៅ ភ្នុំពេញ និងធ្វើដំណើរទៅ កំពុងចាម"},
+        {"start": 2.5, "end": 5.0, "text": "បន្ទាប់មកខ្ញុំទៅលេង សៀមរៀប និង បាត់ដំបូង។"},
+    ]
+    corrected = apply_asr_corrections_cross_cues(sample_cues, corrections=khmer_rules)
+    assert "ភ្នំពេញ" in corrected[0]["text"]
+    assert "កំពង់ចាម" in corrected[0]["text"]
+    assert "សៀមរាប" in corrected[1]["text"]
+    assert "បាត់ដំបង" in corrected[1]["text"]
+
+    # Test tech loanword corrections
+    tech_cues = [
+        {"start": 0.0, "end": 2.0, "text": "មើលវីដេអូនៅលើ យូធូប ជាមួយ កុំព្យូទរ"},
+        {"start": 2.0, "end": 4.0, "text": "ប្រើប្រាស់ អ៊ីនធឺណែត និង ឌីបស៊ីក AI"},
+    ]
+    stabilized = stabilize_subtitles(tech_cues, lang_code="km")
+    combined = " ".join(c["text"] for c in stabilized)
+    assert "YouTube" in combined
+    assert "កុំព្យូទ័រ" in combined
+    assert "អ៊ីនធឺណិត" in combined
+    assert "DeepSeek" in combined
+

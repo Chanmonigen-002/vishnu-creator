@@ -8,7 +8,66 @@ from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 from vishnu_dub.config import Settings, ASRConfig
-from vishnu_dub.subtitles import DEFAULT_INITIAL_PROMPT
+from vishnu_dub.subtitles import DEFAULT_INITIAL_PROMPT, load_asr_corrections
+
+
+KHMER_INITIAL_PROMPT = (
+    "Vishnu Creator, ភ្នំពេញ, សៀមរាប, បាត់ដំបង, កំពង់ចាម, កំពង់ធំ, កំពង់ស្ពឺ, "
+    "ព្រះសីហនុ, កំពត, កែប, កោះកុង, តាកែវ, ព្រៃវែង, ស្វាយរៀង, ពោធិ៍សាត់, "
+    "បន្ទាយមានជ័យ, ប៉ៃលិន, ឧត្តរមានជ័យ, ព្រះវិហារ, ស្ទឹងត្រែង, ក្រចេះ, រតនគិរី, មណ្ឌលគិរី, "
+    "អាយធី, អេអាយ, យូធូប, ហ្វេសប៊ុក, ទីកតុក, តេឡេក្រាម, កុំព្យូទ័រ, អ៊ីនធឺណិត, "
+    "វីដេអូ, ម៉ូដែល, ឆាតជីភីធី, ChatGPT, Claude, DeepSeek, OpenAI, PyTorch, Python, API"
+)
+
+
+def get_asr_initial_prompt(custom_prompt: Optional[str] = None, language: Optional[str] = None) -> str:
+    """Build context-primed prompt for ASR, adding Khmer geographical & tech terms when language is km."""
+    norm_lang = (language or "").lower()[:2]
+    if custom_prompt:
+        base = custom_prompt
+    elif norm_lang == "km":
+        return f"{DEFAULT_INITIAL_PROMPT}, {KHMER_INITIAL_PROMPT}"
+    else:
+        return DEFAULT_INITIAL_PROMPT
+
+    if norm_lang == "km" and "ភ្នំពេញ" not in base:
+        return f"{base}, {KHMER_INITIAL_PROMPT}"
+    return base
+
+
+def apply_asr_corrections_to_segments(
+    segments: List["TranscriptionSegment"],
+    lang_code: Optional[str] = None,
+) -> List["TranscriptionSegment"]:
+    """Apply dictionary corrections (including Khmer corrections list) directly to transcribed segments."""
+    import re
+
+    corrections = load_asr_corrections(lang_code=lang_code)
+    if not corrections or not segments:
+        return segments
+
+    for corr in corrections:
+        pattern = corr.get("pattern", "")
+        replacement = corr.get("replacement", "")
+        case_sensitive = corr.get("case_sensitive", False)
+        if not pattern or replacement is None:
+            continue
+
+        flags = 0 if case_sensitive else re.IGNORECASE
+        try:
+            rx = re.compile(pattern, flags)
+        except Exception:
+            continue
+
+        for seg in segments:
+            if seg.text:
+                seg.text = rx.sub(replacement, seg.text).strip()
+            if seg.words:
+                for w in seg.words:
+                    if isinstance(w, dict) and "word" in w and isinstance(w["word"], str):
+                        w["word"] = rx.sub(replacement, w["word"])
+
+    return segments
 
 
 class TranscriptionSegment(BaseModel):
@@ -95,7 +154,7 @@ class FasterWhisperBackend(ASRBackend):
                 download_root=str(whisper_dir),
             )
 
-        prompt = self.config.initial_prompt or DEFAULT_INITIAL_PROMPT
+        prompt = get_asr_initial_prompt(self.config.initial_prompt, language=language)
         segments, info = self._model.transcribe(
             str(audio_path),
             language=language,
@@ -123,6 +182,8 @@ class FasterWhisperBackend(ASRBackend):
                 text=seg.text.strip(),
                 words=words_list,
             ))
+
+        segments_list = apply_asr_corrections_to_segments(segments_list, lang_code=language or info.language)
 
         return TranscriptionResult(
             segments=segments_list,
@@ -160,7 +221,7 @@ class WhisperXBackend(ASRBackend):
 
         device = "cuda" if self.config.enable_gpu else "cpu"
         model = whisperx.load_model("large-v3", device=device, compute_type="float16")
-        prompt = self.config.initial_prompt or DEFAULT_INITIAL_PROMPT
+        prompt = get_asr_initial_prompt(self.config.initial_prompt, language=language)
         result = model.transcribe(audio, language=language, asr_options={"initial_prompt": prompt})
 
         # Align
@@ -176,6 +237,8 @@ class WhisperXBackend(ASRBackend):
                 speaker=seg.get("speaker"),
                 words=seg.get("words"),
             ))
+
+        segments_list = apply_asr_corrections_to_segments(segments_list, lang_code=language or result.get("language"))
 
         return TranscriptionResult(
             segments=segments_list,
@@ -207,7 +270,7 @@ class OpenAIWhisperBackend(ASRBackend):
 
         import httpx
 
-        prompt = self.config.initial_prompt or DEFAULT_INITIAL_PROMPT
+        prompt = get_asr_initial_prompt(self.config.initial_prompt, language=language)
         with open(audio_path, "rb") as f:
             files = {"file": (audio_path.name, f, "audio/mpeg")}
             data = {
@@ -237,6 +300,8 @@ class OpenAIWhisperBackend(ASRBackend):
                 text=seg["text"].strip(),
                 words=seg.get("words"),
             ))
+
+        segments_list = apply_asr_corrections_to_segments(segments_list, lang_code=language or data.get("language"))
 
         return TranscriptionResult(
             segments=segments_list,

@@ -116,4 +116,45 @@ describe('creator services service', () => {
       gpuName: null
     });
   });
+
+  it('POSTs resynthesize-segment request to the Runtime', async () => {
+    const rawRequest = vi.fn(async (_path: string, _init: { method: string; body: unknown }) => {
+      if (_path === '/creator-services/dub-engine/resynthesize-segment') {
+        return Promise.resolve(new Response(JSON.stringify({
+          ok: true,
+          segmentIndex: 2,
+          audioUrl: '/v1/dub/job123/artifacts/seg_2_abc.mp3',
+          duration: 1.8,
+          text: 'សួស្តី ភ្នំពេញ'
+        })));
+      }
+      throw new Error(`unexpected path ${_path}`);
+    });
+    const service = createCreatorServicesService({
+      get: async () => { throw new Error('unexpected get'); },
+      patch: async () => { throw new Error('unexpected patch'); },
+      delete: async () => { throw new Error('unexpected delete'); },
+      rawRequest
+    });
+    const result = await service.resynthesizeSegment({
+      jobId: 'job123',
+      segmentIndex: 2,
+      text: 'សួស្តី ភ្នំពេញ',
+      targetLanguage: 'km',
+      provider: 'edge-tts'
+    });
+    expect(rawRequest).toHaveBeenCalledWith('/creator-services/dub-engine/resynthesize-segment', {
+      method: 'POST',
+      body: {
+        jobId: 'job123',
+        segmentIndex: 2,
+        text: 'សួស្តី ភ្នំពេញ',
+        targetLanguage: 'km',
+        provider: 'edge-tts'
+      }
+    });
+    expect(result.ok).toBe(true);
+    expect(result.duration).toBe(1.8);
+    expect(result.audioUrl).toContain('seg_2_abc.mp3');
+  });
 });
