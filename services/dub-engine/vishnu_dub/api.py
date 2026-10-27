@@ -106,16 +106,54 @@ class ResynthesizeSegmentResponse(BaseModel):
 
 
 class VoiceDesignRequest(BaseModel):
-    prompt: str
-    speed: float = 1.0
 
 
-class VoiceDesignResponse(BaseModel):
+class LoRATrainingRequest(BaseModel):
+    train_manifest: str
+    val_manifest: Optional[str] = None
+    base_model: str = "Mariya987/VoxCPM2"
+    lora_rank: int = 8
+    lora_alpha: int = 16
+    lora_dropout: float = 0.05
+    learning_rate: float = 1e-4
+    num_epochs: int = 3
+    batch_size: int = 1
+    gradient_accumulation_steps: int = 8
+    max_length: int = 2048
+    save_steps: int = 500
+    eval_steps: int = 500
+    logging_steps: int = 10
+    warmup_steps: int = 100
+    output_dir: Optional[str] = None
+    seed: int = 42
+    amp: bool = True
+    use_ref_audio: bool = True
+
+
+class LoRATrainingResponse(BaseModel):
     ok: bool
-    audio_url: str
-    audio_data_url: Optional[str] = None
-    duration: float
-    prompt: str
+    training_id: str
+    message: str
+
+
+class LoRATrainingStatusResponse(BaseModel):
+    training_id: str
+    status: str
+    progress: float
+    current_epoch: int
+    total_epochs: int
+    current_step: int
+    total_steps: int
+    loss: Optional[float] = None
+    eval_loss: Optional[float] = None
+    learning_rate: Optional[float] = None
+    started_at: Optional[str] = None
+    completed_at: Optional[str] = None
+    error: Optional[str] = None
+
+
+class LoRATrainingListResponse(BaseModel):
+    trainings: List[Dict[str, Any]]
 
 
 # ─── App State ───────────────────────────────────────────────────────────
@@ -651,6 +689,206 @@ async def download_artifact(job_id: str, filename: str):
 
     if not path:
         raise HTTPException(404, f"Artifact '{safe_filename}' not available for this job")
+
+
+# ─── LoRA Training Endpoints ──────────────────────────────────────────
+
+from vishnu_dub.training import run_lora_training, get_training_status, list_trainings
+
+# In-memory storage for training jobs (in production, use persistent storage)
+_training_jobs: Dict[str, Dict[str, Any]] = {}
+
+
+@app.post("/v1/lora/train", response_model=LoRATrainingResponse)
+async def start_lora_training(request: LoRATrainingRequest):
+    """Start a LoRA fine-tuning training job."""
+    import os
+    import yaml
+    import tempfile
+    
+    training_id = str(uuid.uuid4())[:8]
+    
+    # Prepare output directory
+    if request.output_dir:
+        output_dir = Path(request.output_dir)
+    else:
+        output_dir = Path(settings.jobs_path if settings else "jobs") / "lora_trainings" / training_id
+    output_dir.mkdir(parents=True, exist_ok=True)
+    
+    # Save training config
+    config = {
+        "train_manifest": request.train_manifest,
+        "val_manifest": request.val_manifest,
+        "base_model": request.base_model,
+        "lora_rank": request.lora_rank,
+        "lora_alpha": request.lora_alpha,
+        "lora_dropout": request.lora_dropout,
+        "learning_rate": request.learning_rate,
+        "num_epochs": request.num_epochs,
+        "batch_size": request.batch_size,
+        "gradient_accumulation_steps": request.gradient_accumulation_steps,
+        "max_length": request.max_length,
+        "save_steps": request.save_steps,
+        "eval_steps": request.eval_steps,
+        "logging_steps": request.logging_steps,
+        "warmup_steps": request.warmup_steps,
+        "seed": request.seed,
+        "amp": request.amp,
+        "use_ref_audio": request.use_ref_audio,
+    }
+    config_path = output_dir / "training_config.yml"
+    with open(config_path, "w", encoding="utf-8") as f:
+        yaml.dump(config, f)
+    
+    # Initialize training job record
+    _training_jobs[training_id] = {
+        "id": training_id,
+        "config": config,
+        "status": "starting",
+        "progress": 0.0,
+        "current_epoch": 0,
+        "total_epochs": request.num_epochs,
+        "current_step": 0,
+        "total_steps": 0,
+        "loss": None,
+        "eval_loss": None,
+        "learning_rate": None,
+        "started_at": datetime.utcnow().isoformat() + "Z",
+        "completed_at": None,
+        "error": None,
+        "output_dir": str(output_dir),
+    }
+    
+    # Start training in background
+    asyncio.create_task(run_lora_training_background(training_id, config, output_dir))
+    
+    return LoRATrainingResponse(
+        ok=True,
+        training_id=training_id,
+        message=f"LoRA training started. Check status with GET /v1/lora/trainings/{training_id}",
+    )
+
+
+async def run_lora_training_background(training_id: str, config: Dict[str, Any], output_dir: Path):
+    """Run LoRA training in background."""
+    try:
+        _training_jobs[training_id]["status"] = "running"
+        
+        # Import training module
+        from vishnu_dub.training import run_lora_training
+        
+        # Run training
+        await run_lora_training(
+            training_id=training_id,
+            config=config,
+            output_dir=output_dir,
+            progress_callback=lambda status: update_training_status(training_id, status),
+        )
+        
+        _training_jobs[training_id]["status"] = "completed"
+        _training_jobs[training_id]["progress"] = 100.0
+        _training_jobs[training_id]["completed_at"] = datetime.utcnow().isoformat() + "Z"
+    except Exception as e:
+        _training_jobs[training_id]["status"] = "failed"
+        _training_jobs[training_id]["error"] = str(e)
+        _training_jobs[training_id]["completed_at"] = datetime.utcnow().isoformat() + "Z"
+
+def update_training_status(training_id: str, status: Dict[str, Any]):
+    """Update training job status."""
+    if training_id in _training_jobs:
+        _training_jobs[training_id].update(status)
+
+
+@app.get("/v1/lora/trainings", response_model=LoRATrainingListResponse)
+async def list_lora_trainings():
+    """List all LoRA training jobs."""
+    trainings = []
+    for training_id, job in _training_jobs.items():
+        trainings.append({
+            "id": training_id,
+            "status": job["status"],
+            "progress": job["progress"],
+            "current_epoch": job["current_epoch"],
+            "total_epochs": job["total_epochs"],
+            "current_step": job["current_step"],
+            "total_steps": job["total_steps"],
+            "loss": job["loss"],
+            "eval_loss": job["eval_loss"],
+            "learning_rate": job["learning_rate"],
+            "started_at": job["started_at"],
+            "completed_at": job["completed_at"],
+            "error": job["error"],
+        })
+    return LoRATrainingListResponse(trainings=trainings)
+
+
+@app.get("/v1/lora/trainings/{training_id}", response_model=LoRATrainingStatusResponse)
+async def get_lora_training_status(training_id: str):
+    """Get the status of a specific LoRA training job."""
+    if training_id not in _training_jobs:
+        raise HTTPException(404, f"Training job {training_id} not found")
+    
+    job = _training_jobs[training_id]
+    return LoRATrainingStatusResponse(
+        training_id=training_id,
+        status=job["status"],
+        progress=job["progress"],
+        current_epoch=job["current_epoch"],
+        total_epochs=job["total_epochs"],
+        current_step=job["current_step"],
+        total_steps=job["total_steps"],
+        loss=job["loss"],
+        eval_loss=job["eval_loss"],
+        learning_rate=job["learning_rate"],
+        started_at=job["started_at"],
+        completed_at=job["completed_at"],
+        error=job["error"],
+    )
+
+
+@app.delete("/v1/lora/trainings/{training_id}")
+async def delete_lora_training(training_id: str):
+    """Delete a LoRA training job and its outputs."""
+    if training_id not in _training_jobs:
+        raise HTTPException(404, f"Training job {training_id} not found")
+    
+    job = _training_jobs[training_id]
+    output_dir = Path(job["output_dir"])
+    
+    # Remove output directory
+    import shutil
+    if output_dir.exists():
+        shutil.rmtree(output_dir)
+    
+    del _training_jobs[training_id]
+    return {"ok": True, "message": f"Training {training_id} deleted"}
+
+
+@app.post("/v1/lora/validate-manifest")
+async def validate_training_manifest(request: Dict[str, Any]):
+    """Validate a training manifest file."""
+    from vishnu_dub.training.validate import validate_manifest, print_validation_report
+    
+    manifest_path = request.get("manifest_path", "")
+    if not manifest_path:
+        raise HTTPException(400, "manifest_path is required")
+    
+    max_samples = request.get("max_samples", 0)
+    verbose = request.get("verbose", False)
+    
+    result = validate_manifest(manifest_path, max_samples=max_samples, verbose=verbose)
+    
+    return {
+        "valid": result.is_valid,
+        "total_samples": result.total_samples,
+        "valid_samples": result.valid_samples,
+        "has_ref_audio": result.has_ref_audio,
+        "errors": result.errors,
+        "warnings": result.warnings,
+        "audio_durations": result.audio_durations,
+        "text_lengths": result.text_lengths,
+    }
+
 
     if safe_filename.endswith(".srt"):
         media_type = "text/plain; charset=utf-8"
