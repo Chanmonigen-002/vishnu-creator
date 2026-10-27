@@ -203,6 +203,26 @@ export async function registerCreatorServicesRoutes(
     }
   });
 
+  server.post<{ Body: unknown }>('/creator-services/dub-engine/benchmark', async (_request, reply) => {
+    try {
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true
+      });
+      const benchmark = await client.runBenchmark(10, 3);
+      return { ok: true, benchmark };
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Benchmark failed'
+      ));
+    }
+  });
+
   server.delete('/creator-services/config', async (_request, reply) => {
     try {
       const proxy = networkStore !== store ? (await networkStore.read()).proxy : undefined;

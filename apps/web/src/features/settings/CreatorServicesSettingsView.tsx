@@ -103,6 +103,29 @@ export function CreatorServicesSettingsView(props: {
   } | null>(null);
   const [dubEngineTesting, setDubEngineTesting] = useState(false);
   const [dubEngineTestError, setDubEngineTestError] = useState<string>();
+  const [dubEngineBenchmark, setDubEngineBenchmark] = useState<{
+    asrTimeSeconds?: number;
+    translationTimeSeconds?: number;
+    ttsTimeSeconds?: number;
+    totalTimeSeconds?: number;
+    tier?: string;
+  } | null>(null);
+  const [dubEngineBenchmarking, setDubEngineBenchmarking] = useState(false);
+  const [dubEngineBenchmarkError, setDubEngineBenchmarkError] = useState<string>();
+
+  async function runDubEngineBenchmark() {
+    if (props.service === null || !('runDubEngineBenchmark' in props.service)) return;
+    setDubEngineBenchmarking(true);
+    setDubEngineBenchmarkError(undefined);
+    try {
+      const res = await (props.service as any).runDubEngineBenchmark();
+      setDubEngineBenchmark(res.benchmark);
+    } catch (cause) {
+      setDubEngineBenchmarkError(cause instanceof Error ? cause.message : 'Benchmark failed');
+    } finally {
+      setDubEngineBenchmarking(false);
+    }
+  }
 
   async function testDubEngine() {
     if (config === undefined || props.service === null) return;
@@ -513,6 +536,10 @@ export function CreatorServicesSettingsView(props: {
               result={dubEngineTest}
               error={dubEngineTestError}
               onTest={testDubEngine}
+              benchmarking={dubEngineBenchmarking}
+              benchmarkResult={dubEngineBenchmark}
+              benchmarkError={dubEngineBenchmarkError}
+              onBenchmark={runDubEngineBenchmark}
             />
           ) : null}
 
@@ -1836,6 +1863,16 @@ function DubEngineSettings(props: {
   } | null;
   error: string | undefined;
   onTest(): void;
+  benchmarking?: boolean;
+  benchmarkResult?: {
+    asrTimeSeconds?: number;
+    translationTimeSeconds?: number;
+    ttsTimeSeconds?: number;
+    totalTimeSeconds?: number;
+    tier?: string;
+  } | null;
+  benchmarkError?: string;
+  onBenchmark?(): void;
 }) {
   const l = useLocalizedCopy();
   const engine = props.config.dubEngine;
@@ -1940,8 +1977,26 @@ function DubEngineSettings(props: {
           )}
           {props.testing ? l('测试中', 'Testing') : l('测试连接', 'Test Connection')}
         </button>
+        {props.onBenchmark && props.result?.connected ? (
+          <button
+            className="settings-secondary-button"
+            type="button"
+            disabled={props.benchmarking}
+            onClick={props.onBenchmark}
+          >
+            {props.benchmarking ? (
+              <LoaderCircle className="creator-services-spinner" size={15} aria-hidden="true" />
+            ) : (
+              <RefreshCcw size={15} aria-hidden="true" />
+            )}
+            {props.benchmarking ? l('基准测试中', 'Benchmarking') : l('运行基准测试', 'Run Benchmark')}
+          </button>
+        ) : null}
         {props.error !== undefined ? (
           <p className="settings-error" role="alert">{props.error}</p>
+        ) : null}
+        {props.benchmarkError !== undefined ? (
+          <p className="settings-error" role="alert">{props.benchmarkError}</p>
         ) : null}
         {props.result !== null && props.result.connected ? (
           <div className="settings-notice" role="status">
@@ -1949,6 +2004,12 @@ function DubEngineSettings(props: {
             {l('已连接', 'Connected')} — {props.result.version ?? ''}
             {props.result.tier !== undefined ? ` · ${l('算力等级', 'Tier')} ${props.result.tier}` : ''}
             {props.result.ramTotalGb !== undefined ? ` · ${l('内存', 'RAM')} ${props.result.ramTotalGb.toFixed(1)} GB` : ''}
+          </div>
+        ) : null}
+        {props.benchmarkResult ? (
+          <div className="settings-notice" role="status">
+            <Check size={14} aria-hidden="true" />
+            {l('基准测试结果', 'Benchmark')}: ASR {props.benchmarkResult.asrTimeSeconds?.toFixed(1) ?? '0.0'}s · TTS {props.benchmarkResult.ttsTimeSeconds?.toFixed(1) ?? '0.0'}s · {l('总计', 'Total')} {props.benchmarkResult.totalTimeSeconds?.toFixed(1) ?? '0.0'}s ({props.benchmarkResult.tier ?? ''})
           </div>
         ) : null}
       </div>

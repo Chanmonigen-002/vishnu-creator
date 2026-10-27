@@ -1,6 +1,7 @@
 import {
   smartDubbingStyles,
   type CreatorJson,
+  type CreatorServicesConfig,
   type CreatorTtsProvider,
   type SmartDubbingFormat,
   type SmartDubbingStyle
@@ -25,6 +26,7 @@ export function createSmartDubbingExecutor(input: {
   ttsService: Pick<VishnuTtsService, 'synthesize'>;
   isOfficial?(): boolean;
   dubEngineService?: DubEngineService;
+  configStore?: { read(): Promise<CreatorServicesConfig> };
 }): CreatorExecutor {
   return {
     id: 'smart-dubbing',
@@ -42,7 +44,8 @@ export function createSmartDubbingExecutor(input: {
       }
 
       if (useEngine) {
-        return await runEngineDub(stage, engine, request, official);
+        const servicesConfig = input.configStore ? await input.configStore.read().catch(() => undefined) : undefined;
+        return await runEngineDub(stage, engine, request, official, servicesConfig);
       }
 
       stage.reportProgress({ phase: 'generating_voice', percent: 20 });
@@ -126,7 +129,8 @@ async function runEngineDub(
     style: string;
     speed: number;
   },
-  official: boolean
+  official: boolean,
+  servicesConfig?: CreatorServicesConfig
 ): Promise<CreatorExecutorResult> {
   stage.reportProgress({ phase: 'creating_job', percent: 10 });
 
@@ -201,33 +205,135 @@ async function runEngineDub(
     );
   }
 
-  const audioBuffer = await engine.downloadResult(jobId, stage.signal);
-  const fileName = `VishnuCreator-dubbing-${jobId}.mp3`;
+  const resultBuffer = await engine.downloadResult(jobId, stage.signal);
+  const isVideo = resultBuffer.length > 8 && resultBuffer.toString('ascii', 4, 8) === 'ftyp';
+  const ext = isVideo ? 'mp4' : 'mp3';
+  const mime = isVideo ? 'video/mp4' : 'audio/mpeg';
+  const kind = isVideo ? 'dubbed_video' : 'dubbed_audio';
+  const fileName = `VishnuCreator-dubbing-${jobId}.${ext}`;
   const path = join(stage.workdir, fileName);
-  await writeFile(path, audioBuffer, { mode: 0o600 });
+  await writeFile(path, resultBuffer, { mode: 0o600 });
+
+  const outputs: CreatorExecutorResult['outputs'] = [{
+    kind,
+    status: 'completed',
+    path,
+    metadata: {
+      fileName,
+      mime,
+      bytes: resultBuffer.length,
+      sha256: createHash('sha256').update(resultBuffer).digest('hex'),
+      provider: 'local-engine',
+      model: 'local-engine',
+      voiceCode: request.voiceCode ?? 'km-KH-SreymomNeural',
+      voiceName: request.voiceName ?? request.voiceCode ?? 'Sreymom',
+      style: request.style,
+      speed: request.speed,
+      format: ext,
+      characterCount: [...request.text].length,
+      settingsSnapshot: stage.job.state,
+      engineJobId: jobId
+    }
+  }];
+
+  if (result.srtUrl) {
+    try {
+      const srtBuf = await engine.downloadArtifact(jobId, 'source.srt', stage.signal);
+      const srtFile = `VishnuCreator-source-${jobId}.srt`;
+      const srtPath = join(stage.workdir, srtFile);
+      await writeFile(srtPath, srtBuf, { mode: 0o600 });
+      outputs.push({
+        kind: 'source_srt',
+        status: 'completed',
+        path: srtPath,
+        metadata: {
+          fileName: srtFile,
+          mime: 'text/plain',
+          bytes: srtBuf.length,
+          sha256: createHash('sha256').update(srtBuf).digest('hex'),
+          provider: 'local-engine',
+          engineJobId: jobId
+        }
+      });
+    } catch {
+      // Non-fatal if secondary artifact download fails
+    }
+  }
+
+  if (result.kmSrtUrl) {
+    try {
+      const kmSrtBuf = await engine.downloadArtifact(jobId, 'km.srt', stage.signal);
+      const kmSrtFile = `VishnuCreator-khmer-${jobId}.srt`;
+      const kmSrtPath = join(stage.workdir, kmSrtFile);
+      await writeFile(kmSrtPath, kmSrtBuf, { mode: 0o600 });
+      outputs.push({
+        kind: 'khmer_srt',
+        status: 'completed',
+        path: kmSrtPath,
+        metadata: {
+          fileName: kmSrtFile,
+          mime: 'text/plain',
+          bytes: kmSrtBuf.length,
+          sha256: createHash('sha256').update(kmSrtBuf).digest('hex'),
+          provider: 'local-engine',
+          engineJobId: jobId
+        }
+      });
+    } catch {
+      // Non-fatal
+    }
+  }
+
+  if (result.vocalsUrl) {
+    try {
+      const vocalsBuf = await engine.downloadArtifact(jobId, 'vocals.wav', stage.signal);
+      const vocalsFile = `VishnuCreator-vocals-${jobId}.wav`;
+      const vocalsPath = join(stage.workdir, vocalsFile);
+      await writeFile(vocalsPath, vocalsBuf, { mode: 0o600 });
+      outputs.push({
+        kind: 'vocals_stem',
+        status: 'completed',
+        path: vocalsPath,
+        metadata: {
+          fileName: vocalsFile,
+          mime: 'audio/wav',
+          bytes: vocalsBuf.length,
+          sha256: createHash('sha256').update(vocalsBuf).digest('hex'),
+          provider: 'local-engine',
+          engineJobId: jobId
+        }
+      });
+    } catch {
+      // Non-fatal
+    }
+  }
+
+  if (result.musicUrl) {
+    try {
+      const musicBuf = await engine.downloadArtifact(jobId, 'music.wav', stage.signal);
+      const musicFile = `VishnuCreator-music-${jobId}.wav`;
+      const musicPath = join(stage.workdir, musicFile);
+      await writeFile(musicPath, musicBuf, { mode: 0o600 });
+      outputs.push({
+        kind: 'music_stem',
+        status: 'completed',
+        path: musicPath,
+        metadata: {
+          fileName: musicFile,
+          mime: 'audio/wav',
+          bytes: musicBuf.length,
+          sha256: createHash('sha256').update(musicBuf).digest('hex'),
+          provider: 'local-engine',
+          engineJobId: jobId
+        }
+      });
+    } catch {
+      // Non-fatal
+    }
+  }
 
   return {
-    outputs: [{
-      kind: 'dubbed_audio',
-      status: 'completed',
-      path,
-      metadata: {
-        fileName,
-        mime: 'audio/mpeg',
-        bytes: audioBuffer.length,
-        sha256: createHash('sha256').update(audioBuffer).digest('hex'),
-        provider: 'local-engine',
-        model: 'local-engine',
-        voiceCode: request.voiceCode ?? 'km-KH-SreymomNeural',
-        voiceName: request.voiceName ?? request.voiceCode ?? 'Sreymom',
-        style: request.style,
-        speed: request.speed,
-        format: 'mp3',
-        characterCount: [...request.text].length,
-        settingsSnapshot: stage.job.state,
-        engineJobId: jobId
-      }
-    }],
+    outputs,
     progress: {
       phase: 'completed',
       percent: 100,

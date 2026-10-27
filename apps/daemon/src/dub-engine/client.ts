@@ -56,6 +56,10 @@ export type DubJobStatusResponse = {
   status: DubJobStatus;
   progress: DubJobProgress | null;
   resultUrl: string | null;
+  srtUrl?: string | null;
+  kmSrtUrl?: string | null;
+  vocalsUrl?: string | null;
+  musicUrl?: string | null;
   error: string | null;
 };
 
@@ -404,6 +408,46 @@ export class DubEngineClient {
     }
   }
 
+  async downloadArtifact(jobId: string, filename: string, signal?: AbortSignal): Promise<Buffer> {
+    const controller = new AbortController();
+    const linkedSignal = signal
+      ? AbortSignal.any([controller.signal, signal])
+      : controller.signal;
+    const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(
+        `${this.baseUrl()}/v1/dub/${encodeURIComponent(jobId)}/artifacts/${encodeURIComponent(filename)}`,
+        { headers: headersFor(this.config), signal: linkedSignal }
+      );
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new DubEngineError(
+          `ENGINE_HTTP_${response.status}`,
+          `Artifact download failed with status ${response.status}`,
+          response.status,
+          response.status >= 500
+        );
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      return Buffer.from(arrayBuffer);
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof DubEngineError) throw error;
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        throw new DubEngineError('ENGINE_TIMEOUT', 'Artifact download timed out', 504, true);
+      }
+      throw new DubEngineError(
+        'ENGINE_DOWNLOAD_FAILED',
+        error instanceof Error ? error.message : 'Artifact download failed',
+        502,
+        true
+      );
+    }
+  }
+
   generateJobId(): string {
     return createHash('sha256').update(`${Date.now()}:${crypto.randomUUID()}`).digest('hex').slice(0, 12);
   }
@@ -501,6 +545,10 @@ export function fromSnakeJobStatus(body: unknown): DubJobStatusResponse {
     status: (typeof record.status === 'string' ? record.status : 'queued') as DubJobStatus,
     progress,
     resultUrl: readStringOrNull(record.result_url),
+    srtUrl: readStringOrNull(record.srt_url),
+    kmSrtUrl: readStringOrNull(record.km_srt_url),
+    vocalsUrl: readStringOrNull(record.vocals_url),
+    musicUrl: readStringOrNull(record.music_url),
     error: readStringOrNull(record.error),
   };
 }

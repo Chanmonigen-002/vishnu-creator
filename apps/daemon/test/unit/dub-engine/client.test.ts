@@ -60,18 +60,26 @@ describe('snake_case ↔ camelCase wire-format mappers', () => {
     expect(result).toEqual({ jobId: 'abc123', status: 'running', message: 'processing' });
   });
 
-  it('fromSnakeJobStatus maps nested progress and nullable fields', () => {
+  it('fromSnakeJobStatus maps nested progress and nullable fields including artifact URLs', () => {
     const result = fromSnakeJobStatus({
       job_id: 'abc123',
       status: 'completed',
       progress: { stage: 'mix', percent: 78, message: 'mixing audio' },
       result_url: 'http://127.0.0.1:8765/v1/dub/abc123/download',
+      srt_url: 'http://127.0.0.1:8765/v1/dub/abc123/artifacts/source.srt',
+      km_srt_url: 'http://127.0.0.1:8765/v1/dub/abc123/artifacts/km.srt',
+      vocals_url: 'http://127.0.0.1:8765/v1/dub/abc123/artifacts/vocals.wav',
+      music_url: 'http://127.0.0.1:8765/v1/dub/abc123/artifacts/music.wav',
       error: null
     });
     expect(result.jobId).toBe('abc123');
     expect(result.status).toBe('completed');
     expect(result.progress).toEqual({ phase: 'mix', percent: 78, message: 'mixing audio' });
     expect(result.resultUrl).toBe('http://127.0.0.1:8765/v1/dub/abc123/download');
+    expect(result.srtUrl).toBe('http://127.0.0.1:8765/v1/dub/abc123/artifacts/source.srt');
+    expect(result.kmSrtUrl).toBe('http://127.0.0.1:8765/v1/dub/abc123/artifacts/km.srt');
+    expect(result.vocalsUrl).toBe('http://127.0.0.1:8765/v1/dub/abc123/artifacts/vocals.wav');
+    expect(result.musicUrl).toBe('http://127.0.0.1:8765/v1/dub/abc123/artifacts/music.wav');
     expect(result.error).toBeNull();
   });
 

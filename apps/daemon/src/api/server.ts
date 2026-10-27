@@ -1038,6 +1038,7 @@ export async function buildServer(input: BuildServerInput) {
     creatorExecutors.push(createSmartDubbingExecutor({
       ttsService: vishnuTtsService,
       isOfficial: () => gatewayAccount.peekState().source === 'gateway',
+      configStore: creatorServicesConfigStore,
       ...(dubEngineService === undefined ? {} : { dubEngineService })
     }));
     creatorExecutors.push(createImageExecutor({

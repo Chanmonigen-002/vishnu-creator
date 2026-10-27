@@ -12,11 +12,22 @@ import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'patch' | 'delete' | 'rawRequest'>;
 
-export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork'> & {
+export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark'> & {
   getCodexImageStatus?: () => Promise<CodexImageStatus>;
   getCodexModelStatus?: () => Promise<CodexProviderConfig>;
   getNetwork?: () => Promise<{ proxy: string }>;
   saveNetwork?: (network: { proxy: string }) => Promise<{ proxy: string }>;
+  runDubEngineBenchmark?: () => Promise<{
+    ok: boolean;
+    benchmark: {
+      asrTimeSeconds: number;
+      translationTimeSeconds: number;
+      ttsTimeSeconds: number;
+      separationTimeSeconds: number;
+      totalTimeSeconds: number;
+      tier: string;
+    };
+  }>;
 };
 
 export function createCreatorServicesService(client: ClientLike) {
@@ -66,6 +77,27 @@ export function createCreatorServicesService(client: ClientLike) {
       return client.rawRequest('/creator-services/dub-engine/test', {
         method: 'POST',
         body: config
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        return response.json();
+      });
+    },
+    runDubEngineBenchmark(): Promise<{
+      ok: boolean;
+      benchmark: {
+        asrTimeSeconds: number;
+        translationTimeSeconds: number;
+        ttsTimeSeconds: number;
+        separationTimeSeconds: number;
+        totalTimeSeconds: number;
+        tier: string;
+      };
+    }> {
+      return client.rawRequest('/creator-services/dub-engine/benchmark', {
+        method: 'POST'
       }).then(async response => {
         if (!response.ok) {
           const body = await response.json().catch(() => undefined);

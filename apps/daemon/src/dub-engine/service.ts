@@ -326,6 +326,10 @@ export class DubEngineService {
     return this.client.downloadResult(jobId, signal);
   }
 
+  async downloadArtifact(jobId: string, filename: string, signal?: AbortSignal): Promise<Buffer> {
+    return this.client.downloadArtifact(jobId, filename, signal);
+  }
+
   generateJobId(): string {
     return this.client.generateJobId();
   }
