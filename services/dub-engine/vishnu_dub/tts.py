@@ -1,7 +1,9 @@
 """Vishnu Dub Engine — TTS backends."""
 
 import asyncio
+import hashlib
 import os
+import struct
 import subprocess
 import tempfile
 from abc import ABC, abstractmethod
@@ -10,6 +12,13 @@ from typing import AsyncGenerator, Optional
 
 import numpy as np
 from pydantic import BaseModel
+
+# Watermark constants
+WATERMARK_SAMPLE_RATE = 24000
+WATERMARK_BIT_DURATION = 0.1  # 100ms per bit
+WATERMARK_FREQ_0 = 18000  # Hz for bit 0
+WATERMARK_FREQ_1 = 19000  # Hz for bit 1
+WATERMARK_AMPLITUDE = 0.01  # -40 dB relative to full scale
 
 
 class TTSResult(BaseModel):
@@ -460,6 +469,131 @@ class VoxCPM2Backend(TTSBackend):
             if p and p.exists():
                 return str(p)
         return None
+
+    # ─── Watermark & Consent Guard ──────────────────────────────────────
+
+    def _generate_watermark(self, voice_id: str, user_id: str, timestamp: int) -> bytes:
+        """Generate a cryptographic watermark payload."""
+        # Create a watermark containing: voice_id, user_id, timestamp, and a hash
+        payload = f"{voice_id}|{user_id}|{timestamp}".encode()
+        # Add a HMAC for integrity
+        secret = os.environ.get("WATERMARK_SECRET", "vishnu-default-secret").encode()
+        hmac_digest = hashlib.sha256(secret + payload).digest()[:8]
+        return payload + hmac_digest
+
+    def _encode_watermark_audio(self, watermark_bytes: bytes, duration: float, sample_rate: int = WATERMARK_SAMPLE_RATE) -> np.ndarray:
+        """Encode watermark bytes as audio using FSK (Frequency Shift Keying)."""
+        bits = []
+        for byte in watermark_bytes:
+            for i in range(8):
+                bits.append((byte >> i) & 1)
+        
+        samples_per_bit = int(sample_rate * WATERMARK_BIT_DURATION)
+        total_samples = len(bits) * samples_per_bit
+        t = np.arange(total_samples) / sample_rate
+        
+        # Generate FSK signal
+        signal = np.zeros(total_samples, dtype=np.float32)
+        for i, bit in enumerate(bits):
+            start = i * samples_per_bit
+            end = start + samples_per_bit
+            freq = WATERMARK_FREQ_1 if bit else WATERMARK_FREQ_0
+            signal[start:end] = WATERMARK_AMPLITUDE * np.sin(2 * np.pi * freq * t[start:end])
+        
+        return signal
+
+    def _embed_watermark(self, audio: np.ndarray, watermark_signal: np.ndarray) -> np.ndarray:
+        """Embed watermark into audio by adding it to the high-frequency range."""
+        # Ensure watermark fits in audio
+        if len(watermark_signal) > len(audio):
+            watermark_signal = watermark_signal[:len(audio)]
+        
+        # Add watermark to the end of the audio (last N samples)
+        start_idx = len(audio) - len(watermark_signal)
+        if start_idx < 0:
+            start_idx = 0
+        
+        watermarked = audio.copy()
+        watermarked[start_idx:] += watermark_signal
+        
+        # Prevent clipping
+        np.clip(watermarked, -1.0, 1.0, out=watermarked)
+        return watermarked
+
+    def _extract_watermark(self, audio: np.ndarray, expected_length: int, sample_rate: int = WATERMARK_SAMPLE_RATE) -> Optional[bytes]:
+        """Extract watermark from audio using FFT analysis."""
+        if len(audio) < expected_length * sample_rate * WATERMARK_BIT_DURATION / 8:
+            return None
+        
+        # Extract the last portion of audio where watermark is embedded
+        samples_per_bit = int(sample_rate * WATERMARK_BIT_DURATION)
+        watermark_samples = expected_length * 8 * samples_per_bit
+        if watermark_samples > len(audio):
+            return None
+        
+        watermark_audio = audio[-watermark_samples:]
+        
+        bits = []
+        for i in range(0, len(watermark_audio), int(sample_rate * WATERMARK_BIT_DURATION)):
+            chunk = watermark_audio[i:i + int(sample_rate * WATERMARK_BIT_DURATION)]
+            if len(chunk) < sample_rate * WATERMARK_BIT_DURATION // 2:
+                break
+            
+            # FFT to detect frequency
+            fft = np.fft.rfft(chunk)
+            freqs = np.fft.rfftfreq(len(chunk), 1 / WATERMARK_SAMPLE_RATE)
+            
+            # Find peak frequency
+            peak_idx = np.argmax(np.abs(fft))
+            peak_freq = freqs[peak_idx]
+            
+            # Determine bit based on frequency proximity
+            if abs(peak_freq - WATERMARK_FREQ_1) < abs(peak_freq - WATERMARK_FREQ_0):
+                bits.append(1)
+            else:
+                bits.append(0)
+        
+        # Convert bits to bytes
+        if len(bits) < 8:
+            return None
+        
+        bytes_out = bytearray()
+        for i in range(0, min(len(bits), 64), 8):  # Max 8 bytes (48 bits payload + 8 HMAC)
+            byte = 0
+            for j in range(8):
+                if i + j < len(bits):
+                    byte |= (bits[i + j] << j)
+            bytes_out.append(byte)
+        
+        return bytes(bytes_out)
+
+    def verify_watermark(self, audio_path: Path, voice_id: str, user_id: str, timestamp: int) -> bool:
+        """Verify watermark in an audio file."""
+        import torchaudio
+        audio, sr = torchaudio.load(str(audio_path))
+        audio_np = audio[0].numpy()  # Mono
+        
+        expected_watermark = self._generate_watermark(voice_id, user_id, timestamp)
+        extracted = self._extract_watermark(audio_np, len(expected_watermark), WATERMARK_SAMPLE_RATE)
+        
+        if extracted is None:
+            return False
+        
+        return extracted == expected_watermark
+
+    def require_consent(self, voice_id: str, user_consent: bool, user_id: str) -> None:
+        """Enforce consent requirement for voice cloning."""
+        if not user_consent:
+            raise RuntimeError("Voice cloning requires explicit user consent")
+        
+        # Additional checks could be added here:
+        # - Check if voice_id is in user's authorized voices list
+        # - Check rate limiting
+        # - Log the cloning attempt for audit
+        
+        # For now, just log
+        import logging
+        logging.info(f"Voice cloning authorized: voice_id={voice_id}, user_id={user_id}")
 
 
 def get_tts_backend(provider: str, config: dict) -> TTSBackend:
