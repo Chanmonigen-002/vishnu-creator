@@ -276,9 +276,10 @@ export function VoiceLibrary(props: {
         <div className="voice-library-dialog-overlay" onClick={() => setShowCreateDialog(false)}>
           <div className="voice-library-dialog" onClick={e => e.stopPropagation()}>
             <h3>{l('创建新音色', 'Create New Voice')}</h3>
-            <button className="voice-library-dialog-close" onClick={() => setShowCreateDialog(false)} aria-label={l('关闭', 'Close')}>
+            <button className="voice-library-dialog-close" onClick={() => setShowCreateDialog(false)} aria-label={l('关闭', 'Close')}
+              >
               <X size={20} aria-hidden="true" />
-            </button>
+              </button>
             <div className="voice-library-dialog-content">
               <label className="voice-library-field">
                 <span>{l('音色描述', 'Voice Description')}</span>

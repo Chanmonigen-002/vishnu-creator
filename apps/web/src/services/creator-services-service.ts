@@ -192,7 +192,7 @@ export function createCreatorServicesService(client: ClientLike) {
       return client.rawRequest('/creator-services/tts/voices/preview', {
         method: 'POST',
         body: request
-      }).then(async response => {
+      }).then(async (response): Promise<PreviewVoiceDesignResponse> => {
         if (!response.ok) {
           const body = await response.json().catch(() => undefined);
           throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
