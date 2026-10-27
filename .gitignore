@@ -38,3 +38,6 @@ open-design-main/
 
 # Upstream reference sources: read-only, never committed (docs/adr/0004-reference-folder-read-only.md)
 /File clone Resource/
+services/dub-engine/jobs/
+services/dub-engine/models/
+
