@@ -1056,9 +1056,9 @@ describe('DashboardPage', () => {
     fireEvent.click(screen.getByRole('button', { name: '继续' }));
     expect(screen.getByRole('heading', { name: '设置翻译语言' })).toBeInTheDocument();
     expect(screen.getByRole('combobox', { name: '源语言' })).toHaveValue('en');
-    expect(screen.getByRole('combobox', { name: '翻译为' })).toHaveValue('zh_cn');
+    expect(screen.getByRole('combobox', { name: '翻译为' })).toHaveValue('km');
     expect(screen.queryByRole('switch', { name: '合成字幕视频' })).not.toBeInTheDocument();
-    expect(screen.getByLabelText('任务摘要')).toHaveTextContent('English → 简体中文');
+    expect(screen.getByLabelText('任务摘要')).toHaveTextContent('English → ភាសាខ្មែរ');
     await startVideoTranslation();
     fireEvent.click(screen.getByRole('button', { name: '自定义样式' }));
     changeControl(screen.getByRole('combobox', { name: '字幕字体' }), { target: { value: 'rounded' } });
@@ -1663,7 +1663,7 @@ describe('DashboardPage', () => {
         })
       );
     });
-    expect(screen.getByRole('combobox', { name: '翻译为' })).toHaveValue('zh_cn');
+    expect(screen.getByRole('combobox', { name: '翻译为' })).toHaveValue('km');
   });
 
   it('sends the translation review quick action through the Creator Agent', async () => {

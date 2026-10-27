@@ -921,7 +921,7 @@ function legacyResultVersionsFromArtifacts(
             : persisted?.settings.sourceLanguage ?? 'en',
           targetLanguage: typeof sourceState.targetLanguage === 'string'
             ? sourceState.targetLanguage
-            : persisted?.settings.targetLanguage ?? 'zh_cn',
+            : persisted?.settings.targetLanguage ?? 'km',
           bilingual: typeof sourceState.bilingual === 'boolean'
             ? sourceState.bilingual
             : persisted?.settings.bilingual ?? true,
@@ -937,7 +937,7 @@ function legacyResultVersionsFromArtifacts(
             : persisted?.settings.dubbing ?? false,
           ttsProvider: isTtsProvider(sourceState.ttsProvider)
             ? sourceState.ttsProvider
-            : persisted?.settings.ttsProvider ?? 'openai',
+            : persisted?.settings.ttsProvider ?? 'edge-tts',
           ttsModel: typeof sourceState.ttsModel === 'string'
             ? sourceState.ttsModel
             : persisted?.settings.ttsModel ?? '',
@@ -1037,7 +1037,7 @@ function resultVersionFromSnapshot(
     },
     settings: {
       sourceLanguage: readStringSetting(sourceState, fallbackState, persisted, 'sourceLanguage', 'en'),
-      targetLanguage: readStringSetting(sourceState, fallbackState, persisted, 'targetLanguage', 'zh_cn'),
+      targetLanguage: readStringSetting(sourceState, fallbackState, persisted, 'targetLanguage', 'km'),
       bilingual: readBooleanSetting(sourceState, fallbackState, persisted, 'bilingual', true),
       subtitlePosition: sourceState.subtitlePosition === 'bottom'
         ? 'bottom'
@@ -1112,7 +1112,7 @@ function readTtsProviderSetting(
   persisted: TranslationResultVersion | undefined
 ): CreatorTtsProvider {
   const value = state.ttsProvider ?? fallback.ttsProvider;
-  return isTtsProvider(value) ? value : persisted?.settings.ttsProvider ?? 'openai';
+  return isTtsProvider(value) ? value : persisted?.settings.ttsProvider ?? 'edge-tts';
 }
 
 function isTtsProvider(value: unknown): value is CreatorTtsProvider {
@@ -1740,7 +1740,7 @@ export default function VideoTranslationWorkspace(props: {
   const [videoFileLastModified, setVideoFileLastModified] = useState<number | null>(null);
   const [sourceLanguage, setSourceLanguage] = useState('en');
   const [asrCapability, setAsrCapability] = useState<TranscriptionLanguageCapability>();
-  const [targetLanguage, setTargetLanguage] = useState('zh_cn');
+  const [targetLanguage, setTargetLanguage] = useState('km');
   const [bilingual, setBilingual] = useState(true);
   const [subtitlePosition, setSubtitlePosition] = useState<SubtitlePosition>('top');
   const [preferPlatformCaptions, setPreferPlatformCaptions] = useState(true);
@@ -1771,7 +1771,7 @@ export default function VideoTranslationWorkspace(props: {
   const [subtitleShadowOffsetY, setSubtitleShadowOffsetY] = useState(defaultSubtitleStyle.subtitleShadowOffsetY);
   const [subtitleShadowBlur, setSubtitleShadowBlur] = useState(defaultSubtitleStyle.subtitleShadowBlur);
   const [dubbingRequested, setDubbing] = useState(false);
-  const [ttsProvider, setTtsProvider] = useState<CreatorTtsProvider>('openai');
+  const [ttsProvider, setTtsProvider] = useState<CreatorTtsProvider>('edge-tts');
   const [ttsModel, setTtsModel] = useState('gpt-4o-mini-tts');
   const [voiceCode, setVoiceCode] = useState('');
   const [voiceName, setVoiceName] = useState('');

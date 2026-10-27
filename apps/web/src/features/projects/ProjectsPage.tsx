@@ -676,9 +676,11 @@ function hasMeaningfulDraftState(templateId: string, state: CreatorJob['state'])
     : undefined;
   if (templateId === 'video-translation') {
     const sourceLanguage = typeof state.sourceLanguage === 'string' ? state.sourceLanguage : 'en';
-    const targetLanguage = typeof state.targetLanguage === 'string' ? state.targetLanguage : 'zh_cn';
+    const targetLanguage = typeof state.targetLanguage === 'string' ? state.targetLanguage : 'km';
     const usesDefaultLanguagePair = (
-      (sourceLanguage === 'en' && targetLanguage === 'zh_cn')
+      (sourceLanguage === 'en' && targetLanguage === 'km')
+      || (sourceLanguage === 'zh_cn' && targetLanguage === 'km')
+      || (sourceLanguage === 'en' && targetLanguage === 'zh_cn')
       || (sourceLanguage === 'zh_cn' && targetLanguage === 'en')
     );
     if (!usesDefaultLanguagePair) return true;
@@ -802,7 +804,7 @@ function creatorDraftDefaults(templateId: string): Record<string, unknown[]> {
       sourceType: ['url'],
       sourceUrl: [''],
       sourceLanguage: ['en', 'zh_cn'],
-      targetLanguage: ['zh_cn', 'en'],
+      targetLanguage: ['km', 'zh_cn', 'en'],
       bilingual: [true],
       subtitlePosition: ['top'],
       preferPlatformCaptions: [true],

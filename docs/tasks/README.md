@@ -6,7 +6,7 @@ The master plan explains *why*; these files track *what is done*.
 | Phase | Title | Tasks | Done | Doing | Blocked | Todo | Depends on | Gate | Status |
 |---|---|---|---|---|---|---|---|---|---|
 | 0 | [Stabilize the baseline](phase-0-baseline.md) | 9 | 9 | 0 | 0 | 0 | — | met (`v0-baseline`) | Complete |
-| 1 | [Khmer foundation, zero GPU](phase-1-khmer-foundation.md) | 9 | 7 | 2 | 0 | 0 | Phase 0 | **not met** | In progress |
+| 1 | [Khmer foundation, zero GPU](phase-1-khmer-foundation.md) | 9 | 8 | 1 | 0 | 0 | Phase 0 | **not met** | In progress |
 | 2 | [Bring the dub engine into the repo](phase-2-dub-engine-service.md) | 15 | 15 | 0 | 0 | 0 | Phase 0 · ADR-0005 (accepted) | **not met** | Tasks done · gate not met |
 | 3 | [Daemon ↔ engine integration](phase-3-daemon-integration.md) | 14 | 9 | 5 | 0 | 0 | Phase 2 | **not met** | In progress |
 | 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 3 | 2 | 0 | 2 | Phase 3 | **not met** | In progress |
