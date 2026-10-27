@@ -48,6 +48,7 @@ class Job:
     separate_vocals: bool = True
     bilingual_subtitles: bool = True
     compose_video: bool = True
+    auto_clone_speaker: bool = False
 
     status: JobStatus = JobStatus.PENDING
     progress: JobProgress = field(default_factory=JobProgress)
@@ -57,6 +58,7 @@ class Job:
     km_srt_path: Optional[str] = None
     vocals_path: Optional[str] = None
     music_path: Optional[str] = None
+    reference_audio_path: Optional[str] = None
 
     # Timing
     created_at: float = field(default_factory=time.time)
@@ -100,6 +102,8 @@ class Job:
             "km_srt_path": self.km_srt_path,
             "vocals_path": self.vocals_path,
             "music_path": self.music_path,
+            "reference_audio_path": self.reference_audio_path,
+            "auto_clone_speaker": self.auto_clone_speaker,
             "created_at": self.created_at,
             "started_at": self.started_at,
             "completed_at": self.completed_at,
@@ -125,6 +129,7 @@ class Job:
             separate_vocals=data.get("separate_vocals", True),
             bilingual_subtitles=data.get("bilingual_subtitles", True),
             compose_video=data.get("compose_video", True),
+            auto_clone_speaker=data.get("auto_clone_speaker", False),
         )
         job.status = JobStatus(data["status"])
         job.progress = JobProgress(**data.get("progress", {}))
@@ -143,6 +148,8 @@ class Job:
         job.separation_time = data.get("separation_time", 0.0)
         job.total_time = data.get("total_time", 0.0)
         job.work_dir = data.get("work_dir")
+        job.reference_audio_path = data.get("reference_audio_path")
+        job.auto_clone_speaker = data.get("auto_clone_speaker", False)
         return job
 
 
@@ -339,6 +346,33 @@ class JobManager:
 
         return source_video, source_audio
 
+    async def _extract_reference_audio(self, job: "Job", work_dir: Path, ffmpeg_bin: str, source_audio: Path, max_duration: float = 30.0) -> Optional[Path]:
+        """Extract a reference audio segment (up to max_duration seconds) from source audio for voice cloning."""
+        if not job.auto_clone_speaker:
+            return None
+        
+        reference_audio = work_dir / "reference_audio.wav"
+        
+        # Extract first 30 seconds of audio for voice cloning reference
+        proc = await asyncio.create_subprocess_exec(
+            ffmpeg_bin, "-y",
+            "-i", str(source_audio),
+            "-t", str(max_duration),
+            "-acodec", "pcm_s16le",
+            "-ar", "16000",
+            "-ac", "1",
+            str(reference_audio),
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        _, stderr = await proc.communicate()
+        
+        if proc.returncode != 0 or not reference_audio.exists() or reference_audio.stat().st_size == 0:
+            print(f"Warning: Failed to extract reference audio: {stderr.decode(errors='replace')}")
+            return None
+        
+        return reference_audio
+
     async def _run_job(self, job: "Job"):
         """Run the full dubbing pipeline with stage and segment checkpointing."""
         from vishnu_dub.asr import get_asr_backend
@@ -477,6 +511,16 @@ class JobManager:
             write_checkpoint("translation")
             await self._save_job(job)
 
+            # Extract reference audio for voice cloning (if auto_clone_speaker enabled)
+            if job.auto_clone_speaker:
+                job.progress = JobProgress(stage="reference_audio", percent=55, message="Extracting reference audio for voice cloning...")
+                await self._save_job(job)
+                reference_audio = await self._extract_reference_audio(job, work_dir, ffmpeg_bin, source_audio)
+                if reference_audio:
+                    job.reference_audio_path = str(reference_audio)
+                    await self._save_job(job)
+                write_checkpoint("reference_audio")
+
             # Stage 4: TTS — synthesize per-segment audio with checkpoint resume
             job.progress = JobProgress(
                 stage="tts",
@@ -509,6 +553,7 @@ class JobManager:
                         voice_id=voice_id,
                         output_path=seg_path,
                         speed=job.tts_speed,
+                        reference_audio=Path(job.reference_audio_path) if job.reference_audio_path else None,
                     )
                     synthesized_any = True
                 segment_files.append(seg_path)

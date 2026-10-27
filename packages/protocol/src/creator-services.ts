@@ -77,6 +77,7 @@ export type DubJobRequest = {
   separateVocals: boolean;
   bilingualSubtitles: boolean;
   composeVideo: boolean;
+  autoCloneSpeaker?: boolean;
 };
 
 export type DubJobResponse = {
