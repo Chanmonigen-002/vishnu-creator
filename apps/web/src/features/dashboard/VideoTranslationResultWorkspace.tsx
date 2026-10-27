@@ -1043,20 +1043,32 @@ export default function VideoTranslationResultWorkspace(props: {
               </div>
               <div className="quality-metrics-grid">
                 <div className="quality-metric-item">
-                  <span className="quality-metric-label">{l('时间漂移 (Timing Drift)', 'Timing Drift')}</span>
+                  <span className="quality-metric-label">{l('时间漂移 (Timing Drift)', 'Timing Drift', 'គម្លាតពេលវេលា (Timing Drift)')}</span>
                   <span className="quality-metric-value">{qualityReport.timingDriftMs} ms</span>
                 </div>
                 <div className="quality-metric-item">
-                  <span className="quality-metric-label">{l('超长字幕片段 (Overlong Cues)', 'Overlong Cues')}</span>
+                  <span className="quality-metric-label">{l('超长字幕片段 (Overlong Cues)', 'Overlong Cues', 'ឃ្លាវែងពេក (Overlong Cues)')}</span>
                   <span className="quality-metric-value">{qualityReport.overlongCuesCount} / {qualityReport.totalCues}</span>
                 </div>
                 <div className="quality-metric-item">
-                  <span className="quality-metric-label">{l('高棉语平均语速 (Khmer CPS)', 'Average Khmer CPS')}</span>
+                  <span className="quality-metric-label">{l('高棉语平均语速 (Khmer CPS)', 'Average Khmer CPS', 'ល្បឿនអក្សរខ្មែរមធ្យម (Khmer CPS)')}</span>
                   <span className="quality-metric-value">{qualityReport.averageKhmerCps} CPS</span>
                 </div>
                 <div className="quality-metric-item">
-                  <span className="quality-metric-label">{l('字错率预估 (CER Estimate)', 'CER Estimate')}</span>
-                  <span className="quality-metric-value">{qualityReport.cerEstimatePercent}%</span>
+                  <span className="quality-metric-label">
+                    {qualityReport.cerPercent !== undefined
+                      ? l('字错率 (CER via Re-ASR)', 'CER (via Re-ASR)', 'អត្រាកំហុសតួអក្សរ (CER)')
+                      : l('质检评估 (Quality Status)', 'Quality Status', 'ស្ថានភាពគុណភាព (Status)')}
+                  </span>
+                  <span className="quality-metric-value">
+                    {qualityReport.cerPercent !== undefined
+                      ? `${qualityReport.cerPercent}%`
+                      : l(
+                          qualityReport.status === 'passed' ? '合格 (Passed)' : qualityReport.status === 'warning' ? '建议复核 (Warning)' : '需调整 (Attention)',
+                          qualityReport.status === 'passed' ? 'Passed' : qualityReport.status === 'warning' ? 'Warning' : 'Needs Attention',
+                          qualityReport.status === 'passed' ? 'ជាប់ (Passed)' : qualityReport.status === 'warning' ? 'ត្រូវពិនិត្យ (Warning)' : 'ត្រូវកែសម្រួល'
+                        )}
+                  </span>
                 </div>
               </div>
             </div>
@@ -1186,17 +1198,19 @@ export default function VideoTranslationResultWorkspace(props: {
                                 />
                               );
                               const cpsInfo = calculateCueCps(cue, effectiveTargetLang);
+                              const cpsStatusLabel = l(
+                                cpsInfo.status === 'normal' ? '正常' : cpsInfo.status === 'fast' ? '偏快' : '超长',
+                                cpsInfo.status === 'normal' ? 'Normal' : cpsInfo.status === 'fast' ? 'Fast' : 'Overlong',
+                                cpsInfo.status === 'normal' ? 'ធម្មតា' : cpsInfo.status === 'fast' ? 'លឿន' : 'វែងពេក'
+                              );
                               const cueActions = (
                                 <div className="video-subtitle-cue-actions" key={`actions-${cue.id}`}>
                                   <span
                                     className={`video-subtitle-cps-badge video-subtitle-cps-${cpsInfo.status}`}
                                     data-testid={`cue-cps-${cue.id}`}
-                                    title={`${l('语速', 'Speed')}: ${cpsInfo.cps} CPS (${l(cpsInfo.status === 'normal' ? '正常' : cpsInfo.status === 'fast' ? '偏快' : '超长', cpsInfo.status === 'normal' ? 'Normal' : cpsInfo.status === 'fast' ? 'Fast' : 'Overlong')}) · ${l('时长', 'Duration')}: ${cpsInfo.durationSeconds}s · ${l('字数', 'Chars')}: ${cpsInfo.charCount}`}
+                                    title={`${l('语速', 'Speed', 'ល្បឿន')}: ${cpsInfo.cps} CPS (${cpsStatusLabel}) · ${l('时长', 'Duration', 'រយៈពេល')}: ${cpsInfo.durationSeconds}s · ${l('字数', 'Chars', 'ចំនួនតួ')}: ${cpsInfo.charCount}`}
                                   >
-                                    {cpsInfo.cps} CPS · {l(
-                                      cpsInfo.status === 'normal' ? '正常' : cpsInfo.status === 'fast' ? '偏快' : '超长',
-                                      cpsInfo.status === 'normal' ? 'Normal' : cpsInfo.status === 'fast' ? 'Fast' : 'Overlong'
-                                    )}
+                                    {cpsInfo.cps} CPS · {cpsStatusLabel}
                                   </span>
                                   {!editReadOnly ? (
                                     <button

@@ -777,13 +777,14 @@ export type JobQualityReport = {
   overlongCuesCount: number;
   totalCues: number;
   averageKhmerCps: number;
-  cerEstimatePercent: number;
+  cerPercent?: number;
   status: 'passed' | 'warning' | 'needs_attention';
 };
 
 export function calculateJobQualityReport(
   cues: Array<{ start: string | number; end: string | number; text: string }>,
-  targetLanguage: string = 'km'
+  targetLanguage: string = 'km',
+  options?: { measuredCerPercent?: number }
 ): JobQualityReport {
   if (!cues || cues.length === 0) {
     return {
@@ -791,7 +792,7 @@ export function calculateJobQualityReport(
       overlongCuesCount: 0,
       totalCues: 0,
       averageKhmerCps: 0,
-      cerEstimatePercent: 0,
+      cerPercent: options?.measuredCerPercent,
       status: 'passed'
     };
   }
@@ -830,13 +831,9 @@ export function calculateJobQualityReport(
     ? Math.round(driftSumMs / (cues.length - 1))
     : 0;
 
-  // Calibrated CER estimate based on overlong cue ratio & drift severity
   const overlongRatio = overlongCount / cues.length;
-  const baseCer = 2.4;
-  const cerEstimatePercent = Number((baseCer + (overlongRatio * 5.0) + (timingDriftMs > 50 ? 1.2 : 0)).toFixed(1));
-
   let status: 'passed' | 'warning' | 'needs_attention' = 'passed';
-  if (overlongCount > 0 || timingDriftMs > 60 || cerEstimatePercent > 6.0) {
+  if (overlongCount > 0 || timingDriftMs > 60 || (options?.measuredCerPercent !== undefined && options.measuredCerPercent > 6.0)) {
     status = overlongRatio > 0.25 || timingDriftMs > 100 ? 'needs_attention' : 'warning';
   }
 
@@ -845,7 +842,7 @@ export function calculateJobQualityReport(
     overlongCuesCount: overlongCount,
     totalCues: cues.length,
     averageKhmerCps,
-    cerEstimatePercent,
+    cerPercent: options?.measuredCerPercent,
     status
   };
 }

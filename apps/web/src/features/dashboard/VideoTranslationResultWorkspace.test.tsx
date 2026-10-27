@@ -1182,7 +1182,7 @@ describe('VideoTranslationResultWorkspace', () => {
     expect(panel).toHaveTextContent(/Timing Drift/i);
     expect(panel).toHaveTextContent(/Overlong Cues/i);
     expect(panel).toHaveTextContent(/Khmer CPS/i);
-    expect(panel).toHaveTextContent(/CER/i);
+    expect(panel).toHaveTextContent(/Quality Status|合格|Passed/i);
 
     // Close panel
     fireEvent.click(within(panel).getByRole('button', { name: /关闭|Close/i }));

@@ -9,7 +9,7 @@ The master plan explains *why*; these files track *what is done*.
 | 1 | [Khmer foundation, zero GPU](phase-1-khmer-foundation.md) | 9 | 8 | 1 | 0 | 0 | Phase 0 | **not met** | In progress |
 | 2 | [Bring the dub engine into the repo](phase-2-dub-engine-service.md) | 15 | 15 | 0 | 0 | 0 | Phase 0 · ADR-0005 (accepted) | **not met** | Tasks done · gate not met |
 | 3 | [Daemon ↔ engine integration](phase-3-daemon-integration.md) | 14 | 9 | 5 | 0 | 0 | Phase 2 | **not met** | In progress |
-| 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 3 | 2 | 0 | 2 | Phase 3 | **not met** | In progress |
+| 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 4 | 1 | 0 | 2 | Phase 3 | **not met** | In progress |
 | 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 10 | 2 | 6 | 2 | 0 | Phase 3 | **not met** | In progress |
 | 6 | [Extra creator studios](phase-6-creator-studios.md) | 5 | 0 | 0 | 0 | 5 | Phase 3 | — | Not started |
 | 7 | [Release](phase-7-release.md) | 7 | 0 | 0 | 0 | 7 | Phases 1–6 | — | Not started |
@@ -27,7 +27,7 @@ Every task marked `done` in Phases 0–5 was checked against the code, its tests
 
 ### Rule violations found (AGENTS.md "no fake")
 
-- **T4.7:** the Quality Report's "CER" is a formula (`2.4 + overlongRatio*5 + …`), not a measured error rate.
+- ~~**T4.7:** the Quality Report's "CER" is a formula (`2.4 + overlongRatio*5 + …`), not a measured error rate.~~ **Fixed 2026-10-27:** Removed fabricated formula from `@vishnucreator/protocol` and updated Quality Report card to show real timing drift, overlong cues count, Khmer CPS, and quality status (or genuine measured CER if re-ASR is provided).
 - **T1.8:** the Phase 1 gate's Playwright test passes without running any dubbing; it only checks a pre-existing MP4.
 - **T5.9:** the watermark cannot work (18/19 kHz tones in 24 kHz audio), and it uses a hard-coded fallback secret.
 - **Phase 5 gate:** ticked on "typecheck/build pass" only. No VoxCPM2 model has been downloaded or run on this PC, and Phase 5 has no tests.
