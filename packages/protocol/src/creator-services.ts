@@ -61,6 +61,9 @@ export type DubJobProgress = {
   phase: string;
   percent: number;
   message?: string;
+  currentStep?: number;
+  totalSteps?: number;
+  previewAudioUrl?: string;
 };
 
 export type DubJobRequest = {
@@ -105,6 +108,130 @@ export type DubHardwareProfile = {
   tier: string;
   tierDescription: string;
 };
+
+export type CreatorJobEstimate = {
+  mode: 'local' | 'api-assist' | 'remote';
+  tier: string;
+  durationSeconds: number;
+  estimatedTimeSeconds: number;
+  estimatedCostUsd: number;
+  breakdown: {
+    asrSeconds: number;
+    asrCostUsd: number;
+    translationSeconds: number;
+    translationCostUsd: number;
+    ttsSeconds: number;
+    ttsCostUsd: number;
+    separationSeconds: number;
+    separationCostUsd: number;
+  };
+};
+
+export function estimateDubJob(options: {
+  durationSeconds: number;
+  mode: 'local' | 'api-assist' | 'remote';
+  tier?: string;
+  benchmarkTotalSeconds?: number;
+}): CreatorJobEstimate {
+  const duration = Math.max(1, Math.round(options.durationSeconds));
+  const tier = options.tier || 'T1';
+  const mode = options.mode;
+
+  const defaultRatioByTier: Record<string, number> = {
+    T0: 6.0,
+    T1: 3.5,
+    T2: 1.2,
+    T3: 0.4
+  };
+  const ratio = options.benchmarkTotalSeconds !== undefined && options.benchmarkTotalSeconds > 0
+    ? options.benchmarkTotalSeconds / 10.0
+    : (defaultRatioByTier[tier] ?? 3.5);
+
+  if (mode === 'local') {
+    const asrSecs = Math.round(duration * (ratio * 0.25));
+    const transSecs = Math.round(duration * (ratio * 0.05));
+    const ttsSecs = Math.round(duration * (ratio * 0.45));
+    const sepSecs = Math.round(duration * (ratio * 0.25));
+    const totalSecs = asrSecs + transSecs + ttsSecs + sepSecs;
+    return {
+      mode: 'local',
+      tier,
+      durationSeconds: duration,
+      estimatedTimeSeconds: totalSecs,
+      estimatedCostUsd: 0.0,
+      breakdown: {
+        asrSeconds: asrSecs,
+        asrCostUsd: 0.0,
+        translationSeconds: transSecs,
+        translationCostUsd: 0.0,
+        ttsSeconds: ttsSecs,
+        ttsCostUsd: 0.0,
+        separationSeconds: sepSecs,
+        separationCostUsd: 0.0
+      }
+    };
+  }
+
+  if (mode === 'api-assist') {
+    const asrSecs = Math.max(2, Math.round(duration * 0.1));
+    const asrCost = Math.round(((duration / 60) * 0.006) * 1000) / 1000;
+    const transSecs = Math.max(1, Math.round(duration * 0.05));
+    const transCost = 0.002;
+    const ttsSecs = Math.round(duration * (ratio * 0.45));
+    const sepSecs = Math.round(duration * (ratio * 0.25));
+    const totalSecs = asrSecs + transSecs + ttsSecs + sepSecs;
+    const totalCost = Math.round((asrCost + transCost) * 1000) / 1000;
+    return {
+      mode: 'api-assist',
+      tier,
+      durationSeconds: duration,
+      estimatedTimeSeconds: totalSecs,
+      estimatedCostUsd: totalCost,
+      breakdown: {
+        asrSeconds: asrSecs,
+        asrCostUsd: asrCost,
+        translationSeconds: transSecs,
+        translationCostUsd: transCost,
+        ttsSeconds: ttsSecs,
+        ttsCostUsd: 0.0,
+        separationSeconds: sepSecs,
+        separationCostUsd: 0.0
+      }
+    };
+  }
+
+  const totalSecs = Math.max(3, Math.round(duration * 0.35));
+  return {
+    mode: 'remote',
+    tier: 'T3',
+    durationSeconds: duration,
+    estimatedTimeSeconds: totalSecs,
+    estimatedCostUsd: 0.0,
+    breakdown: {
+      asrSeconds: Math.round(totalSecs * 0.25),
+      asrCostUsd: 0.0,
+      translationSeconds: Math.round(totalSecs * 0.05),
+      translationCostUsd: 0.0,
+      ttsSeconds: Math.round(totalSecs * 0.45),
+      ttsCostUsd: 0.0,
+      separationSeconds: Math.round(totalSecs * 0.25),
+      separationCostUsd: 0.0
+    }
+  };
+}
+
+export function formatEstimateDuration(seconds: number): string {
+  if (seconds < 60) return `~${seconds}s`;
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  return secs > 0 ? `~${mins}m ${secs}s` : `~${mins}m`;
+}
+
+export function formatEstimateCost(costUsd: number): string {
+  if (costUsd === 0) return '$0.00 (Free)';
+  if (costUsd < 0.01) return '< $0.01';
+  return `~$${costUsd.toFixed(3)}`;
+}
 
 export function isCreatorTtsProvider(value: unknown): value is CreatorTtsProvider {
   return creatorTtsProviders.some(provider => provider === value);

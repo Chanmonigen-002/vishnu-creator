@@ -30,6 +30,9 @@ export type DubJobProgress = {
   phase: string;
   percent: number;
   message?: string;
+  currentStep?: number;
+  totalSteps?: number;
+  previewAudioUrl?: string;
 };
 
 export type DubJobRequest = {
@@ -528,10 +531,16 @@ export function fromSnakeProgress(body: unknown): DubJobProgress {
   const message = typeof record.message === 'string' && record.message.length > 0
     ? record.message
     : undefined;
+  const currentStep = typeof record.current_step === 'number' ? record.current_step : undefined;
+  const totalSteps = typeof record.total_steps === 'number' ? record.total_steps : undefined;
+  const previewAudioUrl = typeof record.preview_audio_url === 'string' ? record.preview_audio_url : undefined;
   return {
     phase: typeof record.stage === 'string' ? record.stage : '',
     percent: readNumber(record.percent),
     ...(message !== undefined ? { message } : {}),
+    ...(currentStep !== undefined ? { currentStep } : {}),
+    ...(totalSteps !== undefined ? { totalSteps } : {}),
+    ...(previewAudioUrl !== undefined ? { previewAudioUrl } : {}),
   };
 }
 

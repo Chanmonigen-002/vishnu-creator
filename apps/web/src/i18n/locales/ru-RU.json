@@ -3354,5 +3354,9 @@
   "Testing": "Testing",
   "Test Connection": "Test Connection",
   "Tier": "Tier",
-  "RAM": "RAM"
+  "RAM": "RAM",
+  "Benchmarking": "Тестирование производительности",
+  "Run Benchmark": "Запустить тест",
+  "Benchmark": "Бенчмарк",
+  "Total": "Всего"
 }

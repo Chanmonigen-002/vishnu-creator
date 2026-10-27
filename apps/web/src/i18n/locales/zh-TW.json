@@ -3354,5 +3354,9 @@
   "Testing": "Testing",
   "Test Connection": "Test Connection",
   "Tier": "Tier",
-  "RAM": "RAM"
+  "RAM": "RAM",
+  "Benchmarking": "基準測試中",
+  "Run Benchmark": "運行基準測試",
+  "Benchmark": "基準測試",
+  "Total": "總計"
 }

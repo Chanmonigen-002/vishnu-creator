@@ -1,10 +1,11 @@
-import type {
-  CodexImageStatus,
-  CodexProviderConfig,
-  CreatorServicesCapabilitiesResponse,
-  CreatorServicesConfig,
-  CreatorTtsPreviewRequest,
-  CreatorTtsProvider
+import {
+  type CodexImageStatus,
+  type CodexProviderConfig,
+  type CreatorServicesCapabilitiesResponse,
+  type CreatorServicesConfig,
+  type CreatorTtsPreviewRequest,
+  type CreatorTtsProvider,
+  estimateDubJob
 } from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
 import { ZodError } from 'zod/v3';
@@ -219,6 +220,42 @@ export async function registerCreatorServicesRoutes(
       return reply.code(502).send(apiError(
         'DUB_ENGINE_ERROR',
         error instanceof Error ? error.message : 'Benchmark failed'
+      ));
+    }
+  });
+
+  server.post<{
+    Body: {
+      durationSeconds?: number;
+      mode?: 'local' | 'api-assist' | 'remote';
+      benchmarkTotalSeconds?: number;
+    };
+  }>('/creator-services/dub-engine/estimate', async (request, reply) => {
+    try {
+      const { durationSeconds, mode, benchmarkTotalSeconds } = request.body || {};
+      const saved = await store.read();
+      let tier = 'T1';
+      try {
+        const client = new DubEngineClient({
+          ...saved.dubEngine,
+          enabled: true
+        });
+        const hw = await client.getHardware();
+        tier = hw.tier;
+      } catch {
+        // Fall back to T1 if engine is not reachable
+      }
+      const estimate = estimateDubJob({
+        durationSeconds: durationSeconds ?? 60,
+        mode: mode ?? (saved.dubEngine.mode === 'remote' ? 'remote' : 'local'),
+        tier,
+        benchmarkTotalSeconds
+      });
+      return { ok: true, estimate };
+    } catch (error) {
+      return reply.code(500).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Estimate failed'
       ));
     }
   });

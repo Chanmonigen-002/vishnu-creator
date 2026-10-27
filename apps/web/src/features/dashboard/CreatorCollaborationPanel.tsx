@@ -686,6 +686,14 @@ function CreatorStageProgressDetails(props: { stage: CreatorStageRun; progress: 
   const elapsedSeconds = Math.max(0, Math.floor((now - (Number.isFinite(startedAt) ? startedAt : observedRef.current.firstSeenAt)) / 1_000));
   const receivedSeconds = Math.max(0, Math.floor((now - observedRef.current.receivedAt) / 1_000));
   const duration = `${Math.floor(elapsedSeconds / 60)}:${String(elapsedSeconds % 60).padStart(2, '0')}`;
+  const percent = progress.percent ?? null;
+  let etaText: string | null = null;
+  if (percent !== null && percent > 5 && percent < 100 && elapsedSeconds > 2) {
+    const remainingSeconds = Math.max(0, Math.round((elapsedSeconds / percent) * (100 - percent)));
+    const remainingMins = Math.floor(remainingSeconds / 60);
+    const remainingSecs = remainingSeconds % 60;
+    etaText = remainingMins > 0 ? `${remainingMins}m ${remainingSecs}s` : `${remainingSecs}s`;
+  }
   const waitingForProvider = progress.phase === 'queued' || progress.phase === 'generating';
   const disconnected = session?.connection !== undefined && session.connection.status !== 'connected';
   const warning = !showTiming ? null : disconnected
@@ -696,8 +704,9 @@ function CreatorStageProgressDetails(props: { stage: CreatorStageRun; progress: 
         ? localize('仍在等待服务商返回结果，生成时间由服务商决定。可以离开当前页面，任务会在后台继续。', 'Still waiting for the provider result. Generation time depends on the provider. You can leave this page; the task continues in the background.', 'Väntar fortfarande på leverantörens resultat. Genereringstiden beror på leverantören. Du kan lämna sidan; uppgiften fortsätter i bakgrunden.')
         : null;
   if (props.compact) return <small className="creator-task-progress-bar-timing" title={warning ?? undefined} aria-live="off">
-    {disconnected ? localize('连接中断，正在重连', 'Connection lost; reconnecting') : stage.startedAt === null
-      ? localize(`已等待 ${duration}`, `Waiting ${duration}`) : localize(`已运行 ${duration}`, `Elapsed ${duration}`)}
+    <span>{disconnected ? localize('连接中断，正在重连', 'Connection lost; reconnecting') : stage.startedAt === null
+      ? localize(`已等待 ${duration}`, `Waiting ${duration}`) : localize(`已运行 ${duration}`, `Elapsed ${duration}`)}</span>
+    {etaText ? <span>{` · ${localize(`预计剩余 ${etaText}`, `ETA ${etaText}`, `Återstår ca ${etaText}`)}`}</span> : null}
   </small>;
   return (
     <div className="creator-collaboration-stage-details">
@@ -706,9 +715,15 @@ function CreatorStageProgressDetails(props: { stage: CreatorStageRun; progress: 
         <span>{stage.startedAt === null
           ? localize(`已等待 ${duration}`, `Waiting ${duration}`, `Väntat ${duration}`)
           : localize(`已运行 ${duration}`, `Elapsed ${duration}`, `Förfluten tid ${duration}`)}</span>
+        {etaText ? <span>{` · ${localize(`预计剩余 ${etaText}`, `ETA ${etaText}`, `Återstår ca ${etaText}`)}`}</span> : null}
         <span>{localize(`最近收到状态：${receivedSeconds} 秒前`, `Last status received ${receivedSeconds}s ago`, `Senaste status mottogs för ${receivedSeconds}s sedan`)}</span>
       </small> : null}
       {warning ? <p className="creator-collaboration-stage-message">{warning}</p> : null}
+      {typeof stage.progress.previewAudioUrl === 'string' && stage.progress.previewAudioUrl ? (
+        <div className="creator-collaboration-stage-audio-preview">
+          <audio controls src={stage.progress.previewAudioUrl} aria-label={localize('分段配音试听', 'Segment dubbing preview', 'Segmentförhandsgranskning')} />
+        </div>
+      ) : null}
     </div>
   );
 }

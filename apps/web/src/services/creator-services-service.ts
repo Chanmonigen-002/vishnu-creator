@@ -1,6 +1,7 @@
 import type {
   CodexImageStatus,
   CodexProviderConfig,
+  CreatorJobEstimate,
   CreatorServicesCapabilitiesResponse,
   CreatorServicesConfig,
   CreatorServicesConfigResponse,
@@ -12,7 +13,7 @@ import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'patch' | 'delete' | 'rawRequest'>;
 
-export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark'> & {
+export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob'> & {
   getCodexImageStatus?: () => Promise<CodexImageStatus>;
   getCodexModelStatus?: () => Promise<CodexProviderConfig>;
   getNetwork?: () => Promise<{ proxy: string }>;
@@ -28,6 +29,11 @@ export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreato
       tier: string;
     };
   }>;
+  estimateDubEngineJob?: (options: {
+    durationSeconds?: number;
+    mode?: 'local' | 'api-assist' | 'remote';
+    benchmarkTotalSeconds?: number;
+  }) => Promise<{ ok: boolean; estimate: CreatorJobEstimate }>;
 };
 
 export function createCreatorServicesService(client: ClientLike) {
@@ -110,6 +116,22 @@ export function createCreatorServicesService(client: ClientLike) {
       return client.rawRequest('/creator-services/tts/preview', {
         method: 'POST',
         body: request
+      });
+    },
+    estimateDubEngineJob(options: {
+      durationSeconds?: number;
+      mode?: 'local' | 'api-assist' | 'remote';
+      benchmarkTotalSeconds?: number;
+    }): Promise<{ ok: boolean; estimate: CreatorJobEstimate }> {
+      return client.rawRequest('/creator-services/dub-engine/estimate', {
+        method: 'POST',
+        body: options
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        return response.json();
       });
     }
   };

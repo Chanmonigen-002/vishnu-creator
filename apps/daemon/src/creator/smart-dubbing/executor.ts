@@ -176,7 +176,9 @@ async function runEngineDub(
       stage.reportProgress({
         phase: mapEngineStageToCreatorPhase(progress.phase),
         percent: Math.min(95, 20 + Math.floor(progress.percent * 0.75)),
-        ...(progress.message !== undefined ? { message: progress.message } : {})
+        ...(progress.message !== undefined ? { message: progress.message } : {}),
+        ...(progress.currentStep !== undefined ? { completed: progress.currentStep } : {}),
+        ...(progress.totalSteps !== undefined ? { total: progress.totalSteps } : {})
       });
     }
   } catch (error) {

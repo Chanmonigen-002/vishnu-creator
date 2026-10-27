@@ -1,5 +1,6 @@
 import {
   smartDubbingStyles, gatewayModelDisplayName, gatewayModelIdMatches,
+  estimateDubJob, formatEstimateDuration, formatEstimateCost,
   type CreatorArtifact,
   type CreatorJson,
   type CreatorTtsProvider,
@@ -87,6 +88,14 @@ export default function SmartDubbingWorkspace(props: {
   const [error, setError] = useState('');
   const [taskControlPending, setTaskControlPending] = useState<'canceling' | 'resuming'>();
   const characterCount = useMemo(() => [...text.trim()].length, [text]);
+  const textDurationSeconds = Math.max(5, Math.round(characterCount / 12));
+  const jobEstimate = useMemo(() => {
+    return estimateDubJob({
+      durationSeconds: textDurationSeconds,
+      mode: provider === 'edge-tts' || official.official ? 'local' : 'api-assist',
+      tier: 'T1'
+    });
+  }, [textDurationSeconds, provider, official.official]);
   const selectedStyle = styles.find(item => item.value === style) ?? styles[0]!;
   const result = useMemo(
     () => readLatestResult(session?.job.artifacts ?? []),
@@ -336,7 +345,9 @@ export default function SmartDubbingWorkspace(props: {
         ...(result || supportsStyle ? [{ label: l('表达风格', 'Delivery'), value: l(summaryStyle.zh, summaryStyle.en) }] : []),
         ...(result || supportsSpeed ? [{ label: l('语速', 'Speed'), value: `${(result?.speed ?? speed).toFixed(2)}x` }] : []),
         { label: l('音频格式', 'Format'), value: (result?.format ?? format).toUpperCase() },
-        { label: l('文案长度', 'Length'), value: l(`${result?.characterCount ?? characterCount} 字`, `${result?.characterCount ?? characterCount} characters`) }
+        { label: l('文案长度', 'Length'), value: l(`${result?.characterCount ?? characterCount} 字`, `${result?.characterCount ?? characterCount} characters`) },
+        { label: l('预计用时', 'Est. Time'), value: formatEstimateDuration(jobEstimate.estimatedTimeSeconds) },
+        { label: l('预计费用', 'Est. Cost'), value: formatEstimateCost(jobEstimate.estimatedCostUsd) }
       ]}
     />
   );

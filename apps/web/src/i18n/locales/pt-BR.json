@@ -3354,5 +3354,9 @@
   "Testing": "Testing",
   "Test Connection": "Test Connection",
   "Tier": "Tier",
-  "RAM": "RAM"
+  "RAM": "RAM",
+  "Benchmarking": "Executando benchmark",
+  "Run Benchmark": "Executar benchmark",
+  "Benchmark": "Benchmark",
+  "Total": "Total"
 }

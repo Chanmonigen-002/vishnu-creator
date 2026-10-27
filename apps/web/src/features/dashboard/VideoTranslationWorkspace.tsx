@@ -1,5 +1,8 @@
 import AppSelect from '../../components/forms/Select.js';
-import { gatewayModelIdMatches, normalizeSubtitleRenderCues } from '@vishnucreator/protocol';
+import {
+  gatewayModelIdMatches, normalizeSubtitleRenderCues,
+  estimateDubJob, formatEstimateDuration, formatEstimateCost
+} from '@vishnucreator/protocol';
 import {
   useCallback,
   useEffect,
@@ -2360,13 +2363,31 @@ export default function VideoTranslationWorkspace(props: {
   const initialTranslation = workspacePhase === 'configure' && draftBaseVersion === undefined;
   const outputLabel = outputLabelFor({ composeVideo: composeVideo && !initialTranslation, videoFormat }, l);
   const subtitleStyleLabel = `${subtitleFontLabel(subtitleFont, l)} · ${subtitleWeightLabel(subtitleWeight, l)} · ${subtitleSizeLabel(subtitleSize, l)} · ${subtitleColor.toUpperCase()}`;
+  const estimatedMediaDuration = useMemo(() => {
+    const fileSize = videoFile?.size ?? videoFileSize;
+    if (typeof fileSize === 'number' && fileSize > 0) {
+      return Math.max(15, Math.min(600, Math.round(fileSize / (250 * 1024))));
+    }
+    return 60;
+  }, [videoFile?.size, videoFileSize]);
+
+  const jobEstimate = useMemo(() => {
+    return estimateDubJob({
+      durationSeconds: estimatedMediaDuration,
+      mode: dubbing && ttsProvider === 'edge-tts' ? 'local' : 'api-assist',
+      tier: 'T1'
+    });
+  }, [estimatedMediaDuration, dubbing, ttsProvider]);
+
   const summaryItems = useMemo(() => [
     { label: l('翻译语言', 'Languages'), value: `${languageLabel(sourceLanguages, sourceLanguage)} → ${languageLabel(targetLanguages, targetLanguage)}` },
     { label: l('字幕', 'Subtitles'), value: bilingual ? l(`双语 · 译文在${subtitlePosition === 'top' ? '上' : '下'}`, `Bilingual · translation ${subtitlePosition === 'top' ? 'above' : 'below'}`) : l('仅译文', 'Translation only') },
     ...(composeVideo && !initialTranslation ? [{ label: l('字幕样式', 'Subtitle style'), value: subtitleStyleLabel }] : []),
     ...(!initialTranslation && (composeVideo || dubbing) ? [{ label: l('配音', 'Dubbing'), value: dubbing ? (voiceName.trim() || voiceCode.trim() || l('自动匹配音色', 'Auto-match voice')) : l('关闭', 'Off') }] : []),
+    { label: l('预计用时', 'Est. Time'), value: formatEstimateDuration(jobEstimate.estimatedTimeSeconds) },
+    { label: l('预计费用', 'Est. Cost'), value: formatEstimateCost(jobEstimate.estimatedCostUsd) },
     { label: l('输出', 'Output'), value: outputLabel }
-  ], [bilingual, composeVideo, dubbing, initialTranslation, l, outputLabel, sourceLanguage, subtitlePosition, subtitleStyleLabel, targetLanguage, voiceCode, voiceName]);
+  ], [bilingual, composeVideo, dubbing, initialTranslation, jobEstimate.estimatedCostUsd, jobEstimate.estimatedTimeSeconds, l, outputLabel, sourceLanguage, subtitlePosition, subtitleStyleLabel, targetLanguage, voiceCode, voiceName]);
   const targetLanguageLabel = languageLabel(targetLanguages, targetLanguage);
   const selectedResult = resultVersions.find(version => version.value === resultVersion);
   const selectedSubtitleOnly = (selectedResult?.source.sourceType ?? sourceType) === 'subtitle';
