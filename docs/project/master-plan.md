@@ -138,6 +138,7 @@ Full task lists with status and evidence are in [`docs/tasks/`](../tasks/README.
 | 5 | [VoxCPM2 voice power](../tasks/phase-5-voxcpm-voices.md) | 9 | ≈5–7 days | Khmer dub with a cloned voice completes on this PC (T1, CPU) and passes the listening test. The same job on a T2/T3 machine (or remote engine) gives an equivalent voice and timing, only faster. VRAM ≤8 GB on T2. |
 | 6 | [Extra creator studios](../tasks/phase-6-creator-studios.md) | 5 | ≈4 days | each enabled studio has an e2e test producing a real file. |
 | 7 | [Release](../tasks/phase-7-release.md) | 7 | ≈3 days | installer works on a clean Windows PC; Khmer dub end-to-end without manual setup. |
+| 8 | [More AI providers (free, paid, cloud, local)](../tasks/phase-8-ai-providers.md) | 10 | ≈2–3 weeks | every provider listed in Settings has a recorded real call (cloud) or local run, and the user guide matches the app. |
 
 ---
 

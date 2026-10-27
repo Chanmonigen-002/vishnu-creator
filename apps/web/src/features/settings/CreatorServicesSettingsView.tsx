@@ -499,7 +499,8 @@ export function CreatorServicesSettingsView(props: {
                 setModelProviderId(id);
                 setModelBaseUrl(preset.defaultBaseUrl ?? '');
                 setModelName(preset.models[0]?.id ?? '');
-                setModelApiKey('');
+                // Local servers ignore the key but the creator path needs a value.
+                setModelApiKey(preset.placeholderApiKey ?? '');
                 setModelFieldErrors({});
                 setValidationError(undefined);
                 setNotice(undefined);

@@ -32,10 +32,19 @@ describe('creator provider catalog', () => {
   });
 
   it('marks only implemented providers as supported', () => {
+    expect(creatorProviderCatalog.some(entry => entry.status === 'planned')).toBe(false);
     expect(creatorProviderCatalog
-      .filter(entry => entry.id !== 'codex-native')
+      .filter(entry => entry.kind !== 'llm' && entry.id !== 'codex-native')
       .every(entry => entry.status === 'supported')).toBe(true);
     expect(creatorProviderCatalogById.image.gemini?.status).toBe('supported');
+  });
+
+  it('keeps new text presets experimental until a live call is recorded (T8.5)', () => {
+    for (const id of ['openrouter', 'groq', 'gemini', 'anthropic', 'ollama', 'llamacpp']) {
+      expect(creatorProviderCatalogById.llm[id]?.status).toBe('experimental');
+    }
+    expect(creatorProviderCatalogById.llm.llamacpp?.defaultBaseUrl).toBe('http://127.0.0.1:9931/v1');
+    expect(creatorProviderCatalogById.llm.ollama).toMatchObject({ access: 'local', credentials: [], placeholderApiKey: 'ollama' });
   });
 
   it('describes Codex native image generation as credential-free and experimental', () => {

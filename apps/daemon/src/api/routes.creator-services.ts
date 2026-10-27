@@ -161,6 +161,32 @@ export async function registerCreatorServicesRoutes(
     } catch (error) { return reply.code(502).send(apiError('SMART_DUBBING_UPSTREAM_ERROR', error instanceof Error && error.name === 'AbortError' ? 'FunASR connection timed out' : 'FunASR connection failed')); }
   });
 
+  // Lists the models an OpenAI-compatible text provider (cloud or local) offers,
+  // so presets never rely on a stale built-in model list.
+  server.post<{ Body: unknown }>('/creator-services/llm/models', async (request, reply) => {
+    try {
+      const body = (request.body ?? {}) as { baseUrl?: unknown; apiKey?: unknown };
+      const baseUrl = typeof body.baseUrl === 'string' ? body.baseUrl.trim().replace(/\/+$/, '') : '';
+      if (!/^https?:\/\//i.test(baseUrl)) return reply.code(400).send(apiError('VALIDATION_FAILED', 'A valid model service Base URL is required'));
+      const controller = new AbortController(); const timer = setTimeout(() => controller.abort(), 15000);
+      try {
+        const saved = await store.read();
+        const apiKey = typeof body.apiKey === 'string' && body.apiKey
+          ? body.apiKey
+          : saved.llm.baseUrl.trim().replace(/\/+$/, '') === baseUrl ? saved.llm.apiKey : '';
+        const response = await fetch(`${baseUrl}/models`, { headers: apiKey ? { Authorization: `Bearer ${apiKey}` } : {}, signal: controller.signal });
+        if (!response.ok) return reply.code(502).send(apiError('SMART_DUBBING_UPSTREAM_ERROR', `Model list request failed (HTTP ${response.status})`));
+        const payload = await response.json().catch(() => undefined) as { data?: Array<{ id?: unknown }> } | undefined;
+        const models = Array.isArray(payload?.data)
+          ? [...new Set(payload.data.map(item => item.id).filter((id): id is string => typeof id === 'string' && id.length > 0))].sort()
+          : [];
+        return { models };
+      } finally { clearTimeout(timer); }
+    } catch (error) {
+      return reply.code(502).send(apiError('SMART_DUBBING_UPSTREAM_ERROR', error instanceof Error && error.name === 'AbortError' ? 'Model list request timed out' : 'Model list request failed'));
+    }
+  });
+
   server.post<{ Body: unknown }>('/creator-services/dub-engine/test', async (request, reply) => {
     try {
       const body = (request.body ?? null) as {

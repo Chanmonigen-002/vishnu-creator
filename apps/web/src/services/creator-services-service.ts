@@ -23,7 +23,8 @@ import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'patch' | 'delete' | 'rawRequest'>;
 
-export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice'> & {
+export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'listLlmModels'> & {
+  listLlmModels?: (input: { baseUrl: string; apiKey: string }) => Promise<{ models: string[] }>;
   getCodexImageStatus?: () => Promise<CodexImageStatus>;
   getCodexModelStatus?: () => Promise<CodexProviderConfig>;
   getNetwork?: () => Promise<{ proxy: string }>;
@@ -72,6 +73,9 @@ export function createCreatorServicesService(client: ClientLike) {
       return client.patch('/creator-services/config', config);
     },
     testTranscriptionConnection(config: CreatorServicesConfig['transcription']['funasr']): Promise<{ connected: boolean; model: string; models: string[]; capabilities: string[] }> { return client.rawRequest('/creator-services/transcription/test', { method: 'POST', body: config }).then(response => response.json()); },
+    listLlmModels(input: { baseUrl: string; apiKey: string }): Promise<{ models: string[] }> {
+      return client.rawRequest('/creator-services/llm/models', { method: 'POST', body: input }).then(response => response.json());
+    },
     resetConfig(): Promise<CreatorServicesConfigResponse> {
       return client.delete('/creator-services/config');
     },

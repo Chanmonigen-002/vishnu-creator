@@ -2,6 +2,8 @@ export type CreatorProviderKind = 'llm' | 'image' | 'video' | 'tts' | 'transcrip
 export type CreatorProviderProtocol = 'openai-compatible' | 'gemini' | 'kling' | 'custom' | 'local';
 export type CreatorProviderStatus = 'supported' | 'experimental' | 'planned';
 export type CreatorProviderCredential = 'apiKey' | 'accessKey' | 'secretKey' | 'region';
+/** How the provider is paid for, from its official docs (docs/providers/provider-research-2026-10.md). */
+export type CreatorProviderAccess = 'free-tier' | 'paid' | 'local';
 
 export type CreatorProviderModel = {
   id: string;
@@ -20,14 +22,39 @@ export type CreatorProviderCatalogEntry = {
   credentials: readonly CreatorProviderCredential[];
   capabilities?: readonly string[];
   status: CreatorProviderStatus;
+  access?: CreatorProviderAccess;
+  /** Page where the user creates an API key. */
+  keyUrl?: string;
+  /** Documented placeholder for local servers that ignore the key. */
+  placeholderApiKey?: string;
 };
 
 const entry = (value: CreatorProviderCatalogEntry) => value;
 
 export const creatorProviderCatalog = [
-  entry({ id: 'openai', kind: 'llm', label: 'OpenAI', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.openai.com/v1', models: [{ id: 'gpt-5.6-sol', label: 'GPT-5.6 Sol', recommended: true }], credentials: ['apiKey'], status: 'supported' }),
+  entry({ id: 'openai', kind: 'llm', label: 'OpenAI', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.openai.com/v1', models: [{ id: 'gpt-5.6-sol', label: 'GPT-5.6 Sol', recommended: true }], credentials: ['apiKey'], status: 'supported', access: 'paid', keyUrl: 'https://platform.openai.com/api-keys' }),
   entry({ id: 'deepseek', kind: 'llm', label: 'DeepSeek', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.deepseek.com', models: [{ id: 'deepseek-v4-pro', label: 'DeepSeek V4 Pro', recommended: true }, { id: 'deepseek-v4-flash', label: 'DeepSeek V4 Flash' }, { id: 'deepseek-flash', label: 'DeepSeek Flash' }], credentials: ['apiKey'], status: 'supported' }),
   entry({ id: 'minimax', kind: 'llm', label: 'MiniMax', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.minimax.io', models: [{ id: 'MiniMax-M2.7', label: 'MiniMax M2.7', recommended: true }, { id: 'MiniMax-M2.7-highspeed', label: 'MiniMax M2.7 Highspeed' }, { id: 'MiniMax-M2.5', label: 'MiniMax M2.5' }, { id: 'MiniMax-M2.5-highspeed', label: 'MiniMax M2.5 Highspeed' }], credentials: ['apiKey'], status: 'supported' }),
+  // Cloud and local presets below are verified against official docs on 2026-10-27
+  // (docs/providers/provider-research-2026-10.md). They stay experimental until a
+  // live chat/completions call is recorded for each (T8.5).
+  entry({ id: 'openrouter', kind: 'llm', label: 'OpenRouter', protocol: 'openai-compatible', defaultBaseUrl: 'https://openrouter.ai/api/v1', models: [{ id: 'google/gemma-4-31b-it:free', label: 'Gemma 4 31B (free)', recommended: true }, { id: '~openai/gpt-sol-latest', label: 'GPT Sol (latest)' }], credentials: ['apiKey'], status: 'experimental', access: 'free-tier', keyUrl: 'https://openrouter.ai/keys' }),
+  entry({ id: 'groq', kind: 'llm', label: 'Groq', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.groq.com/openai/v1', models: [{ id: 'openai/gpt-oss-120b', label: 'GPT-OSS 120B', recommended: true }, { id: 'llama-3.3-70b-versatile', label: 'Llama 3.3 70B' }, { id: 'llama-3.1-8b-instant', label: 'Llama 3.1 8B Instant' }, { id: 'openai/gpt-oss-20b', label: 'GPT-OSS 20B' }], credentials: ['apiKey'], status: 'experimental', access: 'free-tier', keyUrl: 'https://console.groq.com/keys' }),
+  entry({ id: 'gemini', kind: 'llm', label: 'Google Gemini', protocol: 'openai-compatible', defaultBaseUrl: 'https://generativelanguage.googleapis.com/v1beta/openai/', models: [{ id: 'gemini-3.8-flash', label: 'Gemini 3.8 Flash', recommended: true }, { id: 'gemini-4-argon', label: 'Gemini 4 Argon' }, { id: 'gemini-3.5-flash-lite', label: 'Gemini 3.5 Flash-Lite' }], credentials: ['apiKey'], status: 'experimental', access: 'free-tier', keyUrl: 'https://aistudio.google.com/apikey' }),
+  entry({ id: 'anthropic', kind: 'llm', label: 'Anthropic Claude', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.anthropic.com/v1/', models: [{ id: 'claude-sonnet-5-5', label: 'Claude Sonnet 5.5', recommended: true }, { id: 'claude-opus-5-5', label: 'Claude Opus 5.5' }, { id: 'claude-haiku-5-5', label: 'Claude Haiku 5.5' }], credentials: ['apiKey'], status: 'experimental', access: 'paid', keyUrl: 'https://platform.claude.com/settings/keys' }),
+  entry({ id: 'mistral', kind: 'llm', label: 'Mistral', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.mistral.ai/v1', models: [{ id: 'mistral-large-latest', label: 'Mistral Large (latest)', recommended: true }, { id: 'mistral-small-latest', label: 'Mistral Small (latest)' }], credentials: ['apiKey'], status: 'experimental', access: 'paid', keyUrl: 'https://console.mistral.ai/api-keys' }),
+  entry({ id: 'moonshot', kind: 'llm', label: 'Moonshot Kimi', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.moonshot.ai/v1', models: [{ id: 'kimi-k3.1-pro', label: 'Kimi K3.1 Pro', recommended: true }, { id: 'kimi-k3.1-pro-highspeed', label: 'Kimi K3.1 Pro Highspeed' }], credentials: ['apiKey'], status: 'experimental', access: 'paid', keyUrl: 'https://platform.kimi.ai/console/api-keys' }),
+  entry({ id: 'zai', kind: 'llm', label: 'Z.ai GLM', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.z.ai/api/paas/v4/', models: [{ id: 'glm-5.3', label: 'GLM 5.3', recommended: true }], credentials: ['apiKey'], status: 'experimental', access: 'paid', keyUrl: 'https://z.ai/manage-apikey/apikey-list' }),
+  entry({ id: 'together', kind: 'llm', label: 'Together AI', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.together.ai/v1', models: [{ id: 'MiniMaxAI/MiniMax-M3', label: 'MiniMax M3', recommended: true }], credentials: ['apiKey'], status: 'experimental', access: 'paid', keyUrl: 'https://api.together.ai/settings/api-keys' }),
+  entry({ id: 'fireworks', kind: 'llm', label: 'Fireworks', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.fireworks.ai/inference/v1', models: [{ id: 'accounts/fireworks/models/llama-v3p1-8b-instruct', label: 'Llama 3.1 8B Instruct', recommended: true }], credentials: ['apiKey'], status: 'experimental', access: 'paid', keyUrl: 'https://fireworks.ai/account/api-keys' }),
+  entry({ id: 'cerebras', kind: 'llm', label: 'Cerebras', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.cerebras.ai/v1', models: [{ id: 'gpt-oss-120b', label: 'GPT-OSS 120B', recommended: true }, { id: 'qwen-3.8-27b', label: 'Qwen 3.8 27B' }], credentials: ['apiKey'], status: 'experimental', access: 'free-tier', keyUrl: 'https://cloud.cerebras.ai' }),
+  entry({ id: 'nvidia', kind: 'llm', label: 'NVIDIA NIM', protocol: 'openai-compatible', defaultBaseUrl: 'https://integrate.api.nvidia.com/v1', models: [{ id: 'openai/gpt-oss-120b', label: 'GPT-OSS 120B', recommended: true }, { id: 'deepseek-ai/deepseek-v4-flash', label: 'DeepSeek V4 Flash' }, { id: 'nvidia/nemotron-3-super-120b-a12b', label: 'Nemotron 3 Super 120B' }], credentials: ['apiKey'], status: 'experimental', keyUrl: 'https://build.nvidia.com' }),
+  entry({ id: 'huggingface', kind: 'llm', label: 'Hugging Face', protocol: 'openai-compatible', defaultBaseUrl: 'https://router.huggingface.co/v1', models: [{ id: 'openai/gpt-oss-120b:fastest', label: 'GPT-OSS 120B (fastest provider)', recommended: true }, { id: 'openai/gpt-oss-120b:cheapest', label: 'GPT-OSS 120B (cheapest provider)' }], credentials: ['apiKey'], status: 'experimental', access: 'paid', keyUrl: 'https://huggingface.co/settings/tokens' }),
+  entry({ id: 'ollama', kind: 'llm', label: 'Ollama (local)', protocol: 'local', defaultBaseUrl: 'http://localhost:11434/v1', models: [], credentials: [], status: 'experimental', access: 'local', placeholderApiKey: 'ollama' }),
+  entry({ id: 'lmstudio', kind: 'llm', label: 'LM Studio (local)', protocol: 'local', defaultBaseUrl: 'http://localhost:1234/v1', models: [], credentials: [], status: 'experimental', access: 'local', placeholderApiKey: 'lm-studio' }),
+  entry({ id: 'llamacpp', kind: 'llm', label: 'llama.cpp server (local)', protocol: 'local', defaultBaseUrl: 'http://127.0.0.1:9931/v1', models: [], credentials: [], status: 'experimental', access: 'local', placeholderApiKey: 'llama-cpp' }),
+  entry({ id: 'vllm', kind: 'llm', label: 'vLLM (local)', protocol: 'local', defaultBaseUrl: 'http://localhost:8000/v1', models: [], credentials: [], status: 'experimental', access: 'local', placeholderApiKey: 'EMPTY' }),
+  entry({ id: 'jan', kind: 'llm', label: 'Jan (local)', protocol: 'local', defaultBaseUrl: 'http://127.0.0.1:1337/v1', models: [], credentials: [], status: 'experimental', access: 'local', placeholderApiKey: 'jan' }),
   entry({ id: 'custom', kind: 'llm', label: 'Custom OpenAI-compatible', protocol: 'custom', models: [], credentials: ['apiKey'], status: 'supported' }),
   entry({ id: 'openai', kind: 'image', label: 'OpenAI', protocol: 'openai-compatible', defaultBaseUrl: 'https://api.openai.com/v1', models: [{ id: 'gpt-image-2', label: 'GPT Image', recommended: true }], credentials: ['apiKey'], capabilities: ['text-to-image', 'image-edit', 'reference-image'], status: 'supported' }),
   entry({ id: 'jimeng', kind: 'image', label: 'Jimeng / Seedream', protocol: 'openai-compatible', defaultBaseUrl: 'https://ark.cn-beijing.volces.com/api/v3', models: [{ id: 'doubao-seedream-4-0-250828', label: 'Seedream 4.0', recommended: true }], credentials: ['apiKey'], capabilities: ['text-to-image'], status: 'supported' }),
