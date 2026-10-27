@@ -629,7 +629,12 @@ function createService(
     previewTtsVoice: vi.fn(async () => new Response(Buffer.from('preview-audio'), {
       status: 200,
       headers: { 'Content-Type': 'audio/mpeg' }
-    }))
+    })),
+    listVoiceDesigns: vi.fn(async () => ({ voices: [] })),
+    saveVoiceDesign: vi.fn(async () => ({ id: 'voice-1', name: 'Test Voice', prompt: 'test', duration: 1.0, createdAt: new Date().toISOString(), audioUrl: '', consent: true })),
+    deleteVoiceDesign: vi.fn(async () => {}),
+    previewVoiceDesign: vi.fn(async () => ({ blob: new Blob() })),
+    designVoice: vi.fn(async () => ({ ok: true, audioUrl: '', audioDataUrl: '', duration: 1.0, prompt: 'test' }))
   };
 }
 

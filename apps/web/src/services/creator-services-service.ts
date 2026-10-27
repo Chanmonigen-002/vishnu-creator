@@ -9,13 +9,21 @@ import type {
   CreatorTtsProvider,
   CreatorTtsVoicesResponse,
   ResynthesizeSegmentRequest,
-  ResynthesizeSegmentResponse
+  ResynthesizeSegmentResponse,
+  VoiceLibraryItem,
+  VoiceLibraryListResponse,
+  SaveVoiceDesignRequest,
+  DeleteVoiceDesignRequest,
+  PreviewVoiceDesignRequest,
+  PreviewVoiceDesignResponse,
+  VoiceDesignRequest,
+  VoiceDesignResponse
 } from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'patch' | 'delete' | 'rawRequest'>;
 
-export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment'> & {
+export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice'> & {
   getCodexImageStatus?: () => Promise<CodexImageStatus>;
   getCodexModelStatus?: () => Promise<CodexProviderConfig>;
   getNetwork?: () => Promise<{ proxy: string }>;
@@ -37,6 +45,11 @@ export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreato
     mode?: 'local' | 'api-assist' | 'remote';
     benchmarkTotalSeconds?: number;
   }) => Promise<{ ok: boolean; estimate: CreatorJobEstimate }>;
+  listVoiceDesigns: () => Promise<{ voices: VoiceLibraryItem[] }>;
+  saveVoiceDesign: (request: SaveVoiceDesignRequest) => Promise<VoiceLibraryItem>;
+  deleteVoiceDesign: (request: DeleteVoiceDesignRequest) => Promise<void>;
+  previewVoiceDesign: (request: PreviewVoiceDesignRequest) => Promise<PreviewVoiceDesignResponse>;
+  designVoice: (request: VoiceDesignRequest) => Promise<VoiceDesignResponse>;
 };
 
 export function createCreatorServicesService(client: ClientLike) {
@@ -141,6 +154,57 @@ export function createCreatorServicesService(client: ClientLike) {
       return client.rawRequest('/creator-services/dub-engine/resynthesize-segment', {
         method: 'POST',
         body: params
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        return response.json();
+      });
+    },
+    listVoiceDesigns(): Promise<{ voices: VoiceLibraryItem[] }> {
+      return client.get('/creator-services/tts/voices/list').then((r: unknown) => r as { voices: VoiceLibraryItem[] });
+    },
+    saveVoiceDesign(request: SaveVoiceDesignRequest): Promise<VoiceLibraryItem> {
+      return client.rawRequest('/creator-services/tts/voices/save', {
+        method: 'POST',
+        body: request
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        return response.json();
+      });
+    },
+    deleteVoiceDesign(request: DeleteVoiceDesignRequest): Promise<void> {
+      return client.rawRequest('/creator-services/tts/voices/delete', {
+        method: 'POST',
+        body: request
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+      });
+    },
+    previewVoiceDesign(request: PreviewVoiceDesignRequest): Promise<PreviewVoiceDesignResponse> {
+      return client.rawRequest('/creator-services/tts/voices/preview', {
+        method: 'POST',
+        body: request
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        const blob = await response.blob();
+        return { blob };
+      });
+    },
+    designVoice(request: VoiceDesignRequest): Promise<VoiceDesignResponse> {
+      return client.rawRequest('/creator-services/tts/design-voice', {
+        method: 'POST',
+        body: request
       }).then(async response => {
         if (!response.ok) {
           const body = await response.json().catch(() => undefined);

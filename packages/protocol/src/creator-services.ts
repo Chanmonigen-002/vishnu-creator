@@ -849,3 +849,60 @@ export function calculateJobQualityReport(
   };
 }
 
+export type VoiceDesignRequest = {
+  prompt: string;
+  speed?: number;
+};
+
+export type VoiceDesignResponse = {
+  ok: boolean;
+  audioUrl: string;
+  audioDataUrl?: string;
+  duration: number;
+  prompt: string;
+};
+
+export type VoiceLibraryItem = {
+  id: string;
+  name: string;
+  prompt: string;
+  duration: number;
+  createdAt: string;
+  audioUrl: string;
+  audioDataUrl?: string;
+  consent: boolean;
+};
+
+export type VoiceLibraryListResponse = {
+  voices: VoiceLibraryItem[];
+};
+
+export type SaveVoiceDesignRequest = {
+  prompt: string;
+  consent: boolean;
+};
+
+export type DeleteVoiceDesignRequest = {
+  voiceId: string;
+};
+
+export type PreviewVoiceDesignRequest = {
+  voiceId: string;
+};
+
+export type PreviewVoiceDesignResponse = {
+  blob: Blob;
+};
+
+export type DeleteVoiceDesignResponse = {
+  ok: boolean;
+};
+
+// ─── Voice Library Service Interface ───
+
+export interface VoiceLibraryService {
+  listVoiceDesigns(): Promise<VoiceLibraryListResponse>;
+  saveVoiceDesign(request: SaveVoiceDesignRequest): Promise<VoiceLibraryItem>;
+  deleteVoiceDesign(request: DeleteVoiceDesignRequest): Promise<void>;
+  previewVoiceDesign(request: PreviewVoiceDesignRequest): Promise<PreviewVoiceDesignResponse>;
+}

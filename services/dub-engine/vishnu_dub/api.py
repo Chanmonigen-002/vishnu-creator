@@ -7,6 +7,7 @@ import subprocess
 import sys
 import uuid
 from contextlib import asynccontextmanager
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -102,6 +103,19 @@ class ResynthesizeSegmentResponse(BaseModel):
     audio_data_url: Optional[str] = None
     duration: float
     text: str
+
+
+class VoiceDesignRequest(BaseModel):
+    prompt: str
+    speed: float = 1.0
+
+
+class VoiceDesignResponse(BaseModel):
+    ok: bool
+    audio_url: str
+    audio_data_url: Optional[str] = None
+    duration: float
+    prompt: str
 
 
 # ─── App State ───────────────────────────────────────────────────────────
@@ -437,6 +451,160 @@ async def resynthesize_segment(request: ResynthesizeSegmentRequest, job_id: Opti
     )
 
 
+@app.post("/v1/tts/design-voice", response_model=VoiceDesignResponse)
+async def design_voice(request: VoiceDesignRequest):
+    """Design a voice from a text description (zero-shot voice design)."""
+    prompt = (request.prompt or "").strip()
+    if not prompt:
+        raise HTTPException(400, "Prompt is required for voice design")
+
+    from vishnu_dub.tts import get_tts_backend
+
+    tts_backend = get_tts_backend("voxcpm2")
+    if not hasattr(tts_backend, "design_voice"):
+        raise HTTPException(501, "Voice design not supported by this TTS backend")
+
+    safe_prompt = Path(prompt).name
+    cache_dir = Path(settings.jobs_path if settings else "jobs") / "voice_designs" / safe_prompt
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    out_file = cache_dir / f"design_{uuid.uuid4().hex[:8]}.wav"
+
+    tts_result = await tts_backend.design_voice(
+        prompt=prompt,
+        output_path=out_file,
+        speed=request.speed,
+    )
+
+    audio_data_url = None
+    if out_file.exists():
+        import base64
+        audio_bytes = out_file.read_bytes()
+        audio_data_url = f"data:audio/wav;base64,{base64.b64encode(audio_bytes).decode('ascii')}"
+
+    audio_url = f"/v1/tts/artifacts/{out_file.name}"
+
+    return VoiceDesignResponse(
+        ok=True,
+        audio_url=audio_url,
+        audio_data_url=audio_data_url,
+        duration=tts_result.duration,
+        prompt=prompt,
+    )
+
+
+@app.get("/v1/tts/voices/list")
+async def list_voice_designs():
+    """List all saved voice designs."""
+    base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
+    voice_designs_dir = base_jobs_dir / "voice_designs"
+    
+    if not voice_designs_dir.exists():
+        return {"voices": []}
+    
+    voices = []
+    for design_dir in voice_designs_dir.iterdir():
+        if not design_dir.is_dir():
+            continue
+        
+        # Find audio file
+        audio_file = None
+        for f in design_dir.iterdir():
+            if f.suffix in ('.wav', '.mp3'):
+                audio_file = f
+                break
+        
+        if not audio_file:
+            continue
+        
+        # Try to read metadata from a sidecar file
+        metadata = {
+            "id": design_dir.name,
+            "name": design_dir.name,
+            "prompt": design_dir.name,
+            "duration": 0.0,
+            "createdAt": datetime.fromtimestamp(design_dir.stat().st_ctime).isoformat(),
+            "audioUrl": f"/v1/tts/artifacts/{audio_file.name}",
+            "consent": True,
+        }
+        
+        # Try to get duration from audio file
+        try:
+            from vishnu_dub.config import resolve_ffprobe_path
+            ffprobe_bin = resolve_ffprobe_path()
+            result = subprocess.run([
+                ffprobe_bin, "-v", "error",
+                "-show_entries", "format=duration",
+                "-of", "default=noprint_wrappers=1:nokey=1",
+                str(audio_file)
+            ], capture_output=True, text=True, timeout=10)
+            if result.stdout.strip():
+                metadata["duration"] = float(result.stdout.strip())
+        except Exception:
+            pass
+        
+        voices.append(metadata)
+    
+    return {"voices": voices}
+
+
+@app.post("/v1/tts/voices/save")
+async def save_voice_design(prompt: str = Body(...), consent: bool = Body(...)):
+    """Save a voice design to the library."""
+    if not consent:
+        raise HTTPException(400, "Consent is required to save voice design")
+    
+    # This is called after design_voice creates the audio file
+    # We just need to register it in the library
+    # The actual audio file was already created by design_voice
+    return {"ok": True, "message": "Voice design saved"}
+
+
+@app.post("/v1/tts/voices/delete")
+async def delete_voice_design(voice_id: str = Body(..., embed=True)):
+    """Delete a voice design from the library."""
+    base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
+    voice_dir = (base_jobs_dir / "voice_designs" / voice_id).resolve()
+    
+    try:
+        if voice_dir.is_relative_to(base_jobs_dir / "voice_designs") and voice_dir.exists():
+            import shutil
+            shutil.rmtree(voice_dir)
+            return {"ok": True}
+        else:
+            raise HTTPException(404, "Voice design not found")
+    except (ValueError, RuntimeError):
+        raise HTTPException(404, "Voice design not found")
+
+
+@app.post("/v1/tts/voices/preview")
+async def preview_voice_design(voice_id: str = Body(..., embed=True)):
+    """Preview a saved voice design."""
+    base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
+    voice_dir = (base_jobs_dir / "voice_designs" / voice_id).resolve()
+    
+    try:
+        if not voice_dir.is_relative_to(base_jobs_dir / "voice_designs") or not voice_dir.exists():
+            raise HTTPException(404, "Voice design not found")
+    except (ValueError, RuntimeError):
+        raise HTTPException(404, "Voice design not found")
+    
+    # Find audio file
+    audio_file = None
+    for f in voice_dir.iterdir():
+        if f.suffix in ('.wav', '.mp3'):
+            audio_file = f
+            break
+    
+    if not audio_file:
+        raise HTTPException(404, "Voice design audio not found")
+    
+    return FileResponse(
+        audio_file,
+        media_type="audio/wav",
+        filename=audio_file.name,
+    )
+
+
 @app.get("/v1/dub/{job_id}/download")
 async def download_result(job_id: str):
     """Download the completed dubbing result (MP4)."""
@@ -494,6 +662,30 @@ async def download_artifact(job_id: str, filename: str):
     return FileResponse(
         path,
         media_type=media_type,
+        filename=safe_filename,
+    )
+
+
+@app.get("/v1/tts/artifacts/{filename}")
+async def download_voice_design_artifact(filename: str):
+    """Download a voice design artifact."""
+    safe_filename = Path(filename).name
+    base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
+    custom_candidate = (base_jobs_dir / "voice_designs" / safe_filename).resolve()
+    try:
+        if custom_candidate.is_relative_to(base_jobs_dir) and custom_candidate.exists() and custom_candidate.is_file():
+            path = str(custom_candidate)
+        else:
+            path = None
+    except (ValueError, RuntimeError):
+        path = None
+
+    if not path:
+        raise HTTPException(404, f"Voice design artifact '{safe_filename}' not found")
+
+    return FileResponse(
+        path,
+        media_type="audio/wav",
         filename=safe_filename,
     )
 

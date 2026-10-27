@@ -255,6 +255,67 @@ class VoxCPM2Backend(TTSBackend):
             {"id": "design", "name": "Voice Design (text prompt)"},
         ]
 
+    async def design_voice(
+        self,
+        prompt: str,
+        output_path: Path,
+        speed: float = 1.0,
+    ) -> TTSResult:
+        """Design a voice from a text description (zero-shot voice design)."""
+        if not self.is_available():
+            raise RuntimeError("VoxCPM not installed")
+
+        import torch
+        import voxcpm
+        import tempfile
+        import torchaudio
+
+        if self._model is None:
+            self._model = voxcpm.VoxCPM.from_pretrained(
+                self.model_path or "Mariya987/VoxCPM2",
+                device=self.device,
+                load_denoiser=False,
+            )
+
+            # Try to load Khmer LoRA
+            if not self._khmer_lora:
+                lora_path = self._resolve_khmer_lora()
+                if lora_path:
+                    self._model.load_lora(lora_path)
+                    self._khmer_lora = True
+
+        output_path.parent.mkdir(parents=True, exist_ok=True)
+
+        # Map speed to inference_timesteps and cfg_value
+        inference_timesteps = max(5, min(20, int(10 / speed)))
+        cfg_value = 2.0
+
+        # Voice design: provide prompt_text without reference_wav_path
+        # The model generates a voice matching the text description
+        audio = self._model.generate(
+            text="",  # Empty text, we just want the voice characteristics
+            prompt_text=prompt,
+            reference_wav_path=None,
+            prompt_wav_path=None,
+            inference_timesteps=inference_timesteps,
+            cfg_value=cfg_value,
+            max_len=4096,
+        )
+
+        # Save
+        torchaudio.save(str(output_path), audio.unsqueeze(0).cpu(), 24000)
+
+        # Get duration
+        duration = audio.shape[-1] / 24000
+
+        return TTSResult(
+            audio_path=output_path,
+            duration=duration,
+            format="wav",
+            provider="voxcpm",
+            voice_id=f"design:{prompt[:30]}",
+        )
+
     async def synthesize(
         self,
         text: str,

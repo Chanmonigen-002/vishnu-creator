@@ -491,6 +491,163 @@ export class DubEngineClient {
     }
   }
 
+  async designVoice(params: { prompt: string; speed?: number }): Promise<{
+    ok: boolean;
+    audioUrl: string;
+    audioDataUrl?: string;
+    duration: number;
+    prompt: string;
+  }> {
+    const body = await this.request<Record<string, unknown>>(
+      'POST',
+      '/v1/tts/design-voice',
+      {
+        prompt: params.prompt,
+        speed: params.speed ?? 1.0,
+      }
+    );
+    const rec = asRecord(body);
+    return {
+      ok: readBoolean(rec.ok),
+      audioUrl: typeof rec.audio_url === 'string' ? rec.audio_url : '',
+      audioDataUrl: typeof rec.audio_data_url === 'string' ? rec.audio_data_url : undefined,
+      duration: readNumber(rec.duration),
+      prompt: typeof rec.prompt === 'string' ? rec.prompt : params.prompt,
+    };
+  }
+
+  async downloadVoiceDesignArtifact(filename: string, signal?: AbortSignal): Promise<Buffer> {
+    const controller = new AbortController();
+    const linkedSignal = signal
+      ? AbortSignal.any([controller.signal, signal])
+      : controller.signal;
+    const timeoutId = setTimeout(() => controller.abort(), DEFAULT_TIMEOUT_MS);
+
+    try {
+      const response = await fetch(
+        `${this.baseUrl()}/v1/tts/artifacts/${encodeURIComponent(filename)}`,
+        { headers: headersFor(this.config), signal: linkedSignal }
+      );
+      clearTimeout(timeoutId);
+
+      if (!response.ok) {
+        throw new DubEngineError(
+          `ENGINE_HTTP_${response.status}`,
+          `Voice design artifact download failed with status ${response.status}`,
+          response.status,
+          response.status >= 500
+        );
+      }
+
+      const arrayBuffer = await response.arrayBuffer();
+      return Buffer.from(arrayBuffer);
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof DubEngineError) throw error;
+      if (error instanceof DOMException && error.name === 'AbortError') {
+        throw new DubEngineError('ENGINE_TIMEOUT', 'Voice design artifact download timed out', 504, true);
+      }
+      throw new DubEngineError(
+        'ENGINE_DOWNLOAD_FAILED',
+        error instanceof Error ? error.message : 'Voice design artifact download failed',
+        502,
+        true
+      );
+    }
+  }
+
+  async listVoiceDesigns(): Promise<{ voices: Array<{
+    id: string;
+    name: string;
+    prompt: string;
+    duration: number;
+    createdAt: string;
+    audioUrl: string;
+    audioDataUrl?: string;
+    consent: boolean;
+  }> }> {
+    const body = await this.request<Record<string, unknown>>(
+      'GET',
+      '/v1/tts/voices/list'
+    );
+    const rec = asRecord(body);
+    const voices = Array.isArray(rec.voices) ? rec.voices : [];
+    return {
+      voices: voices.map(v => ({
+        id: typeof v.id === 'string' ? v.id : '',
+        name: typeof v.name === 'string' ? v.name : '',
+        prompt: typeof v.prompt === 'string' ? v.prompt : '',
+        duration: readNumber(v.duration),
+        createdAt: typeof v.created_at === 'string' ? v.created_at : '',
+        audioUrl: typeof v.audio_url === 'string' ? v.audio_url : '',
+        audioDataUrl: typeof v.audio_data_url === 'string' ? v.audio_data_url : undefined,
+        consent: readBoolean(v.consent),
+      })).filter(v => v.id),
+    };
+  }
+
+  async saveVoiceDesign(params: { prompt: string; consent: boolean }): Promise<{
+    id: string;
+    name: string;
+    prompt: string;
+    duration: number;
+    createdAt: string;
+    audioUrl: string;
+    audioDataUrl?: string;
+    consent: boolean;
+  }> {
+    const body = await this.request<Record<string, unknown>>(
+      'POST',
+      '/v1/tts/voices/save',
+      {
+        prompt: params.prompt,
+        consent: params.consent,
+      }
+    );
+    const rec = asRecord(body);
+    return {
+      id: typeof rec.id === 'string' ? rec.id : '',
+      name: typeof rec.name === 'string' ? rec.name : '',
+      prompt: typeof rec.prompt === 'string' ? rec.prompt : '',
+      duration: readNumber(rec.duration),
+      createdAt: typeof rec.created_at === 'string' ? rec.created_at : '',
+      audioUrl: typeof rec.audio_url === 'string' ? rec.audio_url : '',
+      audioDataUrl: typeof rec.audio_data_url === 'string' ? rec.audio_data_url : undefined,
+      consent: readBoolean(rec.consent),
+    };
+  }
+
+  async deleteVoiceDesign(params: { voiceId: string }): Promise<void> {
+    await this.request<Record<string, unknown>>(
+      'POST',
+      '/v1/tts/voices/delete',
+      { voice_id: params.voiceId }
+    );
+  }
+
+  async previewVoiceDesign(params: { voiceId: string }): Promise<Buffer> {
+    const response = await this.fetchWithRetry(
+      '/v1/tts/voices/preview',
+      {
+        method: 'POST',
+        headers: headersFor(this.config),
+        body: JSON.stringify({ voice_id: params.voiceId }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new DubEngineError(
+        `ENGINE_HTTP_${response.status}`,
+        `Voice preview failed with status ${response.status}`,
+        response.status,
+        response.status >= 500
+      );
+    }
+
+    const arrayBuffer = await response.arrayBuffer();
+    return Buffer.from(arrayBuffer);
+  }
+
   generateJobId(): string {
     return createHash('sha256').update(`${Date.now()}:${crypto.randomUUID()}`).digest('hex').slice(0, 12);
   }

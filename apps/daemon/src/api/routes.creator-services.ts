@@ -408,7 +408,178 @@ export async function registerCreatorServicesRoutes(
       }
     );
   }
+
+  server.post<{
+    Body: {
+      prompt?: string;
+      speed?: number;
+    };
+  }>('/creator-services/tts/design-voice', async (request, reply) => {
+    const prompt = (request.body?.prompt ?? '').trim();
+    if (!prompt) {
+      return reply.code(400).send(apiError('VALIDATION_FAILED', 'Prompt is required for voice design'));
+    }
+    const speed = typeof request.body?.speed === 'number' ? request.body.speed : 1.0;
+    try {
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      const result = await client.designVoice({ prompt, speed });
+      const filename = result.audioUrl ? result.audioUrl.split('/').pop() || '' : '';
+      const proxyAudioUrl = filename
+        ? `/creator-services/tts/artifacts/${encodeURIComponent(filename)}`
+        : result.audioUrl;
+      return {
+        ...result,
+        audioUrl: proxyAudioUrl,
+      };
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Voice design failed'
+      ));
+    }
+  });
+
+  server.get<{
+    Params: { filename: string };
+  }>('/creator-services/tts/artifacts/:filename', async (request, reply) => {
+    try {
+      const { filename } = request.params;
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      const buffer = await client.downloadVoiceDesignArtifact(filename);
+      return reply
+        .header('Content-Type', 'audio/wav')
+        .header('Content-Length', String(buffer.length))
+        .header('Cache-Control', 'public, max-age=3600')
+        .send(buffer);
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(error.statusCode === 404 ? 404 : 502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Voice design artifact download failed'
+      ));
+    }
+  });
+
+  server.get('/creator-services/tts/voices/list', async (_request, reply) => {
+    try {
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      const result = await client.listVoiceDesigns();
+      return result;
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Failed to list voice designs'
+      ));
+    }
+  });
+
+  server.post<{
+    Body: { prompt?: string; consent?: boolean };
+  }>('/creator-services/tts/voices/save', async (request, reply) => {
+    const prompt = (request.body?.prompt ?? '').trim();
+    const consent = request.body?.consent === true;
+    if (!prompt) {
+      return reply.code(400).send(apiError('VALIDATION_FAILED', 'Prompt is required'));
+    }
+    if (!consent) {
+      return reply.code(400).send(apiError('VALIDATION_FAILED', 'Consent is required to save voice design'));
+    }
+    try {
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      const result = await client.saveVoiceDesign({ prompt, consent });
+      return result;
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Failed to save voice design'
+      ));
+    }
+  });
+
+  server.post<{
+    Body: { voiceId?: string };
+  }>('/creator-services/tts/voices/delete', async (request, reply) => {
+    const voiceId = request.body?.voiceId;
+    if (!voiceId) {
+      return reply.code(400).send(apiError('VALIDATION_FAILED', 'Voice ID is required'));
+    }
+    try {
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      await client.deleteVoiceDesign({ voiceId });
+      return { ok: true };
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Failed to delete voice design'
+      ));
+    }
+  });
+
+  server.post<{
+    Body: { voiceId?: string };
+  }>('/creator-services/tts/voices/preview', async (request, reply) => {
+    const voiceId = request.body?.voiceId;
+    if (!voiceId) {
+      return reply.code(400).send(apiError('VALIDATION_FAILED', 'Voice ID is required'));
+    }
+    try {
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      const blob = await client.previewVoiceDesign({ voiceId });
+      return reply
+        .header('Content-Type', 'audio/wav')
+        .header('Content-Length', String(blob.length))
+        .header('Cache-Control', 'no-store')
+        .send(blob);
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Voice preview failed'
+      ));
+    }
+  });
 }
+
 
 function clearOfficialAddresses(value: unknown): void {
   if (!value || typeof value !== 'object') return;
