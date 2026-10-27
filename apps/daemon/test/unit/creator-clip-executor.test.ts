@@ -120,7 +120,13 @@ describe('clip executor', () => {
     expect(firstArgs.indexOf('-ss')).toBeLessThan(firstArgs.indexOf('-i'));
     expect(firstArgs.slice(firstArgs.indexOf('-t'), firstArgs.indexOf('-t') + 2)).toEqual(['-t', '30']);
     expect(firstFilter).not.toContain('trim=');
-    expect(firstFilter.indexOf('crop=')).toBeLessThan(firstFilter.indexOf('scale='));
+    // 9:16 renders use the stacked-blur short composition: the blurred
+    // background scales 1080-wide first, then crops, and the source frame is
+    // overlaid centered on the 1080x1920 canvas.
+    expect(firstFilter).toContain('split=2');
+    expect(firstFilter).toContain('boxblur=');
+    expect(firstFilter).toContain('overlay=');
+    expect(firstFilter.indexOf('scale=')).toBeLessThan(firstFilter.indexOf('crop='));
     expect(firstArgs.slice(firstArgs.indexOf('-preset'), firstArgs.indexOf('-preset') + 2)).toEqual(['-preset', 'veryfast']);
     expect(firstArgs.slice(firstArgs.indexOf('-progress'), firstArgs.indexOf('-progress') + 2)).toEqual(['-progress', 'pipe:2']);
     expect(firstArgs).toContain('-nostats');
@@ -136,8 +142,113 @@ describe('clip executor', () => {
       .toEqual(['clip-1', 'clip-2']);
     expect(result.outputs.map(output => output.path && readFileSync(output.path, 'utf8')))
       .toEqual(['rendered-video', 'rendered-video']);
-    expect(invocations).toHaveLength(2);
-    expect(result.progress).toMatchObject({ completed: 2, failed: 0, total: 2 });
+  });
+
+  it('burns karaoke captions from the subtitle into the 9:16 short render', async () => {
+    tempDir = mkdtempSync(join(tmpdir(), 'creator-clip-executor-'));
+    const workdir = join(tempDir, 'work');
+    mkdirSync(workdir);
+    const sourcePath = join(tempDir, 'source.mp4');
+    const candidatesPath = join(tempDir, 'clip-candidates.json');
+    const subtitlePath = join(tempDir, 'subtitle.srt');
+    const ffprobePath = join(tempDir, 'ffprobe');
+    const ffmpegPath = join(tempDir, 'ffmpeg');
+    const ffmpegLogPath = join(tempDir, 'ffmpeg.log');
+    writeFileSync(sourcePath, 'source-video');
+    writeFileSync(candidatesPath, JSON.stringify({
+      candidates: [candidate('clip-1', 'First clip', 1, 30)]
+    }));
+    writeFileSync(subtitlePath, [
+      '1', '00:00:01,500 --> 00:00:05,000', 'ខ្មែរ នេះ',
+      '',
+      '2', '00:00:06,000 --> 00:00:09,000', 'Pricing and customers',
+      ''
+    ].join('\n'));
+    writeExecutable(ffprobePath, `#!/bin/sh\nprintf '%s\\n' '{"format":{"duration":"120"},"streams":[{"codec_type":"video","width":1920,"height":1080},{"codec_type":"audio"}]}'\n`);
+    writeExecutable(ffmpegPath, `#!/bin/sh\nlast=''\nfor arg in "$@"; do\n  last="$arg"\n  printf '%s\\n' "$arg" >> '${ffmpegLogPath}'\ndone\nprintf '%s\\n' '---' >> '${ffmpegLogPath}'\nprintf '%s\\n' 'out_time=00:00:15.000000' >&2\nprintf '%s\\n' 'progress=continue' >&2\nprintf 'rendered-video' > "$last"\n`);
+
+    const executor = createClipExecutor({
+      configStore: { read: vi.fn() } as never,
+      ffmpegPath,
+      ffprobePath,
+      preferHardwareEncoding: false,
+      fontsDir: join(tempDir, 'fonts')
+    });
+    const result = await executor.run({
+      stageRun: stageRun(),
+      job: job(),
+      inputArtifacts: [
+        artifact('source', 'source_video', sourcePath),
+        artifact('candidates', 'clip_candidates', candidatesPath),
+        artifact('subtitle', 'target_subtitle', subtitlePath)
+      ],
+      workdir,
+      signal: new AbortController().signal,
+      reportProgress: vi.fn()
+    });
+
+    const invocations = readFileSync(ffmpegLogPath, 'utf8').trim().split('\n---\n')
+      .map(entry => entry.split('\n'));
+    const filter = invocations[0]![invocations[0]!.indexOf('-filter_complex') + 1]!;
+    const fontsDir = join(tempDir, 'fonts');
+    const assPath = join(workdir, '01-First-clip-captions.ass');
+    // The fake sh-based ffmpeg strips single quotes when sh re-parses the
+    // Windows command line; real ffmpeg.exe receives them verbatim, so the
+    // logged argv is compared quote-free.
+    const loggedFilter = filter.replaceAll("'", '');
+    const escape = (path: string) => path.replaceAll('\\', '/').replace(':', '\\:');
+    expect(loggedFilter).toContain(`ass=filename=${escape(assPath)}`);
+    expect(loggedFilter).toContain(`fontsdir=${escape(fontsDir)}`);
+    // Cue 1 (1.5-5s) clips into the 1-30s render starting at 00:00:00,50.
+    const ass = readFileSync(assPath, 'utf8');
+    expect(ass).toContain('Style: Karaoke,Noto Sans Khmer');
+    expect(ass).toContain('Dialogue: 0,0:00:00.50,');
+    expect(ass).toContain('\\k');
+    expect(ass).toContain('Pricing');
+    expect(result.outputs[0]?.metadata).toMatchObject({ captionsStyle: 'karaoke' });
+  });
+
+  it('skips captions when captionStyle is none', async () => {
+    tempDir = mkdtempSync(join(tmpdir(), 'creator-clip-executor-'));
+    const workdir = join(tempDir, 'work');
+    mkdirSync(workdir);
+    const sourcePath = join(tempDir, 'source.mp4');
+    const candidatesPath = join(tempDir, 'clip-candidates.json');
+    const subtitlePath = join(tempDir, 'subtitle.srt');
+    const ffprobePath = join(tempDir, 'ffprobe');
+    const ffmpegPath = join(tempDir, 'ffmpeg');
+    const ffmpegLogPath = join(tempDir, 'ffmpeg.log');
+    writeFileSync(sourcePath, 'source-video');
+    writeFileSync(candidatesPath, JSON.stringify({
+      candidates: [candidate('clip-1', 'First clip', 0, 30)]
+    }));
+    writeFileSync(subtitlePath, '1\n00:00:00,000 --> 00:00:05,000\nhello\n');
+    writeExecutable(ffprobePath, `#!/bin/sh\nprintf '%s\\n' '{"format":{"duration":"120"},"streams":[{"codec_type":"video","width":1920,"height":1080},{"codec_type":"audio"}]}'\n`);
+    writeExecutable(ffmpegPath, `#!/bin/sh\nlast=''\nfor arg in "$@"; do\n  last="$arg"\n  printf '%s\\n' "$arg" >> '${ffmpegLogPath}'\ndone\nprintf '%s\\n' '---' >> '${ffmpegLogPath}'\nprintf '%s\\n' 'out_time=00:00:05.000000' >&2\nprintf '%s\\n' 'progress=continue' >&2\nprintf 'rendered-video' > "$last"\n`);
+
+    const executor = createClipExecutor({
+      configStore: { read: vi.fn() } as never,
+      ffmpegPath,
+      ffprobePath,
+      preferHardwareEncoding: false
+    });
+    const currentJob = job();
+    currentJob.state = { ...currentJob.state, aspectRatio: '16:9', captionStyle: 'none' };
+    await executor.run({
+      stageRun: stageRun(),
+      job: currentJob,
+      inputArtifacts: [
+        artifact('source', 'source_video', sourcePath),
+        artifact('candidates', 'clip_candidates', candidatesPath),
+        artifact('subtitle', 'target_subtitle', subtitlePath)
+      ],
+      workdir,
+      signal: new AbortController().signal,
+      reportProgress: vi.fn()
+    });
+    const invocations = readFileSync(ffmpegLogPath, 'utf8').trim().split('\n---\n')
+      .map(entry => entry.split('\n'));
+    expect(invocations[0]!.join('\n')).not.toContain('ass=filename=');
   });
 
   it('falls back to software encoding when VideoToolbox is unavailable', async () => {

@@ -15,12 +15,20 @@ import {
 } from '../../src/creator/templates/registry.js';
 
 describe('creator template registry', () => {
-  it('defaults video clips to three source-format outputs', () => {
+  it('defaults video clips to three 9:16 karaoke shorts', () => {
     const template = createAutoClipTemplate();
 
+    expect(template.version).toBe(3);
     expect(template.inputSchema.parse({})).toMatchObject({
       clipCount: 3,
-      aspectRatio: 'source'
+      targetLanguage: 'km',
+      focus: 'viral',
+      aspectRatio: '9:16',
+      captionStyle: 'karaoke'
+    });
+    expect(template.stages.find(stage => stage.id === 'render')?.inputArtifacts).toContainEqual({
+      kind: 'target_subtitle',
+      selector: 'latest-completed'
     });
   });
 

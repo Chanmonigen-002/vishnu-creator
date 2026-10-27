@@ -980,7 +980,8 @@ export async function buildServer(input: BuildServerInput) {
       creatorExecutors.push(createClipExecutor({
         configStore: creatorServicesConfigStore,
         ffmpegPath: creatorFfmpegPath,
-        ffprobePath: creatorFfprobePath
+        ffprobePath: creatorFfprobePath,
+        fontsDir: join(creatorRuntimeRoot, 'fonts')
       }));
     }
     if (input.creatorExecutors === undefined && creatorFfprobePath) {

@@ -32,7 +32,8 @@ export function createLegacyAutoClipTemplate(): CreatorTemplateDefinition {
   };
 }
 
-export function createAutoClipTemplate(): CreatorTemplateDefinition {
+// Version 2 is preserved verbatim for jobs pinned at templateVersion 2.
+export function createAutoClipTemplateV2(): CreatorTemplateDefinition {
   return {
     id: 'auto-clip',
     version: 2,
@@ -103,6 +104,100 @@ export function createAutoClipTemplate(): CreatorTemplateDefinition {
         inputArtifacts: [
           { kind: 'source_video', selector: 'latest-completed' },
           { kind: 'clip_candidates', selector: 'latest-completed' }
+        ],
+        outputArtifacts: [{ kind: 'auto_clip_video', status: 'completed' }]
+      }
+    ],
+    actions: [
+      { id: 'update-settings', inputSchema: record, allowedStages: ['probe', 'download', 'subtitle', 'analyze', 'render'] },
+      { id: 'run-stage', inputSchema: record, allowedStages: ['probe', 'download', 'subtitle', 'analyze', 'render'] },
+      { id: 'undo-action', inputSchema: record, allowedStages: ['probe', 'download', 'subtitle', 'analyze', 'render'] }
+    ],
+    outputs: [{ kind: 'auto_clip_video', required: true }],
+    agentGuidance: [
+      '这是视频切片模板。',
+      'URL 来源从 probe 开始并设置 workflow=true，本地或导入视频从 subtitle 开始并设置 workflow=true。',
+      '工作流必须从 analyze 自动继续到 render，将本次分析出的全部片段直接生成视频。',
+      '不得把多个候选片段拼接成一个文件。'
+    ].join(' ')
+  };
+}
+
+// Version 3 adds the shorts flow: viral-first defaults, Khmer-first target
+// language, stacked-blur 9:16 composition and karaoke captions.
+export function createAutoClipTemplate(): CreatorTemplateDefinition {
+  return {
+    id: 'auto-clip',
+    version: 3,
+    renderer: 'auto-clips',
+    inputSchema: z.object({
+      sourceType: z.enum(['url', 'file']).default('url'),
+      sourceUrl: z.string().default(''),
+      sourceArtifactId: z.string().nullable().default(null),
+      formatId: z.string().default('bestvideo+bestaudio/best'),
+      sourceLanguage: z.string().default('auto'),
+      targetLanguage: z.string().default('km'),
+      preferPlatformCaptions: z.boolean().default(true),
+      focus: z.enum(['balanced', 'viral', 'knowledge']).default('viral'),
+      genre: z.enum(['auto', 'talk', 'podcast', 'tutorial', 'interview', 'entertainment', 'sports', 'gaming', 'news']).default('auto'),
+      duration: z.enum(['15-30', '30-60', '60-90']).default('30-60'),
+      clipCount: z.number().int().min(1).max(20).default(3),
+      aspectRatio: z.enum(['source', '16:9', '9:16', '1:1']).default('9:16'),
+      captionStyle: z.enum(['karaoke', 'none']).default('karaoke'),
+      currentStage: z.string().nullable().default(null)
+    }).passthrough() as never,
+    stages: [
+      {
+        id: 'probe',
+        executor: 'download',
+        completesJob: false,
+        resultVersionPolicy: 'none',
+        allowedJobStatuses: ['draft', 'running', 'completed', 'failed', 'needs_input'],
+        inputArtifacts: [],
+        outputArtifacts: [{ kind: 'download_probe', status: 'completed' }]
+      },
+      {
+        id: 'download',
+        executor: 'download',
+        completesJob: false,
+        resultVersionPolicy: 'none',
+        dependsOn: ['probe'],
+        allowedJobStatuses: ['draft', 'running', 'completed', 'failed', 'needs_input'],
+        inputArtifacts: [{ kind: 'download_probe', selector: 'latest-completed' }],
+        outputArtifacts: [{ kind: 'source_video', status: 'completed' }]
+      },
+      {
+        id: 'subtitle',
+        executor: 'vishnuai',
+        completesJob: false,
+        resultVersionPolicy: 'none',
+        dependsOn: ['download'],
+        allowedJobStatuses: ['draft', 'running', 'completed', 'failed', 'needs_input'],
+        inputArtifacts: [{ kind: 'source_video', selector: 'latest-completed' }],
+        outputArtifacts: [{ kind: 'target_subtitle', status: 'completed' }]
+      },
+      {
+        id: 'analyze',
+        executor: 'clip',
+        completesJob: false,
+        dependsOn: ['subtitle'],
+        allowedJobStatuses: ['draft', 'running', 'completed', 'failed', 'needs_input'],
+        inputArtifacts: [
+          { kind: 'source_video', selector: 'latest-completed' },
+          { kind: 'target_subtitle', selector: 'latest-completed' }
+        ],
+        outputArtifacts: [{ kind: 'clip_candidates', status: 'completed' }]
+      },
+      {
+        id: 'render',
+        executor: 'clip',
+        resultVersionPolicy: 'none',
+        dependsOn: ['analyze'],
+        allowedJobStatuses: ['draft', 'running', 'completed', 'failed', 'needs_input'],
+        inputArtifacts: [
+          { kind: 'source_video', selector: 'latest-completed' },
+          { kind: 'clip_candidates', selector: 'latest-completed' },
+          { kind: 'target_subtitle', selector: 'latest-completed' }
         ],
         outputArtifacts: [{ kind: 'auto_clip_video', status: 'completed' }]
       }

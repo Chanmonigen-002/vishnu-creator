@@ -1,17 +1,20 @@
 import { readFile, writeFile } from 'node:fs/promises';
-import { join } from 'node:path';
+import { basename, join } from 'node:path';
 import type { CreatorServicesConfigStore } from '../../creator-services/config-store.js';
 import type { CreatorExecutor } from '../executor.js';
 import { CreatorExecutorError } from '../executor.js';
 import { spawnCreatorProcess } from '../process-tree.js';
 import { validateMediaFile } from '../validators/media.js';
+import { parseSrt } from '../validators/srt.js';
 import { analyzeClips, parseClipCandidates, type ClipGenre } from './analyzer.js';
+import { buildKaraokeAss, selectCuesInRange } from './captions.js';
 
 export function createClipExecutor(input: {
   configStore: Pick<CreatorServicesConfigStore, 'read'>;
   ffmpegPath: string;
   ffprobePath: string;
   preferHardwareEncoding?: boolean;
+  fontsDir?: string;
 }): CreatorExecutor {
   return {
     id: 'clip',
@@ -84,6 +87,11 @@ export function createClipExecutor(input: {
         const candidates = parseClipCandidates(raw, duration);
         if (candidates.length === 0) throw new CreatorExecutorError('creator_clip_candidates_missing', 'No clips are available to render');
         const aspectRatio = readAspectRatio(stage.job.state.aspectRatio);
+        const captionStyle = readCaptionStyle(stage.job.state.captionStyle);
+        const subtitleArtifact = stage.inputArtifacts.find(artifact => artifact.kind.includes('subtitle'));
+        const srtCues = captionStyle === 'none' || !subtitleArtifact?.path
+          ? []
+          : parseSrt(await readFile(subtitleArtifact.path, 'utf8'), { allowOverlaps: true });
         const outputs = [];
         let videoEncoder: ClipVideoEncoder = (input.preferHardwareEncoding ?? process.platform === 'darwin')
           ? 'h264_videotoolbox'
@@ -93,6 +101,15 @@ export function createClipExecutor(input: {
           const clipDuration = candidate.end - candidate.start;
           const fileName = `${String(index + 1).padStart(2, '0')}-${safeFileName(candidate.title)}.mp4`;
           const output = join(stage.workdir, fileName);
+          const karaokeCues = srtCues.length === 0
+            ? []
+            : selectCuesInRange(srtCues, candidate.start * 1000, candidate.end * 1000);
+          let captionsPath: string | undefined;
+          if (karaokeCues.length > 0) {
+            const canvas = captionCanvas(aspectRatio, sourceMedia.width, sourceMedia.height);
+            captionsPath = join(stage.workdir, `${fileName.replace(/\.mp4$/, '')}-captions.ass`);
+            await writeFile(captionsPath, buildKaraokeAss(karaokeCues, canvas));
+          }
           let lastReportedPercent = Math.round(index / candidates.length * 100);
           stage.reportProgress({
             phase: 'rendering_clips',
@@ -108,7 +125,8 @@ export function createClipExecutor(input: {
             candidate,
             aspectRatio,
             hasAudio: sourceMedia.hasAudio,
-            videoEncoder
+            videoEncoder,
+            ...(captionsPath === undefined ? {} : { captionsPath })
           };
           const reportRenderProgress = (renderedSeconds: number) => {
             const clipProgress = Math.max(0, Math.min(1, renderedSeconds / clipDuration));
@@ -127,7 +145,7 @@ export function createClipExecutor(input: {
           try {
             await runProcess(
               input.ffmpegPath,
-              buildClipArguments(renderInput),
+              buildClipArguments({ ...renderInput, fontsDir: input.fontsDir, captionsPath }),
               stage.signal,
               reportRenderProgress
             );
@@ -145,7 +163,7 @@ export function createClipExecutor(input: {
             });
             await runProcess(
               input.ffmpegPath,
-              buildClipArguments(renderInput),
+              buildClipArguments({ ...renderInput, fontsDir: input.fontsDir, captionsPath }),
               stage.signal,
               reportRenderProgress
             );
@@ -165,6 +183,7 @@ export function createClipExecutor(input: {
               end: candidate.end,
               duration: candidate.end - candidate.start,
               aspectRatio,
+              ...(captionsPath === undefined ? {} : { captionsStyle: 'karaoke' as const, captionsArtifact: basename(captionsPath) }),
               candidateArtifactId: candidateArtifact.id
             }
           });
@@ -195,16 +214,36 @@ function buildClipArguments(input: {
   aspectRatio: ClipAspectRatio;
   hasAudio: boolean;
   videoEncoder: ClipVideoEncoder;
+  fontsDir?: string;
+  captionsPath?: string;
 }): string[] {
-  const format = aspectRatioFilter(input.aspectRatio);
-  const videoFilter = [
-    'setpts=PTS-STARTPTS',
-    ...format,
-    'format=yuv420p'
-  ].join(',');
+  const segments: string[] = [];
+  const finish = (label: string): void => { segments.push(`[${label}]format=yuv420p[outv]`); };
+  if (input.aspectRatio === '9:16') {
+    // Vertical short composition: a blurred background fills the 1080x1920
+    // canvas and the source frame sits centered on top.
+    segments.push('[0:v]setpts=PTS-STARTPTS,split=2[shortsForeground][shortsBlurSource]');
+    segments.push([
+      '[shortsBlurSource]scale=-2:1920:flags=bilinear',
+      "crop='min(iw,1080)':1920:'(iw-min(iw,1080))/2':0",
+      'pad=1080:1920:(ow-iw)/2:(oh-ih)/2:black',
+      'boxblur=luma_radius=28:luma_power=2:chroma_radius=12:chroma_power=2',
+      'eq=brightness=-0.08'
+    ].join(',') + '[shortsBackground]');
+    segments.push('[shortsForeground]scale=1080:1920:force_original_aspect_ratio=decrease[shortsFit]');
+    segments.push('[shortsBackground][shortsFit]overlay=(W-w)/2:(H-h)/2[shortsComposed]');
+    if (input.captionsPath === undefined) finish('shortsComposed');
+    else segments.push(captionsFilter(input.captionsPath, input.fontsDir, 'shortsComposed'), finishCaptioned());
+  } else {
+    const format = aspectRatioFilter(input.aspectRatio);
+    const videoFilter = ['setpts=PTS-STARTPTS', ...format].join(',');
+    segments.push(`[0:v]${videoFilter}[preCaptions]`);
+    if (input.captionsPath === undefined) finish('preCaptions');
+    else segments.push(captionsFilter(input.captionsPath, input.fontsDir, 'preCaptions'), finishCaptioned());
+  }
   const filter = input.hasAudio
-    ? `[0:v]${videoFilter}[outv];[0:a]asetpts=PTS-STARTPTS[outa]`
-    : `[0:v]${videoFilter}[outv]`;
+    ? `${segments.join(';')};[0:a]asetpts=PTS-STARTPTS[outa]`
+    : segments.join(';');
   return [
     '-y',
     '-ss', formatFfmpegTime(input.candidate.start),
@@ -221,9 +260,24 @@ function buildClipArguments(input: {
   ];
 }
 
+// ffmpeg filter options treat `\` as an escape and `:` as a separator, so
+// Windows paths need forward slashes and an escaped drive colon.
+function filterPath(path: string): string {
+  return path.replaceAll('\\', '/').replaceAll(':', '\\:');
+}
+
+function captionsFilter(path: string, fontsDir: string | undefined, sourceLabel: string): string {
+  const fontsDirOption = fontsDir === undefined ? '' : `:fontsdir='${filterPath(fontsDir)}'`;
+  return `[${sourceLabel}]ass=filename='${filterPath(path)}'${fontsDirOption}[captioned]`;
+}
+
+function finishCaptioned(): string {
+  return '[captioned]format=yuv420p[outv]';
+}
+
 function aspectRatioFilter(value: ClipAspectRatio): string[] {
   if (value === '16:9') return ["crop='min(iw,ih*16/9)':'min(ih,iw*9/16)'", 'scale=1920:1080:flags=bilinear'];
-  if (value === '9:16') return ["crop='min(iw,ih*9/16)':'min(ih,iw*16/9)'", 'scale=1080:1920:flags=bilinear'];
+  // 9:16 uses the stacked-blur short composition in buildClipArguments.
   if (value === '1:1') return ["crop='min(iw,ih)':'min(iw,ih)'", 'scale=1080:1080:flags=bilinear'];
   return ['scale=trunc(iw/2)*2:trunc(ih/2)*2'];
 }
@@ -269,6 +323,30 @@ function readClipCount(value: unknown): number {
 
 function readAspectRatio(value: unknown): ClipAspectRatio {
   return value === '16:9' || value === '9:16' || value === '1:1' ? value : 'source';
+}
+
+// Karaoke captions are on by default (shorts behaviour); set captionStyle
+// 'none' in the job state to keep plain renders.
+function readCaptionStyle(value: unknown): 'none' | 'karaoke' {
+  return value === 'none' ? 'none' : 'karaoke';
+}
+
+function captionCanvas(
+  aspectRatio: ClipAspectRatio,
+  sourceWidth?: number,
+  sourceHeight?: number
+): { width: number; height: number } {
+  if (aspectRatio === '16:9') return { width: 1920, height: 1080 };
+  if (aspectRatio === '1:1') return { width: 1080, height: 1080 };
+  if (aspectRatio === '9:16') return { width: 1080, height: 1920 };
+  if (sourceWidth && sourceHeight) {
+    return { width: evenRound(sourceWidth), height: evenRound(sourceHeight) };
+  }
+  return { width: 1080, height: 1920 };
+}
+
+function evenRound(value: number): number {
+  return Math.max(2, Math.round(value / 2) * 2);
 }
 
 function safeFileName(value: string): string {
