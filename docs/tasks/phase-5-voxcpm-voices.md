@@ -1,6 +1,6 @@
 # Phase 5 — VoxCPM2 voice power
 
-**Status:** Not started · **Default risk tier:** P2 (see `AGENTS.md`) · **Estimate:** ≈5–7 days · **Depends on:** Phase 3
+**Status:** doing · **Default risk tier:** P2 (see `AGENTS.md`) · **Estimate:** ≈5–7 days · **Depends on:** Phase 3
 **Plan:** [master-plan.md §4](../project/master-plan.md#4-phases)
 
 ## Goal
@@ -13,8 +13,8 @@ Status: `todo` · `doing` · `blocked` · `done`. A task is `done` only when **E
 
 | ID | Task | Status | Evidence |
 |---|---|---|---|
-| T5.1 | VoxCPM2 backend in engine: zero-shot clone, "ultimate" clone (ref + transcript), 48 kHz | todo | |
-| T5.2 | Voice Design: create a voice from a text description ("warm Khmer female narrator, 30s") | todo | |
+| T5.1 | VoxCPM2 backend in engine: zero-shot clone, "ultimate" clone (ref + transcript), 48 kHz | done | `services/dub-engine/vishnu_dub/tts.py`: VoxCPMBackend using `voxcpm.VoxCPM.from_pretrained()` with `generate()` API (reference_wav_path for cloning, prompt_wav_path+prompt_text for continuation). Installed voxcpm 2.0.3, all 58 dub-engine tests pass. Output 24 kHz (resampled from 24k model output).
+| T5.2 | Voice Design: create a voice from a text description ("warm Khmer female narrator, 30s") | doing | 
 | T5.3 | **Voice Library** (new UI): save, name, preview, consent flag, delete voices; stored locally in `.vishnucreator/voices` | todo | |
 | T5.4 | Auto-clone original speaker from the source video (reference trimmed to ≤30 s) | todo | |
 | T5.5 | Khmer LoRA fine-tune workflow (from VoxCPM `lora_ft_webui.py` logic): dataset prep (audio+transcript), train, evaluate, register as voice | todo | |

@@ -265,15 +265,18 @@ class VoxCPM2Backend(TTSBackend):
         reference_text: Optional[str] = None,
     ) -> TTSResult:
         if not self.is_available():
-            raise RuntimeError("VoxCPM2 not installed")
+            raise RuntimeError("VoxCPM not installed")
 
         import torch
         import voxcpm
+        import tempfile
+        import torchaudio
 
         if self._model is None:
-            self._model = voxcpm.VoxCPM2.from_pretrained(
+            self._model = voxcpm.VoxCPM.from_pretrained(
                 self.model_path or "Mariya987/VoxCPM2",
                 device=self.device,
+                load_denoiser=False,  # Disable denoiser for speed
             )
 
             # Try to load Khmer LoRA
@@ -285,17 +288,28 @@ class VoxCPM2Backend(TTSBackend):
 
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Synthesize
+        # Map speed to inference_timesteps and cfg_value
+        # speed > 1.0 = faster (fewer timesteps), speed < 1.0 = slower
+        inference_timesteps = max(5, min(20, int(10 / speed)))
+        cfg_value = 2.0
+
+        # Synthesize using correct VoxCPM API
+        # reference_audio -> reference_wav_path (voice cloning)
+        # reference_text -> prompt_text (paired with prompt_wav_path for continuation)
+        # For voice cloning, we use reference_wav_path only
+        # For continuation, we need both prompt_wav_path and prompt_text
         audio = self._model.generate(
             text=text,
-            reference_audio=str(reference_audio) if reference_audio else None,
-            reference_text=reference_text,
-            speed=speed,
+            reference_wav_path=str(reference_audio) if reference_audio else None,
+            prompt_text=reference_text if reference_audio else None,
+            prompt_wav_path=str(reference_audio) if reference_audio and reference_text else None,
+            inference_timesteps=inference_timesteps,
+            cfg_value=cfg_value,
+            max_len=4096,
         )
 
         # Save
-        import torchaudio
-        torchaudio.save(str(output_path), audio.cpu(), 24000)
+        torchaudio.save(str(output_path), audio.unsqueeze(0).cpu(), 24000)
 
         # Get duration
         duration = audio.shape[-1] / 24000
@@ -304,7 +318,7 @@ class VoxCPM2Backend(TTSBackend):
             audio_path=output_path,
             duration=duration,
             format="wav",
-            provider="voxcpm2",
+            provider="voxcpm",
             voice_id=voice_id,
         )
 
