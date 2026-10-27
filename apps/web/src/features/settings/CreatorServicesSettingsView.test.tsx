@@ -278,6 +278,53 @@ describe('CreatorServicesSettingsView', () => {
     expect(modelService.updateCodexProvider).not.toHaveBeenCalled();
   });
 
+  it('fills the documented placeholder key for a local provider and marks it local', async () => {
+    const service = createService();
+    render(<CreatorServicesSettingsView connected service={service} modelService={createModelService()} />);
+
+    await screen.findByRole('heading', { name: 'AI 服务' });
+    await selectOption(screen.getByLabelText('供应商'), 'ollama');
+    expect(screen.getByLabelText('Base URL')).toHaveValue('http://localhost:11434/v1');
+    expect(screen.getByLabelText('API Key')).toHaveValue('ollama');
+    expect(screen.getByLabelText('模型')).toHaveValue('gemma4:latest');
+    const info = screen.getByTestId('llm-provider-info');
+    expect(info).toHaveTextContent('本机运行 · 无需账号');
+    expect(info).not.toHaveTextContent('尚未实测');
+    expect(screen.getByText('文本任务可用')).toBeInTheDocument();
+  });
+
+  it('shows the key link for a free-tier provider and loads its live model list', async () => {
+    const user = userEvent.setup();
+    const service = createService();
+    service.listLlmModels = vi.fn(async () => ({ models: ['llama-3.3-70b-versatile', 'openai/gpt-oss-120b', 'qwen/qwen3-next'] }));
+    render(<CreatorServicesSettingsView connected service={service} modelService={createModelService()} />);
+
+    await screen.findByRole('heading', { name: 'AI 服务' });
+    await selectOption(screen.getByLabelText('供应商'), 'groq');
+    expect(screen.getByTestId('llm-provider-info')).toHaveTextContent('有免费额度');
+    expect(screen.getByRole('link', { name: /获取 API Key/ })).toHaveAttribute('href', 'https://console.groq.com/keys');
+    await user.type(screen.getByLabelText('API Key'), 'gsk-test');
+
+    await user.click(screen.getByRole('button', { name: '从服务加载模型' }));
+    expect(service.listLlmModels).toHaveBeenCalledWith({ baseUrl: 'https://api.groq.com/openai/v1', apiKey: 'gsk-test' });
+    expect(await screen.findByText('已加载 3 个模型')).toBeInTheDocument();
+    await user.click(screen.getByRole('combobox', { name: '模型' }));
+    expect(screen.getByRole('option', { name: 'qwen/qwen3-next' })).toBeInTheDocument();
+  });
+
+  it('reports a failed model list request instead of showing stale models', async () => {
+    const user = userEvent.setup();
+    const service = createService();
+    service.listLlmModels = vi.fn(async () => { throw new Error('Model list request failed (HTTP 401)'); });
+    render(<CreatorServicesSettingsView connected service={service} modelService={createModelService()} />);
+
+    await screen.findByRole('heading', { name: 'AI 服务' });
+    await selectOption(screen.getByLabelText('供应商'), 'openrouter');
+    await user.click(screen.getByRole('button', { name: '从服务加载模型' }));
+    expect(await screen.findByRole('alert')).toHaveTextContent('Model list request failed (HTTP 401)');
+    expect(screen.queryByText(/个模型/)).not.toBeInTheDocument();
+  });
+
   it('does not report a custom provider ready from an unrelated API key login', async () => {
     render(
       <CreatorServicesSettingsView

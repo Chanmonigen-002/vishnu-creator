@@ -52,6 +52,13 @@ The creator text path calls `POST {baseUrl}/chat/completions` (`apps/daemon/src/
 
 None of these text providers documents a Khmer quality guarantee. Khmer translation quality must be checked per model with the real Khmer rules prompt (T8.5).
 
+Live results so far (2026-10-27, CLI-shaped request with `response_format: json_object` and `reasoning_effort: "none"`):
+
+| Provider | Model | HTTP | Khmer result | Time (CPU) |
+|---|---|---|---|---|
+| Ollama (local) | `gemma4:latest` | 200 | Correct: `ជំរាបសួរអ្នកទាំងអស់គ្នាសូមស្វាគមន៍មកកម្ពុជា។` | 92.7 s |
+| Ollama (local) | `qwen3:4b` | 200 | Valid JSON but **no Khmer text** | 19.2 s |
+
 ## Transcription, voice, image, video
 
 To be researched under T8.6–T8.9.

@@ -13,7 +13,7 @@ The master plan explains *why*; these files track *what is done*.
 | 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 10 | 2 | 6 | 2 | 0 | Phase 3 | **not met** | In progress |
 | 6 | [Extra creator studios](phase-6-creator-studios.md) | 5 | 0 | 0 | 0 | 5 | Phase 3 | — | Not started |
 | 7 | [Release](phase-7-release.md) | 7 | 0 | 0 | 0 | 7 | Phases 1–6 | — | Not started |
-| 8 | [More AI providers (free, paid, cloud, local)](phase-8-ai-providers.md) | 10 | 0 | 1 | 0 | 9 | Phase 3 | — | In progress |
+| 8 | [More AI providers (free, paid, cloud, local)](phase-8-ai-providers.md) | 10 | 1 | 4 | 0 | 5 | Phase 3 | — | In progress |
 
 ## Audit 2026-10-27
 

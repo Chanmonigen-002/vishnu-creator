@@ -28,6 +28,7 @@ import {
   Cloud,
   Eye,
   EyeOff,
+  ExternalLink,
   FileKey2,
   HardDriveDownload,
   Image,
@@ -493,6 +494,7 @@ export function CreatorServicesSettingsView(props: {
               }}
               providerId={modelProviderId}
               runtimeModelIds={runtimeModelIds}
+              listModels={props.service?.listLlmModels}
               onProviderIdChange={id => {
                 const preset = creatorProviderCatalogById.llm[id];
                 if (preset === undefined) return;
@@ -607,9 +609,34 @@ function TextModelSettings(props: SettingsGroupProps & {
   onProviderChange(value: OpenAiCompatibleConfig): void;
   providerId: string;
   runtimeModelIds: readonly string[];
+  listModels?: (input: { baseUrl: string; apiKey: string }) => Promise<{ models: string[] }>;
   onProviderIdChange(value: string): void;
 }) {
   const l = useLocalizedCopy();
+  const preset = creatorProviderCatalogById.llm[props.providerId];
+  const [liveModels, setLiveModels] = useState<string[]>();
+  const [loadingModels, setLoadingModels] = useState(false);
+  const [modelsError, setModelsError] = useState<string>();
+  // A different endpoint has a different model list.
+  useEffect(() => {
+    setLiveModels(undefined);
+    setModelsError(undefined);
+  }, [props.providerId, props.baseUrl]);
+  const loadModels = async () => {
+    if (props.listModels === undefined) return;
+    setLoadingModels(true);
+    setModelsError(undefined);
+    try {
+      const result = await props.listModels({ baseUrl: props.baseUrl, apiKey: props.apiKey });
+      setLiveModels(result.models);
+      if (result.models.length === 0) setModelsError(l('该服务未返回任何模型', 'The service returned no models'));
+    } catch (error) {
+      setLiveModels(undefined);
+      setModelsError(error instanceof Error && error.message ? error.message : l('无法加载模型列表', 'Could not load the model list'));
+    } finally {
+      setLoadingModels(false);
+    }
+  };
   const legacyApiKeyConfigured = props.config.llm.source === 'custom'
     && props.configuredCredentials.has('llm.apiKey');
   const providerApiKeyConfigured = props.provider?.apiKeyConfigured === true;
@@ -656,6 +683,20 @@ function TextModelSettings(props: SettingsGroupProps & {
             ))}
           </AppSelect>
         </label> : null}
+        {props.mode === 'custom' && preset !== undefined ? (
+          <div className="creator-services-provider-info is-wide" data-testid="llm-provider-info">
+            {preset.access === 'free-tier' ? <span className="creator-services-provider-badge is-free">{l('有免费额度', 'Free tier')}</span> : null}
+            {preset.access === 'paid' ? <span className="creator-services-provider-badge">{l('付费', 'Paid')}</span> : null}
+            {preset.access === 'local' ? <span className="creator-services-provider-badge is-local">{l('本机运行 · 无需账号', 'Runs on this PC · no account')}</span> : null}
+            {preset.status === 'experimental' ? <span className="creator-services-provider-badge is-warning">{l('尚未实测', 'Not yet verified')}</span> : null}
+            {preset.keyUrl !== undefined ? (
+              <a href={preset.keyUrl} target="_blank" rel="noreferrer">
+                {l('获取 API Key', 'Get API key')}
+                <ExternalLink size={13} aria-hidden="true" />
+              </a>
+            ) : null}
+          </div>
+        ) : null}
         {props.mode === 'custom' ? <OpenAiFields
           id="llm"
           credential="llm.apiKey"
@@ -666,9 +707,11 @@ function TextModelSettings(props: SettingsGroupProps & {
             model: props.model
           }}
           modelPlaceholder="gpt-5.6-sol"
-          modelSuggestions={props.providerId === 'openai' && props.runtimeModelIds.length > 0
+          modelSuggestions={liveModels !== undefined && liveModels.length > 0
+            ? liveModels
+            : props.providerId === 'openai' && props.runtimeModelIds.length > 0
             ? props.runtimeModelIds
-            : creatorProviderCatalogById.llm[props.providerId]?.models.map(model => model.id)}
+            : preset?.models.map(model => model.id)}
           errors={props.fieldErrors}
           onChange={props.onProviderChange}
         /> : (
@@ -680,6 +723,25 @@ function TextModelSettings(props: SettingsGroupProps & {
               : l(`已连接本机 Codex · ${props.provider.model || 'Runtime'}`, `Local Codex connected · ${props.provider.model || 'Runtime'}`)}
           </p>
         )}
+        {props.mode === 'custom' && props.listModels !== undefined ? (
+          <div className="creator-services-provider-models is-wide">
+            <button
+              className="settings-secondary-button"
+              type="button"
+              disabled={loadingModels || props.baseUrl.trim().length === 0}
+              onClick={() => { void loadModels(); }}
+            >
+              {loadingModels
+                ? <LoaderCircle className="creator-services-spinner" size={15} aria-hidden="true" />
+                : <RefreshCcw size={15} aria-hidden="true" />}
+              {loadingModels ? l('正在加载模型', 'Loading models') : l('从服务加载模型', 'Load models from service')}
+            </button>
+            {liveModels !== undefined && liveModels.length > 0 ? (
+              <span role="status">{l(`已加载 ${liveModels.length} 个模型`, `${liveModels.length} models loaded`)}</span>
+            ) : null}
+            {modelsError !== undefined ? <span className="is-warning" role="alert">{modelsError}</span> : null}
+          </div>
+        ) : null}
         <div className="creator-services-model-status is-wide" role="status">
           <span className={selectedModeAvailable ? '' : 'is-warning'}>
             <TextTaskStatusIcon size={15} aria-hidden="true" />

@@ -40,11 +40,12 @@ describe('creator provider catalog', () => {
   });
 
   it('keeps new text presets experimental until a live call is recorded (T8.5)', () => {
-    for (const id of ['openrouter', 'groq', 'gemini', 'anthropic', 'ollama', 'llamacpp']) {
+    for (const id of ['openrouter', 'groq', 'gemini', 'anthropic', 'llamacpp']) {
       expect(creatorProviderCatalogById.llm[id]?.status).toBe('experimental');
     }
     expect(creatorProviderCatalogById.llm.llamacpp?.defaultBaseUrl).toBe('http://127.0.0.1:9931/v1');
-    expect(creatorProviderCatalogById.llm.ollama).toMatchObject({ access: 'local', credentials: [], placeholderApiKey: 'ollama' });
+    // Ollama was verified with a live call on 2026-10-27.
+    expect(creatorProviderCatalogById.llm.ollama).toMatchObject({ status: 'supported', access: 'local', credentials: [], placeholderApiKey: 'ollama' });
   });
 
   it('describes Codex native image generation as credential-free and experimental', () => {
