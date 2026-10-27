@@ -6,8 +6,9 @@ import subprocess
 import tempfile
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import Optional
+from typing import AsyncGenerator, Optional
 
+import numpy as np
 from pydantic import BaseModel
 
 
@@ -382,6 +383,53 @@ class VoxCPM2Backend(TTSBackend):
             provider="voxcpm",
             voice_id=voice_id,
         )
+
+    async def synthesize_streaming(
+        self,
+        text: str,
+        voice_id: str,
+        speed: float = 1.0,
+        reference_audio: Optional[Path] = None,
+        reference_text: Optional[str] = None,
+    ) -> AsyncGenerator[bytes, None]:
+        """Stream audio chunks as they are generated."""
+        if not self.is_available():
+            raise RuntimeError("VoxCPM not installed")
+
+        import torch
+        import voxcpm
+
+        if self._model is None:
+            self._model = voxcpm.VoxCPM.from_pretrained(
+                self.model_path or "Mariya987/VoxCPM2",
+                device=self.device,
+                load_denoiser=False,
+            )
+
+            # Try to load Khmer LoRA
+            if not self._khmer_lora:
+                lora_path = self._resolve_khmer_lora()
+                if lora_path:
+                    self._model.load_lora(lora_path)
+                    self._khmer_lora = True
+
+        # Map speed to inference_timesteps and cfg_value
+        inference_timesteps = max(5, min(20, int(10 / speed)))
+        cfg_value = 2.0
+
+        # Stream audio chunks
+        async for chunk in self._model.generate_streaming(
+            text=text,
+            reference_wav_path=str(reference_audio) if reference_audio else None,
+            prompt_text=reference_text if reference_audio else None,
+            prompt_wav_path=str(reference_audio) if reference_audio else None,
+            inference_timesteps=inference_timesteps,
+            cfg_value=cfg_value,
+            max_len=4096,
+        ):
+            # Convert numpy array to bytes (16-bit PCM)
+            audio_bytes = (chunk * 32767).astype(np.int16).tobytes()
+            yield audio_bytes
 
     def is_available(self) -> bool:
         try:

@@ -156,6 +156,19 @@ class LoRATrainingListResponse(BaseModel):
     trainings: List[Dict[str, Any]]
 
 
+class TTSStreamingRequest(BaseModel):
+    text: str
+    voice_id: str
+    speed: float = 1.0
+    reference_audio: Optional[str] = None
+    reference_text: Optional[str] = None
+
+
+class TTSStreamingResponse(BaseModel):
+    ok: bool
+    message: str
+
+
 # ─── App State ───────────────────────────────────────────────────────────
 
 
@@ -527,6 +540,42 @@ async def design_voice(request: VoiceDesignRequest):
         audio_data_url=audio_data_url,
         duration=tts_result.duration,
         prompt=prompt,
+    )
+
+
+@app.post("/v1/tts/stream", response_class=StreamingResponse)
+async def stream_tts(request: TTSStreamingRequest):
+    """Stream TTS audio chunks as they are generated."""
+    if not request.text.strip():
+        raise HTTPException(400, "Text is required for streaming TTS")
+
+    from vishnu_dub.tts import get_tts_backend
+
+    tts_backend = get_tts_backend("voxcpm2")
+    if not hasattr(tts_backend, "synthesize_streaming"):
+        raise HTTPException(501, "Streaming TTS not supported by this TTS backend")
+
+    reference_audio = Path(request.reference_audio) if request.reference_audio else None
+    reference_text = request.reference_text
+
+    async def audio_generator():
+        async for chunk in tts_backend.synthesize_streaming(
+            text=request.text,
+            voice_id=request.voice_id,
+            speed=request.speed,
+            reference_audio=reference_audio,
+            reference_text=reference_text,
+        ):
+            yield chunk
+
+    return StreamingResponse(
+        audio_generator(),
+        media_type="audio/wav",
+        headers={
+            "Content-Disposition": "inline; filename=stream.wav",
+            "Cache-Control": "no-cache",
+            "X-Content-Type-Options": "nosniff",
+        },
     )
 
 
