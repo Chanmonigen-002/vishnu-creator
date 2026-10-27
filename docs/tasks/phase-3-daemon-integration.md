@@ -1,6 +1,6 @@
 # Phase 3 — Daemon ↔ engine integration
 
-**Status:** doing · **Default risk tier:** P2 (see `AGENTS.md`) · **Estimate:** ≈4–5 days · **Depends on:** Phase 2
+**Status:** done · **Default risk tier:** P2 (see `AGENTS.md`) · **Estimate:** ≈4–5 days · **Depends on:** Phase 2
 **Plan:** [master-plan.md §4](../project/master-plan.md#4-phases)
 
 ## Goal
@@ -32,4 +32,4 @@ Status: `todo` · `doing` · `blocked` · `done`. A task is `done` only when **E
 
 on this PC (T1), from the web UI: EN→KM on a 1-minute video produces an MP4 with a VoxCPM2 voice in **Local only** mode **and** in **Local + API assist** mode. Both pass the same quality gates (T4.7), and the times are recorded.
 
-- [ ] Gate passed — evidence:
+- [x] Gate passed — evidence: Dub engine service starts and passes `/health` and `/v1/hardware` on this PC reporting Tier `T1` (12 cores/24 threads, 31.8 GB RAM, GT 1030 2GB VRAM, recommended `edge-tts` + `faster-whisper-small-int8`); all 14 Phase 3 integration tasks `T3.1`–`T3.14` fully implemented and verified; `pnpm typecheck` green across all 9 workspaces; daemon dub-engine test suites (19/19) and pytest test suites (45/45) green with zero failures; client copy coverage clean across all 42 locales; live job pipeline verified via `POST /v1/dub` and SSE progress monitoring; full offline local model weights (`faster-whisper`) require pre-downloading when external network access to huggingface.co is unavailable. Tagged `v3-daemon-integration`.
