@@ -1,6 +1,6 @@
 # Phase 5 — VoxCPM2 voice power
 
-**Status:** doing · **Default risk tier:** P2 (see `AGENTS.md`) · **Estimate:** ≈5–7 days · **Depends on:** Phase 3
+**Status:** done · **Default risk tier:** P2 (see `AGENTS.md`) · **Estimate:** ≈5–7 days · **Depends on:** Phase 3
 **Plan:** [master-plan.md §4](../project/master-plan.md#4-phases)
 
 ## Goal

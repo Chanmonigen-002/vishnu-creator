@@ -10,7 +10,7 @@ The master plan explains *why*; these files track *what is done*.
 | 2 | [Bring the dub engine into the repo](phase-2-dub-engine-service.md) | 15 | Phase 0 · ADR-0005 (accepted) | done |
 | 3 | [Daemon ↔ engine integration](phase-3-daemon-integration.md) | 14 | Phase 2 | done |
 | 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | Phase 3 | done |
-| 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 9 | Phase 3 | doing |
+| 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 9 | Phase 3 | done |
 | 6 | [Extra creator studios](phase-6-creator-studios.md) | 5 | Phase 3 | Not started |
 | 7 | [Release](phase-7-release.md) | 7 | Phases 1–6 | Not started |
 
