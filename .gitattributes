@@ -1,4 +1,7 @@
 * text=auto eol=lf
+# Windows cmd needs CRLF; with LF, goto labels can be missed.
+*.bat text eol=crlf
+*.cmd text eol=crlf
 *.png binary
 *.ico binary
 *.icns binary

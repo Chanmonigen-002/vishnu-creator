@@ -5,11 +5,21 @@ import {
   parseRuntimeChannel,
   prepareSchedulerStartup,
   requiresPaidStartupProbe,
+  resolveDaemonListenPort,
   resolveProductionRuntimePaths,
   resolveProductionServerEnvironment
 } from '../../src/startup.js';
 
 describe('daemon production startup', () => {
+  it('listens on a random port unless VISHNUCREATOR_DAEMON_PORT sets a valid one', () => {
+    expect(resolveDaemonListenPort({})).toBe(0);
+    expect(resolveDaemonListenPort({ VISHNUCREATOR_DAEMON_PORT: '  ' })).toBe(0);
+    expect(resolveDaemonListenPort({ VISHNUCREATOR_DAEMON_PORT: '19862' })).toBe(19862);
+    for (const invalid of ['0', '65536', '18789.5', 'abc', '-1']) {
+      expect(() => resolveDaemonListenPort({ VISHNUCREATOR_DAEMON_PORT: invalid })).toThrow('VISHNUCREATOR_DAEMON_PORT');
+    }
+  });
+
   it('requires explicit paid-test opt-in instead of charging for desktop readiness checks', () => {
     expect(requiresPaidStartupProbe({ VISHNUCREATOR_REQUIRE_CODEX_PROBE: '1' })).toBe(false);
     expect(requiresPaidStartupProbe({ VISHNUCREATOR_ENABLE_PAID_STARTUP_PROBE: '1' })).toBe(false);

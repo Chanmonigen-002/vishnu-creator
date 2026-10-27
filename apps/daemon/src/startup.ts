@@ -81,6 +81,22 @@ export function resolveProductionServerEnvironment(
   };
 }
 
+/**
+ * Port the daemon listens on. Unset means a random free port (0), which the
+ * Web dev server and Desktop shell discover from the daemon's startup output.
+ * A fixed port gives the dev stack a stable API address (e.g. 19862, away from
+ * other local tools such as OpenClaw on 18789).
+ */
+export function resolveDaemonListenPort(env: NodeJS.ProcessEnv = process.env): number {
+  const value = env.VISHNUCREATOR_DAEMON_PORT?.trim();
+  if (!value) return 0;
+  const port = Number(value);
+  if (!Number.isInteger(port) || port < 1 || port > 65_535) {
+    throw new Error(`VISHNUCREATOR_DAEMON_PORT must be a port number from 1 to 65535, got "${value}"`);
+  }
+  return port;
+}
+
 export function createProductionServerInput(
   input: Omit<BuildServerInput, 'schedulerAutostart'>
 ): BuildServerInput {

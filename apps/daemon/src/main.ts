@@ -34,6 +34,7 @@ import {
   createProductionServerInput,
   parseRuntimeChannel,
   requiresPaidStartupProbe,
+  resolveDaemonListenPort,
   resolveProductionRuntimePaths,
   resolveProductionServerEnvironment
 } from './startup.js';
@@ -191,7 +192,7 @@ async function main(): Promise<void> {
     codexHome,
     localCodexHome
   }));
-  const address = await server.listen({ host: '127.0.0.1', port: 0 });
+  const address = await server.listen({ host: '127.0.0.1', port: resolveDaemonListenPort() });
   capabilityResolution.startBackgroundRefresh();
 
   installGracefulShutdown({
