@@ -33,10 +33,20 @@ describe('creator provider catalog', () => {
 
   it('marks only implemented providers as supported', () => {
     expect(creatorProviderCatalog.some(entry => entry.status === 'planned')).toBe(false);
+    // Phase 8 presets stay experimental until a live call is recorded (T8.5, T8.7).
+    const phase8Voices = ['azure', 'elevenlabs', 'fishaudio'];
     expect(creatorProviderCatalog
-      .filter(entry => entry.kind !== 'llm' && entry.id !== 'codex-native')
+      .filter(entry => entry.kind !== 'llm' && entry.id !== 'codex-native' && !phase8Voices.includes(entry.id))
       .every(entry => entry.status === 'supported')).toBe(true);
     expect(creatorProviderCatalogById.image.gemini?.status).toBe('supported');
+  });
+
+  it('keeps new voice presets experimental and labels Khmer support only where documented (T8.7)', () => {
+    const voices = creatorProviderCatalog.filter(entry => entry.kind === 'tts');
+    const byId = Object.fromEntries(voices.map(entry => [entry.id, entry]));
+    for (const id of ['azure', 'elevenlabs', 'fishaudio']) expect(byId[id]?.status).toBe('experimental');
+    expect(voices.filter(entry => entry.capabilities?.includes('khmer')).map(entry => entry.id)).toEqual(['azure']);
+    expect(byId.fishaudio?.models[0]?.id).toBe('s2.1-pro-free');
   });
 
   it('keeps new text presets experimental until a live call is recorded (T8.5)', () => {

@@ -683,20 +683,7 @@ function TextModelSettings(props: SettingsGroupProps & {
             ))}
           </AppSelect>
         </label> : null}
-        {props.mode === 'custom' && preset !== undefined ? (
-          <div className="creator-services-provider-info is-wide" data-testid="llm-provider-info">
-            {preset.access === 'free-tier' ? <span className="creator-services-provider-badge is-free">{l('有免费额度', 'Free tier')}</span> : null}
-            {preset.access === 'paid' ? <span className="creator-services-provider-badge">{l('付费', 'Paid')}</span> : null}
-            {preset.access === 'local' ? <span className="creator-services-provider-badge is-local">{l('本机运行 · 无需账号', 'Runs on this PC · no account')}</span> : null}
-            {preset.status === 'experimental' ? <span className="creator-services-provider-badge is-warning">{l('尚未实测', 'Not yet verified')}</span> : null}
-            {preset.keyUrl !== undefined ? (
-              <a href={preset.keyUrl} target="_blank" rel="noreferrer">
-                {l('获取 API Key', 'Get API key')}
-                <ExternalLink size={13} aria-hidden="true" />
-              </a>
-            ) : null}
-          </div>
-        ) : null}
+        {props.mode === 'custom' ? <ProviderInfo kind="llm" providerId={props.providerId} /> : null}
         {props.mode === 'custom' ? <OpenAiFields
           id="llm"
           credential="llm.apiKey"
@@ -1079,13 +1066,16 @@ function TtsSettings(props: SettingsGroupProps) {
           ['minimax', 'MiniMax'],
           ['aliyun', l('阿里云百炼', 'Alibaba Cloud Model Studio')],
           ['volcengine', l('火山引擎', 'Volcengine')],
-          ['edge-tts', 'Edge TTS']
+          ['edge-tts', 'Edge TTS'],
+          ['azure', 'Azure Speech'],
+          ['elevenlabs', 'ElevenLabs'],
+          ['fishaudio', 'Fish Audio']
         ]}
         onChange={value => props.update(config => {
           config.tts.provider = value as CreatorServicesConfig['tts']['provider'];
           const preset = creatorProviderOfKind('tts', value);
           if (preset?.defaultBaseUrl !== undefined && value !== 'edge-tts') {
-            const target = config.tts[value as 'openai' | 'minimax' | 'aliyun'];
+            const target = config.tts[value as 'openai' | 'minimax' | 'aliyun' | 'azure' | 'elevenlabs' | 'fishaudio'];
             target.baseUrl = target.baseUrl || preset.defaultBaseUrl;
             if (!target.model && preset.models[0] !== undefined) target.model = preset.models[0].id;
           }
@@ -1153,6 +1143,40 @@ function TtsSettings(props: SettingsGroupProps) {
           </p>
         </>
       ) : null}
+      {provider === 'azure' || provider === 'elevenlabs' || provider === 'fishaudio' ? (
+        <>
+          <ProviderInfo kind="tts" providerId={provider} />
+          <OpenAiFields
+            id={`tts-${provider}`}
+            credential={`tts.${provider}.apiKey`}
+            configuredCredentials={props.configuredCredentials}
+            value={props.config.tts[provider]}
+            modelLabel={provider === 'azure' ? l('音质', 'Audio quality') : undefined}
+            modelPlaceholder={creatorProviderOfKind('tts', provider)?.models[0]?.id ?? ''}
+            modelSuggestions={creatorProviderOfKind('tts', provider)?.models.map(model => model.id)}
+            baseUrlPlaceholder={creatorProviderOfKind('tts', provider)?.defaultBaseUrl}
+            onChange={value => props.update(config => {
+              config.tts[provider] = { ...config.tts[provider], ...value };
+            })}
+          />
+          <p className="creator-services-inline-note">
+            {provider === 'azure'
+              ? l(
+                '使用 Azure 语音资源的密钥，Base URL 为资源所在区域，例如 https://southeastasia.tts.speech.microsoft.com。内置高棉语音色 Sreymom 和 Piseth；也可以填写其他 Azure 音色名称（如 en-US-JennyNeural）。',
+                'Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).'
+              )
+              : provider === 'elevenlabs'
+              ? l(
+                'ElevenLabs 目前没有任何模型支持高棉语。适合英语和其他语言。',
+                'No ElevenLabs model currently supports Khmer. Use it for English and other languages.'
+              )
+              : l(
+                's2.1-pro-free 为免费开发者模型。音色为 Fish Audio 的模型 ID，可从列表选择或直接填写。高棉语支持尚未确认，请先试听。',
+                's2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.'
+              )}
+          </p>
+        </>
+      ) : null}
       {provider !== 'edge-tts' ? (
         <div className="creator-services-tts-voice">
           <TtsVoicePicker
@@ -1161,7 +1185,7 @@ function TtsSettings(props: SettingsGroupProps) {
             model={props.config.tts[provider].model}
             value={props.config.tts[provider].defaultVoiceId}
             service={props.service ?? null}
-            allowCustomVoice={provider === 'volcengine'}
+            allowCustomVoice={provider === 'volcengine' || provider === 'azure' || provider === 'elevenlabs' || provider === 'fishaudio'}
             onChange={voiceId => props.update(config => {
               config.tts[provider].defaultVoiceId = voiceId;
             })}
@@ -1273,6 +1297,29 @@ function SettingsFieldset(props: { title: string; description: string; children:
       <p>{props.description}</p>
       <div className="creator-services-grid">{props.children}</div>
     </fieldset>
+  );
+}
+
+/** Cost, verification and key-page details for a catalog provider. */
+function ProviderInfo(props: { kind: 'llm' | 'tts'; providerId: string }) {
+  const l = useLocalizedCopy();
+  const preset = creatorProviderOfKind(props.kind, props.providerId);
+  if (preset === undefined) return null;
+  const khmer = preset.capabilities?.includes('khmer') === true;
+  return (
+    <div className="creator-services-provider-info is-wide" data-testid={`${props.kind}-provider-info`}>
+      {preset.access === 'free-tier' ? <span className="creator-services-provider-badge is-free">{l('有免费额度', 'Free tier')}</span> : null}
+      {preset.access === 'paid' ? <span className="creator-services-provider-badge">{l('付费', 'Paid')}</span> : null}
+      {preset.access === 'local' ? <span className="creator-services-provider-badge is-local">{l('本机运行 · 无需账号', 'Runs on this PC · no account')}</span> : null}
+      {khmer ? <span className="creator-services-provider-badge is-free">{l('支持高棉语', 'Khmer voices')}</span> : null}
+      {preset.status === 'experimental' ? <span className="creator-services-provider-badge is-warning">{l('尚未实测', 'Not yet verified')}</span> : null}
+      {preset.keyUrl !== undefined ? (
+        <a href={preset.keyUrl} target="_blank" rel="noreferrer">
+          {l('获取 API Key', 'Get API key')}
+          <ExternalLink size={13} aria-hidden="true" />
+        </a>
+      ) : null}
+    </div>
   );
 }
 

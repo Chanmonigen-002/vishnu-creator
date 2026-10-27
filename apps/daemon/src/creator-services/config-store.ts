@@ -3,7 +3,7 @@ import type {
   CreatorServicesConfigResponse,
   CreatorServicesCredentialField
 } from '@vishnucreator/protocol';
-import { createDefaultCreatorServicesConfig, migrateOpenAiImageModel } from '@vishnucreator/protocol';
+import { createDefaultCreatorServicesConfig, creatorTtsProviders, migrateOpenAiImageModel } from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 import {
   readVishnuCreatorConfig,
@@ -125,14 +125,18 @@ const volcengineTtsSchema = z.object({
   appId: value.appId
 }));
 const ttsConfigSchema = z.object({
-  provider: z.enum(['openai', 'aliyun', 'edge-tts', 'minimax', 'volcengine']),
+  provider: z.enum(creatorTtsProviders),
   openai: ttsProviderSchema(creatorServicesDefaults.tts.openai.defaultVoiceId),
   minimax: ttsProviderSchema(creatorServicesDefaults.tts.minimax.defaultVoiceId),
   aliyun: z.union([
     ttsProviderSchema(creatorServicesDefaults.tts.aliyun.defaultVoiceId),
     legacyAliyunTtsSchema
   ]),
-  volcengine: volcengineTtsSchema.default(creatorServicesDefaults.tts.volcengine)
+  volcengine: volcengineTtsSchema.default(creatorServicesDefaults.tts.volcengine),
+  // Added in Phase 8 (T8.7); older saved configs do not have these blocks.
+  azure: ttsProviderSchema(creatorServicesDefaults.tts.azure.defaultVoiceId).default(creatorServicesDefaults.tts.azure),
+  elevenlabs: ttsProviderSchema(creatorServicesDefaults.tts.elevenlabs.defaultVoiceId).default(creatorServicesDefaults.tts.elevenlabs),
+  fishaudio: ttsProviderSchema(creatorServicesDefaults.tts.fishaudio.defaultVoiceId).default(creatorServicesDefaults.tts.fishaudio)
 }).strict();
 
 export const creatorServicesConfigSchema = z.object({
@@ -348,6 +352,9 @@ const creatorCredentialPaths = [
   'tts.aliyun.apiKey',
   'tts.volcengine.appId',
   'tts.volcengine.accessToken',
+  'tts.azure.apiKey',
+  'tts.elevenlabs.apiKey',
+  'tts.fishaudio.apiKey',
   'image.openai.apiKey',
   'image.jimeng.apiKey',
   'image.kling.accessKey',
@@ -449,6 +456,9 @@ export function presentCreatorServicesConfig(
   redact('tts.aliyun.apiKey', redacted.tts.aliyun.apiKey, () => { redacted.tts.aliyun.apiKey = ''; });
   redact('tts.volcengine.appId', redacted.tts.volcengine.appId, () => { redacted.tts.volcengine.appId = ''; });
   redact('tts.volcengine.accessToken', redacted.tts.volcengine.accessToken, () => { redacted.tts.volcengine.accessToken = ''; });
+  redact('tts.azure.apiKey', redacted.tts.azure.apiKey, () => { redacted.tts.azure.apiKey = ''; });
+  redact('tts.elevenlabs.apiKey', redacted.tts.elevenlabs.apiKey, () => { redacted.tts.elevenlabs.apiKey = ''; });
+  redact('tts.fishaudio.apiKey', redacted.tts.fishaudio.apiKey, () => { redacted.tts.fishaudio.apiKey = ''; });
   redact('image.openai.apiKey', redacted.image.openai.apiKey, () => { redacted.image.openai.apiKey = ''; });
   redact('image.jimeng.apiKey', redacted.image.jimeng.apiKey, () => { redacted.image.jimeng.apiKey = ''; });
   redact('image.kling.accessKey', redacted.image.kling.accessKey, () => { redacted.image.kling.accessKey = ''; });
@@ -497,6 +507,9 @@ export function retainCreatorServicesCredentials(
   retainBlank(() => merged.tts.aliyun.apiKey, value => { merged.tts.aliyun.apiKey = value; }, current.tts.aliyun.apiKey);
   retainBlank(() => merged.tts.volcengine.appId, value => { merged.tts.volcengine.appId = value; }, current.tts.volcengine.appId);
   retainBlank(() => merged.tts.volcengine.accessToken, value => { merged.tts.volcengine.accessToken = value; }, current.tts.volcengine.accessToken);
+  retainBlank(() => merged.tts.azure.apiKey, value => { merged.tts.azure.apiKey = value; }, current.tts.azure.apiKey);
+  retainBlank(() => merged.tts.elevenlabs.apiKey, value => { merged.tts.elevenlabs.apiKey = value; }, current.tts.elevenlabs.apiKey);
+  retainBlank(() => merged.tts.fishaudio.apiKey, value => { merged.tts.fishaudio.apiKey = value; }, current.tts.fishaudio.apiKey);
   retainBlank(() => merged.image.openai.apiKey, value => { merged.image.openai.apiKey = value; }, current.image.openai.apiKey);
   retainBlank(() => merged.image.jimeng.apiKey, value => { merged.image.jimeng.apiKey = value; }, current.image.jimeng.apiKey);
   retainBlank(() => merged.image.kling.accessKey, value => { merged.image.kling.accessKey = value; }, current.image.kling.accessKey);

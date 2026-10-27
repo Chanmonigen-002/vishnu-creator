@@ -35,6 +35,40 @@ describe('CreatorServicesConfigStore', () => {
     expect((await store.read()).image.openai.apiKey).toBe('image-secret');
   });
 
+  it('loads configs saved before the Phase 8 voice providers and keeps their keys private', async () => {
+    const current = createDefaultCreatorServicesConfig();
+    const { azure: _azure, elevenlabs: _elevenlabs, fishaudio: _fishaudio, ...oldTts } = current.tts;
+    let saved = JSON.stringify({ ...current, tts: oldTts });
+    const store = createCreatorServicesConfigStore({
+      getPassword: async () => saved,
+      setPassword: async value => { saved = value; },
+      deletePassword: async () => undefined
+    });
+
+    const loaded = await store.read();
+    expect(loaded.tts.azure).toEqual(current.tts.azure);
+    expect(loaded.tts.elevenlabs).toEqual(current.tts.elevenlabs);
+    expect(loaded.tts.fishaudio).toEqual(current.tts.fishaudio);
+
+    loaded.tts.provider = 'azure';
+    loaded.tts.azure.apiKey = 'azure-secret';
+    loaded.tts.elevenlabs.apiKey = 'eleven-secret';
+    loaded.tts.fishaudio.apiKey = 'fish-secret';
+    await store.write(loaded);
+    const reloaded = await store.read();
+    expect(reloaded.tts.provider).toBe('azure');
+    expect(reloaded.tts.azure.apiKey).toBe('azure-secret');
+
+    const presented = presentCreatorServicesConfig(reloaded);
+    expect(presented.config.tts.azure.apiKey).toBe('');
+    expect(presented.config.tts.elevenlabs.apiKey).toBe('');
+    expect(presented.config.tts.fishaudio.apiKey).toBe('');
+    expect(presented.configuredCredentials).toEqual(expect.arrayContaining(['tts.azure.apiKey', 'tts.elevenlabs.apiKey', 'tts.fishaudio.apiKey']));
+
+    const blankKeys = structuredClone(presented.config);
+    expect(retainCreatorServicesCredentials(blankKeys, reloaded).tts.fishaudio.apiKey).toBe('fish-secret');
+  });
+
   it('migrates legacy OSS settings and retains a custom region and endpoint across reloads', async () => {
     const legacy = createDefaultCreatorServicesConfig();
     const { region: _region, endpoint: _endpoint, ...oldOss } = legacy.transcription.aliyun.oss;

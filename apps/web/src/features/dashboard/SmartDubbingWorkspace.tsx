@@ -1,4 +1,5 @@
 import {
+  isCreatorTtsProvider,
   smartDubbingStyles, gatewayModelDisplayName, gatewayModelIdMatches,
   estimateDubJob, formatEstimateDuration, formatEstimateCost,
   type CreatorArtifact,
@@ -536,7 +537,7 @@ function readLatestResult(artifacts: CreatorArtifact[]): DubbingResult | undefin
     artifact,
     fileName: readString(metadata.fileName) || `Vishnu Creator-dubbing.${readFormat(metadata.format)}`,
     size: readNonNegativeNumber(metadata.bytes),
-    provider: provider === 'aliyun' || provider === 'minimax' || provider === 'volcengine' ? provider : 'openai',
+    provider: provider !== undefined && provider !== 'edge-tts' ? provider : 'openai',
     model: readString(metadata.model),
     voice: readString(metadata.voiceCode),
     voiceName: readString(metadata.voiceName) || readString(metadata.voiceCode),
@@ -588,9 +589,7 @@ function readString(value: CreatorJson | undefined): string {
 }
 
 function readProvider(value: CreatorJson | undefined): CreatorTtsProvider | undefined {
-  return value === 'openai' || value === 'aliyun' || value === 'minimax' || value === 'edge-tts' || value === 'volcengine'
-    ? value
-    : undefined;
+  return isCreatorTtsProvider(value) ? value : undefined;
 }
 
 function readStyle(value: CreatorJson | undefined): SmartDubbingStyle {

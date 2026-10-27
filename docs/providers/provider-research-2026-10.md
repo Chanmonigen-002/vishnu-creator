@@ -59,6 +59,20 @@ Live results so far (2026-10-27, CLI-shaped request with `response_format: json_
 | Ollama (local) | `gemma4:latest` | 200 | Correct: `ជំរាបសួរអ្នកទាំងអស់គ្នាសូមស្វាគមន៍មកកម្ពុជា។` | 92.7 s |
 | Ollama (local) | `qwen3:4b` | 200 | Valid JSON but **no Khmer text** | 19.2 s |
 
-## Transcription, voice, image, video
+## Voice / TTS (T8.7) — checked 2026-10-27
 
-To be researched under T8.6–T8.9.
+| Provider | Khmer | Endpoint and auth | Cost | Get a key | Decision | Source |
+|---|---|---|---|---|---|---|
+| **Azure Speech** | ✅ `km-KH-SreymomNeural` (female), `km-KH-PisethNeural` (male) | `POST https://{region}.tts.speech.microsoft.com/cognitiveservices/v1`, header `Ocp-Apim-Subscription-Key`, SSML body, `X-Microsoft-OutputFormat` (e.g. `audio-24khz-96kbitrate-mono-mp3`, `audio-48khz-192kbitrate-mono-mp3`, `riff-24khz-16bit-mono-pcm`), `User-Agent` | Free F0 tier: 0.5 million characters/month (neural); paid beyond | Azure portal → Speech resource → Keys and Endpoint | **Built** | [language support](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/language-support?tabs=tts), [REST TTS](https://learn.microsoft.com/en-us/azure/ai-services/speech-service/rest-text-to-speech), [pricing](https://azure.microsoft.com/en-us/pricing/details/speech/) |
+| **ElevenLabs** | ❌ not in any model's language list | `POST https://api.elevenlabs.io/v1/text-to-speech/{voice_id}?output_format=…`, header `xi-api-key`, JSON `text`, `model_id`, `voice_settings.speed`; voices `GET /v2/voices` | Paid (some formats need paid tier) | [API keys docs](https://elevenlabs.io/docs/overview/administration/workspaces/api-keys) | **Built** (non-Khmer languages) | [convert](https://elevenlabs.io/docs/api-reference/text-to-speech/convert), [models](https://elevenlabs.io/docs/overview/models), [voices](https://elevenlabs.io/docs/api-reference/voices/search), [auth](https://elevenlabs.io/docs/api-reference/authentication) |
+| **Fish Audio** | ❓ S2.1 supports 83 languages; list not published | `POST https://api.fish.audio/v1/tts`, `Authorization: Bearer`, header `model` (`s2.1-pro-free`, `s2.1-pro`, `s2-pro`, `s1`, `drama-3`), JSON `text`, `reference_id`, `format`, `prosody.speed`; voices `GET https://api.fish.audio/model` | Free developer model `s2.1-pro-free` ($0, no TTFA/DPA guarantees); paid models | https://fish.audio/app/api-keys | **Built** — test Khmer live | [TTS](https://docs.fish.audio/api-reference/endpoint/openapi-v1/text-to-speech), [list models](https://docs.fish.audio/api-reference/endpoint/model/list-models), [models](https://docs.fish.audio/developer-guide/models-pricing/models-overview), [quickstart](https://docs.fish.audio/developer-guide/getting-started/quickstart) |
+| Google Cloud TTS | ❌ no `km-KH` in the voice list | `POST https://texttospeech.googleapis.com/v1/text:synthesize`; docs show OAuth (`gcloud auth print-access-token`), API-key use for TTS not documented | — | — | **Not built**: no Khmer, and API-key auth unconfirmed | [voices](https://docs.cloud.google.com/text-to-speech/docs/list-voices-and-types), [synthesize](https://docs.cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize), [quickstart](https://docs.cloud.google.com/text-to-speech/docs/create-audio-text-command-line) |
+| Local VoxCPM2 (dub engine) | ✅ per VoxCPM README | Engine `/v1/tts/*` | Free, local | — | **Waits on T5.1** (no model weights downloaded) | `services/dub-engine` |
+
+Notes:
+- Azure documents a full voice list only on per-resource endpoints (`https://{resource}.cognitiveservices.azure.com/tts/cognitiveservices/voices/list`). The preset uses the regional endpoint, so it ships the two documented Khmer voices and lets users type any other Azure voice name.
+- These providers work in **Text to Speech, Smart Dubbing and stick-figure videos** (TypeScript speech service). **Video translation** dubs inside the `vishnuai` CLI, which only supports OpenAI, Alibaba, Edge TTS, MiniMax and Volcengine; preflight blocks the new providers there with a clear message (follow-up task T8.11).
+
+## Transcription, image, video
+
+To be researched under T8.6, T8.8 and T8.9.

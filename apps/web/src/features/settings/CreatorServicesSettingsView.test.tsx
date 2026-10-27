@@ -448,6 +448,39 @@ describe('CreatorServicesSettingsView', () => {
     expect(screen.queryByLabelText('API Key')).not.toBeInTheDocument();
   });
 
+  it('configures the Phase 8 voice providers with honest Khmer and cost labels', async () => {
+    const user = userEvent.setup();
+    const service = createService();
+    render(<CreatorServicesSettingsView connected service={service} modelService={createModelService()} initialSection="tts" />);
+
+    await user.click(await screen.findByRole('combobox', { name: '服务商' }));
+    await user.click(screen.getByRole('option', { name: 'Azure Speech' }));
+    const azureInfo = screen.getByTestId('tts-provider-info');
+    expect(azureInfo).toHaveTextContent('有免费额度');
+    expect(azureInfo).toHaveTextContent('支持高棉语');
+    expect(azureInfo).toHaveTextContent('尚未实测');
+    expect(screen.getByLabelText('Base URL')).toHaveValue('https://southeastasia.tts.speech.microsoft.com');
+    expect(screen.getByLabelText('音质')).toHaveValue('24khz');
+    expect(screen.getByText(/内置高棉语音色 Sreymom 和 Piseth/)).toBeInTheDocument();
+
+    await user.click(screen.getByRole('combobox', { name: '服务商' }));
+    await user.click(screen.getByRole('option', { name: 'ElevenLabs' }));
+    expect(screen.getByTestId('tts-provider-info')).not.toHaveTextContent('支持高棉语');
+    expect(screen.getByText('ElevenLabs 目前没有任何模型支持高棉语。适合英语和其他语言。')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('combobox', { name: '服务商' }));
+    await user.click(screen.getByRole('option', { name: 'Fish Audio' }));
+    expect(screen.getByLabelText('模型')).toHaveValue('s2.1-pro-free');
+    expect(screen.getByRole('link', { name: /获取 API Key/ })).toHaveAttribute('href', 'https://fish.audio/app/api-keys');
+    await user.type(screen.getByLabelText('API Key'), 'fish-key');
+
+    await user.click(screen.getByRole('button', { name: '保存配置' }));
+    await waitFor(() => expect(service.saveConfig).toHaveBeenCalled());
+    const saved = vi.mocked(service.saveConfig).mock.lastCall![0];
+    expect(saved.tts.provider).toBe('fishaudio');
+    expect(saved.tts.fishaudio).toMatchObject({ apiKey: 'fish-key', baseUrl: 'https://api.fish.audio', model: 's2.1-pro-free' });
+  });
+
   it('confirms before saving a newly selected local Whisper provider', async () => {
     const user = userEvent.setup();
     const service = createService();
