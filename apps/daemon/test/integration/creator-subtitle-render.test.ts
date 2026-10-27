@@ -32,6 +32,12 @@ const fontManifestPath = join(runtimeRoot, 'fonts', 'manifest.json');
 const hasPackagedRuntime = [cliPath, ffmpegPath, fontManifestPath].every(existsSync);
 const roots: string[] = [];
 
+// ffmpeg filter options treat `\` as an escape and `:` as a separator, so
+// Windows paths (C:\...) need forward slashes and an escaped drive colon.
+function filterPath(path: string): string {
+  return path.replaceAll('\\', '/').replaceAll(':', '\\:');
+}
+
 afterAll(() => {
   for (const root of roots) rmSync(root, { recursive: true, force: true });
 });
@@ -73,7 +79,7 @@ describe.runIf(hasPackagedRuntime)('Creator packaged subtitle rendering', () => 
       const assPath = join(root, `${enabled}.ass`);
       writeFileSync(assPath, bundle.ass);
       frames.push(run(ffmpegPath, ['-v', 'error', '-f', 'lavfi', '-i', 'color=c=black@0:s=1920x1080:d=1,format=rgba',
-        '-ss', '0.5', '-vf', `ass=filename='${assPath}':fontsdir='${join(runtimeRoot, 'fonts')}':alpha=1`,
+        '-ss', '0.5', '-vf', `ass=filename='${filterPath(assPath)}':fontsdir='${filterPath(join(runtimeRoot, 'fonts'))}':alpha=1`,
         '-frames:v', '1', '-f', 'rawvideo', '-pix_fmt', 'rgba', 'pipe:1'], null));
     }
     const countPixels = (frame: Buffer, predicate: (r: number, alpha: number) => boolean) => {
@@ -108,7 +114,7 @@ describe.runIf(hasPackagedRuntime)('Creator packaged subtitle rendering', () => 
     const assPath = result.assPath;
     const frame = run(ffmpegPath, [
       '-v', 'error', '-f', 'lavfi', '-i', `color=c=0x202020:s=${width}x${height}:d=2,format=rgba`, '-ss', '0.5',
-      '-vf', `ass=filename='${assPath}':fontsdir='${join(runtimeRoot, 'fonts')}'`,
+      '-vf', `ass=filename='${filterPath(assPath)}':fontsdir='${filterPath(join(runtimeRoot, 'fonts'))}'`,
       '-frames:v', '1', '-f', 'rawvideo', '-pix_fmt', 'rgb24', 'pipe:1'
     ], null);
     let changedPixels = 0;
