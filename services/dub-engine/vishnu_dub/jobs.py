@@ -548,12 +548,19 @@ class JobManager:
             for idx, seg in enumerate(km_segments):
                 seg_path = tts_dir / f"seg_{idx:04d}.mp3"
                 if not seg_path.exists() or seg_path.stat().st_size == 0:
+                    # Only cloning backends (VoxCPM2) accept reference_audio; the
+                    # TTSBackend contract and the Edge/OpenAI backends do not.
+                    clone_kwargs = (
+                        {"reference_audio": Path(job.reference_audio_path)}
+                        if job.reference_audio_path
+                        else {}
+                    )
                     await tts_backend.synthesize(
                         seg["text"],
                         voice_id=voice_id,
                         output_path=seg_path,
                         speed=job.tts_speed,
-                        reference_audio=Path(job.reference_audio_path) if job.reference_audio_path else None,
+                        **clone_kwargs,
                     )
                     synthesized_any = True
                 segment_files.append(seg_path)

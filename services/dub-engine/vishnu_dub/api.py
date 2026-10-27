@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import psutil
-from fastapi import FastAPI, HTTPException, Request
+from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
@@ -106,6 +106,16 @@ class ResynthesizeSegmentResponse(BaseModel):
 
 
 class VoiceDesignRequest(BaseModel):
+    prompt: str
+    speed: float = 1.0
+
+
+class VoiceDesignResponse(BaseModel):
+    ok: bool
+    audio_url: str
+    audio_data_url: Optional[str] = None
+    duration: float
+    prompt: str
 
 
 class LoRATrainingRequest(BaseModel):
@@ -739,10 +749,23 @@ async def download_artifact(job_id: str, filename: str):
     if not path:
         raise HTTPException(404, f"Artifact '{safe_filename}' not available for this job")
 
+    if safe_filename.endswith(".srt"):
+        media_type = "text/plain; charset=utf-8"
+    elif safe_filename.endswith(".mp3"):
+        media_type = "audio/mpeg"
+    else:
+        media_type = "audio/wav"
+
+    return FileResponse(
+        path,
+        media_type=media_type,
+        filename=safe_filename,
+    )
+
 
 # ─── LoRA Training Endpoints ──────────────────────────────────────────
-
-from vishnu_dub.training import run_lora_training, get_training_status, list_trainings
+# The training package is imported lazily inside the handlers so the engine
+# still starts when training dependencies are unavailable (see T5.5).
 
 # In-memory storage for training jobs (in production, use persistent storage)
 _training_jobs: Dict[str, Dict[str, Any]] = {}
@@ -916,8 +939,11 @@ async def delete_lora_training(training_id: str):
 @app.post("/v1/lora/validate-manifest")
 async def validate_training_manifest(request: Dict[str, Any]):
     """Validate a training manifest file."""
-    from vishnu_dub.training.validate import validate_manifest, print_validation_report
-    
+    try:
+        from vishnu_dub.training.validate import validate_manifest
+    except ImportError as e:
+        raise HTTPException(503, f"LoRA training is unavailable: {e}")
+
     manifest_path = request.get("manifest_path", "")
     if not manifest_path:
         raise HTTPException(400, "manifest_path is required")
