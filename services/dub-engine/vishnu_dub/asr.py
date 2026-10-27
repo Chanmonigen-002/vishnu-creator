@@ -4,10 +4,11 @@ import asyncio
 import os
 from abc import ABC, abstractmethod
 from pathlib import Path
-from typing import List, Optional
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel
 from vishnu_dub.config import Settings, ASRConfig
+from vishnu_dub.subtitles import DEFAULT_INITIAL_PROMPT
 
 
 class TranscriptionSegment(BaseModel):
@@ -15,6 +16,7 @@ class TranscriptionSegment(BaseModel):
     end: float
     text: str
     speaker: Optional[str] = None
+    words: Optional[List[Dict[str, Any]]] = None
 
 
 class TranscriptionResult(BaseModel):
@@ -93,19 +95,33 @@ class FasterWhisperBackend(ASRBackend):
                 download_root=str(whisper_dir),
             )
 
+        prompt = self.config.initial_prompt or DEFAULT_INITIAL_PROMPT
         segments, info = self._model.transcribe(
             str(audio_path),
             language=language,
             word_timestamps=word_timestamps,
             vad_filter=True,
+            initial_prompt=prompt,
         )
 
         segments_list = []
         for seg in segments:
+            words_list = None
+            if hasattr(seg, "words") and seg.words:
+                words_list = [
+                    {
+                        "word": w.word,
+                        "start": w.start,
+                        "end": w.end,
+                        "probability": getattr(w, "probability", None),
+                    }
+                    for w in seg.words
+                ]
             segments_list.append(TranscriptionSegment(
                 start=seg.start,
                 end=seg.end,
                 text=seg.text.strip(),
+                words=words_list,
             ))
 
         return TranscriptionResult(
@@ -144,8 +160,8 @@ class WhisperXBackend(ASRBackend):
 
         device = "cuda" if self.config.enable_gpu else "cpu"
         model = whisperx.load_model("large-v3", device=device, compute_type="float16")
-        audio = whisperx.load_audio(str(audio_path))
-        result = model.transcribe(audio, language=language)
+        prompt = self.config.initial_prompt or DEFAULT_INITIAL_PROMPT
+        result = model.transcribe(audio, language=language, asr_options={"initial_prompt": prompt})
 
         # Align
         model_a, metadata = whisperx.load_align_model(language_code=result["language"], device=device)
@@ -158,6 +174,7 @@ class WhisperXBackend(ASRBackend):
                 end=seg["end"],
                 text=seg["text"].strip(),
                 speaker=seg.get("speaker"),
+                words=seg.get("words"),
             ))
 
         return TranscriptionResult(
@@ -190,12 +207,14 @@ class OpenAIWhisperBackend(ASRBackend):
 
         import httpx
 
+        prompt = self.config.initial_prompt or DEFAULT_INITIAL_PROMPT
         with open(audio_path, "rb") as f:
             files = {"file": (audio_path.name, f, "audio/mpeg")}
             data = {
                 "model": self.config.openai_model,
                 "response_format": "verbose_json",
                 "timestamp_granularities": ["word"] if word_timestamps else ["segment"],
+                "prompt": prompt,
             }
             if language:
                 data["language"] = language
@@ -216,6 +235,7 @@ class OpenAIWhisperBackend(ASRBackend):
                 start=seg["start"],
                 end=seg["end"],
                 text=seg["text"].strip(),
+                words=seg.get("words"),
             ))
 
         return TranscriptionResult(

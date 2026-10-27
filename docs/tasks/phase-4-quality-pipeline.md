@@ -1,6 +1,6 @@
 # Phase 4 — Quality upgrades into existing stages
 
-**Status:** Not started · **Default risk tier:** P1 (see `AGENTS.md`) · **Estimate:** ≈4 days · **Depends on:** Phase 3
+**Status:** In progress · **Default risk tier:** P1 (see `AGENTS.md`) · **Estimate:** ≈4 days · **Depends on:** Phase 3
 **Plan:** [master-plan.md §4](../project/master-plan.md#4-phases)
 
 ## Goal
@@ -13,7 +13,7 @@ Status: `todo` · `doing` · `blocked` · `done`. A task is `done` only when **E
 
 | ID | Task | Status | Evidence |
 |---|---|---|---|
-| T4.1 | 8-step subtitle stabilization → existing subtitle pipeline (no 1-word cues, monotonic timecodes, 40 ms gaps) | todo | |
+| T4.1 | 8-step subtitle stabilization → existing subtitle pipeline (no 1-word cues, monotonic timecodes, 40 ms gaps) | done | `services\dub-engine\.venv\Scripts\pytest -v vishnu_dub\tests\test_subtitles.py` (9 passed in 0.23s) & full suite `pytest -v` (54 passed in 17.11s). Implemented `vishnu_dub/subtitles.py`: lookahead boundary splitting (`MIN_CUE_WORDS=3`, `MIN_CUE_DURATION_MS=400ms`), empty/isolated punctuation redistribution, anti-dangling sentence fragment merging, context-aware inter-cue casing (English "I", German nouns, acronyms), cross-cue tech dictionary repairs, ergonomic wrapping (≤50 chars), and strict monotonic timecodes (`end[i] <= start[i+1] - 40ms`). Integrated into `JobManager` ASR/translation stages. |
 | T4.2 | ASR correction dictionary, plus a **Khmer** correction list (common mis-recognitions, names, places) | todo | |
 | T4.3 | Fitted-CPS length fitting per language, with a measured Khmer CPS value (calibrate with real dubs) | todo | |
 | T4.4 | Demucs vocal/music separation → dub keeps original background music | todo | |

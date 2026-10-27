@@ -273,8 +273,10 @@ class JobManager:
         return f"{hours:02d}:{minutes:02d}:{secs:02d},{millis:03d}"
 
     def _write_srt(self, path: Path, segments: List[Dict[str, Any]], bilingual_source: Optional[List[Dict[str, Any]]] = None) -> None:
+        from vishnu_dub.subtitles import normalize_timecodes
+        normalized = normalize_timecodes(segments, min_gap_ms=40, min_cue_duration_ms=400, text_key="text")
         with open(path, "w", encoding="utf-8") as f:
-            for i, seg in enumerate(segments, 1):
+            for i, seg in enumerate(normalized, 1):
                 f.write(f"{i}\n")
                 f.write(f"{self._fmt_srt(float(seg['start']))} --> {self._fmt_srt(float(seg['end']))}\n")
                 if bilingual_source and i - 1 < len(bilingual_source):
@@ -391,13 +393,28 @@ class JobManager:
                 asr_backend = get_asr_backend(self.settings)
                 lang = None if job.source_language in ("", "auto") else job.source_language
                 asr_result = await asr_backend.transcribe(source_audio, language=lang)
-                source_segments = [
-                    {"start": float(seg.start), "end": float(seg.end), "text": seg.text.strip()}
+                raw_segments = [
+                    {
+                        "start": float(seg.start),
+                        "end": float(seg.end),
+                        "text": seg.text.strip(),
+                        "words": getattr(seg, "words", None),
+                    }
                     for seg in asr_result.segments
                     if seg.text.strip()
                 ]
-                if not source_segments:
+                if not raw_segments:
                     raise RuntimeError("ASR produced no speech segments from source audio")
+
+                from vishnu_dub.subtitles import stabilize_subtitles
+                source_segments = stabilize_subtitles(
+                    raw_segments,
+                    lang_code=asr_result.language or job.source_language or "en",
+                    text_key="text",
+                )
+                if not source_segments:
+                    source_segments = raw_segments
+
                 with open(segments_json, "w", encoding="utf-8") as f:
                     json.dump(source_segments, f, ensure_ascii=False, indent=2)
                 self._write_srt(source_srt, source_segments)
@@ -429,15 +446,26 @@ class JobManager:
                     job.source_language,
                     job.target_language,
                 )
-                km_segments = []
+                raw_km_segments = []
                 for seg in translated:
                     seg_start = float(seg["start"] if isinstance(seg, dict) else seg.start)
                     seg_end = float(seg["end"] if isinstance(seg, dict) else seg.end)
                     seg_text = str(seg["text"] if isinstance(seg, dict) else seg.text).strip()
                     if seg_text:
-                        km_segments.append({"start": seg_start, "end": seg_end, "text": seg_text})
-                if not km_segments:
+                        raw_km_segments.append({"start": seg_start, "end": seg_end, "text": seg_text})
+                if not raw_km_segments:
                     raise RuntimeError("Translation produced no subtitle segments")
+
+                from vishnu_dub.subtitles import stabilize_subtitles
+                km_segments = stabilize_subtitles(
+                    raw_km_segments,
+                    lang_code=job.target_language or "km",
+                    text_key="text",
+                    clean_fillers=False,
+                )
+                if not km_segments:
+                    km_segments = raw_km_segments
+
                 with open(km_segments_json, "w", encoding="utf-8") as f:
                     json.dump(km_segments, f, ensure_ascii=False, indent=2)
                 bilingual_src = source_segments if job.bilingual_subtitles else None

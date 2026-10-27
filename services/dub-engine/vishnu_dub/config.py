@@ -78,6 +78,7 @@ class ASRConfig(BaseSettings):
     volcengine_access_token: str = ""
     volcengine_resource_id: str = ""
     volcengine_base_url: str = ""
+    initial_prompt: Optional[str] = None
 
 
 class TTSConfig(BaseSettings):
