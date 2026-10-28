@@ -3386,5 +3386,20 @@
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
   "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
-  "Voice Library": "Voice Library"
+  "Free tier": "Δωρεάν πακέτο",
+  "Paid": "Επί πληρωμή",
+  "Runs on this PC · no account": "Λειτουργεί σε αυτόν τον υπολογιστή · χωρίς λογαριασμό",
+  "Not yet verified": "Δεν έχει επαληθευτεί ακόμη",
+  "Get API key": "Λήψη κλειδιού API",
+  "Load models from service": "Φόρτωση μοντέλων από την υπηρεσία",
+  "{{0}} models loaded": "Φορτώθηκαν {{0}} μοντέλα",
+  "The service returned no models": "Η υπηρεσία δεν επέστρεψε μοντέλα",
+  "Could not load the model list": "Δεν φορτώθηκε η λίστα μοντέλων",
+  "Audio quality": "Ποιότητα ήχου",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Κανένα μοντέλο ElevenLabs δεν υποστηρίζει επί του παρόντος τα χμερικά. Χρησιμοποιήστε το για αγγλικά και άλλες γλώσσες.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Χρησιμοποιήστε το κλειδί του πόρου Azure Speech. Το βασικό URL είναι η περιοχή του πόρου, για παράδειγμα https://southeastasia.tts.speech.microsoft.com. Οι φωνές στα χμερικά Sreymom και Piseth είναι ενσωματωμένες· μπορείτε επίσης να πληκτρολογήσετε οποιοδήποτε άλλο όνομα φωνής Azure (π.χ. en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "Το s2.1-pro-free είναι το δωρεάν μοντέλο για προγραμματιστές. Οι φωνές είναι ταυτότητες μοντέλων Fish Audio· επιλέξτε από τη λίστα ή πληκτρολογήστε. Η υποστήριξη χμερικών δεν έχει επιβεβαιωθεί ακόμη, ακούστε πρώτα προεπισκόπηση.",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "Η έξοδος στα χμερικά από αυτόν τον πάροχο δεν έχει επαληθευτεί ακόμη. Μόλις λειτουργεί το κλειδί, δοκιμάστε πρώτα με μια σύντομη χμερική πρόταση.",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "Η ποιότητα των χμερικών εξαρτάται από το τοπικό μοντέλο: το Gemma 4 (gemma4:latest) παρήγαγε σωστά χμερικά σε πραγματική δοκιμή· τα Qwen 3 και παρόμοια μοντέλα μπορεί να μην εξάγουν χμερικά.",
+  "Voice Library": "Βιβλιοθήκη φωνών"
 }

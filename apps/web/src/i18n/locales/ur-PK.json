@@ -3386,5 +3386,20 @@
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
   "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
-  "Voice Library": "Voice Library"
+  "Free tier": "مفت پلان",
+  "Paid": "پیسے والا",
+  "Runs on this PC · no account": "اس کمپیوٹر پر چلتا ہے · اکاؤنٹ کی ضرورت نہیں",
+  "Not yet verified": "ابھی تصدیق شدہ نہیں",
+  "Get API key": "API کلید حاصل کریں",
+  "Load models from service": "سروس سے ماڈلز لوڈ کریں",
+  "{{0}} models loaded": "{{0}} ماڈلز لوڈ ہوگئے",
+  "The service returned no models": "سروس نے کوئی ماڈل نہیں بھیجا",
+  "Could not load the model list": "ماڈل کی فہرست لوڈ نہیں ہو سکی",
+  "Audio quality": "آڈیو کوالٹی",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "ابھی تک کوئی ElevenLabs ماڈل خمیر زبان کی مدد نہیں کرتا۔ اسے انگریزی اور دیگر زبانوں کے لیے استعمال کریں۔",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "اپنے Azure Speech ریسورس کی کلید استعمال کریں۔ بیس URL آپ کے ریسورس کا علاقہ ہے، مثلاً https://southeastasia.tts.speech.microsoft.com۔ خمیر آوازیں Sreymom اور Piseth پہلے سے موجود ہیں; آپ کوئی اور Azure آواز کا نام بھی لکھ سکتے ہیں (مثلاً en-US-JennyNeural)۔",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free ڈویلپرز کے لیے مفت ماڈل ہے۔ آوازیں Fish Audio ماڈل IDs ہوتی ہیں; فہرست سے منتخب کریں یا لکھ دیں۔ خمیر زبان کی مدد ابھی تصدیق شدہ نہیں، اس لیے پہلے سنیں۔",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "اس فراہم کار کا خمیر آؤٹ پٹ ابھی تصدیق شدہ نہیں۔ کلید کام کرنے کے بعد پہلے ایک مختصر خمیر جملے سے آزمائیں۔",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "خمیر کا معیار لوکل ماڈل پر منحصر ہے: Gemma 4 (gemma4:latest) نے اصل آزمائش میں درست خمیر دیا؛ Qwen 3 جیسے ماڈل خمیر نہیں دے سکتے۔",
+  "Voice Library": "آواز لائبریری"
 }

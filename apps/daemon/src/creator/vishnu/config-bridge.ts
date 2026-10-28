@@ -69,7 +69,10 @@ export function createVishnuConfigToml(
         cluster: config.tts.volcengine.model,
         default_voice_id: config.tts.volcengine.defaultVoiceId,
         base_url: config.tts.volcengine.baseUrl
-      }
+      },
+      azure: openAi(config.tts.azure),
+      elevenlabs: openAi(config.tts.elevenlabs),
+      fishaudio: openAi(config.tts.fishaudio)
     },
     image: {
       provider: config.image.provider,

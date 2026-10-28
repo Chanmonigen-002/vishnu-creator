@@ -1,3 +1,4 @@
+import { isCreatorTtsProvider } from '@vishnucreator/protocol';
 import type {
   CreatorArtifact,
   CreatorJob,
@@ -450,11 +451,7 @@ export function createStickmanVideoWorkflow(input: {
       };
     }
     const config = await (input.readConfigForJob?.(job.id) ?? input.configStore.read());
-    const provider = job.state.ttsProvider === 'openai'
-      || job.state.ttsProvider === 'aliyun'
-      || job.state.ttsProvider === 'edge-tts'
-      || job.state.ttsProvider === 'minimax'
-      || job.state.ttsProvider === 'volcengine'
+    const provider = isCreatorTtsProvider(job.state.ttsProvider)
       ? job.state.ttsProvider
       : config.tts.provider;
     if (provider === 'edge-tts') {

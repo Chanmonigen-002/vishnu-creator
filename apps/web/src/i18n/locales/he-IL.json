@@ -3386,5 +3386,20 @@
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
   "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
-  "Voice Library": "Voice Library"
+  "Free tier": "תוכנית חינמית",
+  "Paid": "בתשלום",
+  "Runs on this PC · no account": "פועל במחשב זה · ללא חשבון",
+  "Not yet verified": "טרם אומת",
+  "Get API key": "קבלו מפתח API",
+  "Load models from service": "טען מודלים מהשירות",
+  "{{0}} models loaded": "{{0}} מודלים נטענו",
+  "The service returned no models": "השירות לא החזיר מודלים",
+  "Could not load the model list": "טעינת רשימת המודלים נכשלה",
+  "Audio quality": "איכות שמע",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "אף מודל של ElevenLabs אינו תומך כרגע בקמרית. השתמשו בו עבור אנגלית ושפות אחרות.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "השתמשו במפתח המשאב Azure Speech שלכם. כתובת הבסיס היא אזור המשאב, למשל https://southeastasia.tts.speech.microsoft.com. הקולות הקמרים Sreymom ו-Piseth מובנים בתוך השירות; אפשר גם להקליד כל שם קול אחר של Azure (למשל en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free הוא המודל החינמי למפתחים. הקולות הם מזהים של מודלים ב-Fish Audio; בחרו מהרשימה או הקלידו ידנית. תמיכה בקמרית עדיין לא אושרה, כדאי להאזין קודם.",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "פלט הקמרית מספק זה טרם אומת. אחרי שהמפתח עובד, בדקו קודם עם משפט קמרי קצר.",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "איכות הקמרית תלויה במודל המקומי: Gemma 4 (gemma4:latest) הפיקה קמרית נכונה בבדיקה חיה; Qwen 3 ודומיו עשויים שלא להפיק קמרית.",
+  "Voice Library": "ספריית קולות"
 }

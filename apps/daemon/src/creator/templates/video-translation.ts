@@ -1,3 +1,4 @@
+import { vishnuCliTtsProviders } from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 import type { CreatorTemplateDefinition } from './types.js';
 import { creatorSubtitleStyleSchema } from '../presets/module-schemas.js';
@@ -34,7 +35,7 @@ function createVideoTranslationTemplateDefinition(version: 1 | 2): CreatorTempla
         ? { subtitleStyle: creatorSubtitleStyleSchema }
         : {}),
       dubbing: z.boolean().default(false),
-      ttsProvider: z.enum(['openai', 'aliyun', 'edge-tts', 'minimax', 'volcengine']).optional(),
+      ttsProvider: z.enum(vishnuCliTtsProviders).optional(),
       ttsModel: z.string().optional(),
       voiceCode: z.string().optional(),
       voiceName: z.string().optional(),

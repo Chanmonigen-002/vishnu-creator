@@ -3386,5 +3386,20 @@
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
   "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
-  "Voice Library": "Voice Library"
+  "Free tier": "Ücretsiz kullanım",
+  "Paid": "Ücretli",
+  "Runs on this PC · no account": "Bu bilgisayarda çalışır · hesap gerekmez",
+  "Not yet verified": "Henüz doğrulanmadı",
+  "Get API key": "API anahtarı edinin",
+  "Load models from service": "Modelleri hizmetten yükleyin",
+  "{{0}} models loaded": "{{0}} model yüklendi",
+  "The service returned no models": "Hizmet hiçbir model döndürmedi",
+  "Could not load the model list": "Model listesi yüklenemedi",
+  "Audio quality": "Ses kalitesi",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Şu anda kmerceyi destekleyen bir ElevenLabs modeli yok. İngilizce ve diğer diller için kullanın.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Azure Speech kaynağınızın anahtarını kullanın. Temel URL kaynağınızın bölgesidir, örneğin https://southeastasia.tts.speech.microsoft.com. Kmerce sesler Sreymom ve Piseth dahilidir; başka bir Azure ses adı da yazabilirsiniz (örneğin en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free geliştiricilere yönelik ücretsiz modeldir. Sesler Fish Audio model kimlikleridir; listeden seçin ya da yazın. Kmerce desteği henüz doğrulanmadı, önce bir önizleme dinleyin.",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "Bu sağlayıcının Kmerce çıktısı henüz doğrulanmadı. Anahtar çalıştığında önce kısa bir Kmerce cümleyle test edin.",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "Kmerce kalitesi yerel modele bağlıdır: Gemma 4 (gemma4:latest) gerçek bir testte doğru Kmerce üretti; Qwen 3 ve benzeri modeller Kmerce üretemeyebilir.",
+  "Voice Library": "Ses kitaplığı"
 }

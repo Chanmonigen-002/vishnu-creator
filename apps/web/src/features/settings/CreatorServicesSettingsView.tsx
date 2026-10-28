@@ -28,6 +28,7 @@ import {
   Cloud,
   Eye,
   EyeOff,
+  ExternalLink,
   FileKey2,
   HardDriveDownload,
   Image,
@@ -63,6 +64,19 @@ type ModelSettingsService = Pick<ConnectionService, 'getCodexProvider' | 'update
 };
 type ModelFieldErrors = Partial<Record<'baseUrl' | 'apiKey' | 'model' | 'proxy', string>>;
 type TextModelMode = 'codex' | 'custom';
+
+/** Per-provider Khmer-quality notes for text presets, from recorded live tests (T8.4/T8.5). */
+const DEFAULT_LLM_KHMER_NOTE = {
+  zh: '该服务商的高棉语输出尚未实测。密钥可用后请先用一句短高棉语测试。',
+  en: 'Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.'
+} as const;
+const llmKhmerSupportNotes: Readonly<Record<string, { zh: string; en: string }>> = {
+  // Ollama: live call recorded 2026-10-27; Khmer quality differs by model (T8.5).
+  ollama: {
+    zh: '高棉语质量取决于本机模型：Gemma 4（gemma4:latest）已实测输出正确高棉语；Qwen 3 等其他模型可能不输出高棉语。',
+    en: 'Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.'
+  }
+};
 
 export function CreatorServicesSettingsView(props: {
   connected: boolean;
@@ -496,6 +510,7 @@ export function CreatorServicesSettingsView(props: {
               }}
               providerId={modelProviderId}
               runtimeModelIds={runtimeModelIds}
+              listModels={props.service?.listLlmModels}
               onProviderIdChange={id => {
                 const preset = creatorProviderCatalogById.llm[id];
                 if (preset === undefined) return;
@@ -615,9 +630,34 @@ function TextModelSettings(props: SettingsGroupProps & {
   onProviderChange(value: OpenAiCompatibleConfig): void;
   providerId: string;
   runtimeModelIds: readonly string[];
+  listModels?: (input: { baseUrl: string; apiKey: string }) => Promise<{ models: string[] }>;
   onProviderIdChange(value: string): void;
 }) {
   const l = useLocalizedCopy();
+  const preset = creatorProviderCatalogById.llm[props.providerId];
+  const [liveModels, setLiveModels] = useState<string[]>();
+  const [loadingModels, setLoadingModels] = useState(false);
+  const [modelsError, setModelsError] = useState<string>();
+  // A different endpoint has a different model list.
+  useEffect(() => {
+    setLiveModels(undefined);
+    setModelsError(undefined);
+  }, [props.providerId, props.baseUrl]);
+  const loadModels = async () => {
+    if (props.listModels === undefined) return;
+    setLoadingModels(true);
+    setModelsError(undefined);
+    try {
+      const result = await props.listModels({ baseUrl: props.baseUrl, apiKey: props.apiKey });
+      setLiveModels(result.models);
+      if (result.models.length === 0) setModelsError(l('该服务未返回任何模型', 'The service returned no models'));
+    } catch (error) {
+      setLiveModels(undefined);
+      setModelsError(error instanceof Error && error.message ? error.message : l('无法加载模型列表', 'Could not load the model list'));
+    } finally {
+      setLoadingModels(false);
+    }
+  };
   const legacyApiKeyConfigured = props.config.llm.source === 'custom'
     && props.configuredCredentials.has('llm.apiKey');
   const providerApiKeyConfigured = props.provider?.apiKeyConfigured === true;
@@ -664,6 +704,15 @@ function TextModelSettings(props: SettingsGroupProps & {
             ))}
           </AppSelect>
         </label> : null}
+        {props.mode === 'custom' ? <ProviderInfo kind="llm" providerId={props.providerId} /> : null}
+        {props.mode === 'custom' && llmKhmerSupportNotes !== undefined ? (
+          <p className="creator-services-inline-note">
+            {(() => {
+              const note = llmKhmerSupportNotes[props.providerId] ?? DEFAULT_LLM_KHMER_NOTE;
+              return l(note.zh, note.en);
+            })()}
+          </p>
+        ) : null}
         {props.mode === 'custom' ? <OpenAiFields
           id="llm"
           credential="llm.apiKey"
@@ -674,9 +723,11 @@ function TextModelSettings(props: SettingsGroupProps & {
             model: props.model
           }}
           modelPlaceholder="gpt-5.6-sol"
-          modelSuggestions={props.providerId === 'openai' && props.runtimeModelIds.length > 0
+          modelSuggestions={liveModels !== undefined && liveModels.length > 0
+            ? liveModels
+            : props.providerId === 'openai' && props.runtimeModelIds.length > 0
             ? props.runtimeModelIds
-            : creatorProviderCatalogById.llm[props.providerId]?.models.map(model => model.id)}
+            : preset?.models.map(model => model.id)}
           errors={props.fieldErrors}
           onChange={props.onProviderChange}
         /> : (
@@ -688,6 +739,25 @@ function TextModelSettings(props: SettingsGroupProps & {
               : l(`已连接本机 Codex · ${props.provider.model || 'Runtime'}`, `Local Codex connected · ${props.provider.model || 'Runtime'}`)}
           </p>
         )}
+        {props.mode === 'custom' && props.listModels !== undefined ? (
+          <div className="creator-services-provider-models is-wide">
+            <button
+              className="settings-secondary-button"
+              type="button"
+              disabled={loadingModels || props.baseUrl.trim().length === 0}
+              onClick={() => { void loadModels(); }}
+            >
+              {loadingModels
+                ? <LoaderCircle className="creator-services-spinner" size={15} aria-hidden="true" />
+                : <RefreshCcw size={15} aria-hidden="true" />}
+              {loadingModels ? l('正在加载模型', 'Loading models') : l('从服务加载模型', 'Load models from service')}
+            </button>
+            {liveModels !== undefined && liveModels.length > 0 ? (
+              <span role="status">{l(`已加载 ${liveModels.length} 个模型`, `${liveModels.length} models loaded`)}</span>
+            ) : null}
+            {modelsError !== undefined ? <span className="is-warning" role="alert">{modelsError}</span> : null}
+          </div>
+        ) : null}
         <div className="creator-services-model-status is-wide" role="status">
           <span className={selectedModeAvailable ? '' : 'is-warning'}>
             <TextTaskStatusIcon size={15} aria-hidden="true" />
@@ -1025,13 +1095,16 @@ function TtsSettings(props: SettingsGroupProps) {
           ['minimax', 'MiniMax'],
           ['aliyun', l('阿里云百炼', 'Alibaba Cloud Model Studio')],
           ['volcengine', l('火山引擎', 'Volcengine')],
-          ['edge-tts', 'Edge TTS']
+          ['edge-tts', 'Edge TTS'],
+          ['azure', 'Azure Speech'],
+          ['elevenlabs', 'ElevenLabs'],
+          ['fishaudio', 'Fish Audio']
         ]}
         onChange={value => props.update(config => {
           config.tts.provider = value as CreatorServicesConfig['tts']['provider'];
           const preset = creatorProviderOfKind('tts', value);
           if (preset?.defaultBaseUrl !== undefined && value !== 'edge-tts') {
-            const target = config.tts[value as 'openai' | 'minimax' | 'aliyun'];
+            const target = config.tts[value as 'openai' | 'minimax' | 'aliyun' | 'azure' | 'elevenlabs' | 'fishaudio'];
             target.baseUrl = target.baseUrl || preset.defaultBaseUrl;
             if (!target.model && preset.models[0] !== undefined) target.model = preset.models[0].id;
           }
@@ -1099,6 +1172,40 @@ function TtsSettings(props: SettingsGroupProps) {
           </p>
         </>
       ) : null}
+      {provider === 'azure' || provider === 'elevenlabs' || provider === 'fishaudio' ? (
+        <>
+          <ProviderInfo kind="tts" providerId={provider} />
+          <OpenAiFields
+            id={`tts-${provider}`}
+            credential={`tts.${provider}.apiKey`}
+            configuredCredentials={props.configuredCredentials}
+            value={props.config.tts[provider]}
+            modelLabel={provider === 'azure' ? l('音质', 'Audio quality') : undefined}
+            modelPlaceholder={creatorProviderOfKind('tts', provider)?.models[0]?.id ?? ''}
+            modelSuggestions={creatorProviderOfKind('tts', provider)?.models.map(model => model.id)}
+            baseUrlPlaceholder={creatorProviderOfKind('tts', provider)?.defaultBaseUrl}
+            onChange={value => props.update(config => {
+              config.tts[provider] = { ...config.tts[provider], ...value };
+            })}
+          />
+          <p className="creator-services-inline-note">
+            {provider === 'azure'
+              ? l(
+                '使用 Azure 语音资源的密钥，Base URL 为资源所在区域，例如 https://southeastasia.tts.speech.microsoft.com。内置高棉语音色 Sreymom 和 Piseth；也可以填写其他 Azure 音色名称（如 en-US-JennyNeural）。',
+                'Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).'
+              )
+              : provider === 'elevenlabs'
+              ? l(
+                'ElevenLabs 目前没有任何模型支持高棉语。适合英语和其他语言。',
+                'No ElevenLabs model currently supports Khmer. Use it for English and other languages.'
+              )
+              : l(
+                's2.1-pro-free 为免费开发者模型。音色为 Fish Audio 的模型 ID，可从列表选择或直接填写。高棉语支持尚未确认，请先试听。',
+                's2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.'
+              )}
+          </p>
+        </>
+      ) : null}
       {provider !== 'edge-tts' ? (
         <div className="creator-services-tts-voice">
           <TtsVoicePicker
@@ -1107,7 +1214,7 @@ function TtsSettings(props: SettingsGroupProps) {
             model={props.config.tts[provider].model}
             value={props.config.tts[provider].defaultVoiceId}
             service={props.service ?? null}
-            allowCustomVoice={provider === 'volcengine'}
+            allowCustomVoice={provider === 'volcengine' || provider === 'azure' || provider === 'elevenlabs' || provider === 'fishaudio'}
             onChange={voiceId => props.update(config => {
               config.tts[provider].defaultVoiceId = voiceId;
             })}
@@ -1219,6 +1326,29 @@ function SettingsFieldset(props: { title: string; description: string; children:
       <p>{props.description}</p>
       <div className="creator-services-grid">{props.children}</div>
     </fieldset>
+  );
+}
+
+/** Cost, verification and key-page details for a catalog provider. */
+function ProviderInfo(props: { kind: 'llm' | 'tts'; providerId: string }) {
+  const l = useLocalizedCopy();
+  const preset = creatorProviderOfKind(props.kind, props.providerId);
+  if (preset === undefined) return null;
+  const khmer = preset.capabilities?.includes('khmer') === true;
+  return (
+    <div className="creator-services-provider-info is-wide" data-testid={`${props.kind}-provider-info`}>
+      {preset.access === 'free-tier' ? <span className="creator-services-provider-badge is-free">{l('有免费额度', 'Free tier')}</span> : null}
+      {preset.access === 'paid' ? <span className="creator-services-provider-badge">{l('付费', 'Paid')}</span> : null}
+      {preset.access === 'local' ? <span className="creator-services-provider-badge is-local">{l('本机运行 · 无需账号', 'Runs on this PC · no account')}</span> : null}
+      {khmer ? <span className="creator-services-provider-badge is-free">{l('支持高棉语', 'Khmer voices')}</span> : null}
+      {preset.status === 'experimental' ? <span className="creator-services-provider-badge is-warning">{l('尚未实测', 'Not yet verified')}</span> : null}
+      {preset.keyUrl !== undefined ? (
+        <a href={preset.keyUrl} target="_blank" rel="noreferrer">
+          {l('获取 API Key', 'Get API key')}
+          <ExternalLink size={13} aria-hidden="true" />
+        </a>
+      ) : null}
+    </div>
   );
 }
 

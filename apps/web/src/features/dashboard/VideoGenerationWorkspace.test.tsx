@@ -962,7 +962,10 @@ function createVideoConfig() {
         model: 'volcano_tts',
         defaultVoiceId: 'BV001_streaming',
         appId: ''
-      }
+      },
+      azure: createDefaultCreatorServicesConfig().tts.azure,
+      elevenlabs: createDefaultCreatorServicesConfig().tts.elevenlabs,
+      fishaudio: createDefaultCreatorServicesConfig().tts.fishaudio
     },
     dubEngine: createDefaultCreatorServicesConfig().dubEngine,
     image: {
