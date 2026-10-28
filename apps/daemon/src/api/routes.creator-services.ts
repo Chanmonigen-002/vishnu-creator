@@ -22,6 +22,7 @@ import {
 import { createVishnuCreatorServicesCapabilities } from '../creator/vishnu/capabilities.js';
 import { DubEngineClient, DubEngineError } from '../dub-engine/client.js';
 import { resolveDubEngineDirectory } from '../dub-engine/service.js';
+import { createZipArchive, type ZipEntry } from '../dub-engine/zip.js';
 import {
   VishnuTtsServiceError,
   type VishnuTtsService
@@ -578,6 +579,42 @@ export async function registerCreatorServicesRoutes(
     }
   }
 
+  function createLocalVoiceZipFallback(voiceId: string, enginePath?: string): { buffer: Buffer; filename: string } | null {
+    try {
+      const safeId = voiceId.replace(/^(\.\.(\/|\\|$))+/, '');
+      const engineDir = resolveDubEngineDirectory({ enginePath: enginePath ?? '' });
+      const sampleVoiceDir = join(engineDir, 'vishnu_dub', 'data', 'sample_voices', safeId);
+      let targetDir = '';
+      if (existsSync(sampleVoiceDir)) {
+        targetDir = sampleVoiceDir;
+      } else {
+        const jobsVoiceDir = join(process.cwd(), 'jobs', 'voice_designs', safeId);
+        if (existsSync(jobsVoiceDir)) {
+          targetDir = jobsVoiceDir;
+        }
+      }
+      if (!targetDir) return null;
+
+      const entries: ZipEntry[] = [];
+      for (const file of readdirSync(targetDir)) {
+        const fullPath = join(targetDir, file);
+        if (existsSync(fullPath)) {
+          entries.push({
+            name: file,
+            data: readFileSync(fullPath)
+          });
+        }
+      }
+      if (entries.length === 0) return null;
+
+      const buffer = createZipArchive(entries);
+      const filename = `voice_export_${safeId}.zip`;
+      return { buffer, filename };
+    } catch {
+      return null;
+    }
+  }
+
   function readLocalArtifactFallback(filename: string, enginePath?: string): Buffer | null {
     try {
       const safeName = filename.replace(/^(\.\.(\/|\\|$))+/, '');
@@ -593,6 +630,15 @@ export async function registerCreatorServicesRoutes(
           }
         }
       }
+      const jobsDesignPath = join(process.cwd(), 'jobs', 'voice_designs', safeName);
+      if (existsSync(jobsDesignPath)) return readFileSync(jobsDesignPath);
+
+      const zipMatch = safeName.match(/^voice_export_(.+)\.zip$/);
+      if (zipMatch && zipMatch[1]) {
+        const fallback = createLocalVoiceZipFallback(zipMatch[1], enginePath);
+        if (fallback) return fallback.buffer;
+      }
+
       return null;
     } catch {
       return null;
@@ -621,8 +667,14 @@ export async function registerCreatorServicesRoutes(
     Params: { filename: string };
   }>('/creator-services/tts/artifacts/:filename', async (request, reply) => {
     let enginePath: string | undefined;
+    const { filename } = request.params;
+    let contentType = 'application/octet-stream';
+    if (filename.endsWith('.zip')) contentType = 'application/zip';
+    else if (filename.endsWith('.wav')) contentType = 'audio/wav';
+    else if (filename.endsWith('.mp3')) contentType = 'audio/mpeg';
+    else if (filename.endsWith('.json')) contentType = 'application/json';
+
     try {
-      const { filename } = request.params;
       const saved = await store.read();
       enginePath = saved.dubEngine.enginePath;
       const client = new DubEngineClient({
@@ -631,16 +683,18 @@ export async function registerCreatorServicesRoutes(
       });
       const buffer = await client.downloadVoiceDesignArtifact(filename);
       return reply
-        .header('Content-Type', 'audio/wav')
+        .header('Content-Type', contentType)
         .header('Content-Length', String(buffer.length))
+        .header('Content-Disposition', `attachment; filename="${filename}"`)
         .header('Cache-Control', 'public, max-age=3600')
         .send(buffer);
     } catch (error) {
-      const fallback = readLocalArtifactFallback(request.params.filename, enginePath);
+      const fallback = readLocalArtifactFallback(filename, enginePath);
       if (fallback) {
         return reply
-          .header('Content-Type', 'audio/wav')
+          .header('Content-Type', contentType)
           .header('Content-Length', String(fallback.length))
+          .header('Content-Disposition', `attachment; filename="${filename}"`)
           .header('Cache-Control', 'public, max-age=3600')
           .send(fallback);
       }
@@ -783,15 +837,31 @@ export async function registerCreatorServicesRoutes(
     if (!voiceId) {
       return reply.code(400).send(apiError('VALIDATION_FAILED', 'Voice ID is required'));
     }
+    let enginePath: string | undefined;
     try {
       const saved = await store.read();
+      enginePath = saved.dubEngine.enginePath;
       const client = new DubEngineClient({
         ...saved.dubEngine,
         enabled: true,
       });
       const result = await client.exportVoiceDesign(voiceId);
-      return result;
+      const filename = result.filename || `voice_export_${voiceId}.zip`;
+      return {
+        ...result,
+        filename,
+        exportUrl: `/creator-services/tts/artifacts/${encodeURIComponent(filename)}`
+      };
     } catch (error) {
+      const fallbackZip = createLocalVoiceZipFallback(voiceId, enginePath);
+      if (fallbackZip) {
+        return {
+          ok: true,
+          voiceId,
+          filename: fallbackZip.filename,
+          exportUrl: `/creator-services/tts/artifacts/${encodeURIComponent(fallbackZip.filename)}`
+        };
+      }
       if (error instanceof DubEngineError) {
         return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
       }
