@@ -477,7 +477,7 @@ describe('creator preflight', () => {
     expect(ready.blocked.map(item => item.id)).not.toContain('tts');
   });
 
-  it('allows Phase 8 voice providers for Smart Dubbing but blocks them for CLI video translation dubbing', async () => {
+  it('allows Phase 8 voice providers for Smart Dubbing and CLI video translation dubbing', async () => {
     root = await mkdtemp(join(tmpdir(), 'creator-preflight-'));
     const config = createDefaultCreatorServicesConfig();
     config.tts.provider = 'azure';
@@ -497,9 +497,8 @@ describe('creator preflight', () => {
 
     const translationTts = createVideoTranslationTemplate().stages.find(candidate => candidate.id === 'tts')!;
     expect(translationTts.executor).toBe('vishnuai');
-    const blocked = await preflight.check(fakeJob('video-translation', { dubbing: true }), translationTts);
-    const tts = blocked.blocked.find(item => item.id === 'tts');
-    expect(tts?.message).toContain('not yet for video translation dubbing');
+    const translation = await preflight.check(fakeJob('video-translation', { dubbing: true }), translationTts);
+    expect(translation.blocked.map(item => item.id)).not.toContain('tts');
   });
 
   it('blocks Volcengine transcription when its shared credentials are missing', async () => {

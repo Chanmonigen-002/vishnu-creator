@@ -30,7 +30,7 @@ Status: `todo` · `doing` · `blocked` · `done`. A task is `done` only when **E
 | T8.8 | Image: FLUX via Together / fal / Replicate, Stability AI, and local ComfyUI; one adapter each, verified by a real generated image | todo | |
 | T8.9 | Video: Runway, Luma, MiniMax Hailuo, and local ComfyUI; one adapter each, verified by a real generated clip | todo | |
 | T8.10 | User guide `docs/providers/README.md`: which providers are free, paid or local, how to get each key, and which support Khmer | todo | |
-| T8.11 | Video translation dubbing with Azure / ElevenLabs / Fish Audio: add them to the `vishnuai` Go CLI voice switch (`runtime/vishnuai/internal/service/init.go`) and its TOML config bridge (`apps/daemon/src/creator/vishnu/config-bridge.ts`), rebuild the CLI, then remove the preflight block | todo | Today preflight blocks these providers for video translation with a clear message (`apps/daemon/src/creator/preflight.ts`). |
+| T8.11 | Video translation dubbing with Azure / ElevenLabs / Fish Audio: add them to the `vishnuai` Go CLI voice switch (`runtime/vishnuai/internal/service/init.go`) and its TOML config bridge (`apps/daemon/src/creator/vishnu/config-bridge.ts`), rebuild the CLI, then remove the preflight block | done 2026-10-28 (live dub runs pending owner keys) | Go TTS clients `pkg/azure`, `pkg/elevenlabs`, `pkg/fishaudio` (same endpoints as the daemon Phase 8 adapters), wired into `ttsprovider.New` + `init.go` and `internal/voices`; `vishnuCliTtsProviders` now lists all 8; TOML bridge writes `tts.azure` / `tts.elevenlabs` / `tts.fishaudio`; preflight block removed. CLI rebuilt with Go 1.27 (`go build` + `verifyCli` ok); `go test ./...` passes except the pre-existing environmental `TestNLPRuntimeReusesProcessAndRestartsAfterCancellation` (Microsoft Store `python3` stub); vitest preflight/protocol/CLI-runner 81 passed; web i18n 202 + settings/coverage 251. |
 
 ## Remaining work and what to fix (2026-10-28)
 
@@ -42,14 +42,14 @@ Fix first, before committing T8.7:
 
 Then, needs the owner:
 
-4. **Live voice tests (T8.7)** with real keys: Azure Khmer sentence (both voices), ElevenLabs any language, Fish Audio Khmer sentence with `s2.1-pro-free` to find out whether Khmer works. Mark each preset `supported` only after a recorded call.
+4. **Live voice tests (T8.7)** with real keys: Azure Khmer sentence (both voices), ElevenLabs any language, Fish Audio Khmer sentence with `s2.1-pro-free` to find out whether Khmer works. Mark each preset `supported` only after a recorded call. Also run one real video translation dub per new provider (T8.11) to verify the CLI end to end.
 5. **Live text tests (T8.5):** 11 cloud presets need keys (Groq, Gemini, Cerebras and OpenRouter have free tiers). LM Studio, llama.cpp, vLLM and Jan are not installed on this PC.
 
 Still to build:
 
 6. ~~**T8.4:** per-provider Khmer-quality note for text presets~~ **Done 2026-10-28:** the Ollama llm preset now carries `capabilities: ['khmer']` (badge shows), and the text-provider section shows a per-provider Khmer-quality note: Ollama note says Gemma 4 (`gemma4:latest`) produced correct Khmer in the recorded live test and Qwen 3-type models may output none; every other text preset shows a "not verified yet — test with a short Khmer sentence" note. Both strings are localized in all 42 locale catalogs; `client-copy-coverage.test.ts` 31/31.
 7. **T8.4:** view the new settings screens in the running app (not yet done; the shared checkout was on another branch).
-8. **T8.11:** video translation support for the new voice providers (Go CLI).
+8. ~~**T8.11:** video translation support for the new voice providers (Go CLI).~~ **Done 2026-10-28:** see the T8.11 row. A real dubbed video with each new provider still needs the owner's keys (covered by item 4). Go was installed on this machine (winget, Go 1.27.0) to rebuild the CLI.
 9. **T8.6** transcription, **T8.8** image, **T8.9** video providers: research, adapters, live tests.
 10. **T8.10** user guide `docs/providers/README.md`.
 11. **Local VoxCPM2 voice** in the voice picker, after T5.1 has real model weights.

@@ -11,7 +11,7 @@ export type OpenAiCompatibleConfig = {
 
 export const creatorTtsProviders = ['openai', 'aliyun', 'edge-tts', 'minimax', 'volcengine', 'azure', 'elevenlabs', 'fishaudio'] as const;
 /** Providers the bundled vishnuai CLI can synthesize with (video translation dubbing). */
-export const vishnuCliTtsProviders = ['openai', 'aliyun', 'edge-tts', 'minimax', 'volcengine'] as const satisfies readonly CreatorTtsProvider[];
+export const vishnuCliTtsProviders = ['openai', 'aliyun', 'edge-tts', 'minimax', 'volcengine', 'azure', 'elevenlabs', 'fishaudio'] as const satisfies readonly CreatorTtsProvider[];
 export type CreatorTtsProvider = (typeof creatorTtsProviders)[number];
 
 export const creatorDubEngineProviders = ['local-engine', 'remote-engine'] as const;

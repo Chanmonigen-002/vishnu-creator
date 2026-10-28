@@ -9,7 +9,7 @@ import type {
   CreatorServicesConfig,
   PublicErrorFacts
 } from '@vishnucreator/protocol';
-import { creatorPreflightFailure, imagePromptRequiresReference, isCreatorTtsProvider, vishnuCliTtsProviders } from '@vishnucreator/protocol';
+import { creatorPreflightFailure, imagePromptRequiresReference, isCreatorTtsProvider } from '@vishnucreator/protocol';
 import { access, mkdir, readFile } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { join } from 'node:path';
@@ -400,11 +400,7 @@ async function checkProviderConfig(
       add('blocked', { id: 'tts-style-capability', title: 'Unsupported speech settings', message: 'Style and speed controls are not verified for this official speech model. Select another TTS service.', executionMode: 'remote' }, { label: 'Open speech settings', deepLink: '#/settings?tab=ai-services&section=tts' });
     }
     const provider = readTtsProvider(job, config);
-    // Video translation dubs inside the vishnuai CLI, which supports fewer providers
-    // than the daemon's own speech service (T8.7).
-    if (stage.executor === 'vishnuai' && !(vishnuCliTtsProviders as readonly string[]).includes(provider)) {
-      add('blocked', { id: 'tts', title: 'Speech service not supported here', message: `${provider} is available for Text to Speech and Smart Dubbing, but not yet for video translation dubbing. Choose OpenAI, Alibaba Cloud, Edge TTS, MiniMax or Volcengine for this task.`, executionMode: 'remote' }, { label: 'Open speech settings', deepLink: '#/settings?tab=ai-services&section=tts' });
-    } else if (provider === 'edge-tts') add('ready', { id: 'tts', title: 'Speech service', message: 'Edge TTS does not require an API key.', executionMode: 'remote' });
+    if (provider === 'edge-tts') add('ready', { id: 'tts', title: 'Speech service', message: 'Edge TTS does not require an API key.', executionMode: 'remote' });
     else checkTts(config, provider, add);
   }
   if (needs.has('image')) {

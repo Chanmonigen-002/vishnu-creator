@@ -79,6 +79,12 @@ func NewService() *Service {
 		ttsClient, _ = ttsprovider.New("minimax")
 	case "volcengine":
 		ttsClient, _ = ttsprovider.New("volcengine")
+	case "azure":
+		ttsClient, _ = ttsprovider.New("azure")
+	case "elevenlabs":
+		ttsClient, _ = ttsprovider.New("elevenlabs")
+	case "fishaudio":
+		ttsClient, _ = ttsprovider.New("fishaudio")
 	}
 
 	s := &Service{
