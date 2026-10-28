@@ -65,13 +65,15 @@ describe('creator provider catalog', () => {
     expect(byId.fishaudio?.models[0]?.id).toBe('s2.1-pro-free');
   });
 
-  it('keeps new text presets experimental until a live call is recorded (T8.5)', () => {
-    for (const id of ['openrouter', 'groq', 'gemini', 'anthropic', 'llamacpp']) {
+  it('keeps unverified text presets experimental and marks verified ones as supported (T8.5)', () => {
+    for (const id of ['groq', 'anthropic', 'llamacpp']) {
       expect(creatorProviderCatalogById.llm[id]?.status).toBe('experimental');
     }
     expect(creatorProviderCatalogById.llm.llamacpp?.defaultBaseUrl).toBe('http://127.0.0.1:9931/v1');
-    // Ollama was verified with a live call on 2026-10-27.
+    // Ollama, OpenRouter, and Google Gemini verified live with real calls and Khmer generation.
     expect(creatorProviderCatalogById.llm.ollama).toMatchObject({ status: 'supported', access: 'local', credentials: [], placeholderApiKey: 'ollama' });
+    expect(creatorProviderCatalogById.llm.openrouter).toMatchObject({ status: 'supported', access: 'free-tier' });
+    expect(creatorProviderCatalogById.llm.gemini).toMatchObject({ status: 'supported', access: 'free-tier' });
   });
 
   it('describes Codex native image generation as credential-free and experimental', () => {
