@@ -23,7 +23,7 @@ const briefSchema = z.object({
   headline: z.string().min(1),
   subheadline: z.string().default(''),
   emphasisTerms: z.array(z.string()).max(3).default([]),
-  language: z.enum(['zh-CN', 'zh-TW', 'en-US', 'ja-JP', 'ko-KR'])
+  language: z.enum(['km-KH', 'zh-CN', 'zh-TW', 'en-US', 'ja-JP', 'ko-KR'])
 }).strict();
 
 export type CoverSourceMetadata = z.infer<typeof metadataSchema>;
@@ -69,7 +69,7 @@ export async function generateCoverBrief(input: {
           `所有封面文字必须使用 ${coverLanguageLabel(input.language)}，language 字段必须是 "${input.language}"。`,
           '格式：{"title":"原视频标题","summary":"内容摘要","headline":"封面主标题","subheadline":"封面副标题","emphasisTerms":["需要视觉强调的词"],"language":"语言代码"}。',
           '主标题必须简短、有信息量并忠于视频内容；副标题可以为空，不得虚构标题和描述中不存在的事实。',
-          '简体或繁体中文主标题建议 6-16 个汉字，英文主标题建议 3-8 个词，日文和韩文保持缩略图可读长度。',
+          '高棉语（Khmer）封面文字必须使用自然高棉口语，词与词之间不加空格，正确使用 "។" 标点，保持 3-8 个短语的缩略图可读长度。简体或繁体中文主标题建议 6-16 个汉字，英文主标题建议 3-8 个词，日文和韩文保持缩略图可读长度。',
           input.headlineOverride.trim()
             ? `用户指定主标题，必须逐字保留：${JSON.stringify(input.headlineOverride.trim())}`
             : '用户未指定主标题，请根据视频标题和描述生成。',

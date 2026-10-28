@@ -769,6 +769,7 @@ export default function CoverGeneratorWorkspace(props: {
                 <span>{l('封面风格', 'Thumbnail style')}</span>
                 <div className="cover-style-grid" role="radiogroup" aria-label={l('封面风格', 'Thumbnail style')}>
                   {([
+                    'khmer-editorial',
                     'personal-growth',
                     'psychology',
                     'wealth-platinum-red',
@@ -813,9 +814,10 @@ export default function CoverGeneratorWorkspace(props: {
                       event.target.value as CoverTextLanguage
                     )}
                   >
+                    <option value="km-KH">ភាសាខ្មែរ (Khmer)</option>
+                    <option value="en-US">English</option>
                     <option value="zh-CN">简体中文</option>
                     <option value="zh-TW">繁體中文</option>
-                    <option value="en-US">English</option>
                     <option value="ja-JP">日本語</option>
                     <option value="ko-KR">한국어</option>
                   </NativeSelect>
@@ -1447,7 +1449,8 @@ function readCoverTextLanguagePreference(
   value: CreatorJson | undefined,
   fallback: CoverTextLanguage
 ): CoverTextLanguage {
-  return value === 'zh-CN'
+  return value === 'km-KH'
+    || value === 'zh-CN'
     || value === 'zh-TW'
     || value === 'en-US'
     || value === 'ja-JP'
@@ -1457,18 +1460,20 @@ function readCoverTextLanguagePreference(
 }
 
 function readCoverTextLanguage(value: CreatorJson | undefined): CoverTextLanguage {
-  return value === 'zh-TW'
+  return value === 'zh-CN'
+    || value === 'zh-TW'
     || value === 'en-US'
     || value === 'ja-JP'
     || value === 'ko-KR'
     ? value
-    : 'zh-CN';
+    : 'km-KH';
 }
 
 function coverStyleLabel(
   style: CoverStyleId,
   l: (zh: string, en: string) => string
 ): string {
+  if (style === 'khmer-editorial') return l('高棉社论风', 'Khmer editorial');
   if (style === 'personal-growth') return l('个人成长', 'Personal growth');
   if (style === 'psychology') return l('心理学', 'Psychology');
   if (style === 'wealth-platinum-red') return l('财富', 'Wealth');
@@ -1480,6 +1485,7 @@ function coverLanguageLabel(
   language: CoverTextLanguage,
   l: (zh: string, en: string) => string
 ): string {
+  if (language === 'km-KH') return l('高棉语', 'Khmer');
   if (language === 'zh-CN') return l('简体中文', 'Simplified Chinese');
   if (language === 'zh-TW') return l('繁体中文', 'Traditional Chinese');
   if (language === 'ja-JP') return l('日语', 'Japanese');

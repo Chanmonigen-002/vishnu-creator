@@ -33,11 +33,11 @@ export function resolveCreatorImageSettings(input: {
     : Math.min(options?.maxImages ?? input.maxCandidateCount, input.maxCandidateCount, Math.max(1, requestedCount));
   return {
     provider,
-    model: provider === 'codex-native' ? 'codex-native' : input.config.image[provider].model,
+    model: provider === 'codex-native' ? 'codex-native' : provider === 'qwen-image' ? 'qwen-image' : input.config.image[provider].model,
     candidateCount,
     supportsReferenceImage: gateway ? gateway.capabilities?.image?.includes('edit') === true : capabilities.supportsReferenceImage,
     maxReferenceImages: options?.maxReferences ?? (gateway ? 1 : capabilities.maxReferenceImages),
-    executionMode: provider === 'codex-native' ? 'local' : 'remote'
+    executionMode: provider === 'codex-native' || provider === 'qwen-image' ? 'local' : 'remote'
   };
 }
 
@@ -46,6 +46,7 @@ export function imageProviderConfigured(
   provider: ImageGenerationProvider
 ): boolean {
   if (provider === 'codex-native') return true;
+  if (provider === 'qwen-image') return process.env.VISHNUCREATOR_GPU_WORKER_URL !== undefined;
   if (provider === 'kling') {
     const settings = config.image.kling;
     return settings.baseUrl.trim().length > 0
@@ -67,6 +68,7 @@ export function readImageProvider(
     || value === 'kling'
     || value === 'gemini'
     || value === 'codex-native'
+    || value === 'qwen-image'
     ? value
     : fallback;
 }

@@ -19,11 +19,17 @@ const hasPackagedRuntime = [ffmpegPath, ffprobePath, join(fontsDir, 'manifest.js
 const roots: string[] = [];
 
 afterAll(() => {
-  for (const root of roots) rmSync(root, { recursive: true, force: true });
+  for (const root of roots) {
+    try {
+      rmSync(root, { recursive: true, force: true });
+    } catch {
+      // Ignore transient Windows file locks during test teardown
+    }
+  }
 });
 
 describe.runIf(hasPackagedRuntime)('Creator packaged 9:16 short rendering', () => {
-  it('renders a vertical short with burned Khmer karaoke captions using the packaged ffmpeg', () => {
+  it('renders a vertical short with burned Khmer karaoke captions using the packaged ffmpeg', async () => {
     const root = mkdtempSync(join(tmpdir(), 'vishnucreator-clip-shorts-'));
     roots.push(root);
     const workdir = join(root, 'work');
@@ -73,7 +79,7 @@ describe.runIf(hasPackagedRuntime)('Creator packaged 9:16 short rendering', () =
       preferHardwareEncoding: false
     });
 
-    return executor.run({
+    const result = await executor.run({
       stageRun: stageRun(),
       job: job(),
       inputArtifacts: [
@@ -84,45 +90,45 @@ describe.runIf(hasPackagedRuntime)('Creator packaged 9:16 short rendering', () =
       workdir,
       signal: new AbortController().signal,
       reportProgress
-    }).then(result => {
-      expect(result.progress).toMatchObject({ completed: 1, failed: 0, total: 1 });
-      expect(result.outputs).toHaveLength(1);
-      const output = result.outputs[0]!;
-      expect(output.path?.endsWith('01-Khmer-short.mp4') ?? false).toBe(true);
-      expect(output.metadata).toMatchObject({
-        candidateId: 'short-1',
-        captionsStyle: 'karaoke'
-      });
-      expect(output.metadata?.captionsArtifact).toBe('01-Khmer-short-captions.ass');
-      const assPath = join(workdir, '01-Khmer-short-captions.ass');
-      const ass = readFileSync(assPath, 'utf8');
-      expect(ass).toContain('PlayResX: 1080');
-      expect(ass).toContain('PlayResY: 1920');
-      expect(ass).toContain('ភា');
-      expect(ass).toContain('ខ្មែ');
-      expect(ass).toContain('\\k');
-      expect(existsSync(output.path!)).toBe(true);
-      expect(readFileSync(output.path!, 'utf8').slice(4, 8)).toBe('ftyp');
-
-      const probe = spawnSync(
-        ffprobePath,
-        ['-v', 'error', '-print_format', 'json', '-show_format', '-show_streams', output.path!],
-        { timeout: 60_000 }
-      );
-      expect(probe.status).toBe(0);
-      const parsed = JSON.parse(String(probe.stdout)) as {
-        format: { duration: string };
-        streams: Array<{ codec_type: string; codec_name: string; width?: number; height?: number }>;
-      };
-      const video = parsed.streams.find(stream => stream.codec_type === 'video');
-      const audio = parsed.streams.find(stream => stream.codec_type === 'audio');
-      expect(video).toMatchObject({ codec_name: 'h264', width: 1080, height: 1920 });
-      expect(audio).toMatchObject({ codec_name: 'aac' });
-      const duration = Number(parsed.format.duration);
-      expect(duration).toBeGreaterThanOrEqual(5.5);
-      expect(duration).toBeLessThanOrEqual(7.5);
     });
-  });
+
+    expect(result.progress).toMatchObject({ completed: 1, failed: 0, total: 1 });
+    expect(result.outputs).toHaveLength(1);
+    const output = result.outputs[0]!;
+    expect(output.path?.endsWith('01-Khmer-short.mp4') ?? false).toBe(true);
+    expect(output.metadata).toMatchObject({
+      candidateId: 'short-1',
+      captionsStyle: 'karaoke'
+    });
+    expect(output.metadata?.captionsArtifact).toBe('01-Khmer-short-captions.ass');
+    const assPath = join(workdir, '01-Khmer-short-captions.ass');
+    const ass = readFileSync(assPath, 'utf8');
+    expect(ass).toContain('PlayResX: 1080');
+    expect(ass).toContain('PlayResY: 1920');
+    expect(ass).toContain('ភា');
+    expect(ass).toContain('ខ្មែ');
+    expect(ass).toContain('\\k');
+    expect(existsSync(output.path!)).toBe(true);
+    expect(readFileSync(output.path!, 'utf8').slice(4, 8)).toBe('ftyp');
+
+    const probe = spawnSync(
+      ffprobePath,
+      ['-v', 'error', '-print_format', 'json', '-show_format', '-show_streams', output.path!],
+      { timeout: 60_000 }
+    );
+    expect(probe.status).toBe(0);
+    const parsed = JSON.parse(String(probe.stdout)) as {
+      format: { duration: string };
+      streams: Array<{ codec_type: string; codec_name: string; width?: number; height?: number }>;
+    };
+    const video = parsed.streams.find(stream => stream.codec_type === 'video');
+    const audio = parsed.streams.find(stream => stream.codec_type === 'audio');
+    expect(video).toMatchObject({ codec_name: 'h264', width: 1080, height: 1920 });
+    expect(audio).toMatchObject({ codec_name: 'aac' });
+    const duration = Number(parsed.format.duration);
+    expect(duration).toBeGreaterThanOrEqual(5.5);
+    expect(duration).toBeLessThanOrEqual(7.5);
+  }, 60_000);
 });
 
 function artifact(id: string, kind: string, path: string): CreatorArtifact {

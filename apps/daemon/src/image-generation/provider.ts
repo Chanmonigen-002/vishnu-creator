@@ -52,15 +52,15 @@ export function imageGenerationCapabilities(
   provider: CreateImageGenerationRequest['provider']
 ): ImageGenerationCapabilities {
   return {
-    supportsReferenceImage: provider === 'openai' || provider === 'gemini' || provider === 'codex-native',
-    maxReferenceImages: provider === 'openai' || provider === 'gemini' || provider === 'codex-native' ? 8 : 0
+    supportsReferenceImage: provider === 'openai' || provider === 'gemini' || provider === 'codex-native' || provider === 'qwen-image',
+    maxReferenceImages: provider === 'openai' || provider === 'gemini' || provider === 'codex-native' || provider === 'qwen-image' ? 8 : 0
   };
 }
 
 export class ImageGenerationProviderError extends Error {
   readonly publicFacts: PublicErrorFacts;
   constructor(
-    readonly code: 'config_missing' | 'upstream_error' | 'unsupported_capability',
+    readonly code: 'config_missing' | 'upstream_error' | 'unsupported_capability' | 'creator_gpu_required',
     message: string,
     publicFacts?: PublicErrorFacts,
     options?: ErrorOptions
@@ -170,6 +170,17 @@ export async function generateImageContents(
     }
     if (request.provider === 'kling') {
       return await generateKlingImages(request, config, controller.signal, options.fetchImpl);
+    }
+    if (request.provider === 'qwen-image') {
+      const gpuWorkerUrl = process.env.VISHNUCREATOR_GPU_WORKER_URL;
+      if (!gpuWorkerUrl && process.env.VISHNUCREATOR_TEST_GPU_WORKER !== 'true') {
+        throw new ImageGenerationProviderError(
+          'creator_gpu_required',
+          'Qwen-Image thumbnail generation requires a dedicated GPU worker with at least 24 GB VRAM (ADR-0003). Use a cloud provider (OpenAI, Gemini) or configure a remote GPU worker.',
+          { kind: 'configuration', upstreamCode: 'creator_gpu_required' }
+        );
+      }
+      return await generateRemoteGpuWorkerImages(request, gpuWorkerUrl || 'http://127.0.0.1:8765', controller.signal, options.fetchImpl);
     }
     return await generateOpenAiImages(
       request,
@@ -715,4 +726,42 @@ function mimeFromHeader(value: string | null): ImageGenerationAsset['mime'] | un
   const mime = value?.split(';')[0]?.trim().toLowerCase();
   if (mime === 'image/png' || mime === 'image/jpeg' || mime === 'image/webp') return mime;
   return undefined;
+}
+
+async function generateRemoteGpuWorkerImages(
+  request: CreateImageGenerationRequest,
+  gpuWorkerUrl: string,
+  signal: AbortSignal,
+  fetchImpl: typeof fetch = fetch
+): Promise<{ model: string; contents: GeneratedImageContent[] }> {
+  const base = new URL(gpuWorkerUrl);
+  const endpoint = appendEndpointPath(base, 'v1/images/generate');
+  const response = await fetchCreatorService({
+    endpoint,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request),
+    signal,
+    maxResponseBytes: MAX_RESPONSE_BYTES,
+    fetchImpl
+  });
+  if (!response.ok) {
+    const failure = await creatorServiceErrorInfo(response, 'Qwen-Image GPU worker', 'image');
+    throw Object.assign(new ImageGenerationProviderError('upstream_error', failure.message), {
+      publicFacts: failure.publicFacts
+    });
+  }
+  const payload = await response.json() as {
+    model?: string;
+    images?: Array<{ b64_json?: string }>;
+  };
+  const contents: GeneratedImageContent[] = (payload.images || []).map(img => {
+    const buf = Buffer.from(img.b64_json || '', 'base64');
+    validateImageContent(buf);
+    return {
+      content: buf,
+      mime: detectImageMime(buf)
+    };
+  });
+  return { model: payload.model || 'qwen-image', contents };
 }

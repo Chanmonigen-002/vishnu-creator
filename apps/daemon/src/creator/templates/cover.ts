@@ -41,14 +41,16 @@ export function createCoverTemplate(): CreatorTemplateDefinition {
       sourceUrl: z.string().default(''),
       prompt: z.string().default(''),
       coverStyle: z.enum([
+        'khmer-editorial',
         'personal-growth',
         'psychology',
         'wealth-platinum-red',
         'bilibili-red-blue-white',
         'custom'
-      ]).default('bilibili-red-blue-white'),
+      ]).default('khmer-editorial'),
       coverTextLanguage: z.enum([
         'auto',
+        'km-KH',
         'zh-CN',
         'zh-TW',
         'en-US',
@@ -56,19 +58,20 @@ export function createCoverTemplate(): CreatorTemplateDefinition {
         'ko-KR'
       ]).default('auto'),
       resolvedCoverTextLanguage: z.enum([
+        'km-KH',
         'zh-CN',
         'zh-TW',
         'en-US',
         'ja-JP',
         'ko-KR'
-      ]).default('zh-CN'),
+      ]).default('km-KH'),
       customStylePrompt: z.string().max(1000).default(''),
       coverHeadline: z.string().max(80).default(''),
       coverSubheadline: z.string().max(140).default(''),
       ratio: z.enum(['16:9', '1:1', '9:16']).default('16:9'),
       candidateCount: z.number().int().min(1).max(4).default(2),
       quality: z.enum(['low', 'medium', 'high']).default('medium'),
-      provider: z.enum(['openai', 'jimeng', 'kling', 'gemini', 'codex-native']).optional(),
+      provider: z.enum(['openai', 'jimeng', 'kling', 'gemini', 'codex-native', 'qwen-image']).optional(),
       referenceImageArtifactId: z.string().nullable().default(null),
       currentStep: z.union([z.literal(0), z.literal(1), z.literal(2)]).default(0),
       furthestStep: z.union([z.literal(0), z.literal(1), z.literal(2)]).default(0),

@@ -344,6 +344,8 @@ describe('creator image executor', () => {
     });
     input.job.state.sourceType = 'youtube';
     input.job.state.coverHeadline = '参考图测试';
+    input.job.state.coverStyle = 'bilibili-red-blue-white';
+    input.job.state.resolvedCoverTextLanguage = 'zh-CN';
     input.inputArtifacts = input.job.artifacts;
 
     const result = await executor.run(input);
@@ -458,6 +460,49 @@ describe('creator image executor', () => {
     )[0]?.[0].prompt ?? '';
     expect(prompt).toContain('Do not return a text-free background');
     expect(prompt).not.toContain('young man');
+  });
+
+  it('rejects qwen-image without a GPU worker with creator_gpu_required', async () => {
+    tempDir = await mkdtemp(join(tmpdir(), 'creator-qwen-gpu-'));
+    const { generateImageContents } = await import('../../src/image-generation/provider.js');
+    const executor = createImageExecutor({
+      configStore: { read: async () => createDefaultCreatorServicesConfig() },
+      generate: generateImageContents
+    });
+    await expect(executor.run(stageInput({ provider: 'qwen-image' }))).rejects.toMatchObject({
+      code: 'image_generation_failed',
+      publicFacts: expect.objectContaining({
+        upstreamCode: 'creator_gpu_required'
+      })
+    });
+  });
+
+  it('builds Khmer editorial prompt when cover uses khmer-editorial and km-KH', async () => {
+    tempDir = await mkdtemp(join(tmpdir(), 'creator-image-khmer-'));
+    const generate = vi.fn(async () => ({ model: 'gemini-imagen', contents: [{ content: png('khmer-thumb'), mime: 'image/png' as const }] }));
+    const executor = createImageExecutor({
+      configStore: { read: async () => createDefaultCreatorServicesConfig() },
+      generate
+    });
+    const result = await executor.run(stageInput({
+      provider: 'openai',
+      coverStyle: 'khmer-editorial',
+      resolvedCoverTextLanguage: 'km-KH',
+      coverHeadline: 'មេរៀនជីវិត',
+      coverSubheadline: 'របៀបកសាងទម្លាប់ល្អ',
+      candidateCount: 1
+    }, { templateId: 'cover' }));
+
+    expect(generate).toHaveBeenCalledTimes(1);
+    const prompt = (generate.mock.calls as unknown as Array<[{ prompt: string }]>)[0]?.[0].prompt ?? '';
+    expect(prompt).toContain('Polished Khmer editorial thumbnail style');
+    expect(prompt).toContain('Language: Khmer (km-KH)');
+    expect(prompt).toContain('"មេរៀនជីវិត"');
+    expect(result.outputs[0]?.metadata).toMatchObject({
+      coverStyle: 'khmer-editorial',
+      coverTextLanguage: 'km-KH',
+      headline: 'មេរៀនជីវិត'
+    });
   });
 });
 

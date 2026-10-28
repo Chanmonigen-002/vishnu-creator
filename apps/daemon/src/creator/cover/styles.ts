@@ -10,6 +10,15 @@ type CoverStyleDefinition = {
 };
 
 const styles: Record<Exclude<CoverStyleId, 'custom'>, CoverStyleDefinition> = {
+  'khmer-editorial': {
+    id: 'khmer-editorial',
+    instructions: [
+      'Polished Khmer editorial thumbnail style.',
+      'Use vibrant gold, deep royal indigo, warm saffron, and crisp white highlights with cinematic lighting.',
+      'Khmer typography must be natural, bold, and highly legible, with balanced coeng sub-consonants and stacked vowels.',
+      'Keep the composition focused and dynamic with strong focal hierarchy and natural depth.'
+    ].join(' ')
+  },
   'personal-growth': {
     id: 'personal-growth',
     instructions: [
@@ -52,18 +61,20 @@ export function readCoverStyle(value: CreatorJson | undefined): CoverStyleId {
   return value === 'personal-growth'
     || value === 'psychology'
     || value === 'wealth-platinum-red'
+    || value === 'bilibili-red-blue-white'
     || value === 'custom'
     ? value
-    : 'bilibili-red-blue-white';
+    : 'khmer-editorial';
 }
 
 export function readCoverTextLanguage(value: CreatorJson | undefined): CoverTextLanguage {
-  return value === 'zh-TW'
+  return value === 'zh-CN'
+    || value === 'zh-TW'
     || value === 'en-US'
     || value === 'ja-JP'
     || value === 'ko-KR'
     ? value
-    : 'zh-CN';
+    : 'km-KH';
 }
 
 export function coverStyleInstructions(
@@ -80,6 +91,7 @@ export function coverStyleInstructions(
 }
 
 export function coverLanguageLabel(language: CoverTextLanguage): string {
+  if (language === 'km-KH') return 'Khmer';
   if (language === 'zh-CN') return 'Simplified Chinese';
   if (language === 'zh-TW') return 'Traditional Chinese';
   if (language === 'ja-JP') return 'Japanese';

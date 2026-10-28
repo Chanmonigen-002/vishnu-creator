@@ -27,7 +27,7 @@ export function migrateOpenAiImageModel(model: string): string {
  */
 export function imageModelOptions(provider: ImageGenerationProvider, model = ''): ImageModelOptions {
   const id = model.trim().toLowerCase();
-  if (provider === 'codex-native') return { aspectRatios: ['1:1', '3:2', '2:3'], qualities: ['low', 'medium', 'high'] };
+  if (provider === 'codex-native' || provider === 'qwen-image') return { aspectRatios: ['1:1', '3:2', '2:3', '16:9', '9:16'], qualities: ['low', 'medium', 'high'] };
   if (provider === 'gemini') {
     if (/^gemini-2\.5-flash-image/.test(id)) return { aspectRatios: geminiRatios };
     if (/^gemini-3(?:\.1)?-pro-image/.test(id)) return { aspectRatios: geminiRatios, resolutions: ['1K', '2K', '4K'] };
