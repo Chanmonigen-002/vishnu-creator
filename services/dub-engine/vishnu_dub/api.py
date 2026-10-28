@@ -19,13 +19,24 @@ from fastapi import Body, FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse, JSONResponse, StreamingResponse
 from pydantic import BaseModel, Field
 
+from vishnu_dub.catalog import find_model_in_catalog
 from vishnu_dub.config import get_settings, Settings
 from vishnu_dub.jobs import JobManager, JobStatus, JobProgress
+from vishnu_dub.models import ModelStore
 
 logger = logging.getLogger("vishnu_dub.api")
 
 
 # ─── Models ──────────────────────────────────────────────────────────────
+
+
+class ModelDownloadApiRequest(BaseModel):
+    model_id: str
+    force_redownload: bool = False
+
+
+class ModelVerifyApiRequest(BaseModel):
+    model_id: str
 
 
 class HardwareProfile(BaseModel):
@@ -1276,6 +1287,68 @@ async def download_voice_design_artifact(filename: str):
         media_type=media_type,
         filename=safe_filename,
     )
+
+
+# ─── Model Store Routes (T7.2) ───────────────────────────────────────────
+
+model_store = ModelStore()
+
+
+@app.get("/v1/models")
+async def list_models():
+    """List available model checkpoints in the model store."""
+    return model_store.list_models()
+
+
+@app.post("/v1/models/download")
+async def download_model_endpoint(req: ModelDownloadApiRequest):
+    """Download a model into the model store."""
+    item = find_model_in_catalog(req.model_id)
+    if not item:
+        raise HTTPException(status_code=404, detail=f"Model '{req.model_id}' not found in catalog")
+    try:
+        return await model_store.download_model(
+            model_id=req.model_id,
+            force_redownload=req.force_redownload,
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@app.get("/v1/models/download/{model_id}")
+async def get_model_download_progress_endpoint(model_id: str):
+    """Get status or progress of a model in the model store."""
+    m = model_store.get_model(model_id)
+    if not m:
+        raise HTTPException(status_code=404, detail=f"Model '{model_id}' not found")
+    installed = m["installed"]
+    return {
+        "model_id": model_id,
+        "status": "installed" if installed else "idle",
+        "bytes_downloaded": m["local_size_bytes"] or 0,
+        "total_bytes": m["size_bytes"],
+        "percent": 100.0 if installed else 0.0,
+        "speed_bytes_per_sec": 0,
+        "local_path": m["local_path"],
+    }
+
+
+@app.post("/v1/models/verify")
+async def verify_model_endpoint(req: ModelVerifyApiRequest):
+    """Verify SHA-256 checksum of an installed model."""
+    res = model_store.verify_model(req.model_id)
+    if not res.get("expected_sha256") and "not in catalog" in res.get("error", ""):
+        raise HTTPException(status_code=404, detail=res["error"])
+    return res
+
+
+@app.delete("/v1/models/{model_id}")
+async def delete_model_endpoint(model_id: str):
+    """Delete a model file and part files from the store."""
+    res = model_store.delete_model(model_id)
+    if "not found in catalog" in res.get("message", ""):
+        raise HTTPException(status_code=404, detail=res["message"])
+    return res
 
 
 @app.get("/health")

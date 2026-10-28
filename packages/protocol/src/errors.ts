@@ -176,6 +176,8 @@ export type RuntimeErrorCode =
   | 'vishnu_path_invalid'
   | 'vishnu_config_missing'
   | 'vishnu_capability_unavailable'
+  | 'dub_model_not_found'
+  | 'dub_model_download_failed'
   | 'INTERNAL_ERROR';
 
 export function publicErrorKindForCode(code: string): PublicErrorFacts['kind'] | undefined {

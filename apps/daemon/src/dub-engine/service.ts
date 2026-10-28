@@ -16,6 +16,12 @@ import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { DubEngineClient } from './client.js';
 import {
+  DubModelManager,
+  resolveModelsCacheDirectory,
+  checkFreeDiskSpace,
+  computeFileSha256,
+} from './model-manager.js';
+import {
   DubEngineConfig,
   DubEngineError,
   DubEngineHealth,
@@ -65,7 +71,15 @@ export type {
   DubBenchmarkResponse,
   DubEngineHealth,
 };
-export { DubEngineError, DubEngineClient, defaultDubEngineConfig };
+export {
+  DubEngineError,
+  DubEngineClient,
+  defaultDubEngineConfig,
+  DubModelManager,
+  resolveModelsCacheDirectory,
+  checkFreeDiskSpace,
+  computeFileSha256,
+};
 
 /**
  * Engine folder: the configured path, else packaged dub engine runtime,
@@ -115,6 +129,7 @@ export function resolveDubEnginePython(config: Pick<DubEngineConfig, 'pythonPath
 export class DubEngineService {
   private config: DubEngineConfig;
   private client: DubEngineClient;
+  private modelManager: DubModelManager;
   private child: ChildProcess | null = null;
   private restartAttempts = 0;
   private isStopping = false;
@@ -125,6 +140,7 @@ export class DubEngineService {
   constructor(options: DubEngineServiceOptions) {
     this.config = { ...defaultDubEngineConfig(), ...options.config };
     this.client = new DubEngineClient(this.config);
+    this.modelManager = new DubModelManager({ modelsDir: this.config.modelFolder });
 
     if (options.onHealthChanged) this.on('health-changed', options.onHealthChanged);
     if (options.onJobProgress) this.on('job-progress', options.onJobProgress);
@@ -145,6 +161,10 @@ export class DubEngineService {
 
   getClient(): DubEngineClient {
     return this.client;
+  }
+
+  getModelManager(): DubModelManager {
+    return this.modelManager;
   }
 
   isHealthy(): boolean {
@@ -208,6 +228,7 @@ export class DubEngineService {
 
     const engineDir = resolveDubEngineDirectory(this.config);
     const pythonPath = resolveDubEnginePython(this.config, engineDir);
+    const modelStore = this.modelManager.getModelsDirectory();
 
     this.child = spawn(pythonPath, ['-m', 'vishnu_dub.api'], {
       cwd: engineDir,
@@ -215,6 +236,8 @@ export class DubEngineService {
       env: {
         ...process.env,
         VISHNU_DUB_ENGINE: '1',
+        VISHNU_DUB_MODEL_STORE: modelStore,
+        VISHNUCREATOR_MODELS_DIR: modelStore,
       },
     });
 

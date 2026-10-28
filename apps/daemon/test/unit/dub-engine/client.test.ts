@@ -5,7 +5,12 @@ import {
   fromSnakeJobResponse,
   fromSnakeJobStatus,
   fromSnakeProgress,
-  toSnakeDubRequest
+  toSnakeDubRequest,
+  fromSnakeModelCatalogItem,
+  fromSnakeModelList,
+  fromSnakeModelProgress,
+  fromSnakeModelVerify,
+  fromSnakeModelDelete,
 } from '../../../src/dub-engine/client.js';
 
 describe('snake_case ↔ camelCase wire-format mappers', () => {
@@ -158,6 +163,98 @@ describe('snake_case ↔ camelCase wire-format mappers', () => {
       separationTimeSeconds: 2.0,
       totalTimeSeconds: 13.6,
       tier: 'T2'
+    });
+  });
+
+  it('fromSnakeModelList and fromSnakeModelCatalogItem map wire fields', () => {
+    const raw = {
+      models_root: 'D:\\.vishnucreator\\models',
+      available_disk_free_bytes: 1000000000,
+      models: [
+        {
+          id: 'whisper-small-int8',
+          name: 'Whisper Small',
+          category: 'asr',
+          description: 'Lightweight ASR',
+          size_bytes: 484000000,
+          expected_sha256: 'abc123',
+          source_url: 'https://example.com/whisper.bin',
+          filename: 'model.bin',
+          target_subdir: 'whisper',
+          recommended_for_tier: ['T0', 'T1'],
+          installed: true,
+          local_path: 'D:\\.vishnucreator\\models\\whisper\\model.bin',
+          local_size_bytes: 484000000,
+          sha256_verified: true,
+        },
+      ],
+    };
+
+    const res = fromSnakeModelList(raw);
+    expect(res.modelsRoot).toBe('D:\\.vishnucreator\\models');
+    expect(res.availableDiskFreeBytes).toBe(1000000000);
+    expect(res.models).toHaveLength(1);
+    expect(res.models[0]).toEqual({
+      id: 'whisper-small-int8',
+      name: 'Whisper Small',
+      category: 'asr',
+      description: 'Lightweight ASR',
+      sizeBytes: 484000000,
+      expectedSha256: 'abc123',
+      sourceUrl: 'https://example.com/whisper.bin',
+      filename: 'model.bin',
+      targetSubdir: 'whisper',
+      recommendedForTier: ['T0', 'T1'],
+      installed: true,
+      localPath: 'D:\\.vishnucreator\\models\\whisper\\model.bin',
+      localSizeBytes: 484000000,
+      sha256Verified: true,
+    });
+  });
+
+  it('fromSnakeModelProgress, verify, and delete map wire formats', () => {
+    const prog = fromSnakeModelProgress({
+      model_id: 'htdemucs',
+      status: 'downloading',
+      bytes_downloaded: 5000,
+      total_bytes: 10000,
+      percent: 50.0,
+      speed_bytes_per_sec: 1000,
+    });
+    expect(prog).toEqual({
+      modelId: 'htdemucs',
+      status: 'downloading',
+      bytesDownloaded: 5000,
+      totalBytes: 10000,
+      percent: 50.0,
+      speedBytesPerSec: 1000,
+      error: undefined,
+      localPath: undefined,
+    });
+
+    const verify = fromSnakeModelVerify({
+      model_id: 'htdemucs',
+      valid: true,
+      expected_sha256: 'abc',
+      calculated_sha256: 'abc',
+    });
+    expect(verify).toEqual({
+      modelId: 'htdemucs',
+      valid: true,
+      expectedSha256: 'abc',
+      calculatedSha256: 'abc',
+      error: undefined,
+    });
+
+    const del = fromSnakeModelDelete({
+      model_id: 'htdemucs',
+      deleted: true,
+      message: 'Deleted successfully',
+    });
+    expect(del).toEqual({
+      modelId: 'htdemucs',
+      deleted: true,
+      message: 'Deleted successfully',
     });
   });
 });
