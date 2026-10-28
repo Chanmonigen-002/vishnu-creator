@@ -223,6 +223,10 @@ def build_app():
                     label="Reference Voice Audio (10–30s clean WAV)",
                 )
 
+                with gr.Row():
+                    load_sample_btn1 = gr.Button("🎤 Use Official Clone Sample", size="sm", variant="secondary")
+                    load_sample_btn2 = gr.Button("📚 Use Training Reader Sample", size="sm", variant="secondary")
+
                 is_ultimate = gr.Checkbox(
                     label="Ultimate Cloning Mode (Requires Transcript for Highest Similarity)",
                     value=False,
@@ -306,6 +310,42 @@ def build_app():
                 status_out = gr.Markdown()
 
         # Wire callbacks
+        def load_official_clone_sample():
+            path = Path("samples/voxcpm2_reference_speaker.wav").resolve()
+            if not path.exists():
+                path = (Path(__file__).resolve().parent / "services/dub-engine/vishnu_dub/data/sample_voices/default_clone_speaker.wav").resolve()
+            return str(path), True, "Hello, this is the official VoxCPM2 reference speaker recording for high fidelity voice cloning."
+
+        def load_training_sample():
+            path = Path("samples/voxcpm2_training_sample.wav").resolve()
+            if not path.exists():
+                path = (Path(__file__).resolve().parent / "services/dub-engine/vishnu_dub/data/sample_voices/default_training_sample.wav").resolve()
+            return str(path), False, "This is an example audio transcript for voice cloning and fine-tuning."
+
+        load_sample_btn1.click(
+            fn=load_official_clone_sample,
+            inputs=[],
+            outputs=[ref_audio, is_ultimate, transcript_input],
+        )
+
+        load_sample_btn2.click(
+            fn=load_training_sample,
+            inputs=[],
+            outputs=[ref_audio, is_ultimate, transcript_input],
+        )
+
+        sample1_path = Path("samples/voxcpm2_reference_speaker.wav").resolve()
+        sample2_path = Path("samples/voxcpm2_training_sample.wav").resolve()
+        if sample1_path.exists():
+            gr.Examples(
+                examples=[
+                    [str(sample1_path), True, "Hello, this is the official VoxCPM2 reference speaker recording for high fidelity voice cloning.", "Welcome to Vishnu Creator! This high fidelity cloned voice is running with VoxCPM2.", "cheerful, energetic"],
+                    [str(sample2_path), False, "", "Testing zero-shot quick cloning using the official VoxCPM training audio sample.", "natural, clear tone"],
+                ],
+                inputs=[ref_audio, is_ultimate, transcript_input, target_text, style_dropdown],
+                label="💡 Built-in Default Voice Reading Samples",
+            )
+
         generate_btn.click(
             fn=synthesize_voice,
             inputs=[

@@ -29,6 +29,7 @@ export type VoiceLibraryItem = {
   audioUrl: string;
   audioDataUrl?: string;
   consent: boolean;
+  isSample?: boolean;
 };
 
 export function VoiceLibrary(props: {
@@ -544,6 +545,11 @@ export function VoiceLibrary(props: {
               <div className="voice-library-card-header">
                 <div className="voice-library-card-title">
                   <span className="voice-library-name">{voice.name}</span>
+                  {voice.isSample ? (
+                    <span className="voice-library-sample-badge" style={{ fontSize: '11px', padding: '2px 6px', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', borderRadius: '4px', fontWeight: 500 }}>
+                      {l('官方示例', 'Official Sample')}
+                    </span>
+                  ) : null}
                   {voice.consent ? (
                     <CircleCheck className="voice-library-consent-badge" size={14} aria-label={l('已授权', 'Consented')} />
                   ) : (

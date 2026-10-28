@@ -68,6 +68,10 @@ def main():
     )
     parser.add_argument("--steps", type=int, default=6, help="Inference diffusion timesteps (low-spec default: 6)")
     parser.add_argument("--cfg", type=float, default=2.0, help="CFG guidance scale (default: 2.0)")
+    parser.add_argument(
+        "--use_sample_voice", action="store_true", default=False,
+        help="Use the official VoxCPM2 reference speaker sample audio for zero-shot voice cloning",
+    )
     parser.add_argument("--lora_path", type=str, default=None, help="Path to fine-tuned LoRA weights directory or file")
     parser.add_argument("--denoiser", action="store_true", default=False, help="Enable ZipEnhancer denoiser (requires extra VRAM)")
     parser.add_argument("--seed", type=int, default=None, help="Random seed for reproducible generation")
@@ -103,6 +107,16 @@ def main():
     prompt_wav = None
     reference_wav = None
     prompt_text = None
+
+    if args.use_sample_voice or args.audio == "sample":
+        sample_cand = Path("samples/voxcpm2_reference_speaker.wav").resolve()
+        if not sample_cand.exists():
+            sample_cand = (Path(__file__).resolve().parent / "services/dub-engine/vishnu_dub/data/sample_voices/default_clone_speaker.wav").resolve()
+        if sample_cand.exists():
+            args.audio = str(sample_cand)
+            if not args.prompt_text:
+                args.prompt_text = "Hello, this is the official VoxCPM2 reference speaker recording for high fidelity voice cloning."
+            print(f"[Sample Voice] Selected official default reference speaker: {sample_cand.name}")
 
     if args.audio:
         audio_path = Path(args.audio).resolve()
