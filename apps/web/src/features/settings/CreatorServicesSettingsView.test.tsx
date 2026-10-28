@@ -642,6 +642,16 @@ describe('CreatorServicesSettingsView', () => {
     await user.click(screen.getByRole('combobox', { name: '服务商' }));
     await user.click(screen.getByRole('option', { name: 'Veo' }));
     expect(screen.getByLabelText('默认模型')).toHaveValue('veo-3.1-generate-preview');
+
+    await user.click(screen.getByRole('combobox', { name: '服务商' }));
+    await user.click(screen.getByRole('option', { name: 'Runway (Gen-3 / Gen-4)' }));
+    expect(screen.getByLabelText('默认模型')).toHaveValue('gen4.5');
+    expect(screen.getByLabelText('Base URL')).toHaveValue('https://api.dev.runwayml.com');
+
+    await user.click(screen.getByRole('combobox', { name: '服务商' }));
+    await user.click(screen.getByRole('option', { name: 'ComfyUI (Local)' }));
+    expect(screen.getByLabelText('默认工作流')).toHaveValue('svd-workflow');
+    expect(screen.queryByLabelText('API Key')).not.toBeInTheDocument();
   });
 
   it('uses local Codex image generation by default without configuration fields', async () => {

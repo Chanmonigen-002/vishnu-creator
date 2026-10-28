@@ -951,12 +951,7 @@ function createVideoConfig() {
     },
     dubEngine: createDefaultCreatorServicesConfig().dubEngine,
     image: createDefaultCreatorServicesConfig().image,
-    video: {
-      provider: 'seedance' as const,
-      seedance: { baseUrl: '', apiKey: '', model: 'doubao-seedance-2-5-260628' },
-      kling: { baseUrl: '', accessKey: '', secretKey: '', model: 'kling-v2-1-master' },
-      veo: { baseUrl: '', apiKey: '', model: 'veo-3.1-generate-preview' }
-    }
+    video: createDefaultCreatorServicesConfig().video
   };
 }
 

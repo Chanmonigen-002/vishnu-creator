@@ -9,7 +9,7 @@ import type {
   CreatorServicesConfig,
   PublicErrorFacts
 } from '@vishnucreator/protocol';
-import { creatorPreflightFailure, imagePromptRequiresReference, isCreatorTtsProvider } from '@vishnucreator/protocol';
+import { creatorPreflightFailure, imagePromptRequiresReference, isCreatorTtsProvider, videoGenerationProviders } from '@vishnucreator/protocol';
 import { access, mkdir, readFile } from 'node:fs/promises';
 import { constants } from 'node:fs';
 import { join } from 'node:path';
@@ -572,7 +572,9 @@ function readTtsProvider(job: CreatorJob, config: CreatorServicesConfig): Creato
 }
 function readVideoProvider(job: CreatorJob, config: CreatorServicesConfig): CreatorServicesConfig['video']['provider'] {
   const value = job.state.provider;
-  return value === 'seedance' || value === 'kling' || value === 'veo' ? value : config.video.provider;
+  return (videoGenerationProviders as readonly unknown[]).includes(value)
+    ? value as CreatorServicesConfig['video']['provider']
+    : config.video.provider;
 }
 function executionMode(stage: CreatorTemplateStage, job: CreatorJob): CreatorPreflightExecutionMode {
   if (stage.executor === 'image' || stage.executor === 'video' || stage.executor === 'smart-dubbing' || stage.executor === 'stickman-image') return 'remote';

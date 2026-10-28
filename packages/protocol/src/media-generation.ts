@@ -85,11 +85,20 @@ export type ImageGenerationResultResponse = {
 };
 
 export const videoGenerationSizes = ['1280x720', '720x1280', '1024x1024'] as const;
-export const videoGenerationDurations = [4, 5, 6, 8, 10] as const;
 export type VideoGenerationSize = typeof videoGenerationSizes[number] | `${number}x${number}` | `${string}@${number}:${number}`;
+export const videoGenerationDurations = [2, 3, 4, 5, 6, 7, 8, 9, 10] as const;
 export type VideoGenerationDuration = number;
 export type VideoGenerationStatus = 'queued' | 'in_progress' | 'completed' | 'failed';
-export type VideoGenerationProvider = 'seedance' | 'kling' | 'veo';
+export const videoGenerationProviders = [
+  'seedance',
+  'kling',
+  'veo',
+  'runway',
+  'luma',
+  'minimax',
+  'comfyui'
+] as const;
+export type VideoGenerationProvider = typeof videoGenerationProviders[number];
 
 export const videoGenerationModelIds = {
   seedance: [
@@ -102,13 +111,21 @@ export const videoGenerationModelIds = {
     'doubao-seedance-1-0-pro-250528'
   ],
   kling: ['kling-v2-1-master'],
-  veo: ['veo-3.1-generate-preview']
+  veo: ['veo-3.1-generate-preview'],
+  runway: ['gen4.5', 'gen3a_turbo'],
+  luma: ['ray-2', 'ray-flash-2'],
+  minimax: ['MiniMax-H3', 'MiniMax-H3-Highspeed', 'MiniMax-Hailuo-2.3'],
+  comfyui: ['svd-workflow', 'animatediff-workflow']
 } as const;
 
 export const defaultVideoGenerationModels = {
   seedance: videoGenerationModelIds.seedance[0],
   kling: videoGenerationModelIds.kling[0],
-  veo: videoGenerationModelIds.veo[0]
+  veo: videoGenerationModelIds.veo[0],
+  runway: videoGenerationModelIds.runway[0],
+  luma: videoGenerationModelIds.luma[0],
+  minimax: videoGenerationModelIds.minimax[0],
+  comfyui: videoGenerationModelIds.comfyui[0]
 } satisfies Record<VideoGenerationProvider, string>;
 
 export type VideoGenerationReferenceImage = {

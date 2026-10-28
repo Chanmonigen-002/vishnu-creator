@@ -109,6 +109,10 @@ Where they work: all of the above work in **Text to Speech**, **Smart Dubbing** 
 | Seedance (Volcengine Ark) | Paid | Volcengine Ark console | Text-to-video, image-to-video. |
 | Kling | Paid | Kling AI console | Access key + secret key. |
 | Veo (Gemini) | Paid | https://aistudio.google.com/apikey | Text-to-video, image-to-video. |
+| Runway | Paid | https://dev.runwayml.com | Gen-4.5 / Gen-3a Turbo via Developer API. |
+| Luma Dream Machine | Paid | https://lumalabs.ai/dream-machine/api | Ray-2 / Ray-Flash-2 generations API. |
+| MiniMax Hailuo | Paid | https://platform.minimax.io | MiniMax-H3 video generation API. |
+| ComfyUI (Local) | Local | — | Free, local; runs against local ComfyUI on port 8188. |
 
 ## Dub engine
 

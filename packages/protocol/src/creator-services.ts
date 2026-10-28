@@ -1,4 +1,4 @@
-import { defaultVideoGenerationModels } from './media-generation.js';
+import { defaultVideoGenerationModels, type VideoGenerationProvider, videoGenerationProviders } from './media-generation.js';
 import { publicErrorKindForCode, safePublicErrorMessage } from './errors.js';
 import type { PublicErrorFacts } from './issues.js';
 import type { GatewayVoiceProfile } from './gateway-account.js';
@@ -446,10 +446,14 @@ export type CreatorServicesConfig = {
     comfyui: OpenAiCompatibleConfig;
   };
   video: {
-    provider: 'seedance' | 'kling' | 'veo';
+    provider: VideoGenerationProvider;
     seedance: OpenAiCompatibleConfig;
     kling: KlingAiConfig;
     veo: OpenAiCompatibleConfig;
+    runway: OpenAiCompatibleConfig;
+    luma: OpenAiCompatibleConfig;
+    minimax: OpenAiCompatibleConfig;
+    comfyui: OpenAiCompatibleConfig;
   };
   dubEngine: CreatorDubEngineConfig;
 };
@@ -578,6 +582,9 @@ export type CreatorServicesCredentialField =
   | 'video.kling.accessKey'
   | 'video.kling.secretKey'
   | 'video.veo.apiKey'
+  | 'video.runway.apiKey'
+  | 'video.luma.apiKey'
+  | 'video.minimax.apiKey'
   | 'dubEngine.token';
 
 export const defaultVolcengineSpeechBaseUrl = 'https://openspeech.bytedance.com';
@@ -754,6 +761,26 @@ export function createDefaultCreatorServicesConfig(): CreatorServicesConfig {
         baseUrl: 'https://generativelanguage.googleapis.com/v1beta',
         apiKey: '',
         model: defaultVideoGenerationModels.veo
+      },
+      runway: {
+        baseUrl: 'https://api.dev.runwayml.com',
+        apiKey: '',
+        model: defaultVideoGenerationModels.runway
+      },
+      luma: {
+        baseUrl: 'https://api.lumalabs.ai/dream-machine/v1',
+        apiKey: '',
+        model: defaultVideoGenerationModels.luma
+      },
+      minimax: {
+        baseUrl: 'https://api.minimax.io/v1',
+        apiKey: '',
+        model: defaultVideoGenerationModels.minimax
+      },
+      comfyui: {
+        baseUrl: 'http://127.0.0.1:8188',
+        apiKey: '',
+        model: defaultVideoGenerationModels.comfyui
       }
     },
     // On by default (T6.7): the local Khmer dub engine starts with the app when

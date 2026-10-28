@@ -3,7 +3,7 @@ import type {
   CreatorServicesConfigResponse,
   CreatorServicesCredentialField
 } from '@vishnucreator/protocol';
-import { createDefaultCreatorServicesConfig, creatorImageProviders, creatorTtsProviders, migrateOpenAiImageModel } from '@vishnucreator/protocol';
+import { createDefaultCreatorServicesConfig, creatorImageProviders, creatorTtsProviders, migrateOpenAiImageModel, videoGenerationProviders } from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 import {
   readVishnuCreatorConfig,
@@ -100,10 +100,14 @@ const legacyImageConfigSchema = z.object({
   openai: value.openai
 }));
 const videoConfigSchema = z.object({
-  provider: z.enum(['seedance', 'kling', 'veo']),
+  provider: z.enum(videoGenerationProviders),
   seedance: openAiCompatibleSchema,
   kling: klingAiSchema,
-  veo: openAiCompatibleSchema
+  veo: openAiCompatibleSchema,
+  runway: openAiCompatibleSchema.default(creatorServicesDefaults.video.runway),
+  luma: openAiCompatibleSchema.default(creatorServicesDefaults.video.luma),
+  minimax: openAiCompatibleSchema.default(creatorServicesDefaults.video.minimax),
+  comfyui: openAiCompatibleSchema.default(creatorServicesDefaults.video.comfyui)
 }).strict();
 const legacyVideoConfigSchema = z.object({
   provider: z.literal('openai-compatible'),
@@ -382,7 +386,10 @@ const creatorCredentialPaths = [
   'video.seedance.apiKey',
   'video.kling.accessKey',
   'video.kling.secretKey',
-  'video.veo.apiKey'
+  'video.veo.apiKey',
+  'video.runway.apiKey',
+  'video.luma.apiKey',
+  'video.minimax.apiKey'
 ] as const;
 
 function splitCreatorServiceCredentials(config: CreatorServicesConfig): {
@@ -503,6 +510,9 @@ export function presentCreatorServicesConfig(
   redact('video.kling.accessKey', redacted.video.kling.accessKey, () => { redacted.video.kling.accessKey = ''; });
   redact('video.kling.secretKey', redacted.video.kling.secretKey, () => { redacted.video.kling.secretKey = ''; });
   redact('video.veo.apiKey', redacted.video.veo.apiKey, () => { redacted.video.veo.apiKey = ''; });
+  redact('video.runway.apiKey', redacted.video.runway.apiKey, () => { redacted.video.runway.apiKey = ''; });
+  redact('video.luma.apiKey', redacted.video.luma.apiKey, () => { redacted.video.luma.apiKey = ''; });
+  redact('video.minimax.apiKey', redacted.video.minimax.apiKey, () => { redacted.video.minimax.apiKey = ''; });
   redact('dubEngine.token', redacted.dubEngine.token, () => { redacted.dubEngine.token = ''; });
 
   return { config: redacted, configuredCredentials };
@@ -562,6 +572,9 @@ export function retainCreatorServicesCredentials(
   retainBlank(() => merged.video.kling.accessKey, value => { merged.video.kling.accessKey = value; }, current.video.kling.accessKey);
   retainBlank(() => merged.video.kling.secretKey, value => { merged.video.kling.secretKey = value; }, current.video.kling.secretKey);
   retainBlank(() => merged.video.veo.apiKey, value => { merged.video.veo.apiKey = value; }, current.video.veo.apiKey);
+  retainBlank(() => merged.video.runway.apiKey, value => { merged.video.runway.apiKey = value; }, current.video.runway.apiKey);
+  retainBlank(() => merged.video.luma.apiKey, value => { merged.video.luma.apiKey = value; }, current.video.luma.apiKey);
+  retainBlank(() => merged.video.minimax.apiKey, value => { merged.video.minimax.apiKey = value; }, current.video.minimax.apiKey);
   return merged;
 }
 
