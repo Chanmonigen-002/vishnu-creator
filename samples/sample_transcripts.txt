@@ -1,0 +1,3 @@
+# Sample Voice Transcripts for VoxCPM2 Cloning and Training
+voxcpm2_reference_speaker|Hello, this is the official VoxCPM2 reference speaker recording for high fidelity voice cloning.
+voxcpm2_training_sample|This is an example audio transcript for voice cloning and fine-tuning.

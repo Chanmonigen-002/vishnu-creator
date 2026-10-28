@@ -66,10 +66,27 @@ export function TtsVoicePicker(props: {
     }
     setLoading(true);
     setVoices([]);
-    void props.service.getTtsVoices(props.provider, props.model)
-      .then(response => {
+    const serviceWithLibrary = props.service as unknown as {
+      listVoiceDesigns?: () => Promise<{ voices: Array<{ id: string; name: string; prompt?: string; isSample?: boolean }> }>;
+    };
+    const ttsPromise = props.service.getTtsVoices(props.provider, props.model);
+    const libPromise = typeof serviceWithLibrary?.listVoiceDesigns === 'function'
+      ? serviceWithLibrary.listVoiceDesigns().catch(() => null)
+      : Promise.resolve(null);
+
+    void Promise.all([ttsPromise, libPromise])
+      .then(([response, libResult]) => {
         if (!active) return;
-        setVoices(response.voices);
+        const libraryVoices: CreatorTtsVoice[] = (libResult?.voices ?? []).map(v => ({
+          id: v.id,
+          name: v.name,
+          provider: props.provider,
+          kind: 'custom' as const,
+          scenario: v.isSample ? l('官方示例', 'Official Sample') : l('音色库', 'Voice Library'),
+          traits: { zh: [v.prompt || ''], en: [v.prompt || ''] },
+          previewLanguages: [appLanguage.split('-')[0] || 'en', 'km', 'en']
+        }));
+        setVoices([...response.voices, ...libraryVoices]);
         pageIssues.resolveOperation('tts.load-voices');
       })
       .catch(cause => {
@@ -225,14 +242,26 @@ export function TtsVoicePicker(props: {
     setPreviewVoiceId(voiceId);
     setPreviewing(true);
     try {
-      const response = await props.service.previewTtsVoice({
-        provider: props.provider,
-        model: props.model,
-        language,
-        voiceId
-      });
-      if (!response.ok) throw new Error(`Voice preview request failed: ${response.status}`);
-      const blob = await response.blob();
+      const serviceWithPreview = props.service as unknown as {
+        previewVoiceDesign?: (req: { voiceId: string }) => Promise<{ ok: boolean; blob: Blob }>;
+      };
+      const isVoiceDesign = voiceId.startsWith('voxcpm2') || (options.find(voice => voice.id === voiceId)?.kind === 'custom' && typeof serviceWithPreview?.previewVoiceDesign === 'function');
+      let blob: Blob;
+      let sampleLang = '';
+      if (isVoiceDesign && typeof serviceWithPreview?.previewVoiceDesign === 'function') {
+        const previewResult = await serviceWithPreview.previewVoiceDesign({ voiceId });
+        blob = previewResult.blob;
+      } else {
+        const response = await props.service.previewTtsVoice({
+          provider: props.provider,
+          model: props.model,
+          language,
+          voiceId
+        });
+        if (!response.ok) throw new Error(`Voice preview request failed: ${response.status}`);
+        blob = await response.blob();
+        sampleLang = response.headers.get('Content-Language') || '';
+      }
       if (request !== previewRequestRef.current) return;
       const url = URL.createObjectURL(blob);
       if (previewUrlRef.current) URL.revokeObjectURL(previewUrlRef.current);
@@ -242,7 +271,7 @@ export function TtsVoicePicker(props: {
       audio.src = url;
       await audio.play();
       if (request !== previewRequestRef.current) return;
-      setSampleLanguage(response.headers.get('Content-Language') || '');
+      setSampleLanguage(sampleLang);
       setPlaying(true);
       pageIssues.resolveOperation('tts.preview-voice');
     } catch (cause) {

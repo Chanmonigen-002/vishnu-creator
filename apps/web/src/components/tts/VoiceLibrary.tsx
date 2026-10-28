@@ -29,11 +29,13 @@ export type VoiceLibraryItem = {
   audioUrl: string;
   audioDataUrl?: string;
   consent: boolean;
+  isSample?: boolean;
 };
 
 export function VoiceLibrary(props: {
   service: Pick<CreatorServicesSettingsService, 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign'> & {
     exportVoiceDesign?: (request: { voiceId: string }) => Promise<{ ok: boolean; voiceId: string; filename: string; exportUrl: string }>;
+    downloadVoiceArtifact?: (filenameOrUrl: string) => Promise<Blob>;
     importVoiceDesign?: (request: { name: string; prompt?: string; audioData: string; consent: boolean; loraWeightsBase64?: string }) => Promise<VoiceLibraryItem>;
   } | null;
   disabled?: boolean;
@@ -227,10 +229,21 @@ export function VoiceLibrary(props: {
     setExportingVoiceId(voiceId);
     try {
       const res = await props.service.exportVoiceDesign({ voiceId });
-      if (res.exportUrl) {
+      const filename = res.filename || `voice_${voiceId}.zip`;
+      if (props.service.downloadVoiceArtifact) {
+        const blob = await props.service.downloadVoiceArtifact(res.filename || res.exportUrl);
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      } else if (res.exportUrl) {
         const link = document.createElement('a');
         link.href = res.exportUrl;
-        link.download = res.filename || `voice_${voiceId}.zip`;
+        link.download = filename;
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
@@ -301,7 +314,11 @@ export function VoiceLibrary(props: {
   }
 
   function formatDate(dateString: string): string {
+    if (!dateString) return l('内置预设', 'Built-in');
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return l('内置预设', 'Built-in');
+    }
     return date.toLocaleDateString(undefined, {
       year: 'numeric',
       month: 'short',
@@ -544,6 +561,11 @@ export function VoiceLibrary(props: {
               <div className="voice-library-card-header">
                 <div className="voice-library-card-title">
                   <span className="voice-library-name">{voice.name}</span>
+                  {voice.isSample ? (
+                    <span className="voice-library-sample-badge" style={{ fontSize: '11px', padding: '2px 6px', background: 'rgba(59, 130, 246, 0.1)', color: '#3b82f6', borderRadius: '4px', fontWeight: 500 }}>
+                      {l('官方示例', 'Official Sample')}
+                    </span>
+                  ) : null}
                   {voice.consent ? (
                     <CircleCheck className="voice-library-consent-badge" size={14} aria-label={l('已授权', 'Consented')} />
                   ) : (

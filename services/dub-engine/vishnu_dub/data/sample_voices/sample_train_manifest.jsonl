@@ -1,0 +1,2 @@
+{"audio": "data/sample_voices/default_training_sample.wav", "text": "This is an example audio transcript for voice cloning and fine-tuning.", "duration": 8.16, "speaker": "narrator_en"}
+{"audio": "data/sample_voices/default_clone_speaker.wav", "text": "សូមស្វាគមន៍មកកាន់ប្រព័ន្ធសំឡេងឆ្លាតវៃ VoxCPM2", "duration": 12.8, "speaker": "voxcpm_sample"}

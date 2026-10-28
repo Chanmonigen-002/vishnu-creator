@@ -576,6 +576,7 @@ export class DubEngineClient {
     audioUrl: string;
     audioDataUrl?: string;
     consent: boolean;
+    isSample?: boolean;
   }> }> {
     const body = await this.request<Record<string, unknown>>(
       'GET',
@@ -584,16 +585,29 @@ export class DubEngineClient {
     const rec = asRecord(body);
     const voices = Array.isArray(rec.voices) ? rec.voices : [];
     return {
-      voices: voices.map(v => ({
-        id: typeof v.id === 'string' ? v.id : '',
-        name: typeof v.name === 'string' ? v.name : '',
-        prompt: typeof v.prompt === 'string' ? v.prompt : '',
-        duration: readNumber(v.duration),
-        createdAt: typeof v.created_at === 'string' ? v.created_at : '',
-        audioUrl: typeof v.audio_url === 'string' ? v.audio_url : '',
-        audioDataUrl: typeof v.audio_data_url === 'string' ? v.audio_data_url : undefined,
-        consent: readBoolean(v.consent),
-      })).filter(v => v.id),
+      voices: voices.map(v => {
+        const item = asRecord(v);
+        const createdAt = typeof item.createdAt === 'string' && item.createdAt
+          ? item.createdAt
+          : (typeof item.created_at === 'string' ? item.created_at : '');
+        const audioUrl = typeof item.audioUrl === 'string' && item.audioUrl
+          ? item.audioUrl
+          : (typeof item.audio_url === 'string' ? item.audio_url : '');
+        const audioDataUrl = typeof item.audioDataUrl === 'string' && item.audioDataUrl
+          ? item.audioDataUrl
+          : (typeof item.audio_data_url === 'string' ? item.audio_data_url : undefined);
+        return {
+          id: typeof item.id === 'string' ? item.id : '',
+          name: typeof item.name === 'string' ? item.name : '',
+          prompt: typeof item.prompt === 'string' ? item.prompt : '',
+          duration: readNumber(item.duration),
+          createdAt,
+          audioUrl,
+          audioDataUrl,
+          consent: readBoolean(item.consent),
+          isSample: Boolean(item.isSample ?? item.is_sample),
+        };
+      }).filter(v => v.id),
     };
   }
 

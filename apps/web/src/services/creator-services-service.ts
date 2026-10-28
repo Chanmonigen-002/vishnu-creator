@@ -26,7 +26,7 @@ import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'patch' | 'delete' | 'rawRequest'>;
 
-export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'exportVoiceDesign' | 'importVoiceDesign' | 'getHardwarePerformance' | 'listLlmModels' | 'getDubEngineStatus' | 'startDubEngine' | 'stopDubEngine' | 'getDubEngineTimesyncReport' | 'streamTts'> & {
+export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'exportVoiceDesign' | 'downloadVoiceArtifact' | 'importVoiceDesign' | 'getHardwarePerformance' | 'listLlmModels' | 'getDubEngineStatus' | 'startDubEngine' | 'stopDubEngine' | 'getDubEngineTimesyncReport' | 'streamTts'> & {
   listLlmModels?: (input: { baseUrl: string; apiKey: string }) => Promise<{ models: string[] }>;
   getDubEngineStatus?: () => Promise<DubEngineRuntimeStatus>;
   startDubEngine?: () => Promise<DubEngineRuntimeStatus>;
@@ -59,6 +59,7 @@ export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreato
   previewVoiceDesign: (request: PreviewVoiceDesignRequest) => Promise<PreviewVoiceDesignResponse>;
   designVoice: (request: VoiceDesignRequest) => Promise<VoiceDesignResponse>;
   exportVoiceDesign?: (request: { voiceId: string }) => Promise<{ ok: boolean; voiceId: string; filename: string; exportUrl: string }>;
+  downloadVoiceArtifact?: (filenameOrUrl: string) => Promise<Blob>;
   importVoiceDesign?: (request: { name: string; prompt?: string; audioData: string; consent: boolean; loraWeightsBase64?: string }) => Promise<VoiceLibraryItem>;
   getHardwarePerformance?: () => Promise<Record<string, unknown>>;
   streamTts?: (request: {
@@ -261,6 +262,17 @@ export function createCreatorServicesService(client: ClientLike) {
           throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
         }
         return response.json();
+      });
+    },
+    downloadVoiceArtifact(filenameOrUrl: string): Promise<Blob> {
+      const clean = filenameOrUrl.startsWith('/creator-services/tts/artifacts/')
+        ? filenameOrUrl
+        : `/creator-services/tts/artifacts/${encodeURIComponent(filenameOrUrl.replace(/^.*[\\/]/, ''))}`;
+      return client.rawRequest(clean, {
+        method: 'GET'
+      }).then(async response => {
+        if (!response.ok) throw new Error(`Artifact download failed: ${response.status}`);
+        return response.blob();
       });
     },
     importVoiceDesign(request: { name: string; prompt?: string; audioData: string; consent: boolean; loraWeightsBase64?: string }): Promise<VoiceLibraryItem> {

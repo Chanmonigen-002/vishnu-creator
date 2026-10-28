@@ -1,0 +1,11 @@
+{
+  "id": "voxcpm2_training_reader",
+  "name": "VoxCPM2 Training Voice Reader",
+  "prompt": "Clear articulate voice reading sample for fine-tuning and training",
+  "duration": 8.16,
+  "createdAt": "2026-10-28T00:00:00Z",
+  "audioUrl": "/v1/tts/artifacts/default_training_sample.wav",
+  "consent": true,
+  "isSample": true,
+  "description": "Standard voice reading sample with matching transcript for VoxCPM2 training manifests."
+}
