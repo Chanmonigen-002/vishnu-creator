@@ -98,11 +98,12 @@ export function resolveDaemonListenPort(env: NodeJS.ProcessEnv = process.env): n
 }
 
 export function createProductionServerInput(
-  input: Omit<BuildServerInput, 'schedulerAutostart'>
+  input: Omit<BuildServerInput, 'schedulerAutostart' | 'dubEngineAutostart'>
 ): BuildServerInput {
   return {
     ...input,
     schedulerAutostart: true,
+    dubEngineAutostart: true,
     agentToolsEnabled: true,
     persistentAppServerEnabled: input.persistentAppServerEnabled ?? true
   };

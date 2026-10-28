@@ -813,7 +813,9 @@ describe('DashboardPage', () => {
     expect(screen.getByRole('tab', { name: 'Recommended' })).toHaveAttribute('aria-selected', 'true');
     expect(screen.getByRole('tab', { name: 'Video Editing' })).toBeInTheDocument();
     expect(screen.getByRole('searchbox', { name: 'Search apps' })).toBeInTheDocument();
-    expect(screen.getByText('Translate & Dub Video')).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: 'Khmer Dub Studio' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /Translate & dub to Khmer/ })).toBeInTheDocument();
+    expect(screen.getByText('Shorts with Khmer captions')).toBeInTheDocument();
     expect(screen.getAllByText('Thumbnail Generator')).toHaveLength(1);
     expect(screen.getAllByText('Image Generation')).toHaveLength(2);
     expect(screen.queryByText('Digital Avatar')).not.toBeInTheDocument();
@@ -824,7 +826,7 @@ describe('DashboardPage', () => {
     expect(screen.getByRole('heading', { name: 'Painel', level: 1 })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: 'Aplicativos em destaque' })).toBeInTheDocument();
     expect(screen.getByRole('searchbox', { name: 'Pesquisar aplicativos' })).toBeInTheDocument();
-    expect(screen.getByText('Traduzir e dublar vídeo')).toBeInTheDocument();
+    expect(screen.getByText('Tradução de vídeo')).toBeInTheDocument();
   });
 
   it('creates the selected project type from the dashboard dropdown', async () => {
@@ -894,12 +896,14 @@ describe('DashboardPage', () => {
     expect(screen.getByRole('heading', { name: '工作台' })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: '精选应用' })).toBeInTheDocument();
     expect(screen.getAllByRole('button', { name: /打开.+/ })).toHaveLength(3);
-    expect(screen.getByRole('button', { name: '打开视频翻译配音' }).querySelector('img'))
-      .toHaveAttribute('src', '/dashboard/templates/video-translation-example.png');
-    expect(screen.getByRole('button', { name: '打开封面生成' }).querySelector('img'))
-      .toHaveAttribute('src', '/dashboard/templates/peter-openclaw-cover.png');
-    expect(screen.getByRole('button', { name: '打开图像生成' }).querySelector('img'))
-      .toHaveAttribute('src', '/dashboard/templates/image-generation-cover.png');
+    // Featured cards are drawn Khmer art, not upstream's sample photos (T6.6).
+    for (const name of ['打开高棉语字幕短视频', '打开封面生成', '打开图像生成']) {
+      const card = screen.getByRole('button', { name });
+      expect(card.querySelector('img')).toBeNull();
+      expect(card.querySelector('.dashboard-featured-art [lang="km"]')).not.toBeNull();
+    }
+    expect(container.querySelector('img[src*="peter-openclaw"], img[src*="video-translation-example"]')).toBeNull();
+    expect(screen.getByRole('heading', { name: '高棉语配音工作室' })).toBeInTheDocument();
     expect(screen.getByRole('region', { name: '创作应用' })).toBeInTheDocument();
     expect(screen.getByRole('searchbox', { name: '搜索应用' })).toBeInTheDocument();
     expect(screen.getAllByRole('tab').slice(0, 2).map(tab => tab.textContent)).toEqual(['推荐', '全部']);

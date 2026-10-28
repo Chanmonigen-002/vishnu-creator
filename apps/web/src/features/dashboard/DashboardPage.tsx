@@ -58,6 +58,7 @@ import { CreateProjectDropdown } from '../projects/CreateProjectDropdown.js';
 import type { CreatorProjectType } from '../projects/project-types.js';
 import { IssueList } from '../issues/IssuePresenter.js';
 import { usePageIssueState } from '../issues/page-issue-state.js';
+import { KhmerStudioHero } from './KhmerStudioHero.js';
 
 type DashboardCategory = '视频创作' | '图像创作' | '文案创作' | '音频处理' | '视频编辑' | '数字人';
 
@@ -71,30 +72,32 @@ type DashboardEntry = {
   workspace?: CreatorWorkspace;
 };
 
+// Featured cards are drawn (Khmer letters on gradients) rather than using
+// upstream's sample photos of real people (T6.6).
 type FeaturedEntry = Pick<DashboardEntry, 'title' | 'prompt'> & {
-  image: string;
+  art: { glyph: string; caption: string };
   accent: 'warm' | 'cyan' | 'neutral';
   workspace?: CreatorWorkspace;
 };
 
 const featuredTools: FeaturedEntry[] = [
   {
-    title: '视频翻译配音',
-    image: '/dashboard/templates/video-translation-example.png',
-    prompt: '帮我把这段视频翻译成目标语言，保留原片语气，并生成匹配的字幕和配音。',
+    title: '高棉语字幕短视频',
+    art: { glyph: 'វីដេអូខ្លី', caption: '9:16' },
+    prompt: '帮我从这段长视频中识别适合独立传播的高光片段，并生成多个短视频切片。',
     accent: 'cyan',
-    workspace: 'video-translation'
+    workspace: 'auto-clips'
   },
   {
     title: '封面生成',
-    image: '/dashboard/templates/peter-openclaw-cover.png',
+    art: { glyph: 'ក', caption: 'Aa' },
     prompt: '根据我的内容主题生成一张封面，请先规划标题层级、主体画面、构图和视觉风格。',
     accent: 'warm',
     workspace: 'cover-generator'
   },
   {
     title: '图像生成',
-    image: '/dashboard/templates/image-generation-cover.png',
+    art: { glyph: 'រូបភាព', caption: 'AI' },
     prompt: '根据我的创意生成一组图片，请先确认画面主体、风格、构图和使用场景。',
     accent: 'neutral',
     workspace: 'image-generation'
@@ -490,6 +493,12 @@ export default function DashboardPage(props: {
         </header>
         <IssueList issues={launchIssues.issues} onDismiss={launchIssues.dismissIssue} />
 
+        <KhmerStudioHero
+          service={props.creatorServicesService}
+          onTranslateAndDub={() => openWorkspace('video-translation')}
+          onKhmerVoices={() => openWorkspace('smart-dubbing')}
+        />
+
         <section className="dashboard-featured" aria-labelledby="dashboard-featured-title">
           <h2 id="dashboard-featured-title">{t('dashboard.featured')}</h2>
           <div className="dashboard-featured-grid">
@@ -504,7 +513,10 @@ export default function DashboardPage(props: {
                   : props.onSelectPrompt(tool.prompt)}
                 aria-label={t('dashboard.openTool', { title: localize(tool.title) })}
               >
-                <img src={tool.image} alt="" />
+                <span className="dashboard-featured-art" aria-hidden="true">
+                  <span lang="km">{tool.art.glyph}</span>
+                  <small>{tool.art.caption}</small>
+                </span>
                 <span className="dashboard-featured-scrim" aria-hidden="true" />
                 <span className="dashboard-featured-copy">
                   <strong>{localize(tool.title)}</strong>
@@ -1052,6 +1064,7 @@ const englishDashboardLabels: Record<string, string> = {
   图像生成: 'Image Generation',
   生成创意图片与视觉素材: 'Generate images and visual assets',
   封面生成: 'Thumbnail Generator',
+  高棉语字幕短视频: 'Shorts with Khmer captions',
   生成视频与内容封面: 'Create thumbnails for videos and content',
   视频下载: 'Video Downloader',
   '下载公开视频，或提取 MP3 音频': 'Download public videos or extract MP3 audio'

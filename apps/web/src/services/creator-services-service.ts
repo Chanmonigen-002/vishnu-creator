@@ -17,14 +17,18 @@ import type {
   PreviewVoiceDesignRequest,
   PreviewVoiceDesignResponse,
   VoiceDesignRequest,
-  VoiceDesignResponse
+  VoiceDesignResponse,
+  DubEngineRuntimeStatus
 } from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'patch' | 'delete' | 'rawRequest'>;
 
-export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'listLlmModels'> & {
+export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'listLlmModels' | 'getDubEngineStatus' | 'startDubEngine' | 'stopDubEngine'> & {
   listLlmModels?: (input: { baseUrl: string; apiKey: string }) => Promise<{ models: string[] }>;
+  getDubEngineStatus?: () => Promise<DubEngineRuntimeStatus>;
+  startDubEngine?: () => Promise<DubEngineRuntimeStatus>;
+  stopDubEngine?: () => Promise<DubEngineRuntimeStatus>;
   getCodexImageStatus?: () => Promise<CodexImageStatus>;
   getCodexModelStatus?: () => Promise<CodexProviderConfig>;
   getNetwork?: () => Promise<{ proxy: string }>;
@@ -86,6 +90,15 @@ export function createCreatorServicesService(client: ClientLike) {
       const query = new URLSearchParams({ provider });
       if (model?.trim()) query.set('model', model.trim());
       return client.get(`/creator-services/tts/voices?${query.toString()}`);
+    },
+    getDubEngineStatus(): Promise<DubEngineRuntimeStatus> {
+      return client.get('/creator-services/dub-engine/status');
+    },
+    startDubEngine(): Promise<DubEngineRuntimeStatus> {
+      return client.rawRequest('/creator-services/dub-engine/start', { method: 'POST' }).then(response => response.json());
+    },
+    stopDubEngine(): Promise<DubEngineRuntimeStatus> {
+      return client.rawRequest('/creator-services/dub-engine/stop', { method: 'POST' }).then(response => response.json());
     },
     testDubEngineConnection(config: {
       mode: 'local' | 'remote';

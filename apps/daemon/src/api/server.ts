@@ -71,6 +71,7 @@ import { createVideoExecutor } from '../creator/video/executor.js';
 import { createClipExecutor } from '../creator/clip/executor.js';
 import { createSmartDubbingExecutor } from '../creator/smart-dubbing/executor.js';
 import { createDubEngineService } from '../dub-engine/service.js';
+import { DubEngineRuntime } from '../dub-engine/runtime.js';
 import { createXiaohongshuPostExecutor } from '../creator/xiaohongshu/executor.js';
 import { createShortVideoScriptExecutor } from '../creator/short-video-script/executor.js';
 import { createWechatArticleExecutor } from '../creator/article/executor.js';
@@ -240,6 +241,7 @@ import { registerApprovalRoutes } from './routes.approvals.js';
 import { registerCodexRoutes } from './routes.codex.js';
 import { registerCleanupRoutes } from './routes.cleanup.js';
 import { registerCreatorServicesRoutes } from './routes.creator-services.js';
+import { registerDubEngineRuntimeRoutes } from './routes.dub-engine-runtime.js';
 import { registerGatewayAccountRoutes } from './routes.gateway-account.js';
 import { createGatewayAccountService, type GatewayAccountService } from '../gateway/account-service.js';
 import { createGatewayClient, GatewayError, type GatewayClient } from '../gateway/client.js';
@@ -295,6 +297,8 @@ export type BuildServerInput = {
   scheduler?: SchedulerService;
   scheduleCoordinator?: ScheduleCoordinator;
   schedulerAutostart?: boolean;
+  /** Start the local dub engine at startup when its saved config asks for it (production only). */
+  dubEngineAutostart?: boolean;
   startupSessionClassifier?(): void;
   sseHeartbeatMs?: number;
   resumeCapabilityVerified?: boolean;
@@ -1010,24 +1014,23 @@ export async function buildServer(input: BuildServerInput) {
   } catch (error) {
     console.warn(`Creator optional runtime executors are unavailable: ${formatError(error)}`);
   }
-  let dubEngineService: ReturnType<typeof createDubEngineService> | undefined;
-  try {
-    const creatorServicesConfig = await creatorServicesConfigStore.read();
-    if (creatorServicesConfig.dubEngine?.enabled) {
-      dubEngineService = createDubEngineService({
-        config: creatorServicesConfig.dubEngine,
-        onEngineStarted: () => console.log('[dub-engine] engine started'),
-        onEngineStopped: () => console.log('[dub-engine] engine stopped'),
-        onEngineCrashed: (err) => console.warn('[dub-engine] engine crashed:', err.message)
-      });
-      if (creatorServicesConfig.dubEngine.autoStart) {
-        dubEngineService.start().catch(err =>
-          console.warn('[dub-engine] autostart failed:', err instanceof Error ? err.message : String(err))
-        );
+  // The runtime can start, stop and report the engine at any time (T6.7).
+  const dubEngineRuntime = new DubEngineRuntime(creatorServicesConfigStore, config => createDubEngineService({
+    config,
+    onEngineStarted: () => console.log('[dub-engine] engine started'),
+    onEngineStopped: () => console.log('[dub-engine] engine stopped'),
+    onEngineCrashed: (err) => console.warn('[dub-engine] engine crashed:', err.message)
+  }));
+  if (input.dubEngineAutostart === true) {
+    try {
+      const { dubEngine } = await creatorServicesConfigStore.read();
+      if (dubEngine?.enabled && dubEngine.autoStart) {
+        const status = await dubEngineRuntime.start({ persist: false });
+        if (status.state === 'not_installed') console.log(`[dub-engine] autostart skipped: ${status.message}`);
       }
+    } catch (error) {
+      console.warn('[dub-engine] autostart failed:', error instanceof Error ? error.message : String(error));
     }
-  } catch (error) {
-    console.warn('[dub-engine] service wiring skipped:', error instanceof Error ? error.message : String(error));
   }
   if (input.creatorExecutors === undefined) {
     creatorExecutors.push(createXiaohongshuPostExecutor({
@@ -1040,7 +1043,7 @@ export async function buildServer(input: BuildServerInput) {
       ttsService: vishnuTtsService,
       isOfficial: () => gatewayAccount.peekState().source === 'gateway',
       configStore: creatorServicesConfigStore,
-      ...(dubEngineService === undefined ? {} : { dubEngineService })
+      getDubEngineService: () => dubEngineRuntime.current()
     }));
     creatorExecutors.push(createImageExecutor({
       ledger: creatorProviderRequestLedger,
@@ -1526,6 +1529,7 @@ export async function buildServer(input: BuildServerInput) {
 
   server.addHook('onClose', async () => {
     closing = true;
+    await dubEngineRuntime.stop().catch(() => undefined);
     await youtubeConnection.close();
     await douyinConnection.close();
     await modelSelectionProbe.close();
@@ -1650,6 +1654,7 @@ export async function buildServer(input: BuildServerInput) {
   });
   await registerCleanupRoutes(server, cleanupService);
   await registerSettingsRoutes(server, vishnuCreatorSettingsStore);
+  await registerDubEngineRuntimeRoutes(server, dubEngineRuntime);
   await registerCreatorServicesRoutes(
     server,
     creatorServicesConfigStore,

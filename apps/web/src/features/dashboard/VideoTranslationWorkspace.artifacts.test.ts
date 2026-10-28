@@ -26,7 +26,8 @@ describe('video translation result artifact selection', () => {
     const original = { ...snapshot(1, { target_subtitle: [subtitle.id] }, [subtitle.id]), state: {} };
     const state = { resultSnapshots: [original] };
     expect(resultVersionsFromArtifacts([subtitle], state)[0]?.settings).toMatchObject({
-      sourceLanguage: 'en', targetLanguage: 'zh_cn', bilingual: true, subtitlePosition: 'top',
+      // Khmer is the default target since T1.2.
+      sourceLanguage: 'en', targetLanguage: 'km', bilingual: true, subtitlePosition: 'top',
       preferPlatformCaptions: true, composeVideo: false, dubbing: false, videoFormat: 'horizontal'
     });
     const saved = { ...original, state: { sourceLanguage: 'fr', targetLanguage: 'ja', bilingual: false,

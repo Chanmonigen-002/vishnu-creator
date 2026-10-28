@@ -55,6 +55,18 @@ export type CreatorDubEngineConfig = {
   autoStart: boolean;
 };
 
+/** Local dub engine state shown on the dashboard (T6.7). */
+export type DubEngineRuntimeState = 'off' | 'not_installed' | 'starting' | 'ready' | 'error';
+
+export type DubEngineRuntimeStatus = {
+  state: DubEngineRuntimeState;
+  enabled: boolean;
+  mode: CreatorDubEngineConfig['mode'];
+  /** Where the local engine is expected; empty for remote mode. */
+  engineDir: string;
+  message?: string;
+};
+
 export type DubJobStatus = 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
 
 export type DubJobProgress = {
@@ -598,15 +610,17 @@ export function createDefaultCreatorServicesConfig(): CreatorServicesConfig {
         model: defaultVideoGenerationModels.veo
       }
     },
+    // On by default (T6.7): the local Khmer dub engine starts with the app when
+    // it is installed; saved settings keep the user's own choice.
     dubEngine: {
-      enabled: false,
+      enabled: true,
       mode: 'local',
       url: 'http://127.0.0.1:8765',
       port: 8765,
       token: '',
       enginePath: '',
       pythonPath: '',
-      autoStart: false
+      autoStart: true
     }
   };
 }

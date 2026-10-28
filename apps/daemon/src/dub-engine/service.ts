@@ -9,9 +9,10 @@
  * Independent implementation — no ZastTranslate code copied.
  */
 
-import { spawn, ChildProcess } from 'node:child_process';
+import { spawn, spawnSync, ChildProcess } from 'node:child_process';
 import { existsSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { createHash } from 'node:crypto';
 import { DubEngineClient } from './client.js';
 import {
@@ -65,6 +66,37 @@ export type {
   DubEngineHealth,
 };
 export { DubEngineError, DubEngineClient, defaultDubEngineConfig };
+
+/**
+ * Engine folder: the configured path, else `services/dub-engine` under the
+ * working directory, else under the repository root. The dev daemon runs from
+ * `apps/daemon`, so the working directory alone never found it.
+ */
+export function resolveDubEngineDirectory(
+  config: Pick<DubEngineConfig, 'enginePath'>,
+  cwd: string = process.cwd(),
+  moduleDir: string = dirname(fileURLToPath(import.meta.url))
+): string {
+  if (config.enginePath) return resolve(config.enginePath);
+  const candidates = [
+    join(cwd, 'services', 'dub-engine'),
+    // apps/daemon/{src,dist}/dub-engine -> repository root
+    resolve(moduleDir, '..', '..', '..', '..', 'services', 'dub-engine')
+  ];
+  return candidates.find(candidate => existsSync(join(candidate, 'vishnu_dub'))) ?? candidates[0]!;
+}
+
+/** Python for the local engine: configured, else the engine's own venv, else `python`. */
+export function resolveDubEnginePython(config: Pick<DubEngineConfig, 'pythonPath'>, engineDir: string): string {
+  if (config.pythonPath) return config.pythonPath;
+  const venvPython = join(
+    engineDir,
+    '.venv',
+    process.platform === 'win32' ? 'Scripts' : 'bin',
+    process.platform === 'win32' ? 'python.exe' : 'python'
+  );
+  return existsSync(venvPython) ? venvPython : 'python';
+}
 
 export class DubEngineService {
   private config: DubEngineConfig;
@@ -152,18 +184,16 @@ export class DubEngineService {
 
   private async startLocal(): Promise<void> {
     if (this.isRunning()) return;
+    this.isStopping = false;
+    // An engine already serving this port (e.g. `pnpm dub:engine`) is reused.
+    if (await this.client.getHealth().then(health => health.status === 'ok', () => false)) {
+      this.lastHealthy = true;
+      this.emit('health-changed', true);
+      return;
+    }
 
-    const engineDir = this.config.enginePath
-      ? resolve(this.config.enginePath)
-      : join(process.cwd(), 'services', 'dub-engine');
-    const venvPython = join(
-      engineDir,
-      '.venv',
-      process.platform === 'win32' ? 'Scripts' : 'bin',
-      process.platform === 'win32' ? 'python.exe' : 'python'
-    );
-    const pythonPath =
-      this.config.pythonPath || (existsSync(venvPython) ? venvPython : 'python');
+    const engineDir = resolveDubEngineDirectory(this.config);
+    const pythonPath = resolveDubEnginePython(this.config, engineDir);
 
     this.child = spawn(pythonPath, ['-m', 'vishnu_dub.api'], {
       cwd: engineDir,
@@ -278,14 +308,21 @@ export class DubEngineService {
     this.stopHealthMonitoring();
 
     if (this.child) {
-      this.child.kill('SIGTERM');
-      // Give it a moment to shut down gracefully
-      await new Promise(resolve => setTimeout(resolve, 1_000));
-      if (!this.child.killed) {
-        this.child.kill('SIGKILL');
+      if (process.platform === 'win32' && this.child.pid !== undefined) {
+        // The venv python.exe is a launcher that starts the real interpreter as
+        // a child; killing only the launcher leaves the engine on its port.
+        spawnSync('taskkill', ['/PID', String(this.child.pid), '/T', '/F'], { stdio: 'ignore', windowsHide: true });
+      } else {
+        this.child.kill('SIGTERM');
+        // Give it a moment to shut down gracefully
+        await new Promise(resolve => setTimeout(resolve, 1_000));
+        if (!this.child.killed) {
+          this.child.kill('SIGKILL');
+        }
       }
       this.child = null;
     }
+    this.lastHealthy = false;
 
     this.emit('engine-stopped');
   }

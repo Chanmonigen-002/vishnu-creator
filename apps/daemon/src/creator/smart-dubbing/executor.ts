@@ -26,6 +26,8 @@ export function createSmartDubbingExecutor(input: {
   ttsService: Pick<VishnuTtsService, 'synthesize'>;
   isOfficial?(): boolean;
   dubEngineService?: DubEngineService;
+  /** Current engine at run time; it can be started after the daemon boots. */
+  getDubEngineService?(): DubEngineService | undefined;
   configStore?: { read(): Promise<CreatorServicesConfig> };
 }): CreatorExecutor {
   return {
@@ -34,7 +36,7 @@ export function createSmartDubbingExecutor(input: {
       stage.reportProgress({ phase: 'validating', percent: 5 });
       const request = readRequest(stage.job.state);
       const official = input.isOfficial?.() === true;
-      const engine = input.dubEngineService;
+      const engine = input.getDubEngineService?.() ?? input.dubEngineService;
       const useEngine = engine !== undefined
         && engine.isHealthy()
         && typeof request.sourceUrl === 'string'
