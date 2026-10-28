@@ -12,7 +12,7 @@ import { CreatorProviderRequestLedger } from '../../src/creator/provider-request
 import { createCreatorIssueService } from '../../src/creator/issues.js';
 
 const close: Array<() => Promise<void>> = [];
-afterEach(async () => { for (const callback of close.splice(0)) await callback(); });
+afterEach(async () => { for (const callback of close.splice(0).reverse()) await callback(); });
 
 it.each(['text', 'image', 'video', 'speech', 'transcription'] as const)('uses the saved %s choice only inside its task execution scope', async modality => {
   const kinds = ['text', 'image', 'video', 'speech', 'transcription'] as const;

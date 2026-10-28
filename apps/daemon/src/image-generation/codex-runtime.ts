@@ -1,4 +1,4 @@
-import { execFile } from 'node:child_process';
+import crossSpawn from 'cross-spawn';
 import type { CodexImageStatus } from '@vishnucreator/protocol';
 import { readLocalCodexImageConfiguration, type LocalCodexImageConfiguration } from '../codex/local-provider.js';
 import type { CodexNativeImageRuntime } from './provider.js';
@@ -33,8 +33,17 @@ export async function inspectCodexImageRuntime(runtime: CodexNativeImageRuntime 
 
 async function probeNativeImageCapability(codexBin: string, codexHome: string): Promise<{ supported: boolean; version?: string }> {
   const run = (args: string[]) => new Promise<string>((resolve, reject) => {
-    execFile(codexBin, args, { timeout: 8_000, maxBuffer: 1024 * 1024, encoding: 'utf8', env: { ...process.env, CODEX_HOME: codexHome } }, (error, stdout) => {
-      if (error) reject(new Error('Could not start Codex or read native image capabilities. Check the executable.'));
+    const child = crossSpawn(codexBin, args, {
+      env: { ...process.env, CODEX_HOME: codexHome },
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
+    let stdout = '';
+    let stderr = '';
+    child.stdout?.on('data', chunk => { stdout += String(chunk); });
+    child.stderr?.on('data', chunk => { stderr += String(chunk); });
+    child.on('error', reject);
+    child.on('close', code => {
+      if (code !== 0) reject(new Error(`Could not start Codex or read native image capabilities. Check the executable.`));
       else resolve(stdout);
     });
   });

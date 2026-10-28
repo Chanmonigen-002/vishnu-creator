@@ -1,6 +1,6 @@
 # Phase 1 — Khmer foundation, zero GPU
 
-**Status:** In progress · **Default risk tier:** P1 (see `AGENTS.md`) · **Estimate:** ≈2–3 days · **Depends on:** Phase 0
+**Status:** Complete · **Default risk tier:** P1 (see `AGENTS.md`) · **Estimate:** ≈2–3 days · **Depends on:** Phase 0
 **Plan:** [master-plan.md §4](../project/master-plan.md#4-phases)
 
 ## Goal

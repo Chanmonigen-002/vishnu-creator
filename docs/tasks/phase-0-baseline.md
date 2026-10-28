@@ -1,6 +1,6 @@
 # Phase 0 — Stabilize the baseline
  
-**Status:** In progress · **Default risk tier:** P1 (see `AGENTS.md`) · **Estimate:** ≈1 day · **Depends on:** —
+**Status:** Complete · **Default risk tier:** P1 (see `AGENTS.md`) · **Estimate:** ≈1 day · **Depends on:** —
 **Plan:** [master-plan.md §4](../project/master-plan.md#4-phases)
 
 ## Goal

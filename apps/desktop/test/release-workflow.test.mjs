@@ -46,14 +46,14 @@ describe('Desktop release workflow', () => {
 
   it('uses the release Environment and requires macOS signing secrets', () => {
     expect(releaseWorkflow).toContain('environment: release');
-    expect(releaseWorkflow).toContain('name: 验证 macOS 正式签名凭据');
+    expect(releaseWorkflow).toContain('name: Verify macOS production signing credentials');
     expect(releaseWorkflow).toContain('secrets.MACOS_CERTIFICATE');
     expect(releaseWorkflow).toContain('secrets.MACOS_CERTIFICATE_PASSWORD');
     expect(releaseWorkflow).toContain('secrets.APPLE_ID');
     expect(releaseWorkflow).toContain('secrets.APPLE_APP_SPECIFIC_PASSWORD');
     expect(releaseWorkflow).toContain('secrets.APPLE_TEAM_ID');
     expect(releaseWorkflow).toContain(
-      'release Environment 缺少 macOS 签名 Secret'
+      'release Environment is missing macOS signing Secret'
     );
   });
 
@@ -72,21 +72,21 @@ describe('Desktop release workflow', () => {
   });
 
   it('provides GitHub API authentication to both desktop packaging steps', () => {
-    const macStep = releaseWorkflow.split('name: 生成 macOS 正式签名安装包')[1]
-      .split('name: 生成 Windows 未签名安装包')[0];
-    const windowsStep = releaseWorkflow.split('name: 生成 Windows 未签名安装包')[1]
-      .split('name: 验证实际打包应用')[0];
+    const macStep = releaseWorkflow.split('name: Generate macOS production signed installer')[1]
+      .split('name: Generate Windows unsigned installer')[0];
+    const windowsStep = releaseWorkflow.split('name: Generate Windows unsigned installer')[1]
+      .split('name: Verify packaged application')[0];
     for (const step of [macStep, windowsStep]) {
       expect(step).toContain('GH_TOKEN: ${{ github.token }}');
     }
   });
 
   it('reuses the successful master CI instead of repeating all tests', () => {
-    expect(releaseWorkflow).toContain('name: 校验同一提交的 CI 已通过');
+    expect(releaseWorkflow).toContain('name: Verify CI passed for the same commit');
     expect(releaseWorkflow).toContain('--workflow ci.yml');
     expect(releaseWorkflow).toContain('--event push');
     expect(releaseWorkflow).toContain('--status success');
-    expect(releaseWorkflow).toContain('请等待 CI 通过');
+    expect(releaseWorkflow).toContain('Please wait for CI to pass');
     expect(releaseWorkflow).not.toContain('run: pnpm test');
     expect(releaseWorkflow).not.toContain('run: pnpm typecheck');
     expect(releaseWorkflow).not.toContain('run: pnpm build');
@@ -121,18 +121,18 @@ describe('Desktop release workflow', () => {
 
   it('promotes an immutable successful master candidate instead of rebuilding a tag', () => {
     expect(releaseWorkflow).toContain("if: github.event_name == 'workflow_dispatch'");
-    expect(releaseWorkflow).toContain('name: 查找可复用的完整候选构建');
+    expect(releaseWorkflow).toContain('name: Find reusable complete candidate build');
     expect(releaseWorkflow).toContain('release-build-input.mjs digest');
     expect(releaseWorkflow).toContain('repos/$GH_REPO/compare/$candidate_sha...$RELEASE_SHA');
     expect(releaseWorkflow).toContain('comparison_status');
     expect(releaseWorkflow).toContain('CANDIDATE_BUILD_INPUT_DIGEST');
     expect(releaseWorkflow).toContain('candidate.schemaVersion === 2');
     expect(releaseWorkflow).toContain('candidate.buildInputDigest');
-    expect(releaseWorkflow).toContain('当前 tag 没有可复用的完整候选构建');
+    expect(releaseWorkflow).toContain('No reusable complete candidate build for current tag');
     expect(releaseWorkflow).toContain('run-id: ${{ steps.candidate.outputs.run-id }}');
     expect(releaseWorkflow).toContain('name: ${{ steps.candidate.outputs.name }}');
     expect(releaseWorkflow).toContain('EXPECTED_SHA: ${{ steps.candidate.outputs.sha }}');
-    expect(releaseWorkflow).toContain('name: 校验候选包身份凭据');
+    expect(releaseWorkflow).toContain('name: Verify candidate package credentials');
     expect(releaseWorkflow).toContain('needs: verify');
     expect(releaseWorkflow).not.toContain("startsWith(github.ref, 'refs/tags/') || inputs.target == 'all'");
   });

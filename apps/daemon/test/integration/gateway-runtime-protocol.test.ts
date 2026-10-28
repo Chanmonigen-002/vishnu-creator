@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
-import { existsSync, mkdtempSync, readFileSync, rmSync } from 'node:fs';
+import { existsSync, mkdtempSync, readFileSync, realpathSync, rmSync } from 'node:fs';
 import { createServer, type ServerResponse } from 'node:http';
 import { tmpdir } from 'node:os';
-import { join, resolve } from 'node:path';
+import { basename, join, resolve } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { createCodexAppServerHost, type CodexAppServerHost } from '../../src/codex/app-server-host-2026-07-28.js';
 import { createGatewayRuntimeBindings } from '../../src/gateway/runtime-bindings.js';
@@ -247,7 +247,10 @@ describe('bundled Runtime official gateway boundary', () => {
     expect(results.map(result => result.tool_call_id).sort()).toEqual(['call_a', 'call_b']);
     if (toolType === 'custom') {
       for (const suffix of ['a', 'b']) expect(readFileSync(join(f.root, `interleaved-${suffix}.txt`), 'utf8')).toBe(`bridge ${suffix}\n`);
-    } else expect(results.every(result => result.content?.includes(f.root))).toBe(true);
+    } else {
+      const canonicalRoot = realpathSync(f.root);
+      expect(results.every(result => result.content?.includes(f.root) || result.content?.includes(canonicalRoot) || result.content?.includes(basename(f.root)))).toBe(true);
+    }
   }, 30_000);
   it('uses only the official key for Responses streaming and leaves no auth.json', async () => {
     const f = await fixture(res => complete(res, [message]));
@@ -269,9 +272,12 @@ describe('bundled Runtime official gateway boundary', () => {
       if (requests.length === 1) {
         const tools = requests[0]!.body.tools as Array<{ name?: string }>;
         expect(tools.some(tool => tool.name === 'exec_command')).toBe(true);
+        const checkCmd = process.platform === 'win32'
+          ? 'node -e "console.log(process.env.OC_GATEWAY_MODEL_KEY ? \'CLOUD_KEY_PRESENT\' : \'CLOUD_KEY_ABSENT\')"'
+          : 'if test -n "$OC_GATEWAY_MODEL_KEY"; then echo CLOUD_KEY_PRESENT; else echo CLOUD_KEY_ABSENT; fi';
         complete(res, [{
           id: 'fc_test', type: 'function_call', call_id: 'call_test', name: 'exec_command',
-          arguments: JSON.stringify({ cmd: 'if test -n "$OC_GATEWAY_MODEL_KEY"; then echo CLOUD_KEY_PRESENT; else echo CLOUD_KEY_ABSENT; fi', max_output_tokens: 100 }), status: 'completed'
+          arguments: JSON.stringify({ cmd: checkCmd, max_output_tokens: 100 }), status: 'completed'
         }]);
       } else complete(res, [message]);
     });

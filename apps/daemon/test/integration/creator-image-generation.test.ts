@@ -3,7 +3,7 @@ import type { FastifyInstance } from 'fastify';
 import { chmod, mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { fileURLToPath } from 'node:url';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { buildServer } from '../../src/api/server.js';
 
@@ -284,10 +284,22 @@ describe('creator image generation', () => {
 
 async function createImageCodexBin(expectedHome: string): Promise<string> {
   const fixture = fileURLToPath(new URL('../fixtures/fake-codex-image.mjs', import.meta.url));
-  const bin = join(tempDir, 'fake-codex-image.mjs');
-  await writeFile(bin, `#!/usr/bin/env node\nif (process.argv[2] === 'exec' && process.env.CODEX_HOME !== ${JSON.stringify(expectedHome)}) throw new Error('Image generation used the wrong Codex home');\nawait import(${JSON.stringify(fixture)});\n`);
-  await chmod(bin, 0o755);
-  return bin;
+  const fixtureUrl = pathToFileURL(fixture).href;
+  const jsBin = join(tempDir, 'fake-codex-image.mjs');
+  await writeFile(
+    jsBin,
+    `import { realpathSync } from 'node:fs';\n` +
+    `const norm = p => { try { return realpathSync(p).toLowerCase(); } catch { return (p ?? '').toLowerCase(); } };\n` +
+    `if (process.argv[2] === 'exec' && norm(process.env.CODEX_HOME) !== norm(${JSON.stringify(expectedHome)})) throw new Error('Image generation used the wrong Codex home');\n` +
+    `await import(${JSON.stringify(fixtureUrl)});\n`
+  );
+  if (process.platform === 'win32') {
+    const cmdBin = join(tempDir, 'fake-codex-image.cmd');
+    await writeFile(cmdBin, `@echo off\r\nnode "${jsBin}" %*\r\n`);
+    return cmdBin;
+  }
+  await chmod(jsBin, 0o755);
+  return jsBin;
 }
 
 async function waitForCompletedJob(jobId: string) {

@@ -51,14 +51,37 @@ async def run_benchmark(
         test_audio = Path(f.name)
 
     try:
-        # Generate test audio (10 seconds of silence with a tone)
+        # Generate test audio (real speech sample for accurate ASR benchmarking)
         import subprocess
         ffmpeg_bin = resolve_ffmpeg_path(getattr(settings, "ffmpeg_path", None))
-        subprocess.run([
-            ffmpeg_bin, "-y", "-f", "lavfi", "-i",
-            f"sine=frequency=440:duration={duration_seconds}",
-            "-ar", "16000", "-ac", "1", str(test_audio)
-        ], check=True, capture_output=True)
+        tts_for_asr = get_tts_backend("edge-tts", {})
+        speech_generated = False
+        if tts_for_asr.is_available():
+            try:
+                with tempfile.NamedTemporaryFile(suffix=".mp3", delete=False) as tts_tmp:
+                    tts_tmp_path = Path(tts_tmp.name)
+                await tts_for_asr.synthesize(
+                    "Hello and welcome to the Vishnu Creator audio benchmarking test.",
+                    "en-US-JennyNeural",
+                    tts_tmp_path
+                )
+                if tts_tmp_path.exists() and tts_tmp_path.stat().st_size > 0:
+                    subprocess.run([
+                        ffmpeg_bin, "-y", "-i", str(tts_tmp_path),
+                        "-t", str(duration_seconds),
+                        "-ar", "16000", "-ac", "1", str(test_audio)
+                    ], check=True, capture_output=True)
+                    speech_generated = True
+                tts_tmp_path.unlink(missing_ok=True)
+            except Exception:
+                speech_generated = False
+
+        if not speech_generated:
+            subprocess.run([
+                ffmpeg_bin, "-y", "-f", "lavfi", "-i",
+                f"sine=frequency=440:duration={duration_seconds}",
+                "-ar", "16000", "-ac", "1", str(test_audio)
+            ], check=True, capture_output=True)
 
         # Benchmark ASR
         print("Benchmarking ASR...")
