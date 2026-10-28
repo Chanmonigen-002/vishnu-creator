@@ -4,22 +4,27 @@ import gc
 import os
 import sys
 from pathlib import Path
-from typing import Any, Callable, Dict, Optional, Tuple
+from typing import Any, Callable, Dict, List, Optional, Tuple
 
 import psutil
 
-from vishnu_dub.downloader import download_file, download_file_sync
+from vishnu_dub.catalog import DEFAULT_MODEL_CATALOG, ModelCatalogItem, find_model_in_catalog
+from vishnu_dub.downloader import compute_sha256, download_file, download_file_sync
 
 
 def resolve_model_store_path() -> Path:
     """Resolve model storage root, defaulting to the drive with the most free space.
 
     Priority:
-    1. VISHNU_DUB_MODEL_STORE or VISHNU_MODEL_DIR environment variable
-    2. Drive with the most free disk space (e.g. D: with 300+ GB vs C: with 20 GB)
-    3. Fallback to current working directory / models
+    1. VISHNU_DUB_MODEL_STORE, VISHNUCREATOR_MODELS_DIR, or VISHNU_MODEL_DIR environment variable
+    2. Drive with the most free disk space (e.g. D:/.vishnucreator/models or D:/VishnuCreatorData/models)
+    3. Fallback to ~/.vishnucreator/models or current working directory / .vishnucreator/models
     """
-    configured = os.environ.get("VISHNU_DUB_MODEL_STORE") or os.environ.get("VISHNU_MODEL_DIR")
+    configured = (
+        os.environ.get("VISHNU_DUB_MODEL_STORE")
+        or os.environ.get("VISHNUCREATOR_MODELS_DIR")
+        or os.environ.get("VISHNU_MODEL_DIR")
+    )
     if configured:
         p = Path(configured).resolve()
         p.mkdir(parents=True, exist_ok=True)
@@ -42,16 +47,22 @@ def resolve_model_store_path() -> Path:
 
     if best_mount:
         mount_path = Path(best_mount)
-        target_dir = mount_path / "VishnuCreatorData" / "models"
+        candidate_dot = mount_path / ".vishnucreator" / "models"
+        candidate_legacy = mount_path / "VishnuCreatorData" / "models"
+        if not candidate_dot.exists() and candidate_legacy.exists():
+            target_dir = candidate_legacy
+        else:
+            target_dir = candidate_dot
     else:
-        target_dir = Path.cwd() / "models"
+        user_dot = Path.home() / ".vishnucreator" / "models"
+        target_dir = user_dot if user_dot.parent.exists() else (Path.cwd() / ".vishnucreator" / "models")
 
     try:
         target_dir.mkdir(parents=True, exist_ok=True)
         return target_dir
     except (PermissionError, OSError):
         # Fallback to local user or cwd
-        local_dir = Path.cwd() / "models"
+        local_dir = Path.cwd() / ".vishnucreator" / "models"
         local_dir.mkdir(parents=True, exist_ok=True)
         return local_dir
 
@@ -175,6 +186,171 @@ class ModelStore:
         d = self.root_dir / clean_id
         d.mkdir(parents=True, exist_ok=True)
         return d
+
+    def resolve_model_path(self, item: ModelCatalogItem) -> Path:
+        return self.root_dir / item.target_subdir / item.filename
+
+    def get_available_disk_free_bytes(self) -> int:
+        try:
+            return psutil.disk_usage(str(self.root_dir)).free
+        except (PermissionError, OSError):
+            return 0
+
+    def list_models(self) -> Dict[str, Any]:
+        models_list: List[Dict[str, Any]] = []
+        for item in DEFAULT_MODEL_CATALOG:
+            local_path = self.resolve_model_path(item)
+            installed = local_path.exists() and local_path.is_file()
+            size = local_path.stat().st_size if installed else 0
+
+            models_list.append({
+                "id": item.id,
+                "name": item.name,
+                "category": item.category,
+                "description": item.description,
+                "size_bytes": item.size_bytes,
+                "expected_sha256": item.expected_sha256,
+                "source_url": item.source_url,
+                "filename": item.filename,
+                "target_subdir": item.target_subdir,
+                "recommended_for_tier": item.recommended_for_tier,
+                "installed": installed,
+                "local_path": str(local_path),
+                "local_size_bytes": size,
+                "sha256_verified": False,
+            })
+
+        return {
+            "models_root": str(self.root_dir),
+            "available_disk_free_bytes": self.get_available_disk_free_bytes(),
+            "models": models_list,
+        }
+
+    def get_model(self, model_id: str) -> Optional[Dict[str, Any]]:
+        item = find_model_in_catalog(model_id)
+        if not item:
+            return None
+        local_path = self.resolve_model_path(item)
+        installed = local_path.exists() and local_path.is_file()
+        size = local_path.stat().st_size if installed else 0
+        return {
+            "id": item.id,
+            "name": item.name,
+            "category": item.category,
+            "description": item.description,
+            "size_bytes": item.size_bytes,
+            "expected_sha256": item.expected_sha256,
+            "source_url": item.source_url,
+            "filename": item.filename,
+            "target_subdir": item.target_subdir,
+            "recommended_for_tier": item.recommended_for_tier,
+            "installed": installed,
+            "local_path": str(local_path),
+            "local_size_bytes": size,
+            "sha256_verified": False,
+        }
+
+    def verify_model(self, model_id: str) -> Dict[str, Any]:
+        item = find_model_in_catalog(model_id)
+        if not item:
+            return {
+                "model_id": model_id,
+                "valid": False,
+                "expected_sha256": "",
+                "error": f"Model '{model_id}' is not in catalog",
+            }
+        local_path = self.resolve_model_path(item)
+        if not local_path.exists():
+            return {
+                "model_id": model_id,
+                "valid": False,
+                "expected_sha256": item.expected_sha256,
+                "error": f"Model file not found at {local_path}",
+            }
+        calculated = compute_sha256(local_path)
+        valid = calculated.lower() == item.expected_sha256.lower()
+        res = {
+            "model_id": model_id,
+            "valid": valid,
+            "expected_sha256": item.expected_sha256,
+            "calculated_sha256": calculated,
+        }
+        if not valid:
+            res["error"] = f"SHA-256 verification mismatch for {model_id}"
+        return res
+
+    def delete_model(self, model_id: str) -> Dict[str, Any]:
+        item = find_model_in_catalog(model_id)
+        if not item:
+            return {"model_id": model_id, "deleted": False, "message": f"Model '{model_id}' not found in catalog"}
+        local_path = self.resolve_model_path(item)
+        part_path = local_path.with_name(f"{local_path.name}.part")
+        deleted = False
+        if local_path.exists():
+            try:
+                local_path.unlink()
+                deleted = True
+            except OSError as e:
+                return {"model_id": model_id, "deleted": False, "message": str(e)}
+        if part_path.exists():
+            try:
+                part_path.unlink()
+                deleted = True
+            except OSError:
+                pass
+        return {
+            "model_id": model_id,
+            "deleted": deleted,
+            "message": f"Model '{model_id}' deleted" if deleted else "Model file was not on disk",
+        }
+
+    async def download_model(
+        self,
+        model_id: str,
+        force_redownload: bool = False,
+        on_progress: Optional[Callable[[int, int], None]] = None,
+    ) -> Dict[str, Any]:
+        item = find_model_in_catalog(model_id)
+        if not item:
+            raise ValueError(f"Model '{model_id}' not found in catalog")
+
+        local_path = self.resolve_model_path(item)
+        local_path.parent.mkdir(parents=True, exist_ok=True)
+
+        if local_path.exists() and not force_redownload:
+            verify_res = self.verify_model(model_id)
+            if verify_res.get("valid"):
+                size = local_path.stat().st_size
+                if on_progress:
+                    on_progress(size, size)
+                return {
+                    "model_id": model_id,
+                    "status": "installed",
+                    "bytes_downloaded": size,
+                    "total_bytes": size,
+                    "percent": 100.0,
+                    "speed_bytes_per_sec": 0,
+                    "local_path": str(local_path),
+                }
+            else:
+                local_path.unlink(missing_ok=True)
+
+        downloaded_path = await download_file(
+            url=item.source_url,
+            dest_path=local_path,
+            expected_sha256=item.expected_sha256,
+            on_progress=on_progress,
+        )
+        final_size = downloaded_path.stat().st_size
+        return {
+            "model_id": model_id,
+            "status": "installed",
+            "bytes_downloaded": final_size,
+            "total_bytes": final_size,
+            "percent": 100.0,
+            "speed_bytes_per_sec": 0,
+            "local_path": str(downloaded_path),
+        }
 
     async def ensure_model_file(
         self,

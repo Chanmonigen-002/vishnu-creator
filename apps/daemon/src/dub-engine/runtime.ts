@@ -7,7 +7,7 @@
 import { existsSync } from 'node:fs';
 import { join } from 'node:path';
 import type { CreatorDubEngineConfig, CreatorServicesConfig, DubEngineRuntimeStatus } from '@vishnucreator/protocol';
-import { DubEngineService, resolveDubEngineDirectory, resolveDubEnginePython } from './service.js';
+import { DubEngineService, DubModelManager, resolveDubEngineDirectory, resolveDubEnginePython } from './service.js';
 
 type ConfigStore = {
   read(): Promise<CreatorServicesConfig>;
@@ -16,6 +16,7 @@ type ConfigStore = {
 
 export class DubEngineRuntime {
   private service: DubEngineService | undefined;
+  private defaultModelManager: DubModelManager | undefined;
   private starting: Promise<void> | undefined;
   private lastError: string | undefined;
 
@@ -28,6 +29,15 @@ export class DubEngineRuntime {
   /** The running service, for executors; undefined when the engine is off. */
   current(): DubEngineService | undefined {
     return this.service;
+  }
+
+  /** The model manager for listing, downloading, and verifying cached models. */
+  getModelManager(): DubModelManager {
+    if (this.service) return this.service.getModelManager();
+    if (!this.defaultModelManager) {
+      this.defaultModelManager = new DubModelManager();
+    }
+    return this.defaultModelManager;
   }
 
   async status(): Promise<DubEngineRuntimeStatus> {

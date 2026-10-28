@@ -10,7 +10,16 @@
  */
 
 import { createHash } from 'node:crypto';
-import type { CreatorDubEngineMode } from '@vishnucreator/protocol';
+import type {
+  CreatorDubEngineMode,
+  ModelCatalogItem,
+  ModelCatalogListResponse,
+  ModelDownloadProgress,
+  ModelDownloadRequest,
+  ModelVerifyRequest,
+  ModelVerifyResponse,
+  ModelDeleteResponse,
+} from '@vishnucreator/protocol';
 
 export type DubEngineProvider = 'local-engine' | 'remote-engine';
 export type DubEngineMode = CreatorDubEngineMode;
@@ -774,6 +783,36 @@ export class DubEngineClient {
     return response;
   }
 
+  async listModels(): Promise<ModelCatalogListResponse> {
+    const raw = await this.request<unknown>('GET', '/v1/models');
+    return fromSnakeModelList(raw);
+  }
+
+  async downloadModel(request: ModelDownloadRequest): Promise<ModelDownloadProgress> {
+    const raw = await this.request<unknown>('POST', '/v1/models/download', {
+      model_id: request.modelId,
+      force_redownload: request.forceRedownload ?? false,
+    });
+    return fromSnakeModelProgress(raw);
+  }
+
+  async getModelDownloadProgress(modelId: string): Promise<ModelDownloadProgress> {
+    const raw = await this.request<unknown>('GET', `/v1/models/download/${encodeURIComponent(modelId)}`);
+    return fromSnakeModelProgress(raw);
+  }
+
+  async verifyModel(request: ModelVerifyRequest): Promise<ModelVerifyResponse> {
+    const raw = await this.request<unknown>('POST', '/v1/models/verify', {
+      model_id: request.modelId,
+    });
+    return fromSnakeModelVerify(raw);
+  }
+
+  async deleteModel(modelId: string): Promise<ModelDeleteResponse> {
+    const raw = await this.request<unknown>('DELETE', `/v1/models/${encodeURIComponent(modelId)}`);
+    return fromSnakeModelDelete(raw);
+  }
+
   generateJobId(): string {
     return createHash('sha256').update(`${Date.now()}:${crypto.randomUUID()}`).digest('hex').slice(0, 12);
   }
@@ -930,3 +969,68 @@ export function fromSnakeBenchmark(body: unknown): DubBenchmarkResponse {
     tier: typeof record.tier === 'string' ? record.tier : 'unknown',
   };
 }
+
+export function fromSnakeModelCatalogItem(raw: unknown): ModelCatalogItem {
+  const record = asRecord(raw);
+  return {
+    id: typeof record.id === 'string' ? record.id : '',
+    name: typeof record.name === 'string' ? record.name : '',
+    category: (typeof record.category === 'string' ? record.category : 'asr') as ModelCatalogItem['category'],
+    description: typeof record.description === 'string' ? record.description : '',
+    sizeBytes: readNumber(record.size_bytes),
+    expectedSha256: typeof record.expected_sha256 === 'string' ? record.expected_sha256 : '',
+    sourceUrl: typeof record.source_url === 'string' ? record.source_url : '',
+    filename: typeof record.filename === 'string' ? record.filename : '',
+    targetSubdir: typeof record.target_subdir === 'string' ? record.target_subdir : '',
+    recommendedForTier: Array.isArray(record.recommended_for_tier) ? record.recommended_for_tier as any : [],
+    installed: readBoolean(record.installed),
+    localPath: readStringOrNull(record.local_path) ?? undefined,
+    localSizeBytes: typeof record.local_size_bytes === 'number' ? record.local_size_bytes : undefined,
+    sha256Verified: readBoolean(record.sha256_verified),
+  };
+}
+
+export function fromSnakeModelList(body: unknown): ModelCatalogListResponse {
+  const record = asRecord(body);
+  const rawModels = Array.isArray(record.models) ? record.models : [];
+  return {
+    modelsRoot: typeof record.models_root === 'string' ? record.models_root : '',
+    availableDiskFreeBytes: readNumber(record.available_disk_free_bytes),
+    models: rawModels.map(fromSnakeModelCatalogItem),
+  };
+}
+
+export function fromSnakeModelProgress(body: unknown): ModelDownloadProgress {
+  const record = asRecord(body);
+  return {
+    modelId: typeof record.model_id === 'string' ? record.model_id : '',
+    status: (typeof record.status === 'string' ? record.status : 'idle') as ModelDownloadProgress['status'],
+    bytesDownloaded: readNumber(record.bytes_downloaded),
+    totalBytes: readNumber(record.total_bytes),
+    percent: readNumber(record.percent),
+    speedBytesPerSec: readNumber(record.speed_bytes_per_sec),
+    error: readStringOrNull(record.error) ?? undefined,
+    localPath: readStringOrNull(record.local_path) ?? undefined,
+  };
+}
+
+export function fromSnakeModelVerify(body: unknown): ModelVerifyResponse {
+  const record = asRecord(body);
+  return {
+    modelId: typeof record.model_id === 'string' ? record.model_id : '',
+    valid: readBoolean(record.valid),
+    expectedSha256: typeof record.expected_sha256 === 'string' ? record.expected_sha256 : '',
+    calculatedSha256: readStringOrNull(record.calculated_sha256) ?? undefined,
+    error: readStringOrNull(record.error) ?? undefined,
+  };
+}
+
+export function fromSnakeModelDelete(body: unknown): ModelDeleteResponse {
+  const record = asRecord(body);
+  return {
+    modelId: typeof record.model_id === 'string' ? record.model_id : '',
+    deleted: readBoolean(record.deleted),
+    message: readStringOrNull(record.message) ?? undefined,
+  };
+}
+
