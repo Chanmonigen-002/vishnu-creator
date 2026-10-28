@@ -3385,5 +3385,6 @@
   "Local only (Offline CPU/GPU)": "僅本機引擎 (完全離線 CPU/GPU)",
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "本機 + API 輔助 (雲端 ASR/LLM + 本機配音)",
   "Model folder": "模型儲存目錄",
-  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "預設最大剩餘空間磁碟 (如 D:\\\\VishnuCreatorData\\\\models)"
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "預設最大剩餘空間磁碟 (如 D:\\\\VishnuCreatorData\\\\models)",
+  "Voice Library": "音色庫"
 }
