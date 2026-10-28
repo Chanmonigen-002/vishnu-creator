@@ -3379,5 +3379,11 @@
   "Local dub engine: failed to start": "Локален двигател за дублаж: неуспешно стартиране",
   "Local dub engine: off": "Локален двигател за дублаж: изключен",
   "Local dub engine: checking": "Локален двигател за дублаж: проверка",
-  "Voices": "Гласове"
+  "Voices": "Гласове",
+  "Compute Mode": "Compute Mode",
+  "Auto (Local engine + API assist)": "Auto (Local engine + API assist)",
+  "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
+  "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
+  "Model folder": "Model folder",
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
 }

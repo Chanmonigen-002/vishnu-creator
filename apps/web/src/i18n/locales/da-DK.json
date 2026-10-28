@@ -3379,5 +3379,11 @@
   "Local dub engine: failed to start": "Lokal dubbingmotor: kunne ikke starte",
   "Local dub engine: off": "Lokal dubbingmotor: slukket",
   "Local dub engine: checking": "Lokal dubbingmotor: kontrollerer",
-  "Voices": "Stemmer"
+  "Voices": "Stemmer",
+  "Compute Mode": "Compute Mode",
+  "Auto (Local engine + API assist)": "Auto (Local engine + API assist)",
+  "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
+  "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
+  "Model folder": "Model folder",
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
 }

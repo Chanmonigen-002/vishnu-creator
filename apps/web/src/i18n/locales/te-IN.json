@@ -3379,5 +3379,11 @@
   "Local dub engine: failed to start": "లోకల్ డబ్బింగ్ ఇంజిన్: ప్రారంభం విఫలమైంది",
   "Local dub engine: off": "లోకల్ డబ్బింగ్ ఇంజిన్: ఆఫ్",
   "Local dub engine: checking": "లోకల్ డబ్బింగ్ ఇంజిన్: తనిఖీ చేస్తోంది",
-  "Voices": "స్వరాలు"
+  "Voices": "స్వరాలు",
+  "Compute Mode": "Compute Mode",
+  "Auto (Local engine + API assist)": "Auto (Local engine + API assist)",
+  "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
+  "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
+  "Model folder": "Model folder",
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
 }

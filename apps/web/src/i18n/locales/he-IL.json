@@ -3379,5 +3379,11 @@
   "Local dub engine: failed to start": "מנוע הדיבוב המקומי: ההפעלה נכשלה",
   "Local dub engine: off": "מנוע הדיבוב המקומי: כבוי",
   "Local dub engine: checking": "מנוע הדיבוב המקומי: בבדיקה",
-  "Voices": "קולות"
+  "Voices": "קולות",
+  "Compute Mode": "Compute Mode",
+  "Auto (Local engine + API assist)": "Auto (Local engine + API assist)",
+  "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
+  "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
+  "Model folder": "Model folder",
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
 }

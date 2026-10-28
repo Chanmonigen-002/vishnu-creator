@@ -3379,5 +3379,11 @@
   "Local dub engine: failed to start": "Lokalni mehanizam za sinkronizaciju: pokretanje nije uspjelo",
   "Local dub engine: off": "Lokalni mehanizam za sinkronizaciju: isključen",
   "Local dub engine: checking": "Lokalni mehanizam za sinkronizaciju: provjera",
-  "Voices": "Glasovi"
+  "Voices": "Glasovi",
+  "Compute Mode": "Compute Mode",
+  "Auto (Local engine + API assist)": "Auto (Local engine + API assist)",
+  "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
+  "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
+  "Model folder": "Model folder",
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
 }

@@ -4,6 +4,7 @@ on:
   workflow_dispatch:
   push:
     branches:
+      - main
       - master
   pull_request:
 
@@ -38,7 +39,7 @@ jobs:
             base_sha="$(
               gh run list \
                 --workflow ci.yml \
-                --branch master \
+                --branch "${GITHUB_REF_NAME:-main}" \
                 --event push \
                 --status success \
                 --limit 1 \

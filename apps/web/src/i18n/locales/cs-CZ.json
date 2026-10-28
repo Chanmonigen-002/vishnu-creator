@@ -3379,5 +3379,11 @@
   "Local dub engine: failed to start": "Místní dabingový engine: spuštění selhalo",
   "Local dub engine: off": "Místní dabingový engine: vypnut",
   "Local dub engine: checking": "Místní dabingový engine: kontroluje se",
-  "Voices": "Hlasy"
+  "Voices": "Hlasy",
+  "Compute Mode": "Compute Mode",
+  "Auto (Local engine + API assist)": "Auto (Local engine + API assist)",
+  "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
+  "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
+  "Model folder": "Model folder",
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
 }

@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       target:
-        description: 要验证的 Desktop 平台
+        description: Target Desktop platforms to build and verify
         required: true
         default: all
         type: choice
@@ -15,7 +15,7 @@ on:
           - windows-x64
           - publish
       release_tag:
-        description: 仅 target=publish 时使用的现有发布标签（保留标签和候选安装包）
+        description: Existing release tag used only when target=publish (preserves tags and candidate packages)
         required: false
         type: string
   push:
@@ -44,7 +44,7 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: 校验 Desktop 发布标签
+      - name: Verify Desktop release tag
         id: release-target
         env:
           TARGET: ${{ inputs.target }}
@@ -52,8 +52,8 @@ jobs:
         shell: bash
         run: |
           if [[ "$GITHUB_EVENT_NAME" == workflow_dispatch && "$TARGET" == publish ]]; then
-            if [[ "$GITHUB_REF" != refs/heads/master ]]; then
-              echo '::error::手动提升现有标签只能从 master 运行。'
+            if [[ "$GITHUB_REF" != refs/heads/main && "$GITHUB_REF" != refs/heads/master ]]; then
+              echo '::error::Manual promotion of an existing tag can only run from main.'
               exit 1
             fi
             release="$(node apps/desktop/scripts/release-build-input.mjs promotion-target "$RELEASE_TAG")"
@@ -65,12 +65,12 @@ jobs:
             echo "sha=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
           else
             if [[ -n "$RELEASE_TAG" ]]; then
-              echo '::error::release_tag 只能与 target=publish 一起使用。'
+              echo '::error::release_tag can only be used with target=publish.'
               exit 1
             fi
             echo "sha=$GITHUB_SHA" >> "$GITHUB_OUTPUT"
           fi
-      - name: 校验同一提交的 CI 已通过
+      - name: Verify CI passed for the same commit
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}
@@ -88,11 +88,11 @@ jobs:
                 --jq 'length'
             )"
             if [[ "$successful_runs" != "1" ]]; then
-              echo "::error::提交 $sha 尚无成功的 master push CI，请等待 CI 通过后再创建发布标签。"
+              echo "::error::Commit $sha has no successful main push CI. Please wait for CI to pass before creating a release tag."
               exit 1
             fi
           done
-      - name: 选择 Desktop 构建平台
+      - name: Select Desktop build platform
         id: release-matrix
         shell: bash
         env:
@@ -112,7 +112,7 @@ jobs:
               matrix='{"include":[{"name":"windows-x64","os":"windows-latest","platform":"win32","arch":"x64","artifact":"vishnucreator-desktop-windows-x64-unsigned"}]}'
               ;;
             *)
-              echo "::error::不支持的 Desktop 构建目标：$TARGET"
+              echo "::error::Unsupported Desktop build target: $TARGET"
               exit 1
               ;;
           esac
@@ -133,7 +133,7 @@ jobs:
       VISHNUCREATOR_DESKTOP_BUILD_MANIFEST: ${{ github.workspace }}/apps/desktop/release/vishnucreator-desktop-build-manifest-${{ matrix.platform }}-${{ matrix.arch }}.json
       VISHNUCREATOR_DESKTOP_OFFICIAL_BUILD: '1'
     steps:
-      - name: 验证 macOS 正式签名凭据
+      - name: Verify macOS production signing credentials
         if: matrix.platform == 'darwin'
         shell: bash
         env:
@@ -156,18 +156,18 @@ jobs:
             fi
           done
           if (( ${#missing[@]} > 0 )); then
-            echo "::error::release Environment 缺少 macOS 签名 Secret：${missing[*]}"
+            echo "::error::release Environment is missing macOS signing Secret: ${missing[*]}"
             exit 1
           fi
       - uses: actions/checkout@v4
-      - name: 验证并使用 macOS Command Line Tools
+      - name: Verify and use macOS Command Line Tools
         if: matrix.platform == 'darwin'
         shell: bash
         run: |
           set -euo pipefail
           tools=/Library/Developer/CommandLineTools
           if [[ ! -d "$tools" ]]; then
-            echo '::error::macOS Command Line Tools 未安装；打包不使用完整 Xcode。'
+            echo '::error::macOS Command Line Tools are not installed; packaging does not use full Xcode.'
             exit 1
           fi
           for tool in iconutil codesign; do
@@ -216,7 +216,7 @@ jobs:
             .runtime/build/vishnuai/${{ matrix.platform }}-${{ matrix.arch }}
           key: vishnuai-build-${{ runner.os }}-${{ matrix.arch }}-${{ hashFiles('scripts/build-vishnuai.mjs', 'runtime/vishnuai/**') }}
       - run: pnpm install --frozen-lockfile
-      - name: 生成 macOS 正式签名安装包
+      - name: Generate macOS production signed installer
         if: matrix.platform == 'darwin'
         shell: bash
         run: |
@@ -247,35 +247,35 @@ jobs:
           APPLE_APP_SPECIFIC_PASSWORD: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
           APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
           VISHNUCREATOR_APPLE_TEAM_ID: ${{ secrets.APPLE_TEAM_ID }}
-      - name: 生成 Windows 未签名安装包
+      - name: Generate Windows unsigned installer
         if: matrix.platform == 'win32'
         run: pnpm desktop:dist
         env:
           GH_TOKEN: ${{ github.token }}
           VISHNUCREATOR_DESKTOP_TARGET_PLATFORM: ${{ matrix.platform }}
           VISHNUCREATOR_DESKTOP_TARGET_ARCH: ${{ matrix.arch }}
-      - name: 验证实际打包应用
+      - name: Verify packaged application
         run: pnpm --filter @vishnucreator/desktop e2e:package:smoke
-      - name: 生成 VishnuAI Server 与 CLI 独立发布包
+      - name: Generate VishnuAI Server and CLI standalone release package
         run: pnpm vishnuai:package
         env:
           VISHNUCREATOR_VISHNUAI_TARGET_PLATFORM: ${{ matrix.platform }}
           VISHNUCREATOR_VISHNUAI_TARGET_ARCH: ${{ matrix.arch }}
-      - name: 上传用户发布附件
+      - name: Upload user release artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.artifact }}
           path: ${{ env.VISHNUCREATOR_DESKTOP_RELEASE_ASSETS }}/*
           if-no-files-found: error
           compression-level: 0
-      - name: 上传 VishnuAI Server 与 CLI 发布附件
+      - name: Upload VishnuAI Server and CLI release artifacts
         uses: actions/upload-artifact@v4
         with:
           name: vishnuai-release-${{ matrix.name }}
           path: ${{ env.VISHNUCREATOR_VISHNUAI_RELEASE_ASSETS }}/*
           if-no-files-found: error
           compression-level: 0
-      - name: 保留内部构建诊断
+      - name: Retain internal build diagnostics
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -307,7 +307,7 @@ jobs:
           cache-dependency-path: runtime/vishnuai/go.sum
       - name: Install release metadata dependencies
         run: pnpm install --filter @vishnucreator/daemon --frozen-lockfile --ignore-scripts
-      - name: 生成 Linux VishnuAI Server 与 CLI 发布包
+      - name: Generate Linux VishnuAI Server and CLI release package
         shell: bash
         run: |
           for arch in x64 arm64; do
@@ -315,7 +315,7 @@ jobs:
             VISHNUCREATOR_VISHNUAI_TARGET_ARCH="$arch" \
               node scripts/package-vishnuai-release.mjs
           done
-      - name: 上传 Linux VishnuAI Server 与 CLI 发布附件
+      - name: Upload Linux VishnuAI Server and CLI release artifacts
         uses: actions/upload-artifact@v4
         with:
           name: vishnuai-release-linux
@@ -332,10 +332,10 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
-      - name: 计算应用构建输入指纹
+      - name: Calculate application build input fingerprint
         id: build-input
         run: echo "digest=$(node apps/desktop/scripts/release-build-input.mjs digest)" >> "$GITHUB_OUTPUT"
-      - name: 记录可提升候选包
+      - name: Record promotable candidate package
         env:
           CANDIDATE_SHA: ${{ github.sha }}
           CANDIDATE_RUN_ID: ${{ github.run_id }}
@@ -355,7 +355,7 @@ jobs:
             };
             fs.writeFileSync("release-candidate.json", `${JSON.stringify(candidate, null, 2)}\n`);
           NODE
-      - name: 上传候选包身份凭据
+      - name: Upload candidate package credentials
         uses: actions/upload-artifact@v4
         with:
           name: vishnucreator-release-candidate-${{ steps.build-input.outputs.digest }}
@@ -381,12 +381,12 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-      - name: 安装发布元数据解析依赖
+      - name: Install release metadata parsing dependencies
         run: pnpm install --filter @vishnucreator/daemon --frozen-lockfile --ignore-scripts
-      - name: 计算应用构建输入指纹
+      - name: Calculate application build input fingerprint
         id: build-input
         run: echo "digest=$(node apps/desktop/scripts/release-build-input.mjs digest)" >> "$GITHUB_OUTPUT"
-      - name: 查找可复用的完整候选构建
+      - name: Find reusable complete candidate build
         id: candidate
         env:
           GH_TOKEN: ${{ github.token }}
@@ -400,7 +400,7 @@ jobs:
               --jq '.artifacts | map(select(.expired == false)) | sort_by(.created_at) | reverse | .[0].workflow_run.id // empty'
           )"
           if [[ -z "$candidate_run_id" ]]; then
-            echo "::error::当前 tag 没有可复用的完整候选构建。应用构建输入发生变化时，请先从 master 运行 target=all。"
+            echo "::error::No reusable complete candidate build for current tag. When application build inputs change, please run target=all from main first."
             exit 1
           fi
 
@@ -410,11 +410,11 @@ jobs:
             gh api "repos/$GH_REPO/compare/$candidate_sha...$RELEASE_SHA" --jq '.status'
           )"
           if [[ "$(jq -r '.event' <<< "$run")" != "workflow_dispatch" \
-            || "$(jq -r '.head_branch' <<< "$run")" != "master" \
+            || ( "$(jq -r '.head_branch' <<< "$run")" != "main" && "$(jq -r '.head_branch' <<< "$run")" != "master" ) \
             || "$(jq -r '.conclusion' <<< "$run")" != "success" \
             || "$(jq -r '.path' <<< "$run")" != ".github/workflows/desktop-release.yml" \
             || ( "$comparison_status" != "identical" && "$comparison_status" != "ahead" ) ]]; then
-            echo "::error::候选构建 $candidate_run_id 的来源或祖先关系无效。"
+            echo "::error::Candidate build $candidate_run_id source or ancestor relationship is invalid."
             exit 1
           fi
           {
@@ -422,7 +422,7 @@ jobs:
             echo "sha=$candidate_sha"
             echo "name=$CANDIDATE_NAME"
           } >> "$GITHUB_OUTPUT"
-          echo "使用已验证候选构建：$candidate_run_id ($candidate_sha)"
+          echo "Using verified candidate build: $candidate_run_id ($candidate_sha)"
       - uses: actions/download-artifact@v4
         with:
           github-token: ${{ github.token }}
@@ -443,7 +443,7 @@ jobs:
           run-id: ${{ steps.candidate.outputs.run-id }}
           name: ${{ steps.candidate.outputs.name }}
           path: candidate
-      - name: 校验候选包身份凭据
+      - name: Verify candidate package credentials
         env:
           EXPECTED_SHA: ${{ steps.candidate.outputs.sha }}
           EXPECTED_RUN_ID: ${{ steps.candidate.outputs.run-id }}
@@ -462,11 +462,11 @@ jobs:
               && candidate.target === "all";
             if (!valid) throw new Error("Release candidate provenance does not match this tag");
           NODE
-      - name: 校验发布附件并生成下载说明
+      - name: Verify release artifacts and generate download instructions
         env:
           GH_REPO: ${{ github.repository }}
         run: node apps/desktop/scripts/release-assets.mjs artifacts "$TAG" "$GH_REPO" release-notes.md
-      - name: 发布 GitHub Release
+      - name: Publish GitHub Release
         env:
           GH_TOKEN: ${{ github.token }}
           GH_REPO: ${{ github.repository }}

@@ -3379,5 +3379,11 @@
   "Local dub engine: failed to start": "உள்ளூர் டப்பிங் இயந்திரம்: தொடங்க முடியவில்லை",
   "Local dub engine: off": "உள்ளூர் டப்பிங் இயந்திரம்: முடக்கப்பட்டது",
   "Local dub engine: checking": "உள்ளூர் டப்பிங் இயந்திரம்: சரிபார்க்கிறது",
-  "Voices": "குரல்கள்"
+  "Voices": "குரல்கள்",
+  "Compute Mode": "Compute Mode",
+  "Auto (Local engine + API assist)": "Auto (Local engine + API assist)",
+  "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
+  "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
+  "Model folder": "Model folder",
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
 }

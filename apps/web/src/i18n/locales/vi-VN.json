@@ -3379,5 +3379,11 @@
   "Local dub engine: failed to start": "Công cụ lồng tiếng cục bộ: khởi động thất bại",
   "Local dub engine: off": "Công cụ lồng tiếng cục bộ: đã tắt",
   "Local dub engine: checking": "Công cụ lồng tiếng cục bộ: đang kiểm tra",
-  "Voices": "Giọng nói"
+  "Voices": "Giọng nói",
+  "Compute Mode": "Compute Mode",
+  "Auto (Local engine + API assist)": "Auto (Local engine + API assist)",
+  "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
+  "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
+  "Model folder": "Model folder",
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
 }
