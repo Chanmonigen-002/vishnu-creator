@@ -5,7 +5,7 @@ The master plan explains *why*; these files track *what is done*.
 
 | Phase | Title | Tasks | Done | Doing | Blocked | Todo | Depends on | Gate | Status |
 |---|---|---|---|---|---|---|---|---|---|
-| 0 | [Stabilize the baseline](phase-0-baseline.md) | 9 | 9 | 0 | 0 | 0 | — | met (`v0-baseline`) | Complete |
+| 0 | [Stabilize the baseline](phase-0-baseline.md) | 10 | 10 | 0 | 0 | 0 | — | met (`v0-baseline`) | Complete |
 | 1 | [Khmer foundation, zero GPU](phase-1-khmer-foundation.md) | 9 | 9 | 0 | 0 | 0 | Phase 0 | met (T1.8 E2E verified) | Complete |
 | 2 | [Bring the dub engine into the repo](phase-2-dub-engine-service.md) | 15 | 15 | 0 | 0 | 0 | Phase 0 · ADR-0005 (accepted) | met (72/72 pytest green) | Complete |
 | 3 | [Daemon ↔ engine integration](phase-3-daemon-integration.md) | 14 | 14 | 0 | 0 | 0 | Phase 2 | met (`v3-daemon-integration`) | Complete |
