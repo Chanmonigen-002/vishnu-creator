@@ -3385,5 +3385,21 @@
   "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
-  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
+  "Free tier": "Безплатен план",
+  "Paid": "Платено",
+  "Runs on this PC · no account": "Работи на този компютър · без акаунт",
+  "Not yet verified": "Още не е проверено",
+  "Get API key": "Вземете API ключ",
+  "Load models from service": "Заредете модели от услугата",
+  "{{0}} models loaded": "Заредени модели: {{0}}",
+  "The service returned no models": "Услугата не върна никакви модели",
+  "Could not load the model list": "Не можа да се зареди списъкът с модели",
+  "Audio quality": "Качество на звука",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "В момента нито един модел на ElevenLabs не поддържа кхмерски. Използвайте го за английски и други езици.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Използвайте ключа на вашия ресурс Azure Speech. Базовият URL е регионът на ресурса, например https://southeastasia.tts.speech.microsoft.com. Кхмерските гласове Sreymom и Piseth са вградени; може да въведете и друго име на глас от Azure (например en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free е безплатният модел за разработчици. Гласовете са идентификатори на модели на Fish Audio; изберете от списъка или въведете директно. Поддръжката на кхмерски все още не е потвърдена, затова първо направете пробно прослушване.",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "Кхмерският изход на този доставчик все още не е проверен. Когато ключът заработи, първо тествайте с кратко изречение на кхмерски.",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "Качеството на кхмерския зависи от локалния модел: Gemma 4 (gemma4:latest) произведе правилен кхмерски при реален тест; Qwen 3 и подобни модели може да не дават кхмерски.",
+  "Voice Library": "Библиотека с гласове"
 }

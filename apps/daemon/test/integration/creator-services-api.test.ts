@@ -189,6 +189,50 @@ describe('creator services API', () => {
     }
   });
 
+  it('lists text models from an OpenAI-compatible endpoint with the retained credential', async () => {
+    let authorization: string | undefined;
+    let status = 200;
+    const endpoint = createServer((request, response) => {
+      authorization = request.headers.authorization;
+      response.statusCode = status;
+      response.setHeader('Content-Type', 'application/json');
+      response.end(JSON.stringify({ data: [{ id: 'qwen3:8b' }, { id: 'llama3.2' }, { id: 'qwen3:8b' }, { id: '' }] }));
+    });
+    await new Promise<void>(resolve => endpoint.listen(0, '127.0.0.1', resolve));
+    try {
+      const address = endpoint.address();
+      if (address === null || typeof address === 'string') throw new Error('Missing endpoint address');
+      const baseUrl = `http://127.0.0.1:${address.port}/v1`;
+      const config = createDefaultCreatorServicesConfig();
+      config.llm.baseUrl = `${baseUrl}/`;
+      config.llm.apiKey = 'saved-llm-secret';
+      vi.mocked(store.read).mockResolvedValue(config);
+
+      const listed = await server.inject({ method: 'POST', url: '/creator-services/llm/models', payload: { baseUrl, apiKey: '' } });
+      expect(listed.statusCode).toBe(200);
+      expect(listed.json()).toEqual({ models: ['llama3.2', 'qwen3:8b'] });
+      expect(authorization).toBe('Bearer saved-llm-secret');
+      expect(listed.body).not.toContain('saved-llm-secret');
+
+      authorization = undefined;
+      const otherEndpoint = await server.inject({ method: 'POST', url: '/creator-services/llm/models',
+        payload: { baseUrl: `${baseUrl}/other`, apiKey: '' } });
+      expect(otherEndpoint.statusCode).toBe(200);
+      expect(authorization).toBeUndefined();
+
+      status = 401;
+      const rejected = await server.inject({ method: 'POST', url: '/creator-services/llm/models', payload: { baseUrl, apiKey: 'typed-key' } });
+      expect(rejected.statusCode).toBe(502);
+      expect(rejected.json().error.message).toContain('HTTP 401');
+      expect(authorization).toBe('Bearer typed-key');
+
+      const invalid = await server.inject({ method: 'POST', url: '/creator-services/llm/models', payload: { baseUrl: 'ftp://x' } });
+      expect(invalid.statusCode).toBe(400);
+    } finally {
+      endpoint.close();
+    }
+  });
+
   it('accepts the default OpenAI provider with an empty API key', async () => {
     vi.mocked(store.read).mockResolvedValue(createDefaultCreatorServicesConfig());
     const config = createDefaultCreatorServicesConfig();

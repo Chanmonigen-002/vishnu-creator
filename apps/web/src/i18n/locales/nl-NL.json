@@ -3385,5 +3385,21 @@
   "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
-  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
+  "Free tier": "Gratis gebruik",
+  "Paid": "Betaald",
+  "Runs on this PC · no account": "Draait op deze PC · geen account nodig",
+  "Not yet verified": "Nog niet geverifieerd",
+  "Get API key": "API-sleutel verkrijgen",
+  "Load models from service": "Modellen laden van de service",
+  "{{0}} models loaded": "{{0}} modellen geladen",
+  "The service returned no models": "De service retourneerde geen modellen",
+  "Could not load the model list": "Kan de modellenlijst niet laden",
+  "Audio quality": "Audiokwaliteit",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Op dit moment ondersteunt geen enkel ElevenLabs-model Khmer. Gebruik het voor Engels en andere talen.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Gebruik de sleutel van uw Azure Speech-resource. De basis-URL is de regio van uw resource, bijvoorbeeld https://southeastasia.tts.speech.microsoft.com. De Khmer-stemmen Sreymom en Piseth zijn ingebouwd; u kunt ook elke andere Azure-stemnaam typen (bijvoorbeeld en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free is het gratis ontwikkelaarsmodel. Stemmen zijn Fish Audio-model-ID’s; kies er een uit de lijst of typ deze. Khmer-ondersteuning is nog niet bevestigd, luister eerst naar een voorbeeld.",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "De Khmer-uitvoer van deze provider is nog niet geverifieerd. Test eerst met een korte Khmer-zin zodra de sleutel werkt.",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "De Khmer-kwaliteit hangt af van het lokale model: Gemma 4 (gemma4:latest) gaf in een live test correct Khmer; Qwen 3 en vergelijkbare modellen kunnen geen Khmer uitgeven.",
+  "Voice Library": "Stemmenbibliotheek"
 }

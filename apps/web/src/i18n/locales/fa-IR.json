@@ -3385,5 +3385,21 @@
   "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
-  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
+  "Free tier": "آزاد",
+  "Paid": "پولی",
+  "Runs on this PC · no account": "اجرای روی این رایانه · بدون حساب",
+  "Not yet verified": "هنوز تأیید نشده",
+  "Get API key": "کلید API را بگیرید",
+  "Load models from service": "بارگذاری مدل‌ها از سرویس",
+  "{{0}} models loaded": "{{0}} مدل بارگذاری شد",
+  "The service returned no models": "سرویس هیچ مدلی برنگرداند",
+  "Could not load the model list": "بارگذاری فهرست مدل‌ها ممکن نشد",
+  "Audio quality": "کیفیت صدا",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "هنوز هیچ مدل ElevenLabs زبان خمر را پشتیبانی نمی‌کند. برای انگلیسی و زبان‌های دیگر از آن استفاده کنید.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "از کلید منبع Azure Speech خود استفاده کنید. URL پایه همان منطقه منبع شماست، مثل https://southeastasia.tts.speech.microsoft.com. صداهای خمر Sreymom و Piseth از پیش موجودند؛ می‌توانید نام هر صدای دیگر Azure را هم بنویسید (مثل en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free مدل رایگان مخصوص توسعه‌دهندگان است. صداها شناسه‌ی مدل‌های Fish Audio هستند؛ از فهرست انتخاب کنید یا دستی بنویسید. پشتیبانی خمر هنوز تأیید نشده، ابتدا نمونه را گوش دهید.",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "خروجی خمر این تأمین‌کننده هنوز تأیید نشده است. پس از کارکردن کلید، اول با یک جمله کوتاه خمر آزمایش کنید.",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "کیفیت خمر به مدل محلی بستگی دارد: Gemma 4 (gemma4:latest) در آزمایش واقعی خمر درست تولید کرد؛ Qwen 3 و مدل‌های مشابه ممکن است خمر تولید نکنند.",
+  "Voice Library": "کتابخانه صدا"
 }

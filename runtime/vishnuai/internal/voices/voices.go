@@ -11,9 +11,12 @@ import (
 )
 
 const (
-	ProviderAliyun = "aliyun"
-	ProviderOpenAI = "openai"
-	Minimax        = "minimax"
+	ProviderAliyun    = "aliyun"
+	ProviderOpenAI    = "openai"
+	Minimax           = "minimax"
+	ProviderAzure     = "azure"
+	ProviderElevenLabs = "elevenlabs"
+	ProviderFishAudio = "fishaudio"
 )
 
 func List(ctx context.Context, provider string) ([]pipeline.Voice, error) {
@@ -53,5 +56,5 @@ func List(ctx context.Context, provider string) ([]pipeline.Voice, error) {
 }
 
 func Providers() []string {
-	return []string{ProviderAliyun, ProviderOpenAI, Minimax}
+	return []string{ProviderAliyun, ProviderOpenAI, Minimax, ProviderAzure, ProviderElevenLabs, ProviderFishAudio}
 }

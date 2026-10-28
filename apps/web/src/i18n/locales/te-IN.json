@@ -3385,5 +3385,21 @@
   "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
-  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
+  "Free tier": "ఉచిత అంచె",
+  "Paid": "చెల్లింపు",
+  "Runs on this PC · no account": "ఈ కంప్యూటర్లో పనిచేస్తుంది · ఖాతా అవసరం లేదు",
+  "Not yet verified": "ఇంకా ధృవీకరించలేదు",
+  "Get API key": "API కీ పొందండి",
+  "Load models from service": "సేవ నుంచి మోడళ్లను లోడ్ చేయండి",
+  "{{0}} models loaded": "{{0}} మోడళ్లు లోడయ్యాయి",
+  "The service returned no models": "సేవ ఏ మోడళ్లనూ ఇవ్వలేదు",
+  "Could not load the model list": "మోడల్ జాబితా లోడ్ చేయలేకపోయింది",
+  "Audio quality": "ఆడియో నాణ్యత",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "ప్రస్తుతం ఏ ElevenLabs మోడల్ ఖ్మేర్ భాషకు మద్దతు ఇవ్వడం లేదు. ఆంగ్లం మరియు ఇతర భాషల కోసం ఉపయోగించండి.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "మీ Azure Speech రిసోర్స్ కీని ఉపయోగించండి. బేస్ URL అంటే మీ రిసోర్స్ ప్రాంతం, ఉదా: https://southeastasia.tts.speech.microsoft.com. ఖ్మేర్ వాయిస్‌లు Sreymom మరియు Piseth అప్పటికే అందుబాటులో ఉన్నాయి; వేరే Azure వాయిస్ పేరు కూడా టైప్ చేయవచ్చు (ఉదా: en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free అనేది డెవలపర్ల కోసం ఉచిత మోడల్. వాయిస్‌లు Fish Audio మోడల్ IDలు; జాబితా నుంచి ఎంచుకోండి లేదా టైప్ చేయండి. ఖ్మేర్ మద్దతు ఇంకా నిర్ధారించబడలేదు, ముందు విని చూడండి.",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "ఈ సేవ యొక్క ఖ్మేర్ అవుట్‌పుట్ ఇంకా ధృవీకరించబడలేదు. కీ పనిచేసిన తర్వాత ముందుగా ఒక చిన్న ఖ్మేర్ వాక్యంతో పరీక్షించండి.",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "ఖ్మేర్ నాణ్యత లోకల్ మోడల్‌పై ఆధారపడి ఉంటుంది: Gemma 4 (gemma4:latest) నిజమైన పరీక్షలో సరైన ఖ్మేర్‌ని ఇచ్చింది; Qwen 3 లాంటి మోడళ్లు ఖ్మేర్ ఇవ్వకపోవచ్చు.",
+  "Voice Library": "వాయిస్ లైబ్రరీ"
 }

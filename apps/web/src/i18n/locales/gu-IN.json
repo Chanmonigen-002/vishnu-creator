@@ -3385,5 +3385,21 @@
   "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
-  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
+  "Free tier": "ફ્રી ટિયર",
+  "Paid": "પેઇડ",
+  "Runs on this PC · no account": "આ કમ્પ્યુટર પર ચાલે · એકાઉન્ટ વગર",
+  "Not yet verified": "હજુ ચકાસાયું નથી",
+  "Get API key": "API કી લો",
+  "Load models from service": "સેવામાંથી મોડેલ લોડ કરો",
+  "{{0}} models loaded": "{{0}} મોડેલ લોડ થયા",
+  "The service returned no models": "સેવાએ કોઈ મોડેલ આપ્યું નથી",
+  "Could not load the model list": "મોડેલ યાદી લોડ ન થઈ",
+  "Audio quality": "ઓડિયો ગુણવત્તા",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "હાલમાં કોઈ ElevenLabs મોડેલ ખ્મેર ભાષા આધાર આપતું નથી. અંગ્રેજી અને અન્ય ભાષાઓ માટે વાપરો.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "તમારી Azure Speech સંસાધન કી વાપરો. બેઝ URL તમારા સંસાધનનો પ્રદેશ છે, દા.ત. https://southeastasia.tts.speech.microsoft.com. ખ્મેર વોઇસ Sreymom અને Piseth પહેલેથી ઉપલબ્ધ છે; અન્ય કોઈપણ Azure વોઇસ નામ પણ લખી શકો (દા.ત. en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free ડેવલપર માટે ફ્રી મોડેલ છે. વોઇસ એ Fish Audio મોડેલ ID હોય છે; યાદીમાંથી પસંદ કરો અથવા જાતે લખો. ખ્મેર સપોર્ટ હજુ ખાતરી નથી, પહેલા પ્રિવ્યૂ સાંભળો.",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "આ પ્રદાતાનું ખ્મેર આઉટપુટ હજુ ચકાસાયું નથી. કી કામ કરે એટલે પહેલા ખ્મેરમાં એક ટૂંકા વાક્યથી કસોટી કરો.",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "ખ્મેરની ગુણવત્તા લોકલ મોડેલ પર આધારિત છે: Gemma 4 (gemma4:latest) લાઈવ કસોટીમાં સાચું ખ્મેર આપ્યું; Qwen 3 જેવા અન્ય મોડેલો કદાચ ખ્મેર આપતાં નથી.",
+  "Voice Library": "અવાજ લાઇબ્રેરી"
 }

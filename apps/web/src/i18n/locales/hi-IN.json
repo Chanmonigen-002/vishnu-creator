@@ -3385,5 +3385,21 @@
   "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
-  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
+  "Free tier": "फ्री टियर",
+  "Paid": "पेड",
+  "Runs on this PC · no account": "इस PC पर चलता है · खाता ज़रूरी नहीं",
+  "Not yet verified": "अभी सत्यापित नहीं",
+  "Get API key": "API कुंजी प्राप्त करें",
+  "Load models from service": "सेवा से मॉडल लोड करें",
+  "{{0}} models loaded": "{{0}} मॉडल लोड हो गए",
+  "The service returned no models": "सेवा ने कोई मॉडल नहीं दिया",
+  "Could not load the model list": "मॉडल सूची लोड नहीं हो सकी",
+  "Audio quality": "ऑडियो गुणवत्ता",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "फिलहाल कोई ElevenLabs मॉडल खमेर भाषा का समर्थन नहीं करता। इसे अंग्रेज़ी व अन्य भाषाओं के लिए उपयोग करें।",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "अपने Azure Speech संसाधन की कुंजी उपयोग करें। बेस यूआरएल आपके संसाधन का क्षेत्र है, जैसे https://southeastasia.tts.speech.microsoft.com। खमेर आवाज़ें Sreymom और Piseth पहले से मौजूद हैं; आप कोई अन्य Azure आवाज़ का नाम भी टाइप कर सकते हैं (जैसे en-US-JennyNeural)।",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free डेवलपर के लिए फ्री मॉडल है। आवाज़ें Fish Audio मॉडल ID होती हैं; सूची से चुनें या टाइप करें। खमेर समर्थन अभी पक्का नहीं, पहले सुनकर देखें।",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "इस प्रदाता का खमेर आउटपुट अभी सत्यापित नहीं है। कुंजी काम करने पर पहले एक छोटे खमेर वाक्य से जांचें।",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "खमेर गुणवत्ता लोकल मॉडल पर निर्भर है: Gemma 4 (gemma4:latest) ने लाइव टेस्ट में सही खमेर दिया; Qwen 3 जैसे मॉडल खमेर नहीं भी दे सकते।",
+  "Voice Library": "आवाज़ लाइब्रेरी"
 }

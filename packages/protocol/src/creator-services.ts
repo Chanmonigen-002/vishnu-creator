@@ -9,7 +9,9 @@ export type OpenAiCompatibleConfig = {
   model: string;
 };
 
-export const creatorTtsProviders = ['openai', 'aliyun', 'edge-tts', 'minimax', 'volcengine'] as const;
+export const creatorTtsProviders = ['openai', 'aliyun', 'edge-tts', 'minimax', 'volcengine', 'azure', 'elevenlabs', 'fishaudio'] as const;
+/** Providers the bundled vishnuai CLI can synthesize with (video translation dubbing). */
+export const vishnuCliTtsProviders = ['openai', 'aliyun', 'edge-tts', 'minimax', 'volcengine', 'azure', 'elevenlabs', 'fishaudio'] as const satisfies readonly CreatorTtsProvider[];
 export type CreatorTtsProvider = (typeof creatorTtsProviders)[number];
 
 export const creatorDubEngineProviders = ['local-engine', 'remote-engine'] as const;
@@ -400,6 +402,9 @@ export type CreatorServicesConfig = {
     minimax: CreatorTtsProviderConfig;
     aliyun: CreatorTtsProviderConfig;
     volcengine: VolcengineTtsConfig;
+    azure: CreatorTtsProviderConfig;
+    elevenlabs: CreatorTtsProviderConfig;
+    fishaudio: CreatorTtsProviderConfig;
   };
   image: {
     provider: 'openai' | 'jimeng' | 'kling' | 'gemini' | 'codex-native';
@@ -522,6 +527,9 @@ export type CreatorServicesCredentialField =
   | 'tts.aliyun.apiKey'
   | 'tts.volcengine.appId'
   | 'tts.volcengine.accessToken'
+  | 'tts.azure.apiKey'
+  | 'tts.elevenlabs.apiKey'
+  | 'tts.fishaudio.apiKey'
   | 'image.openai.apiKey'
   | 'image.jimeng.apiKey'
   | 'image.kling.accessKey'
@@ -597,6 +605,27 @@ export function createDefaultCreatorServicesConfig(): CreatorServicesConfig {
         model: defaultVolcengineTtsCluster,
         defaultVoiceId: defaultVolcengineTtsVoiceId,
         appId: ''
+      },
+      // Azure Speech: regional endpoint (Southeast Asia is nearest Cambodia); `model` is
+      // the output quality, mapped to an X-Microsoft-OutputFormat value.
+      azure: {
+        baseUrl: 'https://southeastasia.tts.speech.microsoft.com',
+        apiKey: '',
+        model: '24khz',
+        defaultVoiceId: 'km-KH-SreymomNeural'
+      },
+      elevenlabs: {
+        baseUrl: 'https://api.elevenlabs.io',
+        apiKey: '',
+        model: 'eleven_multilingual_v2',
+        defaultVoiceId: ''
+      },
+      // Fish Audio: `model` is the `model` request header; voices are model reference IDs.
+      fishaudio: {
+        baseUrl: 'https://api.fish.audio',
+        apiKey: '',
+        model: 's2.1-pro-free',
+        defaultVoiceId: ''
       }
     },
     image: {

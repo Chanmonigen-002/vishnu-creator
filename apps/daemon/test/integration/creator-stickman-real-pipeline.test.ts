@@ -592,7 +592,7 @@ function inMemoryConfigStore(config: CreatorServicesConfig) {
 }
 
 function configuredTts(config: CreatorServicesConfig): {
-  provider: 'openai' | 'aliyun' | 'minimax' | 'volcengine';
+  provider: Exclude<CreatorServicesConfig['tts']['provider'], 'edge-tts'>;
   model: string;
   voiceId: string;
 } {

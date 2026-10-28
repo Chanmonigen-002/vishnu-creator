@@ -3385,5 +3385,21 @@
   "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
-  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
+  "Free tier": "Ingyenes szint",
+  "Paid": "Fizetős",
+  "Runs on this PC · no account": "Ezen a gépen fut · fiók nélkül",
+  "Not yet verified": "Még nincs ellenőrizve",
+  "Get API key": "API-kulcs beszerzése",
+  "Load models from service": "Modellek betöltése a szolgáltatásból",
+  "{{0}} models loaded": "{{0}} modell betöltve",
+  "The service returned no models": "A szolgáltatás nem adott vissza modellt",
+  "Could not load the model list": "A modellista nem tölthető be",
+  "Audio quality": "Hangminőség",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Jelenleg egyetlen ElevenLabs modell sem támogatja a khmert. Használja angolra és más nyelvekre.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Használja az Azure Speech-erőforrás kulcsát. Az alap URL az erőforrás régiója, például https://southeastasia.tts.speech.microsoft.com. A Sreymom és Piseth khmer hangok be vannak építve; más Azure hangnevet is beírhat (például en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "Az s2.1-pro-free az ingyenes fejlesztői modell. A hangok Fish Audio modellazonosítók; válasszon a listából vagy írja be. A khmer támogatás még nincs megerősítve, először hallgassa meg az előnézetet.",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "Ennek a szolgáltatásnak a khmer kimenete még nincs ellenőrizve. Amint a kulcs működik, teszteljen először egy rövid khmer mondattal.",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "A khmer minősége a lokális modelltől függ: Gemma 4 (gemma4:latest) éles tesztben helyes khmert adott; Qwen 3 és hasonló modellek nem adhatnak khmert.",
+  "Voice Library": "Hangtár"
 }

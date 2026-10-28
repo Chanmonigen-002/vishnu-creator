@@ -3385,5 +3385,21 @@
   "Local only (Offline CPU/GPU)": "Local only (Offline CPU/GPU)",
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
-  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)"
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
+  "Free tier": "มีระดับฟรี",
+  "Paid": "แบบเสียเงิน",
+  "Runs on this PC · no account": "ทำงานบนเครื่องนี้ · ไม่ต้องมีบัญชี",
+  "Not yet verified": "ยังไม่ได้ตรวจสอบ",
+  "Get API key": "รับ API key",
+  "Load models from service": "โหลดโมเดลจากบริการ",
+  "{{0}} models loaded": "โหลดโมเดลแล้ว {{0}} รายการ",
+  "The service returned no models": "บริการไม่ส่งโมเดลกลับมา",
+  "Could not load the model list": "โหลดรายการโมเดลไม่สำเร็จ",
+  "Audio quality": "คุณภาพเสียง",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "ขณะนี้ยังไม่มีโมเดล ElevenLabs ที่รองรับภาษาเขมร ใช้สำหรับภาษาอังกฤษและภาษาอื่น ๆ",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "ใช้คีย์ทรัพยากร Azure Speech ของคุณ URL พื้นฐานคือภูมิภาคของทรัพยากร เช่น https://southeastasia.tts.speech.microsoft.com เสียงภาษาเขมร Sreymom และ Piseth มีให้ในตัว และยังพิมพ์ชื่อเสียง Azure อื่น ๆ ได้ด้วย (เช่น en-US-JennyNeural)",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free เป็นโมเดลฟรีสำหรับนักพัฒนา เสียงเป็น ID โมเดลของ Fish Audio เลือกจากรายการหรือพิมพ์เองก็ได้ ยังไม่ยืนยันการรองรับภาษาเขมร จึงควรฟังตัวอย่างก่อน",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "ยังไม่ได้ทดสอบผลลัพธ์ภาษาเขมรของผู้ให้บริการรายนี้ เมื่อคีย์ใช้งานได้ ให้ลองด้วยประโยคภาษาเขมรสั้น ๆ ก่อน",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "คุณภาพภาษาเขมรขึ้นอยู่กับโมเดลในเครื่อง: Gemma 4 (gemma4:latest) ให้ผลภาษาเขมรถูกต้องจากการทดสอบจริง; โมเดลอย่าง Qwen 3 อาจไม่มีภาษาเขมร",
+  "Voice Library": "คลังเสียง"
 }

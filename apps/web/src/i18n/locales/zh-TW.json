@@ -3385,5 +3385,21 @@
   "Local only (Offline CPU/GPU)": "僅本機引擎 (完全離線 CPU/GPU)",
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "本機 + API 輔助 (雲端 ASR/LLM + 本機配音)",
   "Model folder": "模型儲存目錄",
-  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "預設最大剩餘空間磁碟 (如 D:\\\\VishnuCreatorData\\\\models)"
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "預設最大剩餘空間磁碟 (如 D:\\\\VishnuCreatorData\\\\models)",
+  "Free tier": "免費額度",
+  "Paid": "付費",
+  "Runs on this PC · no account": "在本機執行 · 免帳號",
+  "Not yet verified": "尚未實測",
+  "Get API key": "取得 API Key",
+  "Load models from service": "從服務載入模型",
+  "{{0}} models loaded": "已載入 {{0}} 個模型",
+  "The service returned no models": "服務未回傳任何模型",
+  "Could not load the model list": "無法載入模型清單",
+  "Audio quality": "音質",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "ElevenLabs 目前的模型皆不支援高棉語。請用於英文及其他語言。",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "使用您的 Azure Speech 資源金鑰。基底 URL 是您資源所在區域，例如 https://southeastasia.tts.speech.microsoft.com。已內建高棉語音 Sreymom 與 Piseth；也可以輸入任何其他 Azure 語音名稱（例如 en-US-JennyNeural）。",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free 是開發者的免費模型。語音為 Fish Audio 模型 ID；可從清單選擇或自行輸入。尚無法確認是否支援高棉語，請先試聽。",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "此供應商的高棉語輸出尚未實測。金鑰可用後，請先用一句短高棉語測試。",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "高棉語品質取決於本機模型：Gemma 4（gemma4:latest）在實測中輸出正確高棉語；Qwen 3 等模型可能不輸出高棉語。",
+  "Voice Library": "音色庫"
 }
