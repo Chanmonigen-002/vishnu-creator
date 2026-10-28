@@ -374,6 +374,35 @@ async function runEngineDub(
     // Non-fatal
   }
 
+  try {
+    const qualityBuf = await engine.downloadArtifact(jobId, 'quality_report.json', stage.signal);
+    const qualityFile = `VishnuCreator-quality-${jobId}.json`;
+    const qualityPath = join(stage.workdir, qualityFile);
+    await writeFile(qualityPath, qualityBuf, { mode: 0o600 });
+    let parsedQuality: CreatorJson = null;
+    try {
+      parsedQuality = JSON.parse(qualityBuf.toString('utf8')) as CreatorJson;
+    } catch {
+      // Ignore parse failure
+    }
+    outputs.push({
+      kind: 'quality_report',
+      status: 'completed',
+      path: qualityPath,
+      metadata: {
+        fileName: qualityFile,
+        mime: 'application/json',
+        bytes: qualityBuf.length,
+        sha256: createHash('sha256').update(qualityBuf).digest('hex'),
+        provider: 'local-engine',
+        engineJobId: jobId,
+        ...(parsedQuality ? { qualityReport: parsedQuality } : {})
+      }
+    });
+  } catch {
+    // Non-fatal
+  }
+
   return {
     outputs,
     progress: {

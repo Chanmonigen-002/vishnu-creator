@@ -666,6 +666,9 @@ class JobManager:
             else:
                 job.result_path = str(mixed_audio)
 
+            from vishnu_dub.quality import write_quality_report
+            write_quality_report(work_dir, km_segments, target_language=job.target_language)
+
             write_checkpoint("completed", completed_tts_segments=len(km_segments))
             job.status = JobStatus.COMPLETED
             job.completed_at = time.time()
