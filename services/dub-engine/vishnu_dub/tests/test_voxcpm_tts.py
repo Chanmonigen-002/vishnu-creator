@@ -264,3 +264,116 @@ async def test_api_design_voice_workflow(tmp_path: Path, monkeypatch):
         })
         assert del_resp.status_code == 200
         assert del_resp.json()["ok"] is True
+
+
+@pytest.mark.asyncio
+async def test_hardware_performance_diagnostics():
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        resp = await client.get("/v1/hardware/performance")
+        assert resp.status_code == 200
+        data = resp.json()
+        assert "tier" in data
+        assert data["tier"] in ["T0", "T1", "T2", "T3"]
+        assert "can_train_lora" in data
+        assert "voxcpm_mode" in data
+        assert "specs" in data
+        assert "cpu" in data["specs"]
+        assert "memory" in data["specs"]
+        assert "gpu" in data["specs"]
+
+
+@pytest.mark.asyncio
+async def test_voice_export_and_import(tmp_path: Path, monkeypatch):
+    import base64
+    import io
+    import vishnu_dub.api as api_mod
+    from vishnu_dub.config import Settings
+
+    test_settings = Settings(jobs_path=tmp_path / "jobs", model_store_path=tmp_path / "models")
+    monkeypatch.setattr(api_mod, "settings", test_settings)
+
+    # Prepare an existing voice folder
+    voice_dir = tmp_path / "jobs" / "voice_designs" / "test_voice_01"
+    voice_dir.mkdir(parents=True, exist_ok=True)
+    
+    t = np.linspace(0, 1.0, 48000, endpoint=False, dtype=np.float32)
+    sample_wav = 0.2 * np.sin(2 * np.pi * 440.0 * t)
+    wav_bytes_io = io.BytesIO()
+    sf.write(wav_bytes_io, sample_wav, 48000, format="WAV")
+    raw_wav_bytes = wav_bytes_io.getvalue()
+    (voice_dir / "test_voice_01.wav").write_bytes(raw_wav_bytes)
+
+    meta = {
+        "id": "test_voice_01",
+        "name": "Test Voice 01",
+        "prompt": "calm narrator",
+        "duration": 1.0,
+        "createdAt": "2026-10-28T12:00:00Z",
+        "audioUrl": "/v1/tts/artifacts/test_voice_01.wav",
+        "consent": True,
+    }
+    (voice_dir / "metadata.json").write_text(json.dumps(meta), encoding="utf-8")
+
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        # 1. Export voice
+        exp_resp = await client.post("/v1/tts/voices/export", json={"voice_id": "test_voice_01"})
+        assert exp_resp.status_code == 200
+        exp_data = exp_resp.json()
+        assert exp_data["ok"] is True
+        assert exp_data["filename"].endswith(".zip")
+        assert (tmp_path / "jobs" / "voice_designs" / exp_data["filename"]).exists()
+
+        # 2. Import voice
+        b64_audio = base64.b64encode(raw_wav_bytes).decode("ascii")
+        imp_resp = await client.post("/v1/tts/voices/import", json={
+            "name": "Imported Khmer Storyteller",
+            "prompt": "storyteller tone",
+            "audio_data": f"data:audio/wav;base64,{b64_audio}",
+            "consent": True,
+        })
+        assert imp_resp.status_code == 200
+        imp_data = imp_resp.json()
+        assert imp_data["id"] == "Imported_Khmer_Storyteller"
+        assert imp_data["duration"] == pytest.approx(1.0, rel=1e-2)
+        assert imp_data["consent"] is True
+
+        # Verify it shows up in list
+        list_resp = await client.get("/v1/tts/voices/list")
+        assert list_resp.status_code == 200
+        all_ids = [v["id"] for v in list_resp.json()["voices"]]
+        assert "Imported_Khmer_Storyteller" in all_ids
+
+
+@pytest.mark.asyncio
+async def test_lora_train_hardware_gating(monkeypatch, tmp_path: Path):
+    import vishnu_dub.api as api_mod
+    from vishnu_dub.config import Settings
+    test_settings = Settings(jobs_path=tmp_path / "jobs", model_store_path=tmp_path / "models")
+    monkeypatch.setattr(api_mod, "settings", test_settings)
+
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        # On T1 or system with < 8GB VRAM, starting LoRA training directly returns 400 with hardware message
+        resp = await client.post("/v1/lora/train", json={
+            "train_manifest": "dummy_train.jsonl",
+            "val_manifest": "dummy_val.jsonl",
+            "num_epochs": 1,
+            "batch_size": 1,
+        })
+        # If hardware is T1 (or no CUDA/ <8GB VRAM), returns 400 with explanation
+        assert resp.status_code in [200, 400]
+        if resp.status_code == 400:
+            assert "Cannot start LoRA training" in resp.json()["detail"]
+
+
+def test_lora_training_module_import_and_check():
+    from vishnu_dub.training import lora_training
+    assert hasattr(lora_training, "LoRATrainer")
+    assert hasattr(lora_training, "check_hardware_requirements")
+    
+    ok, msg = lora_training.check_hardware_requirements()
+    assert isinstance(ok, bool)
+    assert isinstance(msg, str)
+

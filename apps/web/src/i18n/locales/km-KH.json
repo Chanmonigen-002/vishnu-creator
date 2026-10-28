@@ -3385,5 +3385,6 @@
   "Local only (Offline CPU/GPU)": "តែក្នុងកុំព្យូទ័រ (CPU/GPU គ្មានអ៊ីនធឺណិត)",
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "ក្នុងកុំព្យូទ័រ + ជំនួយពី API (Cloud ASR/LLM + សំឡេងក្នុងកុំព្យូទ័រ)",
   "Model folder": "ថតផ្ទុកម៉ូដែល",
-  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "លំនាំដើម៖ ថាសដែលមានទំហំទំនេរច្រើនបំផុត (ឧ. D:\\\\VishnuCreatorData\\\\models)"
+  "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "លំនាំដើម៖ ថាសដែលមានទំហំទំនេរច្រើនបំផុត (ឧ. D:\\\\VishnuCreatorData\\\\models)",
+  "Voice Library": "បណ្ណាល័យសំឡេង"
 }

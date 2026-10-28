@@ -2,6 +2,7 @@
 
 import asyncio
 import json
+import logging
 import os
 import platform
 import re
@@ -20,6 +21,8 @@ from pydantic import BaseModel, Field
 
 from vishnu_dub.config import get_settings, Settings
 from vishnu_dub.jobs import JobManager, JobStatus, JobProgress
+
+logger = logging.getLogger("vishnu_dub.api")
 
 
 # ─── Models ──────────────────────────────────────────────────────────────
@@ -41,6 +44,9 @@ class HardwareProfile(BaseModel):
     tier_description: str = ""
     recommended_tts: str = "edge-tts"
     recommended_whisper: str = "faster-whisper-small-int8"
+    can_train_lora: bool = False
+    voxcpm_mode: str = "cpu"
+    recommended_batch_size: int = 1
 
 
 class DubRequest(BaseModel):
@@ -268,27 +274,42 @@ def detect_hardware() -> HardwareProfile:
     tier_description = "Minimal - API-only mode, no local models"
     recommended_tts = "edge-tts"
     recommended_whisper = "openai-whisper-api"
+    can_train_lora = False
+    voxcpm_mode = "cpu"
+    recommended_batch_size = 1
 
     if gpu_vram_gb is not None and gpu_vram_gb >= 12:
         tier = "T3"
-        tier_description = "High - GPU >= 12 GB VRAM, all local models"
+        tier_description = "High - GPU >= 12 GB VRAM, all local models + LoRA training"
         recommended_tts = "voxcpm2"
         recommended_whisper = "faster-whisper-large-v3-turbo-fp16"
+        can_train_lora = True
+        voxcpm_mode = "cuda"
+        recommended_batch_size = 2
     elif gpu_vram_gb is not None and gpu_vram_gb >= 8:
         tier = "T2"
-        tier_description = "Mid - GPU 8-12 GB VRAM, int8 models, one at a time"
+        tier_description = "Mid - GPU 8-12 GB VRAM, local inference + LoRA training"
         recommended_tts = "voxcpm2"
         recommended_whisper = "faster-whisper-large-v3-turbo-int8"
+        can_train_lora = True
+        voxcpm_mode = "cuda"
+        recommended_batch_size = 1
     elif ram_total_gb >= 16:
         tier = "T1"
-        tier_description = "Low - GPU < 8 GB or CPU only, RAM >= 16 GB, one model at a time"
+        tier_description = "Low - GPU < 8 GB or CPU only, RAM >= 16 GB; VoxCPM2 runs on CPU; LoRA training requires T2/T3 GPU >= 8 GB"
         recommended_tts = "edge-tts"
         recommended_whisper = "faster-whisper-small-int8"
+        can_train_lora = False
+        voxcpm_mode = "cpu"
+        recommended_batch_size = 1
     else:
         tier = "T0"
         tier_description = "Minimal - RAM < 16 GB, API-only mode"
         recommended_tts = "edge-tts"
         recommended_whisper = "openai-whisper-api"
+        can_train_lora = False
+        voxcpm_mode = "remote_only"
+        recommended_batch_size = 1
 
     return HardwareProfile(
         cpu_cores=cpu_cores,
@@ -306,6 +327,9 @@ def detect_hardware() -> HardwareProfile:
         tier_description=tier_description,
         recommended_tts=recommended_tts,
         recommended_whisper=recommended_whisper,
+        can_train_lora=can_train_lora,
+        voxcpm_mode=voxcpm_mode,
+        recommended_batch_size=recommended_batch_size,
     )
 
 
@@ -346,6 +370,40 @@ app = FastAPI(
 async def get_hardware():
     """Return hardware profile and assigned tier."""
     return detect_hardware()
+
+
+@app.get("/v1/hardware/performance")
+async def get_hardware_performance():
+    """Return detailed hardware diagnostics and performance tier capabilities."""
+    profile = detect_hardware()
+    return {
+        "tier": profile.tier,
+        "description": profile.tier_description,
+        "can_train_lora": profile.can_train_lora,
+        "voxcpm_mode": profile.voxcpm_mode,
+        "recommended_batch_size": profile.recommended_batch_size,
+        "recommended_tts": profile.recommended_tts,
+        "recommended_whisper": profile.recommended_whisper,
+        "specs": {
+            "cpu": {
+                "cores": profile.cpu_cores,
+                "threads": profile.cpu_threads,
+                "avx2": profile.cpu_avx2,
+                "avx512": profile.cpu_avx512,
+            },
+            "memory": {
+                "total_gb": profile.ram_total_gb,
+                "free_gb": profile.ram_free_gb,
+            },
+            "gpu": {
+                "name": profile.gpu_name,
+                "vram_gb": profile.gpu_vram_gb,
+                "compute_capability": profile.gpu_compute_capability,
+                "cuda_version": profile.cuda_version,
+            },
+            "disk": profile.disk_free_gb,
+        },
+    }
 
 
 @app.post("/v1/dub", response_model=DubResponse)
@@ -767,6 +825,99 @@ async def preview_voice_design(voice_id: str = Body(..., embed=True)):
     )
 
 
+class VoiceImportRequest(BaseModel):
+    name: str
+    prompt: Optional[str] = None
+    audio_data: str  # Base64 encoded audio
+    consent: bool = True
+    lora_weights_base64: Optional[str] = None
+
+
+@app.post("/v1/tts/voices/export")
+async def export_voice_design(voice_id: str = Body(..., embed=True)):
+    """Export a voice design bundle as a portable zip archive."""
+    base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
+    voice_dir = (base_jobs_dir / "voice_designs" / voice_id).resolve()
+
+    try:
+        if not (voice_dir.is_relative_to(base_jobs_dir / "voice_designs") and voice_dir.exists() and voice_dir.is_dir()):
+            raise HTTPException(404, f"Voice design '{voice_id}' not found")
+    except (ValueError, RuntimeError):
+        raise HTTPException(404, f"Voice design '{voice_id}' not found")
+
+    import zipfile
+    export_filename = f"voice_export_{voice_id}.zip"
+    export_path = base_jobs_dir / "voice_designs" / export_filename
+
+    with zipfile.ZipFile(export_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
+        for item in voice_dir.rglob("*"):
+            if item.is_file():
+                zf.write(item, arcname=item.relative_to(voice_dir))
+
+    return {
+        "ok": True,
+        "voice_id": voice_id,
+        "filename": export_filename,
+        "export_url": f"/v1/tts/artifacts/{export_filename}",
+    }
+
+
+@app.post("/v1/tts/voices/import")
+async def import_voice_design(request: VoiceImportRequest):
+    """Import a voice design bundle into the voice library."""
+    if not request.consent:
+        raise HTTPException(400, "Consent is required to import voice design")
+
+    import base64
+    import io
+    import soundfile as sf
+
+    clean_name = request.name.strip()
+    if not clean_name:
+        raise HTTPException(400, "Voice name is required")
+
+    safe_id = re.sub(r'[\s\W]+', '_', clean_name).strip('_')[:40] or f"voice_{uuid.uuid4().hex[:6]}"
+    base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
+    dest_dir = base_jobs_dir / "voice_designs" / safe_id
+    dest_dir.mkdir(parents=True, exist_ok=True)
+
+    try:
+        audio_bytes = base64.b64decode(request.audio_data.split(",")[-1])
+    except Exception as e:
+        raise HTTPException(400, f"Invalid base64 audio data: {e}")
+
+    try:
+        with io.BytesIO(audio_bytes) as bio:
+            info = sf.info(bio)
+            duration = float(info.duration)
+    except Exception as e:
+        raise HTTPException(400, f"Invalid audio stream: {e}")
+
+    audio_file = dest_dir / f"{safe_id}.wav"
+    audio_file.write_bytes(audio_bytes)
+
+    if request.lora_weights_base64:
+        try:
+            lora_bytes = base64.b64decode(request.lora_weights_base64.split(",")[-1])
+            (dest_dir / "lora_weights.ckpt").write_bytes(lora_bytes)
+        except Exception:
+            pass
+
+    created_at = datetime.now(timezone.utc).isoformat()
+    metadata = {
+        "id": safe_id,
+        "name": clean_name,
+        "prompt": request.prompt or clean_name,
+        "duration": duration,
+        "createdAt": created_at,
+        "audioUrl": f"/v1/tts/artifacts/{audio_file.name}",
+        "consent": True,
+    }
+    (dest_dir / "metadata.json").write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    return metadata
+
+
 @app.get("/v1/dub/{job_id}/download")
 async def download_result(job_id: str):
     """Download the completed dubbing result (MP4)."""
@@ -841,6 +992,17 @@ _training_jobs: Dict[str, Dict[str, Any]] = {}
 @app.post("/v1/lora/train", response_model=LoRATrainingResponse)
 async def start_lora_training(request: LoRATrainingRequest):
     """Start a LoRA fine-tuning training job."""
+    # Enforce hardware tier check before starting (LoRA requires T2/T3 GPU >= 8 GB VRAM)
+    try:
+        from vishnu_dub.training.lora_training import check_hardware_requirements
+        hw_ok, hw_msg = check_hardware_requirements()
+        if not hw_ok:
+            raise HTTPException(400, f"Cannot start LoRA training: {hw_msg}")
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.warning("Failed to run hardware check for LoRA training: %s", e)
+
     import os
     import yaml
     import tempfile
@@ -1030,22 +1192,6 @@ async def validate_training_manifest(request: Dict[str, Any]):
         "audio_durations": result.audio_durations,
         "text_lengths": result.text_lengths,
     }
-
-
-    if safe_filename.endswith(".srt"):
-        media_type = "text/plain; charset=utf-8"
-    elif safe_filename.endswith(".mp3"):
-        media_type = "audio/mpeg"
-    elif safe_filename.endswith(".json"):
-        media_type = "application/json"
-    else:
-        media_type = "audio/wav"
-
-    return FileResponse(
-        path,
-        media_type=media_type,
-        filename=safe_filename,
-    )
 
 
 @app.get("/v1/tts/artifacts/{filename}")
