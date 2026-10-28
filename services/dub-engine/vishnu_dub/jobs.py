@@ -50,6 +50,9 @@ class Job:
     bilingual_subtitles: bool = True
     compose_video: bool = True
     auto_clone_speaker: bool = False
+    llm_base_url: Optional[str] = None
+    llm_api_key: Optional[str] = None
+    llm_model: Optional[str] = None
 
     status: JobStatus = JobStatus.PENDING
     progress: JobProgress = field(default_factory=JobProgress)
@@ -105,6 +108,9 @@ class Job:
             "music_path": self.music_path,
             "reference_audio_path": self.reference_audio_path,
             "auto_clone_speaker": self.auto_clone_speaker,
+            "llm_base_url": self.llm_base_url,
+            "llm_api_key": self.llm_api_key,
+            "llm_model": self.llm_model,
             "created_at": self.created_at,
             "started_at": self.started_at,
             "completed_at": self.completed_at,
@@ -131,6 +137,9 @@ class Job:
             bilingual_subtitles=data.get("bilingual_subtitles", True),
             compose_video=data.get("compose_video", True),
             auto_clone_speaker=data.get("auto_clone_speaker", False),
+            llm_base_url=data.get("llm_base_url"),
+            llm_api_key=data.get("llm_api_key"),
+            llm_model=data.get("llm_model"),
         )
         job.status = JobStatus(data["status"])
         job.progress = JobProgress(**data.get("progress", {}))
@@ -215,6 +224,9 @@ class JobManager:
         separate_vocals: bool = True,
         bilingual_subtitles: bool = True,
         compose_video: bool = True,
+        llm_base_url: Optional[str] = None,
+        llm_api_key: Optional[str] = None,
+        llm_model: Optional[str] = None,
     ) -> "Job":
         async with self._lock:
             job = Job(
@@ -229,6 +241,9 @@ class JobManager:
                 separate_vocals=separate_vocals,
                 bilingual_subtitles=bilingual_subtitles,
                 compose_video=compose_video,
+                llm_base_url=llm_base_url,
+                llm_api_key=llm_api_key,
+                llm_model=llm_model,
             )
             job.work_dir = str(self.settings.jobs_path / job_id)
             Path(job.work_dir).mkdir(parents=True, exist_ok=True)
@@ -475,7 +490,16 @@ class JobManager:
                     km_segments = json.load(f)
             else:
                 trans_start = time.time()
-                translation_backend = get_translation_backend(self.settings)
+                if job.llm_api_key:
+                    from vishnu_dub.translation import LLMTranslationBackend
+                    from vishnu_dub.config import LLMConfig
+                    translation_backend = LLMTranslationBackend(LLMConfig(
+                        base_url=job.llm_base_url or self.settings.llm.base_url,
+                        api_key=job.llm_api_key,
+                        model=job.llm_model or self.settings.llm.model or "gpt-4o-mini",
+                    ))
+                else:
+                    translation_backend = get_translation_backend(self.settings)
                 translated = await translation_backend.translate(
                     source_segments,
                     job.source_language,

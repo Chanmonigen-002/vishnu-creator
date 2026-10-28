@@ -193,7 +193,7 @@ export async function registerCreatorServicesRoutes(
         mode?: unknown; url?: unknown; port?: unknown; token?: unknown;
       } | null;
       const saved = await store.read();
-      const mode = body?.mode === 'local' || body?.mode === 'remote'
+      const mode = body?.mode === 'local' || body?.mode === 'remote' || body?.mode === 'auto' || body?.mode === 'api-assist'
         ? body.mode
         : saved.dubEngine.mode;
       const url = typeof body?.url === 'string' && body.url.trim().length > 0
@@ -273,7 +273,7 @@ export async function registerCreatorServicesRoutes(
       }
       const estimate = estimateDubJob({
         durationSeconds: durationSeconds ?? 60,
-        mode: mode ?? (saved.dubEngine.mode === 'remote' ? 'remote' : 'local'),
+        mode: mode ?? (saved.dubEngine.mode === 'remote' ? 'remote' : saved.dubEngine.mode === 'api-assist' ? 'api-assist' : 'local'),
         tier,
         benchmarkTotalSeconds
       });

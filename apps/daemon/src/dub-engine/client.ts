@@ -10,18 +10,21 @@
  */
 
 import { createHash } from 'node:crypto';
+import type { CreatorDubEngineMode } from '@vishnucreator/protocol';
 
 export type DubEngineProvider = 'local-engine' | 'remote-engine';
+export type DubEngineMode = CreatorDubEngineMode;
 
 export type DubEngineConfig = {
   enabled: boolean;
-  mode: 'local' | 'remote';
+  mode: CreatorDubEngineMode;
   url: string;
   port: number;
   token: string;
   enginePath: string;
   pythonPath: string;
   autoStart: boolean;
+  modelFolder?: string;
 };
 
 export type DubJobStatus = 'queued' | 'running' | 'completed' | 'failed' | 'cancelled';
@@ -46,6 +49,9 @@ export type DubJobRequest = {
   separateVocals: boolean;
   bilingualSubtitles: boolean;
   composeVideo: boolean;
+  llmBaseUrl?: string;
+  llmApiKey?: string;
+  llmModel?: string;
 };
 
 export type DubJobResponse = {
@@ -80,6 +86,8 @@ export type DubHardwareProfile = {
   diskFreeGb: Record<string, number>;
   tier: string;
   tierDescription: string;
+  recommendedTts?: string | null;
+  recommendedWhisper?: string | null;
 };
 
 export type DubBenchmarkResponse = {
@@ -711,6 +719,9 @@ export function toSnakeDubRequest(request: DubJobRequest): Record<string, unknow
     separate_vocals: request.separateVocals,
     bilingual_subtitles: request.bilingualSubtitles,
     compose_video: request.composeVideo,
+    llm_base_url: request.llmBaseUrl ?? null,
+    llm_api_key: request.llmApiKey ?? null,
+    llm_model: request.llmModel ?? null,
   };
 }
 
@@ -782,6 +793,8 @@ export function fromSnakeHardware(body: unknown): DubHardwareProfile {
     diskFreeGb,
     tier: typeof record.tier === 'string' ? record.tier : 'unknown',
     tierDescription: typeof record.tier_description === 'string' ? record.tier_description : '',
+    recommendedTts: readStringOrNull(record.recommended_tts),
+    recommendedWhisper: readStringOrNull(record.recommended_whisper),
   };
 }
 

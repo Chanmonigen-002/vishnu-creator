@@ -52,6 +52,9 @@ class DubRequest(BaseModel):
     separate_vocals: bool = True
     bilingual_subtitles: bool = True
     compose_video: bool = True
+    llm_base_url: Optional[str] = None
+    llm_api_key: Optional[str] = None
+    llm_model: Optional[str] = None
 
 
 class DubResponse(BaseModel):
@@ -359,6 +362,9 @@ async def create_dub_job(request: DubRequest):
         separate_vocals=request.separate_vocals,
         bilingual_subtitles=request.bilingual_subtitles,
         compose_video=request.compose_video,
+        llm_base_url=request.llm_base_url,
+        llm_api_key=request.llm_api_key,
+        llm_model=request.llm_model,
     )
 
     return DubResponse(

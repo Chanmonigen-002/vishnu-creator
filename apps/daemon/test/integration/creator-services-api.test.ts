@@ -364,4 +364,56 @@ describe('creator services API', () => {
     expect(art.headers['content-type']).toBe('audio/mpeg');
     expect(art.rawPayload).toEqual(Buffer.from('mock-audio-data'));
   });
+
+  it('calculates job time and cost estimates via /creator-services/dub-engine/estimate', async () => {
+    vi.spyOn(DubEngineClient.prototype, 'getHardware').mockResolvedValueOnce({
+      cpuCores: 12,
+      cpuThreads: 24,
+      cpuAvx2: true,
+      cpuAvx512: false,
+      ramTotalGb: 32,
+      ramFreeGb: 24,
+      gpuName: null,
+      gpuVramGb: 0,
+      cudaVersion: null,
+      gpuComputeCapability: null,
+      diskFreeGb: { 'D:': 120 },
+      tier: 'T1',
+      tierDescription: 'Low'
+    });
+
+    const localRes = await server.inject({
+      method: 'POST',
+      url: '/creator-services/dub-engine/estimate',
+      payload: {
+        durationSeconds: 60,
+        mode: 'local'
+      }
+    });
+
+    expect(localRes.statusCode).toBe(200);
+    const localBody = localRes.json();
+    expect(localBody.ok).toBe(true);
+    expect(localBody.estimate.mode).toBe('local');
+    expect(localBody.estimate.tier).toBe('T1');
+    expect(localBody.estimate.durationSeconds).toBe(60);
+    expect(localBody.estimate.estimatedCostUsd).toBe(0.0);
+    expect(localBody.estimate.estimatedTimeSeconds).toBeGreaterThan(0);
+
+    const apiAssistRes = await server.inject({
+      method: 'POST',
+      url: '/creator-services/dub-engine/estimate',
+      payload: {
+        durationSeconds: 120,
+        mode: 'api-assist'
+      }
+    });
+
+    expect(apiAssistRes.statusCode).toBe(200);
+    const apiAssistBody = apiAssistRes.json();
+    expect(apiAssistBody.ok).toBe(true);
+    expect(apiAssistBody.estimate.mode).toBe('api-assist');
+    expect(apiAssistBody.estimate.durationSeconds).toBe(120);
+    expect(apiAssistBody.estimate.estimatedCostUsd).toBe(0.014);
+  });
 });

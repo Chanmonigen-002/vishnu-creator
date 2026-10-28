@@ -1,6 +1,7 @@
 import type {
   CodexImageStatus,
   CodexProviderConfig,
+  CreatorDubEngineMode,
   CreatorJobEstimate,
   CreatorServicesCapabilitiesResponse,
   CreatorServicesConfig,
@@ -110,7 +111,7 @@ export function createCreatorServicesService(client: ClientLike) {
       }
     },
     testDubEngineConnection(config: {
-      mode: 'local' | 'remote';
+      mode: CreatorDubEngineMode;
       url: string;
       port: number;
       token: string;

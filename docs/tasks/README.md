@@ -8,7 +8,7 @@ The master plan explains *why*; these files track *what is done*.
 | 0 | [Stabilize the baseline](phase-0-baseline.md) | 9 | 9 | 0 | 0 | 0 | — | met (`v0-baseline`) | Complete |
 | 1 | [Khmer foundation, zero GPU](phase-1-khmer-foundation.md) | 9 | 9 | 0 | 0 | 0 | Phase 0 | met (T1.8 E2E verified) | Complete |
 | 2 | [Bring the dub engine into the repo](phase-2-dub-engine-service.md) | 15 | 15 | 0 | 0 | 0 | Phase 0 · ADR-0005 (accepted) | **not met** | Tasks done · gate not met |
-| 3 | [Daemon ↔ engine integration](phase-3-daemon-integration.md) | 14 | 9 | 5 | 0 | 0 | Phase 2 | **not met** | In progress |
+| 3 | [Daemon ↔ engine integration](phase-3-daemon-integration.md) | 14 | 13 | 1 | 0 | 0 | Phase 2 | **not met** | In progress (T3.1–T3.13 done) |
 | 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 5 | 1 | 0 | 1 | Phase 3 | **not met** | In progress |
 | 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 10 | 2 | 6 | 2 | 0 | Phase 3 | **not met** | In progress |
 | 6 | [Extra creator studios](phase-6-creator-studios.md) | 9 | 7 | 0 | 0 | 2 | Phase 3 | — | In progress (T6.1, T6.2, T6.5–T6.9 done) |

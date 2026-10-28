@@ -44,15 +44,19 @@ export function isCreatorDubEngineProvider(value: unknown): value is CreatorDubE
   return creatorDubEngineProviders.some(provider => provider === value);
 }
 
+export const creatorDubEngineModes = ['auto', 'local', 'api-assist', 'remote'] as const;
+export type CreatorDubEngineMode = (typeof creatorDubEngineModes)[number];
+
 export type CreatorDubEngineConfig = {
   enabled: boolean;
-  mode: 'local' | 'remote';
+  mode: CreatorDubEngineMode;
   url: string;
   port: number;
   token: string;
   enginePath: string;
   pythonPath: string;
   autoStart: boolean;
+  modelFolder?: string;
 };
 
 /** Local dub engine state shown on the dashboard (T6.7). */
@@ -649,7 +653,8 @@ export function createDefaultCreatorServicesConfig(): CreatorServicesConfig {
       token: '',
       enginePath: '',
       pythonPath: '',
-      autoStart: true
+      autoStart: true,
+      modelFolder: ''
     }
   };
 }

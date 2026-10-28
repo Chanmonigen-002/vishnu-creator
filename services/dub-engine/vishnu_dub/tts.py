@@ -596,7 +596,8 @@ class VoxCPM2Backend(TTSBackend):
         logging.info(f"Voice cloning authorized: voice_id={voice_id}, user_id={user_id}")
 
 
-def get_tts_backend(provider: str, config: dict) -> TTSBackend:
+def get_tts_backend(provider: str, config: Optional[dict] = None) -> TTSBackend:
+    config = config or {}
     if provider == "edge-tts":
         return EdgeTTSBackend()
     elif provider == "openai":

@@ -1877,7 +1877,7 @@ function DubEngineSettings(props: {
 }) {
   const l = useLocalizedCopy();
   const engine = props.config.dubEngine;
-  const local = engine.mode === 'local';
+  const isRemote = engine.mode === 'remote';
   return (
     <div className="creator-services-panel creator-services-dub-engine">
       <h2>
@@ -1899,16 +1899,19 @@ function DubEngineSettings(props: {
         </label>
       </div>
       <div className="settings-field">
-        <label>{l('运行模式', 'Mode')}</label>
+        <label>{l('运行模式', 'Compute Mode')}</label>
         <AppSelect
+          aria-label={l('运行模式', 'Compute Mode')}
           value={engine.mode}
-          onChange={event => props.update(draft => { draft.dubEngine.mode = event.target.value as 'local' | 'remote'; })}
+          onChange={event => props.update(draft => { draft.dubEngine.mode = event.target.value as any; })}
         >
-          <option value="local">{l('本地引擎 (127.0.0.1)', 'Local engine (127.0.0.1)')}</option>
+          <option value="auto">{l('自动 (本地引擎 + API 辅助)', 'Auto (Local engine + API assist)')}</option>
+          <option value="local">{l('仅本地引擎 (完全离线 CPU/GPU)', 'Local only (Offline CPU/GPU)')}</option>
+          <option value="api-assist">{l('本地 + API 辅助 (云端 ASR/翻译 + 本地配音)', 'Local + API assist (Cloud ASR/LLM + Local Voice)')}</option>
           <option value="remote">{l('远程引擎 (URL + 令牌)', 'Remote engine (URL + token)')}</option>
         </AppSelect>
       </div>
-      {local ? (
+      {!isRemote ? (
         <>
           <div className="settings-field">
             <label>{l('监听端口', 'Port')}</label>
@@ -1934,6 +1937,15 @@ function DubEngineSettings(props: {
             <input
               value={engine.enginePath}
               onChange={event => props.update(draft => { draft.dubEngine.enginePath = event.target.value; })}
+            />
+          </div>
+          <div className="settings-field">
+            <label>{l('模型存储目录', 'Model folder')}</label>
+            <input
+              aria-label={l('模型存储目录', 'Model folder')}
+              value={engine.modelFolder ?? ''}
+              placeholder={l('默认最大剩余空间磁盘 (如 D:\\VishnuCreatorData\\models)', 'Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)')}
+              onChange={event => props.update(draft => { draft.dubEngine.modelFolder = event.target.value; })}
             />
           </div>
           <div className="settings-field">

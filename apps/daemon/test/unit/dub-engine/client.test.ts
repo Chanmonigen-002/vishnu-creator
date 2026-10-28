@@ -32,7 +32,10 @@ describe('snake_case ↔ camelCase wire-format mappers', () => {
       tts_speed: 1.25,
       separate_vocals: true,
       bilingual_subtitles: false,
-      compose_video: true
+      compose_video: true,
+      llm_base_url: null,
+      llm_api_key: null,
+      llm_model: null
     });
   });
 

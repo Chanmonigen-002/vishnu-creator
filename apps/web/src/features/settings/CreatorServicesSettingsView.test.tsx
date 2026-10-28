@@ -6,7 +6,7 @@ import {
   type CreatorServicesCredentialField,
   type CreatorTtsProvider
 } from '@vishnucreator/protocol';
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, within } from '@testing-library/react';
 import { userEvent } from '@testing-library/user-event';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { ConfirmDialogProvider } from '../../components/dialogs/ConfirmDialogProvider.js';
@@ -584,6 +584,37 @@ describe('CreatorServicesSettingsView', () => {
 
     expect(screen.getByText('连接本地 Runtime 后即可管理 AI 服务配置。'))
       .toBeInTheDocument();
+  });
+
+  it('configures dub engine compute mode (auto, local, api-assist, remote) and model folder', async () => {
+    const user = userEvent.setup();
+    const service = createService();
+    render(
+      <CreatorServicesSettingsView
+        connected
+        service={service}
+        modelService={createModelService()}
+        initialSection="dubEngine"
+      />
+    );
+
+    await screen.findByRole('tabpanel');
+    const modeSelect = screen.getByRole('combobox', { name: /运行模式|Compute Mode/i });
+    expect(modeSelect).toBeInTheDocument();
+    expect(modeSelect).toHaveAttribute('data-value', 'local');
+
+    await selectOption(modeSelect, 'api-assist');
+    expect(modeSelect).toHaveAttribute('data-value', 'api-assist');
+
+    const modelFolderInput = screen.getByLabelText(/模型存储目录|Model folder/i);
+    expect(modelFolderInput).toBeInTheDocument();
+    await user.clear(modelFolderInput);
+    await user.type(modelFolderInput, 'D:\\VishnuCreatorData\\models');
+    expect(modelFolderInput).toHaveValue('D:\\VishnuCreatorData\\models');
+
+    const testBtn = screen.getByRole('button', { name: /测试连接|Test Connection/i });
+    await user.click(testBtn);
+    expect(await screen.findByText(/已连接|Connected/i)).toBeInTheDocument();
   });
 });
 

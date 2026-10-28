@@ -45,7 +45,7 @@ export type DubEngineServiceEvents = {
 };
 
 export type DubEngineServiceOptions = {
-  config: DubEngineConfig;
+  config: Partial<DubEngineConfig>;
   onHealthChanged?: (healthy: boolean) => void;
   onJobProgress?: (jobId: string, progress: DubJobProgress) => void;
   onJobCompleted?: (jobId: string) => void;
@@ -172,10 +172,10 @@ export class DubEngineService {
   }
 
   async start(): Promise<void> {
-    if (this.config.mode === 'local') {
-      await this.startLocal();
-    } else {
+    if (this.config.mode === 'remote') {
       await this.startRemote();
+    } else {
+      await this.startLocal();
     }
 
     // Begin health monitoring

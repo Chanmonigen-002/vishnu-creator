@@ -136,6 +136,10 @@ async function runEngineDub(
 ): Promise<CreatorExecutorResult> {
   stage.reportProgress({ phase: 'creating_job', percent: 10 });
 
+  const engineMode = servicesConfig?.dubEngine.mode ?? 'local';
+  const allowApiAssist = engineMode === 'api-assist' || engineMode === 'auto';
+  const hasCloudKey = Boolean(servicesConfig?.llm?.apiKey);
+
   const dubRequest: Parameters<DubEngineService['createDubJob']>[0] = {
     sourceUrl: request.sourceUrl ?? '',
     sourceLanguage: 'en',
@@ -146,7 +150,12 @@ async function runEngineDub(
     ttsSpeed: request.speed,
     separateVocals: true,
     bilingualSubtitles: true,
-    composeVideo: true
+    composeVideo: true,
+    ...(allowApiAssist && hasCloudKey ? {
+      llmBaseUrl: servicesConfig?.llm?.baseUrl,
+      llmApiKey: servicesConfig?.llm?.apiKey,
+      llmModel: servicesConfig?.llm?.model
+    } : {})
   };
 
   let jobResponse: DubJobResponse;

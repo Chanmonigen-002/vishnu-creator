@@ -154,13 +154,14 @@ export const creatorServicesConfigSchema = z.object({
   video: z.union([videoConfigSchema, legacyVideoConfigSchema]).default(videoConfigDefault),
   dubEngine: z.object({
     enabled: z.boolean().default(false),
-    mode: z.enum(['local', 'remote']).default('local'),
+    mode: z.enum(['auto', 'local', 'api-assist', 'remote']).default('local'),
     url: boundedString(2048).default('http://127.0.0.1:8765'),
     port: z.number().int().min(1).max(65535).default(8765),
     token: boundedString(2048).default(''),
     enginePath: boundedString(2048).default(''),
     pythonPath: boundedString(2048).default(''),
     autoStart: z.boolean().default(false),
+    modelFolder: boundedString(2048).default(''),
   }).strict().default({
     enabled: false,
     mode: 'local',
@@ -170,6 +171,7 @@ export const creatorServicesConfigSchema = z.object({
     enginePath: '',
     pythonPath: '',
     autoStart: false,
+    modelFolder: '',
   })
 }).strict();
 
