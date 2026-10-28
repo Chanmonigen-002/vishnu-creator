@@ -13,8 +13,9 @@ All project rules for AI agents live in `AGENTS.md`. Follow them without excepti
 3. **Clone / Verify → Build → Test Before Finalizing**:
    - Verify binary and source integrity when copying/cloning assets.
    - Run `pnpm typecheck`, `pnpm build`, `pnpm test`, and `pytest` (for `services/dub-engine`) before marking any task `done` or reporting completion.
-4. **Keep Task Boards Synchronized**:
-   - Always update `docs/tasks/README.md` and `docs/tasks/phase-<n>-*.md` together with real command outputs as evidence.
+4. **Follow the working loop** in `docs/AGENT_RULES.md`: run `pnpm gate:start` first, finish (push + PR) your previous task before a new one, run `pnpm gate:scan` before every push, and never merge without the owner's `merge #N`.
+5. **Keep Task Boards Synchronized**:
+   - Always update `docs/tasks/README.md` and `docs/tasks/phase-<n>-*.md` together with real command outputs as evidence; `pnpm gate:board` must pass.
 
 Quick links: [master plan](docs/project/master-plan.md) · [task board](docs/tasks/README.md) · [ADRs](docs/adr/README.md) · [docs index](docs/README.md)
 

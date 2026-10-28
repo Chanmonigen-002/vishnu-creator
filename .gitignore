@@ -25,6 +25,8 @@ codex-main/
 open-design-main/
 .gstack/
 .codex/
+/.claude/settings.local.json
+/.claude/launch.json
 .worktrees/
 /.tools/
 /.tmp/

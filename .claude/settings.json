@@ -1,0 +1,27 @@
+{
+  "hooks": {
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/agent-gate.mjs\" start --hook",
+            "timeout": 60,
+            "statusMessage": "Agent gate: checking unpushed and unmerged work"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node \"$CLAUDE_PROJECT_DIR/scripts/agent-gate.mjs\" finish --hook",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  }
+}

@@ -8,6 +8,8 @@
 | [Task board](tasks/README.md) | Every task per phase, with status and evidence |
 | [Architecture decisions (ADRs)](adr/README.md) | Why the system is built the way it is |
 | [Agent and contributor rules](../AGENTS.md) | How to work in this repo (people and AI agents) |
+| [Working loop](AGENT_RULES.md) | Scan → build → push → PR → merge → next task, and the agent gate |
+| [Final builds](FINAL_BUILDS.md) | One line per build merged into `main` |
 | [Contributing](../CONTRIBUTING.md) | Setup, workflow, PRs |
 
 ## Folder layout
@@ -24,6 +26,7 @@ The repo-wide layout (backend, frontend, services, data, reference) is in [proje
 | `providers/` | AI provider research | Vishnu Creator |
 | `plans/` | Active implementation plans. `plans/archive/` holds superseded Vishnu plans | Vishnu Creator |
 | `handoffs/` | Dated handoff notes between agents and sessions | Vishnu Creator |
+| `templates/` | Templates (handoff note) | Vishnu Creator |
 | `operations/` | Release runbooks and operating notes | upstream |
 | `performance/` | Performance baselines | upstream |
 | `test-reports/` | Saved test reports and screenshots (evidence for tasks) | Vishnu Creator |

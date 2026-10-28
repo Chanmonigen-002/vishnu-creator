@@ -31,7 +31,12 @@
     "vishnuai:package": "node scripts/package-vishnuai-release.mjs",
     "vishnuai:test": "node scripts/build-vishnuai.mjs --test-only",
     "languages:generate": "node scripts/generate-creator-languages.mjs",
-    "languages:check": "node scripts/generate-creator-languages.mjs --check"
+    "languages:check": "node scripts/generate-creator-languages.mjs --check",
+    "gate:start": "node scripts/agent-gate.mjs start",
+    "gate:scan": "node scripts/agent-gate.mjs scan",
+    "gate:board": "node scripts/agent-gate.mjs board",
+    "gate:finish": "node scripts/agent-gate.mjs finish",
+    "gate:test": "node --test scripts/agent-gate.test.mjs"
   },
   "devDependencies": {
     "@playwright/test": "^1.61.1",

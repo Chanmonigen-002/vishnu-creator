@@ -1,5 +1,7 @@
 ## Summary
 
+<!-- Required sections for the merge gate (docs/AGENT_RULES.md): What, Tested, Not tested, Rollback. The owner merges after replying "merge #N" and CI is green. -->
+
 <!-- What does this PR change, and why? Link the related issue if one exists. -->
 
 **Task IDs:** <!-- e.g. T2.11, T2.12 — from docs/tasks/ -->
@@ -34,6 +36,14 @@
 
 <!-- e.g. Desktop packaging — no Desktop-facing changes -->
 
+## Not tested
+
+<!-- What you did not run or could not verify, and why. "Nothing" only if that is true. -->
+
+## Rollback
+
+<!-- How to undo this change (revert the merge commit, a config switch, a data step). -->
+
 ## Web / Desktop parity
 
 <!-- Required when touching apps/web pages, state, services, Host Bridge, daemon project logic, Desktop preload, window logic, protocol proxy, or packaging scripts. -->
@@ -51,3 +61,5 @@
 - [ ] Nothing builds, runs, or points into `reference/` (ADR-0004, ADR-0006)
 - [ ] Copied third-party code has an origin/license header and a security review (AGENTS.md)
 - [ ] No check reported as passed that was not actually run; no mocked result used to pass a gate
+- [ ] `pnpm gate:scan` is clean (no fake media, skipped tests, placeholder assets, secrets or board drift)
+- [ ] `docs/FINAL_BUILDS.md` gets a line after the merge

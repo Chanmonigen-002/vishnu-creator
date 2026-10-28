@@ -2,6 +2,8 @@
 
 These rules apply to every contributor: people, Claude Code, Hermes, Codex and any other AI agent. `CLAUDE.md` imports this file.
 
+**Working loop:** follow [`docs/AGENT_RULES.md`](docs/AGENT_RULES.md): scan and fix before you build, one task at a time, commit, push and open a PR, wait for the owner's `merge #N`, record the build, then start the next task. `pnpm gate:start` (session start), `pnpm gate:scan` (before every push, also in CI) and `pnpm gate:finish` (before you say done) enforce it; the Claude Code hooks in `.claude/settings.json` run the start and finish checks automatically.
+
 ## Vishnu Creator Project Rules
 
 ### Where things live (single source of truth)
@@ -14,7 +16,9 @@ These rules apply to every contributor: people, Claude Code, Hermes, Codex and a
 | Architecture decisions | [`docs/adr/`](docs/adr/README.md) |
 | Docs index | [`docs/README.md`](docs/README.md) |
 | Superseded plans | `docs/plans/archive/`; upstream history in `docs/archive/upstream/` (read-only) |
-| Agent handoff notes | `docs/handoffs/` |
+| Agent handoff notes | `docs/handoffs/` (template: `docs/templates/HANDOFF.md`) |
+| Working loop, push/PR/merge rules | [`docs/AGENT_RULES.md`](docs/AGENT_RULES.md) |
+| Merged builds log | [`docs/FINAL_BUILDS.md`](docs/FINAL_BUILDS.md) |
 | Upstream reference sources | `reference/` (read-only, see ADR-0004 and ADR-0006) |
 
 Don't create plan or TODO files in the repo root. Update the existing ones above.

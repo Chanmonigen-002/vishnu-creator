@@ -4,6 +4,7 @@ Repo-level scripts. They resolve the repo root from their own location, and `pac
 
 | Group | Script | Run with |
 |---|---|---|
+| Workflow | `agent-gate.mjs` (+ test): session start report, fake-build scan, board check, finish check ([rules](../docs/AGENT_RULES.md)) | `pnpm gate:start` / `gate:scan` / `gate:board` / `gate:finish` / `gate:test` |
 | Dev | `dub-engine.mjs`: start the local Python dub engine | `pnpm dub:engine` |
 | Dev | `run-e2e-khmer-dub.py`: Khmer dubbing e2e runner (called by `apps/web/e2e/khmer-dubbing-e2e.spec.ts`) | Playwright |
 | Build | `build-vishnuai.mjs`: build the `vishnuai` Go CLI | `pnpm vishnuai:build` / `pnpm vishnuai:test` |

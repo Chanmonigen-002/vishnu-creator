@@ -19,7 +19,8 @@ This is a pnpm monorepo (workspaces: `apps/*` and `packages/*`) plus one Python 
 | `skills/` | Agent skills shipped with the app (`vishnuai-*`) | Markdown | yes |
 | `scripts/` | Repo-level dev, build, data and release scripts ([index](../../scripts/README.md)) | JS / Python | yes |
 | `docs/` | All documentation ([index](../README.md)) | Markdown | yes |
-| `.github/` | CI workflows, PR template | YAML | yes |
+| `.github/` | CI workflows (including the `agent-gate` job), PR template | YAML | yes |
+| `.claude/` | Claude Code project settings: hooks that run the agent gate at session start and stop | JSON | yes (`settings.local.json` is personal) |
 | `reference/` | Read-only upstream sources (OpenCreator, ZastTranslate, VoxCPM). Never built or run (ADR-0004, ADR-0006) | — | **no** |
 | `models/` | Downloaded model weights (default model folder, see master plan) | binary | **no** |
 | `logs/` | Dev logs written by `start-dev.bat` | text | **no** |
