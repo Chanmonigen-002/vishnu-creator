@@ -25,6 +25,7 @@ import {
 } from '../creator-services/upstream-fetch.js';
 import { publicFactsFromFailure } from '../creator/public-error-facts.js';
 import { gatewayCreatorBinding } from '../gateway/creator-service-source.js';
+import { generateHttpImages, isPhase8ImageProvider } from '../creator/image/http-image-providers.js';
 
 const MAX_IMAGE_BYTES = 30 * 1024 * 1024;
 const MAX_RESPONSE_BYTES = 120 * 1024 * 1024;
@@ -181,6 +182,14 @@ export async function generateImageContents(
         );
       }
       return await generateRemoteGpuWorkerImages(request, gpuWorkerUrl || 'http://127.0.0.1:8765', controller.signal, options.fetchImpl);
+    }
+    if (isPhase8ImageProvider(request.provider)) {
+      return await generateHttpImages({
+        request,
+        config,
+        signal: controller.signal,
+        fetchImpl: options.fetchImpl
+      });
     }
     return await generateOpenAiImages(
       request,

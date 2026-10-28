@@ -3,7 +3,18 @@ import type { PublicErrorFacts } from './issues.js';
 export const imageGenerationSizes = ['1024x1024', '1536x1024', '1024x1536'] as const;
 export type ImageGenerationSize = typeof imageGenerationSizes[number];
 export type ImageGenerationQuality = 'low' | 'medium' | 'high';
-export type ImageGenerationProvider = 'openai' | 'jimeng' | 'kling' | 'gemini' | 'codex-native' | 'qwen-image';
+export type ImageGenerationProvider =
+  | 'openai'
+  | 'jimeng'
+  | 'kling'
+  | 'gemini'
+  | 'codex-native'
+  | 'qwen-image'
+  | 'fal'
+  | 'stability'
+  | 'replicate'
+  | 'together'
+  | 'comfyui';
 
 export const coverStyleIds = [
   'khmer-editorial',

@@ -33,12 +33,20 @@ describe('creator provider catalog', () => {
 
   it('marks only implemented providers as supported', () => {
     expect(creatorProviderCatalog.some(entry => entry.status === 'planned')).toBe(false);
-    // Phase 8 presets stay experimental until a live call is recorded (T8.5, T8.7).
-    const phase8Voices = ['azure', 'elevenlabs', 'fishaudio'];
+    // Phase 8 presets stay experimental until a live call is recorded (T8.5, T8.7, T8.8).
+    const phase8Presets = ['azure', 'elevenlabs', 'fishaudio', 'fal', 'stability', 'replicate', 'together', 'comfyui'];
     expect(creatorProviderCatalog
-      .filter(entry => entry.kind !== 'llm' && entry.id !== 'codex-native' && !phase8Voices.includes(entry.id))
+      .filter(entry => entry.kind !== 'llm' && entry.id !== 'codex-native' && !phase8Presets.includes(entry.id))
       .every(entry => entry.status === 'supported')).toBe(true);
     expect(creatorProviderCatalogById.image.gemini?.status).toBe('supported');
+  });
+
+  it('keeps new image presets experimental until a live call is recorded (T8.8)', () => {
+    for (const id of ['fal', 'stability', 'replicate', 'together', 'comfyui'] as const) {
+      expect(creatorProviderCatalogById.image[id]?.status).toBe('experimental');
+    }
+    expect(creatorProviderCatalogById.image.fal?.models[0]?.id).toBe('fal-ai/flux/schnell');
+    expect(creatorProviderCatalogById.image.comfyui).toMatchObject({ access: 'local', credentials: [] });
   });
 
   it('keeps new voice presets experimental and labels Khmer support only where documented (T8.7)', () => {

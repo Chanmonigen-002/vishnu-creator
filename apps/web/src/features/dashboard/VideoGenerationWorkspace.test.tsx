@@ -950,14 +950,7 @@ function createVideoConfig() {
       fishaudio: createDefaultCreatorServicesConfig().tts.fishaudio
     },
     dubEngine: createDefaultCreatorServicesConfig().dubEngine,
-    image: {
-      provider: 'openai' as const,
-      openai: { baseUrl: '', apiKey: '', model: '' },
-      jimeng: { baseUrl: '', apiKey: '', model: '' },
-      kling: { baseUrl: '', accessKey: '', secretKey: '', model: '' },
-      gemini: { baseUrl: '', apiKey: '', model: '' },
-      codexNative: {}
-    },
+    image: createDefaultCreatorServicesConfig().image,
     video: {
       provider: 'seedance' as const,
       seedance: { baseUrl: '', apiKey: '', model: 'doubao-seedance-2-5-260628' },

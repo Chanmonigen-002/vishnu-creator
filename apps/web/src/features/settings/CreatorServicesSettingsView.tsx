@@ -1336,6 +1336,11 @@ function ImageSettings(props: SettingsGroupProps & {
         options={[
           ['codex-native', l('本机 Codex 生图', 'Local Codex image generation')],
           ['openai', 'GPT Image'],
+          ['fal', 'fal.ai (FLUX)'],
+          ['stability', 'Stability AI'],
+          ['replicate', 'Replicate (FLUX)'],
+          ['together', 'Together AI (FLUX)'],
+          ['comfyui', 'ComfyUI (Local)'],
           ['jimeng', l('即梦', 'Jimeng')],
           ['kling', l('可灵', 'Kling')],
           ['gemini', 'Gemini']
@@ -1350,12 +1355,18 @@ function ImageSettings(props: SettingsGroupProps & {
           if (!target.model && preset?.models[0] !== undefined) target.model = preset.models[0].id;
         })}
       />
+      <ProviderInfo kind="image" providerId={provider} />
       {provider === 'codex-native' ? (
         <Suspense fallback={<div className="creator-services-inline-note" role="status">{l('正在检查 Codex 生图配置…', 'Checking Codex image configuration…', 'Kontrollerar bildinställningar för Codex…')}</div>}>
           <CodexImageStatusNotice service={props.service} enabled={props.enabled} />
         </Suspense>
       ) : null}
       {provider === 'openai' ? <OpenAiFields id="image-openai" credential="image.openai.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.image.openai} modelPlaceholder="gpt-image-2" modelSuggestions={creatorProviderOfKind('image', 'openai')?.models.map(model => model.id)} onChange={value => props.update(config => { config.image.openai = value; })} /> : null}
+      {provider === 'fal' ? <OpenAiFields id="image-fal" credential="image.fal.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.image.fal} modelPlaceholder="fal-ai/flux/schnell" modelSuggestions={creatorProviderOfKind('image', 'fal')?.models.map(model => model.id)} baseUrlPlaceholder="https://queue.fal.run" onChange={value => props.update(config => { config.image.fal = value; })} /> : null}
+      {provider === 'stability' ? <OpenAiFields id="image-stability" credential="image.stability.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.image.stability} modelPlaceholder="core" modelSuggestions={creatorProviderOfKind('image', 'stability')?.models.map(model => model.id)} baseUrlPlaceholder="https://api.stability.ai" onChange={value => props.update(config => { config.image.stability = value; })} /> : null}
+      {provider === 'replicate' ? <OpenAiFields id="image-replicate" credential="image.replicate.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.image.replicate} modelPlaceholder="black-forest-labs/flux-schnell" modelSuggestions={creatorProviderOfKind('image', 'replicate')?.models.map(model => model.id)} baseUrlPlaceholder="https://api.replicate.com/v1" onChange={value => props.update(config => { config.image.replicate = value; })} /> : null}
+      {provider === 'together' ? <OpenAiFields id="image-together" credential="image.together.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.image.together} modelPlaceholder="black-forest-labs/FLUX.1-schnell" modelSuggestions={creatorProviderOfKind('image', 'together')?.models.map(model => model.id)} baseUrlPlaceholder="https://api.together.xyz/v1" onChange={value => props.update(config => { config.image.together = value; })} /> : null}
+      {provider === 'comfyui' ? <OpenAiFields id="image-comfyui" configuredCredentials={props.configuredCredentials} value={props.config.image.comfyui} modelPlaceholder="flux-schnell" modelSuggestions={creatorProviderOfKind('image', 'comfyui')?.models.map(model => model.id)} baseUrlPlaceholder="http://127.0.0.1:8188" onChange={value => props.update(config => { config.image.comfyui = value; })} /> : null}
       {provider === 'jimeng' ? <OpenAiFields id="image-jimeng" credential="image.jimeng.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.image.jimeng} modelPlaceholder="doubao-seedream-4-0-250828" modelSuggestions={creatorProviderOfKind('image', 'jimeng')?.models.map(model => model.id)} baseUrlPlaceholder="https://ark.cn-beijing.volces.com/api/v3" onChange={value => props.update(config => { config.image.jimeng = value; })} /> : null}
       {provider === 'kling' ? <KlingFields id="image-kling" accessKeyCredential="image.kling.accessKey" secretKeyCredential="image.kling.secretKey" configuredCredentials={props.configuredCredentials} value={props.config.image.kling} modelPlaceholder="kling-v2-1" modelSuggestions={creatorProviderOfKind('image', 'kling')?.models.map(model => model.id)} onChange={value => props.update(config => { config.image.kling = value; })} /> : null}
       {provider === 'gemini' ? <OpenAiFields id="image-gemini" credential="image.gemini.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.image.gemini} modelPlaceholder="gemini-2.5-flash-image" modelSuggestions={creatorProviderOfKind('image', 'gemini')?.models.map(model => model.id)} baseUrlPlaceholder="https://generativelanguage.googleapis.com/v1beta" onChange={value => props.update(config => { config.image.gemini = value; })} /> : null}
@@ -1418,7 +1429,7 @@ function SettingsFieldset(props: { title: string; description: string; children:
 }
 
 /** Cost, verification and key-page details for a catalog provider. */
-function ProviderInfo(props: { kind: 'llm' | 'tts'; providerId: string }) {
+function ProviderInfo(props: { kind: 'llm' | 'tts' | 'image'; providerId: string }) {
   const l = useLocalizedCopy();
   const preset = creatorProviderOfKind(props.kind, props.providerId);
   if (preset === undefined) return null;
@@ -1442,7 +1453,7 @@ function ProviderInfo(props: { kind: 'llm' | 'tts'; providerId: string }) {
 
 function OpenAiFields(props: {
   id: string;
-  credential: CreatorServicesCredentialField;
+  credential?: CreatorServicesCredentialField;
   configuredCredentials: ReadonlySet<CreatorServicesCredentialField>;
   value: OpenAiCompatibleConfig;
   modelPlaceholder: string;
@@ -1465,14 +1476,16 @@ function OpenAiFields(props: {
         onChange={baseUrl => props.onChange({ ...props.value, baseUrl })}
         wide
       />
-      <PasswordField
-        id={`${props.id}-api-key`}
-        label="API Key"
-        value={props.value.apiKey}
-        configured={props.configuredCredentials.has(props.credential)}
-        error={props.errors?.apiKey}
-        onChange={apiKey => props.onChange({ ...props.value, apiKey })}
-      />
+      {props.credential ? (
+        <PasswordField
+          id={`${props.id}-api-key`}
+          label="API Key"
+          value={props.value.apiKey}
+          configured={props.configuredCredentials.has(props.credential)}
+          error={props.errors?.apiKey}
+          onChange={apiKey => props.onChange({ ...props.value, apiKey })}
+        />
+      ) : null}
       {props.modelReadonly ? (
         <ReadonlyModelField label={props.modelLabel ?? l('模型', 'Model')} value={props.modelPlaceholder} />
       ) : (

@@ -380,6 +380,24 @@ export function isCreatorTranscriptionProvider(
   return creatorTranscriptionProviders.some(provider => provider === value);
 }
 
+export const creatorImageProviders = [
+  'codex-native',
+  'openai',
+  'jimeng',
+  'kling',
+  'gemini',
+  'fal',
+  'stability',
+  'replicate',
+  'together',
+  'comfyui'
+] as const;
+export type CreatorImageProvider = (typeof creatorImageProviders)[number];
+
+export function isCreatorImageProvider(value: unknown): value is CreatorImageProvider {
+  return creatorImageProviders.some(provider => provider === value);
+}
+
 export type CreatorServicesConfig = {
   proxy: string;
   llm: OpenAiCompatibleConfig & {
@@ -415,12 +433,17 @@ export type CreatorServicesConfig = {
     fishaudio: CreatorTtsProviderConfig;
   };
   image: {
-    provider: 'openai' | 'jimeng' | 'kling' | 'gemini' | 'codex-native';
+    provider: CreatorImageProvider;
     openai: OpenAiCompatibleConfig;
     jimeng: OpenAiCompatibleConfig;
     kling: KlingAiConfig;
     gemini: OpenAiCompatibleConfig;
     codexNative: Record<never, never>;
+    fal: OpenAiCompatibleConfig;
+    stability: OpenAiCompatibleConfig;
+    replicate: OpenAiCompatibleConfig;
+    together: OpenAiCompatibleConfig;
+    comfyui: OpenAiCompatibleConfig;
   };
   video: {
     provider: 'seedance' | 'kling' | 'veo';
@@ -547,6 +570,10 @@ export type CreatorServicesCredentialField =
   | 'image.kling.accessKey'
   | 'image.kling.secretKey'
   | 'image.gemini.apiKey'
+  | 'image.fal.apiKey'
+  | 'image.stability.apiKey'
+  | 'image.replicate.apiKey'
+  | 'image.together.apiKey'
   | 'video.seedance.apiKey'
   | 'video.kling.accessKey'
   | 'video.kling.secretKey'
@@ -683,7 +710,32 @@ export function createDefaultCreatorServicesConfig(): CreatorServicesConfig {
         apiKey: '',
         model: 'gemini-2.5-flash-image'
       },
-      codexNative: {}
+      codexNative: {},
+      fal: {
+        baseUrl: 'https://queue.fal.run',
+        apiKey: '',
+        model: 'fal-ai/flux/schnell'
+      },
+      stability: {
+        baseUrl: 'https://api.stability.ai',
+        apiKey: '',
+        model: 'core'
+      },
+      replicate: {
+        baseUrl: 'https://api.replicate.com/v1',
+        apiKey: '',
+        model: 'black-forest-labs/flux-schnell'
+      },
+      together: {
+        baseUrl: 'https://api.together.xyz/v1',
+        apiKey: '',
+        model: 'black-forest-labs/FLUX.1-schnell'
+      },
+      comfyui: {
+        baseUrl: 'http://127.0.0.1:8188',
+        apiKey: '',
+        model: 'flux-schnell'
+      }
     },
     video: {
       provider: 'seedance',

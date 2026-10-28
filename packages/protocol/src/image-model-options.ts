@@ -46,6 +46,15 @@ export function imageModelOptions(provider: ImageGenerationProvider, model = '')
     if (/^gpt-image-2(?:$|[.-])/.test(id)) return { aspectRatios: standardRatios, resolutions: ['1K', '2K'], qualities };
     if (/^gpt-image-1\.5(?:$|-)/.test(id) || id === 'chatgpt-image-latest') return { aspectRatios: ['1:1', '3:2', '2:3'], qualities };
   }
+  if (provider === 'fal' || provider === 'together' || provider === 'replicate') {
+    return { aspectRatios: ['1:1', '16:9', '9:16', '3:2', '2:3', '4:3', '3:4'] };
+  }
+  if (provider === 'stability') {
+    return { aspectRatios: ['16:9', '1:1', '21:9', '2:3', '3:2', '4:5', '5:4', '9:16', '9:21'] };
+  }
+  if (provider === 'comfyui') {
+    return { aspectRatios: standardRatios };
+  }
   return {};
 }
 

@@ -623,6 +623,16 @@ describe('CreatorServicesSettingsView', () => {
     expect(screen.getByLabelText('Access Key')).toHaveAttribute('type', 'password');
     expect(screen.getByLabelText('Secret Key')).toHaveAttribute('type', 'password');
 
+    await user.click(screen.getByRole('combobox', { name: '服务商' }));
+    await user.click(screen.getByRole('option', { name: 'fal.ai (FLUX)' }));
+    expect(screen.getByLabelText('API Key')).toBeInTheDocument();
+    expect(screen.getByTestId('image-provider-info')).toBeInTheDocument();
+
+    await user.click(screen.getByRole('combobox', { name: '服务商' }));
+    await user.click(screen.getByRole('option', { name: 'ComfyUI (Local)' }));
+    expect(screen.queryByLabelText('API Key')).not.toBeInTheDocument();
+    expect(screen.getByLabelText('Base URL')).toHaveValue('http://127.0.0.1:8188');
+
     await user.click(screen.getByRole('tab', { name: '视频生成' }));
     expect(screen.getByRole('combobox', { name: '服务商' })).toHaveTextContent('Seedance');
     expect(screen.getByLabelText('默认模型')).toHaveValue('doubao-seedance-2-5-260628');

@@ -92,6 +92,11 @@ Where they work: all of the above work in **Text to Speech**, **Smart Dubbing** 
 | Provider | Cost | Get a key | Notes |
 |---|---|---|---|
 | OpenAI (GPT Image) | Paid | https://platform.openai.com/api-keys | Text-to-image, edit, reference image. |
+| fal.ai (FLUX) | Paid | https://fal.ai/dashboard/keys | FLUX.1 Schnell, Dev, and Pro via queue API. |
+| Stability AI | Paid | https://platform.stability.ai/account/keys | Stable Image Core and SD 3.5 Large. |
+| Replicate (FLUX) | Paid | https://replicate.com/account/api-tokens | FLUX Schnell and Dev predictions API. |
+| Together AI (FLUX) | Paid | https://api.together.ai/settings/api-keys | FLUX.1 Schnell and Dev images API. |
+| ComfyUI (Local) | Local | — | Free, local; runs against local ComfyUI on port 8188. |
 | Jimeng / Seedream (Volcengine Ark) | Paid | Volcengine Ark console | Text-to-image. |
 | Kling | Paid | Kling AI console | Uses access key + secret key. |
 | Nano Banana (Gemini) | Free tier available | https://aistudio.google.com/apikey | Text-to-image, reference image. |

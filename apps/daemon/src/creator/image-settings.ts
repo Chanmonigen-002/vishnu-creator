@@ -47,6 +47,10 @@ export function imageProviderConfigured(
 ): boolean {
   if (provider === 'codex-native') return true;
   if (provider === 'qwen-image') return process.env.VISHNUCREATOR_GPU_WORKER_URL !== undefined;
+  if (provider === 'comfyui') {
+    const settings = config.image.comfyui;
+    return settings.baseUrl.trim().length > 0 && settings.model.trim().length > 0;
+  }
   if (provider === 'kling') {
     const settings = config.image.kling;
     return settings.baseUrl.trim().length > 0
@@ -69,6 +73,11 @@ export function readImageProvider(
     || value === 'gemini'
     || value === 'codex-native'
     || value === 'qwen-image'
+    || value === 'fal'
+    || value === 'stability'
+    || value === 'replicate'
+    || value === 'together'
+    || value === 'comfyui'
     ? value
     : fallback;
 }

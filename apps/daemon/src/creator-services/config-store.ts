@@ -3,7 +3,7 @@ import type {
   CreatorServicesConfigResponse,
   CreatorServicesCredentialField
 } from '@vishnucreator/protocol';
-import { createDefaultCreatorServicesConfig, creatorTtsProviders, migrateOpenAiImageModel } from '@vishnucreator/protocol';
+import { createDefaultCreatorServicesConfig, creatorImageProviders, creatorTtsProviders, migrateOpenAiImageModel } from '@vishnucreator/protocol';
 import { z } from 'zod/v3';
 import {
   readVishnuCreatorConfig,
@@ -79,12 +79,17 @@ const llmConfigSchema = openAiCompatibleSchema.extend({
   source: value.source ?? inferLegacyTextModelSource(value)
 }));
 const imageConfigSchema = z.object({
-  provider: z.enum(['openai', 'jimeng', 'kling', 'gemini', 'codex-native']),
+  provider: z.enum(creatorImageProviders),
   openai: openAiImageSchema,
   jimeng: openAiCompatibleSchema,
   kling: klingAiSchema,
   gemini: openAiCompatibleSchema,
-  codexNative: z.object({}).strict().default({})
+  codexNative: z.object({}).strict().default({}),
+  fal: openAiCompatibleSchema.default(creatorServicesDefaults.image.fal),
+  stability: openAiCompatibleSchema.default(creatorServicesDefaults.image.stability),
+  replicate: openAiCompatibleSchema.default(creatorServicesDefaults.image.replicate),
+  together: openAiCompatibleSchema.default(creatorServicesDefaults.image.together),
+  comfyui: openAiCompatibleSchema.default(creatorServicesDefaults.image.comfyui)
 }).strict();
 const legacyImageConfigSchema = z.object({
   provider: z.literal('openai-compatible'),
@@ -370,6 +375,10 @@ const creatorCredentialPaths = [
   'image.kling.accessKey',
   'image.kling.secretKey',
   'image.gemini.apiKey',
+  'image.fal.apiKey',
+  'image.stability.apiKey',
+  'image.replicate.apiKey',
+  'image.together.apiKey',
   'video.seedance.apiKey',
   'video.kling.accessKey',
   'video.kling.secretKey',
@@ -486,6 +495,10 @@ export function presentCreatorServicesConfig(
   redact('image.kling.accessKey', redacted.image.kling.accessKey, () => { redacted.image.kling.accessKey = ''; });
   redact('image.kling.secretKey', redacted.image.kling.secretKey, () => { redacted.image.kling.secretKey = ''; });
   redact('image.gemini.apiKey', redacted.image.gemini.apiKey, () => { redacted.image.gemini.apiKey = ''; });
+  redact('image.fal.apiKey', redacted.image.fal.apiKey, () => { redacted.image.fal.apiKey = ''; });
+  redact('image.stability.apiKey', redacted.image.stability.apiKey, () => { redacted.image.stability.apiKey = ''; });
+  redact('image.replicate.apiKey', redacted.image.replicate.apiKey, () => { redacted.image.replicate.apiKey = ''; });
+  redact('image.together.apiKey', redacted.image.together.apiKey, () => { redacted.image.together.apiKey = ''; });
   redact('video.seedance.apiKey', redacted.video.seedance.apiKey, () => { redacted.video.seedance.apiKey = ''; });
   redact('video.kling.accessKey', redacted.video.kling.accessKey, () => { redacted.video.kling.accessKey = ''; });
   redact('video.kling.secretKey', redacted.video.kling.secretKey, () => { redacted.video.kling.secretKey = ''; });
@@ -541,6 +554,10 @@ export function retainCreatorServicesCredentials(
   retainBlank(() => merged.image.kling.accessKey, value => { merged.image.kling.accessKey = value; }, current.image.kling.accessKey);
   retainBlank(() => merged.image.kling.secretKey, value => { merged.image.kling.secretKey = value; }, current.image.kling.secretKey);
   retainBlank(() => merged.image.gemini.apiKey, value => { merged.image.gemini.apiKey = value; }, current.image.gemini.apiKey);
+  retainBlank(() => merged.image.fal.apiKey, value => { merged.image.fal.apiKey = value; }, current.image.fal.apiKey);
+  retainBlank(() => merged.image.stability.apiKey, value => { merged.image.stability.apiKey = value; }, current.image.stability.apiKey);
+  retainBlank(() => merged.image.replicate.apiKey, value => { merged.image.replicate.apiKey = value; }, current.image.replicate.apiKey);
+  retainBlank(() => merged.image.together.apiKey, value => { merged.image.together.apiKey = value; }, current.image.together.apiKey);
   retainBlank(() => merged.video.seedance.apiKey, value => { merged.video.seedance.apiKey = value; }, current.video.seedance.apiKey);
   retainBlank(() => merged.video.kling.accessKey, value => { merged.video.kling.accessKey = value; }, current.video.kling.accessKey);
   retainBlank(() => merged.video.kling.secretKey, value => { merged.video.kling.secretKey = value; }, current.video.kling.secretKey);
