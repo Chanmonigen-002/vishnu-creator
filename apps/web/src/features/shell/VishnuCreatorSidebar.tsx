@@ -13,6 +13,7 @@ import {
   FolderOpen,
   LayoutTemplate,
   LoaderCircle,
+  Mic2,
   MoreHorizontal,
   Pencil,
   PanelLeftClose,
@@ -72,6 +73,7 @@ export function VishnuCreatorSidebar(props: {
   onSelectConversation(conversationId: string): void;
   onSelectTask(threadId: string): void;
   onOpenView(view: ActiveView): void;
+  onOpenVoices?(): void;
   onOpenSettings(): void;
   onToggleCollapsed(): void;
   onAddProject?(): void;
@@ -140,6 +142,12 @@ export function VishnuCreatorSidebar(props: {
       icon: PanelsTopLeft,
       current: props.activeView === 'dashboard',
       onClick: () => props.onOpenView('dashboard')
+    },
+    {
+      label: t('nav.voices') || 'Voices',
+      icon: Mic2,
+      current: props.activeView === 'voices',
+      onClick: () => (props.onOpenVoices ? props.onOpenVoices() : props.onOpenView('voices'))
     },
     {
       label: t('nav.home'),

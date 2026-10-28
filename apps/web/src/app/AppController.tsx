@@ -81,6 +81,7 @@ import {
   type ComposerSlashCommand
 } from '../features/runs/Composer.js';
 import { IssueList, PageIssueRoutingProvider } from '../features/issues/IssuePresenter.js';
+import { KhmerVoicesView } from '../features/voices/KhmerVoicesView.js';
 import { buildIssueAgentPrompt } from '../features/issues/issue-catalog.js';
 import { usePageIssueState } from '../features/issues/page-issue-state.js';
 import { createScheduleTaskSummaries } from '../features/schedules/schedule-task-model.js';
@@ -3013,6 +3014,7 @@ export function AppController(props: AppControllerProps) {
       case 'schedules':
       case 'tasks':
       case 'dashboard':
+      case 'voices':
       case 'plugins':
       case 'settings':
       case 'account':
@@ -4680,6 +4682,7 @@ export function AppController(props: AppControllerProps) {
           : projectType => createProject(projectType)
       }
       createProjectError={createProjectError}
+      onOpenVoices={() => openPrimaryView('voices')}
       onOpenRuntimeComponents={() => {
         settingsReturnRouteRef.current = props.route;
         dispatch({ type: 'open_settings' });
@@ -4713,6 +4716,24 @@ export function AppController(props: AppControllerProps) {
           ...(workspace === null || jobId === undefined ? {} : { jobId }),
           ...(workspace === null || returnTo === undefined ? {} : { returnTo })
         }, options);
+      }}
+    />
+  ) : state.activeView === 'voices' ? (
+    <KhmerVoicesView
+      creatorServicesService={creatorServicesService}
+      onBackToDashboard={() => openPrimaryView('dashboard')}
+      onUseVoice={(voiceCode, workspace = 'video-translation') => {
+        navigateToRoute({
+          view: 'workbench',
+          tool: workspace
+        });
+      }}
+      onOpenSettings={(tab, section) => {
+        navigateToRoute({
+          view: 'settings',
+          tab: (tab as any) ?? 'ai-services',
+          section: (section as any) ?? 'tts'
+        });
       }}
     />
   ) : state.activeView === 'search' ? (
@@ -4969,6 +4990,7 @@ export function AppController(props: AppControllerProps) {
           onSelectConversation={selectConversation}
           onSelectTask={selectSidebarTask}
           onOpenView={openPrimaryView}
+          onOpenVoices={() => openPrimaryView('voices')}
           onAddProject={
             projectService === null
               ? undefined
@@ -5290,6 +5312,7 @@ function createInitialState(
     case 'schedules':
     case 'tasks':
     case 'dashboard':
+    case 'voices':
     case 'plugins':
     case 'settings':
     case 'account':
@@ -5327,6 +5350,8 @@ function routeForActiveView(activeView: ActiveView, selectedThreadId?: string): 
       return { view: 'tasks' };
     case 'dashboard':
       return { view: 'dashboard' };
+    case 'voices':
+      return { view: 'voices' };
     case 'plugins':
       return { view: 'plugins' };
     case 'settings':

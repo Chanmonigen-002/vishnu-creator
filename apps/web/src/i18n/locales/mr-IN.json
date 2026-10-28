@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "लोकल डबिंग इंजिन: इंस्टॉल नाही",
   "Local dub engine: failed to start": "लोकल डबिंग इंजिन: सुरू होऊ शकले नाही",
   "Local dub engine: off": "लोकल डबिंग इंजिन: बंद",
-  "Local dub engine: checking": "लोकल डबिंग इंजिन: तपासत आहे"
+  "Local dub engine: checking": "लोकल डबिंग इंजिन: तपासत आहे",
+  "Voices": "आवाज"
 }

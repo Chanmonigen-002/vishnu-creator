@@ -354,7 +354,9 @@ export async function registerCreatorServicesRoutes(
         ? 'audio/mpeg'
         : filename.endsWith('.srt')
           ? 'text/plain; charset=utf-8'
-          : 'audio/wav';
+          : filename.endsWith('.json')
+            ? 'application/json'
+            : 'audio/wav';
       return reply
         .header('Content-Type', mime)
         .header('Content-Length', String(buffer.length))

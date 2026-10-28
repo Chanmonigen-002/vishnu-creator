@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Lokale Synchron-Engine: nicht installiert",
   "Local dub engine: failed to start": "Lokale Synchron-Engine: Start fehlgeschlagen",
   "Local dub engine: off": "Lokale Synchron-Engine: aus",
-  "Local dub engine: checking": "Lokale Synchron-Engine: wird geprüft"
+  "Local dub engine: checking": "Lokale Synchron-Engine: wird geprüft",
+  "Voices": "Stimmen"
 }

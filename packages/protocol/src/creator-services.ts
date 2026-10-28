@@ -140,6 +140,35 @@ export type CreatorJobEstimate = {
   };
 };
 
+export type TimesyncSegmentStatus = 'fit' | 'sped_up' | 'overflow';
+
+export type TimesyncSegmentPlacement = {
+  index: number;
+  target_start: number;
+  target_end: number;
+  speech_duration: number;
+  tempo: number;
+  placed_start: number;
+  placed_end: number;
+  status: TimesyncSegmentStatus;
+  overflow: number;
+};
+
+export type TimesyncSummary = {
+  segments: number;
+  fit: number;
+  sped_up: number;
+  overflow: number;
+  max_tempo: number;
+  max_drift: number;
+};
+
+export type TimesyncReport = {
+  max_speedup: number;
+  segments: TimesyncSegmentPlacement[];
+  summary: TimesyncSummary;
+};
+
 export function estimateDubJob(options: {
   durationSeconds: number;
   mode: 'local' | 'api-assist' | 'remote';

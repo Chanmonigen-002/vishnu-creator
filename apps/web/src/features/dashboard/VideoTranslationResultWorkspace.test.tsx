@@ -3,6 +3,7 @@ import { act, fireEvent, render, screen, within } from '@testing-library/react';
 import { useState } from 'react';
 import { describe, expect, it, vi } from 'vitest';
 import VideoTranslationResultWorkspace, { type SubtitleResultOutput } from './VideoTranslationResultWorkspace.js';
+import type { TimesyncReport } from '@vishnucreator/protocol';
 import { LanguageProvider } from '../../i18n/LanguageProvider.js';
 import { LanguageSwitchControls } from '../../test/LanguageSwitchControls.js';
 
@@ -1252,5 +1253,107 @@ describe('VideoTranslationResultWorkspace', () => {
     expect(badgeFast).toHaveTextContent(/16\.4 CPS/);
     expect(badgeFast).toHaveTextContent(/偏快|Fast/);
     expect(badgeFast.className).toContain('video-subtitle-cps-fast');
+  });
+
+  it('renders dub engine timing sync report toggle, displays the card metrics, and shows per-cue placement badges', () => {
+    const mockTimesyncReport: TimesyncReport = {
+      max_speedup: 1.25,
+      segments: [
+        {
+          index: 0,
+          target_start: 0.0,
+          target_end: 2.0,
+          speech_duration: 1.8,
+          tempo: 1.0,
+          placed_start: 0.0,
+          placed_end: 1.8,
+          status: 'fit',
+          overflow: 0.0
+        },
+        {
+          index: 1,
+          target_start: 2.1,
+          target_end: 3.5,
+          speech_duration: 1.6,
+          tempo: 1.14,
+          placed_start: 2.1,
+          placed_end: 3.5,
+          status: 'sped_up',
+          overflow: 0.0
+        },
+        {
+          index: 2,
+          target_start: 3.6,
+          target_end: 4.5,
+          speech_duration: 1.5,
+          tempo: 1.25,
+          placed_start: 3.6,
+          placed_end: 4.8,
+          status: 'overflow',
+          overflow: 0.3
+        }
+      ],
+      summary: {
+        segments: 3,
+        fit: 1,
+        sped_up: 1,
+        overflow: 1,
+        max_tempo: 1.25,
+        max_drift: 0.3
+      }
+    };
+
+    render(
+      <VideoTranslationResultWorkspace
+        {...baseProps}
+        activeTab="subtitles"
+        timesyncReport={mockTimesyncReport}
+        subtitleOutputs={[{
+          artifactId: 'subtitle-horizontal-v1',
+          variant: 'horizontal',
+          artifactVersion: 1,
+          fileName: 'horizontal.srt',
+          cues: [
+            { id: 401, start: '00:00:00,000', end: '00:00:02,000', text: 'Sentence one fit' },
+            { id: 402, start: '00:00:02,100', end: '00:00:03,500', text: 'Sentence two sped up' },
+            { id: 403, start: '00:00:03,600', end: '00:00:04,500', text: 'Sentence three overflow' }
+          ],
+          readOnly: false
+        }]}
+      />
+    );
+
+    // Toggle button should be visible in header
+    const toggleBtn = screen.getByTestId('timesync-report-toggle');
+    expect(toggleBtn).toBeInTheDocument();
+    expect(toggleBtn).toHaveTextContent(/时间对齐|Time Sync/);
+
+    // Per-cue placement badges should render
+    const cueBadge1 = screen.getByTestId('cue-timesync-401');
+    expect(cueBadge1).toHaveTextContent('Fit');
+    expect(cueBadge1.className).toContain('timesync-cue-status-fit');
+
+    const cueBadge2 = screen.getByTestId('cue-timesync-402');
+    expect(cueBadge2).toHaveTextContent('1.14x');
+    expect(cueBadge2.className).toContain('timesync-cue-status-sped_up');
+
+    const cueBadge3 = screen.getByTestId('cue-timesync-403');
+    expect(cueBadge3).toHaveTextContent('+0.30s');
+    expect(cueBadge3.className).toContain('timesync-cue-status-overflow');
+
+    // Clicking toggle should reveal the timesync report card
+    expect(screen.queryByTestId('timesync-report-card')).toBeNull();
+    fireEvent.click(toggleBtn);
+
+    const reportCard = screen.getByTestId('timesync-report-card');
+    expect(reportCard).toBeInTheDocument();
+    expect(reportCard).toHaveTextContent('1 / 3');
+    expect(reportCard).toHaveTextContent('1.25x (max 1.25x)');
+    expect(reportCard).toHaveTextContent('0.3s');
+
+    // Close the report card
+    const closeBtn = within(reportCard).getByRole('button', { name: /关闭|Close/ });
+    fireEvent.click(closeBtn);
+    expect(screen.queryByTestId('timesync-report-card')).toBeNull();
   });
 });

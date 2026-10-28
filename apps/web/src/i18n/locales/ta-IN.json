@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "உள்ளூர் டப்பிங் இயந்திரம்: நிறுவப்படவில்லை",
   "Local dub engine: failed to start": "உள்ளூர் டப்பிங் இயந்திரம்: தொடங்க முடியவில்லை",
   "Local dub engine: off": "உள்ளூர் டப்பிங் இயந்திரம்: முடக்கப்பட்டது",
-  "Local dub engine: checking": "உள்ளூர் டப்பிங் இயந்திரம்: சரிபார்க்கிறது"
+  "Local dub engine: checking": "உள்ளூர் டப்பிங் இயந்திரம்: சரிபார்க்கிறது",
+  "Voices": "குரல்கள்"
 }

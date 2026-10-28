@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Локален двигател за дублаж: не е инсталиран",
   "Local dub engine: failed to start": "Локален двигател за дублаж: неуспешно стартиране",
   "Local dub engine: off": "Локален двигател за дублаж: изключен",
-  "Local dub engine: checking": "Локален двигател за дублаж: проверка"
+  "Local dub engine: checking": "Локален двигател за дублаж: проверка",
+  "Voices": "Гласове"
 }

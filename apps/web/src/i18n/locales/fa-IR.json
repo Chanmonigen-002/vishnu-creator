@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "موتور دوبله محلی: نصب نشده",
   "Local dub engine: failed to start": "موتور دوبله محلی: راه‌اندازی ناموفق",
   "Local dub engine: off": "موتور دوبله محلی: خاموش",
-  "Local dub engine: checking": "موتور دوبله محلی: در حال بررسی"
+  "Local dub engine: checking": "موتور دوبله محلی: در حال بررسی",
+  "Voices": "صداها"
 }

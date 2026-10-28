@@ -140,8 +140,9 @@ describe('VishnuCreatorSidebar', () => {
     expect(screen.queryByRole('button', { name: 'Agent动态' })).not.toBeInTheDocument();
     const primaryActions = screen.getByRole('button', { name: '工作台' }).parentElement;
     expect(primaryActions?.children[0]).toBe(screen.getByRole('button', { name: '工作台' }));
-    expect(primaryActions?.children[1]).toBe(screen.getByRole('button', { name: '模版' }));
-    expect(primaryActions?.children[2]).toBe(screen.getByRole('button', { name: '我的项目' }));
+    expect(primaryActions?.children[1]).toBe(screen.getByRole('button', { name: '音色' }));
+    expect(primaryActions?.children[2]).toBe(screen.getByRole('button', { name: '模版' }));
+    expect(primaryActions?.children[3]).toBe(screen.getByRole('button', { name: '我的项目' }));
     expect(screen.queryByRole('separator')).not.toBeInTheDocument();
     expect(screen.queryByRole('button', { name: '搜索' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: '定时任务' })).toBeInTheDocument();
@@ -185,9 +186,11 @@ describe('VishnuCreatorSidebar', () => {
     expect(screen.queryByRole('button', { name: '我的资产' })).not.toBeInTheDocument();
     expect(screen.getByRole('button', { name: '我的项目' })
       .querySelector('.lucide-folder-kanban')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: '音色' })
+      .querySelector('.lucide-mic-vocal')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '设置' })
       .querySelector('.lucide-sliders-horizontal')).toBeInTheDocument();
-    expect(view.container.querySelectorAll('.sidebar-nav-icon')).toHaveLength(5);
+    expect(view.container.querySelectorAll('.sidebar-nav-icon')).toHaveLength(6);
   });
 
   it('renders global navigation in the selected display language', () => {
@@ -642,6 +645,18 @@ describe('VishnuCreatorSidebar', () => {
     await user.click(screen.getByRole('button', { name: '工作台' }));
 
     expect(onOpenView).toHaveBeenCalledWith('dashboard');
+  });
+
+  it('opens the voices studio from sidebar', async () => {
+    const user = userEvent.setup();
+    const onOpenVoices = vi.fn();
+    const onOpenView = vi.fn();
+
+    renderSidebar({ onOpenVoices, onOpenView });
+
+    await user.click(screen.getByRole('button', { name: '音色' }));
+
+    expect(onOpenVoices).toHaveBeenCalledTimes(1);
   });
 
   it('hides the header search action', () => {

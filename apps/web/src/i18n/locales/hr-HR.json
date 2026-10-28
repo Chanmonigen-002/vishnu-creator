@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Lokalni mehanizam za sinkronizaciju: nije instaliran",
   "Local dub engine: failed to start": "Lokalni mehanizam za sinkronizaciju: pokretanje nije uspjelo",
   "Local dub engine: off": "Lokalni mehanizam za sinkronizaciju: isključen",
-  "Local dub engine: checking": "Lokalni mehanizam za sinkronizaciju: provjera"
+  "Local dub engine: checking": "Lokalni mehanizam za sinkronizaciju: provjera",
+  "Voices": "Glasovi"
 }

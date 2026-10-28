@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Lokalny silnik dubbingu: niezainstalowany",
   "Local dub engine: failed to start": "Lokalny silnik dubbingu: nie udało się uruchomić",
   "Local dub engine: off": "Lokalny silnik dubbingu: wyłączony",
-  "Local dub engine: checking": "Lokalny silnik dubbingu: sprawdzanie"
+  "Local dub engine: checking": "Lokalny silnik dubbingu: sprawdzanie",
+  "Voices": "Głosy"
 }

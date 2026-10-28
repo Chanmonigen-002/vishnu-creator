@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "เอนจินพากย์เสียงในเครื่อง: ยังไม่ได้ติดตั้ง",
   "Local dub engine: failed to start": "เอนจินพากย์เสียงในเครื่อง: เริ่มไม่สำเร็จ",
   "Local dub engine: off": "เอนจินพากย์เสียงในเครื่อง: ปิดอยู่",
-  "Local dub engine: checking": "เอนจินพากย์เสียงในเครื่อง: กำลังตรวจสอบ"
+  "Local dub engine: checking": "เอนจินพากย์เสียงในเครื่อง: กำลังตรวจสอบ",
+  "Voices": "เสียง"
 }

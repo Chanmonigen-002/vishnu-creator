@@ -8,6 +8,7 @@ export type ActiveView =
   | 'schedules'
   | 'tasks'
   | 'dashboard'
+  | 'voices'
   | 'plugins'
   | 'settings'
   | 'account'

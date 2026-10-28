@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Helyi szinkronmotor: nincs telepítve",
   "Local dub engine: failed to start": "Helyi szinkronmotor: nem sikerült elindítani",
   "Local dub engine: off": "Helyi szinkronmotor: kikapcsolva",
-  "Local dub engine: checking": "Helyi szinkronmotor: ellenőrzés"
+  "Local dub engine: checking": "Helyi szinkronmotor: ellenőrzés",
+  "Voices": "Hangok"
 }

@@ -18,6 +18,7 @@ export type AppRoute =
   | { view: 'schedules'; scheduleId?: string }
   | { view: 'tasks' }
   | { view: 'dashboard' }
+  | { view: 'voices' }
   | { view: 'account'; billingOrderId?: string }
   | { view: 'subscription' }
   | {
@@ -79,6 +80,7 @@ export function parseRoute(hash: string): AppRoute {
   }
   if (path === '#/tasks') return { view: 'tasks' };
   if (path === '#/dashboard') return { view: 'dashboard' };
+  if (path === '#/voices') return { view: 'voices' };
   if (path === '#/account') {
     const params = new URLSearchParams(query);
     const id = params.get('orderId');
@@ -164,6 +166,8 @@ export function formatRoute(route: AppRoute): string {
       return '#/tasks';
     case 'dashboard':
       return '#/dashboard';
+    case 'voices':
+      return '#/voices';
     case 'account':
       return route.billingOrderId ? '#/account?billing=return&orderId=' + encodeURIComponent(route.billingOrderId) : '#/account';
     case 'subscription':

@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Mesin sulih suara lokal: belum terpasang",
   "Local dub engine: failed to start": "Mesin sulih suara lokal: gagal dimulai",
   "Local dub engine: off": "Mesin sulih suara lokal: mati",
-  "Local dub engine: checking": "Mesin sulih suara lokal: memeriksa"
+  "Local dub engine: checking": "Mesin sulih suara lokal: memeriksa",
+  "Voices": "Suara"
 }

@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "ローカル吹き替えエンジン：未インストール",
   "Local dub engine: failed to start": "ローカル吹き替えエンジン：起動に失敗",
   "Local dub engine: off": "ローカル吹き替えエンジン：停止中",
-  "Local dub engine: checking": "ローカル吹き替えエンジン：確認中"
+  "Local dub engine: checking": "ローカル吹き替えエンジン：確認中",
+  "Voices": "音声"
 }

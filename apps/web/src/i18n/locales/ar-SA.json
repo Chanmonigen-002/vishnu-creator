@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "محرك الدبلجة المحلي: غير مثبّت",
   "Local dub engine: failed to start": "محرك الدبلجة المحلي: فشل التشغيل",
   "Local dub engine: off": "محرك الدبلجة المحلي: متوقف",
-  "Local dub engine: checking": "محرك الدبلجة المحلي: جارٍ التحقق"
+  "Local dub engine: checking": "محرك الدبلجة المحلي: جارٍ التحقق",
+  "Voices": "الأصوات"
 }

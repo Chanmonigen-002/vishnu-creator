@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Místní dabingový engine: není nainstalován",
   "Local dub engine: failed to start": "Místní dabingový engine: spuštění selhalo",
   "Local dub engine: off": "Místní dabingový engine: vypnut",
-  "Local dub engine: checking": "Místní dabingový engine: kontroluje se"
+  "Local dub engine: checking": "Místní dabingový engine: kontroluje se",
+  "Voices": "Hlasy"
 }

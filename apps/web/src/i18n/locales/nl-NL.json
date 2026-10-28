@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Lokale nasynchronisatie-engine: niet geïnstalleerd",
   "Local dub engine: failed to start": "Lokale nasynchronisatie-engine: starten mislukt",
   "Local dub engine: off": "Lokale nasynchronisatie-engine: uit",
-  "Local dub engine: checking": "Lokale nasynchronisatie-engine: controleren"
+  "Local dub engine: checking": "Lokale nasynchronisatie-engine: controleren",
+  "Voices": "Stemmen"
 }

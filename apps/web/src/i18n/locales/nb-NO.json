@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Lokal dubbingmotor: ikke installert",
   "Local dub engine: failed to start": "Lokal dubbingmotor: kunne ikke starte",
   "Local dub engine: off": "Lokal dubbingmotor: av",
-  "Local dub engine: checking": "Lokal dubbingmotor: kontrollerer"
+  "Local dub engine: checking": "Lokal dubbingmotor: kontrollerer",
+  "Voices": "Stemmer"
 }

@@ -588,3 +588,100 @@ body:has(.video-translation-page[data-subtitle-immersive="true"]) .tts-voice-lib
   color: var(--accent);
 }
 
+/* Subtitle Timesync Summary Badge (header) */
+.video-subtitle-timesync-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  padding: 3px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border, #e2e8f0);
+  background: var(--surface-2, #f8fafc);
+  color: var(--text, #1e293b);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  user-select: none;
+}
+.video-subtitle-timesync-badge:hover {
+  background: var(--surface-3, #f1f5f9);
+}
+.video-subtitle-timesync-badge.timesync-status-fit {
+  border-color: rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+.video-subtitle-timesync-badge.timesync-status-sped_up {
+  border-color: rgba(245, 158, 11, 0.35);
+  color: #f59e0b;
+}
+.video-subtitle-timesync-badge.timesync-status-overflow {
+  border-color: rgba(239, 68, 68, 0.4);
+  color: #ef4444;
+}
+.video-subtitle-timesync-badge .timesync-summary-pill {
+  font-weight: 600;
+  font-size: 10.5px;
+  padding: 1px 5px;
+  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+/* Timesync Details Card */
+.video-subtitle-timesync-card {
+  margin: 8px 12px;
+  padding: 12px 14px;
+  background: var(--surface-1, #ffffff);
+  border: 1px solid var(--border, #e2e8f0);
+  border-radius: 8px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+}
+.video-subtitle-timesync-card .timesync-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 8px;
+}
+.video-subtitle-timesync-card .timesync-card-header h4 {
+  margin: 0;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text, #1e293b);
+}
+.video-subtitle-timesync-card .timesync-metrics-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+}
+
+/* Per-cue Timesync Placement Badge */
+.video-subtitle-timesync-cue-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  padding: 2px 5px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  white-space: nowrap;
+  user-select: none;
+}
+.video-subtitle-timesync-cue-badge.timesync-cue-status-fit {
+  background: rgba(16, 185, 129, 0.12);
+  color: #10b981;
+  border-color: rgba(16, 185, 129, 0.25);
+}
+.video-subtitle-timesync-cue-badge.timesync-cue-status-sped_up {
+  background: rgba(245, 158, 11, 0.12);
+  color: #f59e0b;
+  border-color: rgba(245, 158, 11, 0.25);
+}
+.video-subtitle-timesync-cue-badge.timesync-cue-status-overflow {
+  background: rgba(239, 68, 68, 0.12);
+  color: #ef4444;
+  border-color: rgba(239, 68, 68, 0.3);
+}
+
+

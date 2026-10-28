@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "লোকাল ডাবিং ইঞ্জিন: ইনস্টল করা নেই",
   "Local dub engine: failed to start": "লোকাল ডাবিং ইঞ্জিন: চালু করা যায়নি",
   "Local dub engine: off": "লোকাল ডাবিং ইঞ্জিন: বন্ধ",
-  "Local dub engine: checking": "লোকাল ডাবিং ইঞ্জিন: যাচাই করা হচ্ছে"
+  "Local dub engine: checking": "লোকাল ডাবিং ইঞ্জিন: যাচাই করা হচ্ছে",
+  "Voices": "কণ্ঠস্বর"
 }

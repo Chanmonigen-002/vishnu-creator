@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Τοπική μηχανή μεταγλώττισης: δεν είναι εγκατεστημένη",
   "Local dub engine: failed to start": "Τοπική μηχανή μεταγλώττισης: η εκκίνηση απέτυχε",
   "Local dub engine: off": "Τοπική μηχανή μεταγλώττισης: ανενεργή",
-  "Local dub engine: checking": "Τοπική μηχανή μεταγλώττισης: έλεγχος"
+  "Local dub engine: checking": "Τοπική μηχανή μεταγλώττισης: έλεγχος",
+  "Voices": "Φωνές"
 }

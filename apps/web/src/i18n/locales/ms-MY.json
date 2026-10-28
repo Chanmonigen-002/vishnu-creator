@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Enjin alih suara setempat: tidak dipasang",
   "Local dub engine: failed to start": "Enjin alih suara setempat: gagal bermula",
   "Local dub engine: off": "Enjin alih suara setempat: dimatikan",
-  "Local dub engine: checking": "Enjin alih suara setempat: sedang menyemak"
+  "Local dub engine: checking": "Enjin alih suara setempat: sedang menyemak",
+  "Voices": "Suara"
 }

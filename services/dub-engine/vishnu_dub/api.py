@@ -753,6 +753,8 @@ async def download_artifact(job_id: str, filename: str):
         media_type = "text/plain; charset=utf-8"
     elif safe_filename.endswith(".mp3"):
         media_type = "audio/mpeg"
+    elif safe_filename.endswith(".json"):
+        media_type = "application/json"
     else:
         media_type = "audio/wav"
 
@@ -969,6 +971,8 @@ async def validate_training_manifest(request: Dict[str, Any]):
         media_type = "text/plain; charset=utf-8"
     elif safe_filename.endswith(".mp3"):
         media_type = "audio/mpeg"
+    elif safe_filename.endswith(".json"):
+        media_type = "application/json"
     else:
         media_type = "audio/wav"
 

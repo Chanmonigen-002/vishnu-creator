@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Công cụ lồng tiếng cục bộ: chưa cài đặt",
   "Local dub engine: failed to start": "Công cụ lồng tiếng cục bộ: khởi động thất bại",
   "Local dub engine: off": "Công cụ lồng tiếng cục bộ: đã tắt",
-  "Local dub engine: checking": "Công cụ lồng tiếng cục bộ: đang kiểm tra"
+  "Local dub engine: checking": "Công cụ lồng tiếng cục bộ: đang kiểm tra",
+  "Voices": "Giọng nói"
 }

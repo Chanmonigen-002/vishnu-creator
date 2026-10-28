@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "本機配音引擎：未安裝",
   "Local dub engine: failed to start": "本機配音引擎：啟動失敗",
   "Local dub engine: off": "本機配音引擎：已關閉",
-  "Local dub engine: checking": "本機配音引擎：檢查中"
+  "Local dub engine: checking": "本機配音引擎：檢查中",
+  "Voices": "語音"
 }

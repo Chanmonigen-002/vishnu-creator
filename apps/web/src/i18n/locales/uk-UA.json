@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Локальний рушій дубляжу: не встановлено",
   "Local dub engine: failed to start": "Локальний рушій дубляжу: не вдалося запустити",
   "Local dub engine: off": "Локальний рушій дубляжу: вимкнено",
-  "Local dub engine: checking": "Локальний рушій дубляжу: перевірка"
+  "Local dub engine: checking": "Локальний рушій дубляжу: перевірка",
+  "Voices": "Голоси"
 }

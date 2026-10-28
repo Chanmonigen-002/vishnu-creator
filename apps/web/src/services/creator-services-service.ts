@@ -18,17 +18,19 @@ import type {
   PreviewVoiceDesignResponse,
   VoiceDesignRequest,
   VoiceDesignResponse,
-  DubEngineRuntimeStatus
+  DubEngineRuntimeStatus,
+  TimesyncReport
 } from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'patch' | 'delete' | 'rawRequest'>;
 
-export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'listLlmModels' | 'getDubEngineStatus' | 'startDubEngine' | 'stopDubEngine'> & {
+export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'listLlmModels' | 'getDubEngineStatus' | 'startDubEngine' | 'stopDubEngine' | 'getDubEngineTimesyncReport'> & {
   listLlmModels?: (input: { baseUrl: string; apiKey: string }) => Promise<{ models: string[] }>;
   getDubEngineStatus?: () => Promise<DubEngineRuntimeStatus>;
   startDubEngine?: () => Promise<DubEngineRuntimeStatus>;
   stopDubEngine?: () => Promise<DubEngineRuntimeStatus>;
+  getDubEngineTimesyncReport?: (jobId: string) => Promise<TimesyncReport | null>;
   getCodexImageStatus?: () => Promise<CodexImageStatus>;
   getCodexModelStatus?: () => Promise<CodexProviderConfig>;
   getNetwork?: () => Promise<{ proxy: string }>;
@@ -99,6 +101,13 @@ export function createCreatorServicesService(client: ClientLike) {
     },
     stopDubEngine(): Promise<DubEngineRuntimeStatus> {
       return client.rawRequest('/creator-services/dub-engine/stop', { method: 'POST' }).then(response => response.json());
+    },
+    async getDubEngineTimesyncReport(jobId: string): Promise<TimesyncReport | null> {
+      try {
+        return await client.get<TimesyncReport>(`/creator-services/dub-engine/artifacts/${encodeURIComponent(jobId)}/timesync_report.json`);
+      } catch {
+        return null;
+      }
     },
     testDubEngineConnection(config: {
       mode: 'local' | 'remote';

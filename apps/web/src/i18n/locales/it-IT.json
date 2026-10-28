@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Motore di doppiaggio locale: non installato",
   "Local dub engine: failed to start": "Motore di doppiaggio locale: avvio non riuscito",
   "Local dub engine: off": "Motore di doppiaggio locale: spento",
-  "Local dub engine: checking": "Motore di doppiaggio locale: verifica in corso"
+  "Local dub engine: checking": "Motore di doppiaggio locale: verifica in corso",
+  "Voices": "Voci"
 }

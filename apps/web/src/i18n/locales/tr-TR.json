@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Yerel dublaj motoru: yüklü değil",
   "Local dub engine: failed to start": "Yerel dublaj motoru: başlatılamadı",
   "Local dub engine: off": "Yerel dublaj motoru: kapalı",
-  "Local dub engine: checking": "Yerel dublaj motoru: denetleniyor"
+  "Local dub engine: checking": "Yerel dublaj motoru: denetleniyor",
+  "Voices": "Sesler"
 }

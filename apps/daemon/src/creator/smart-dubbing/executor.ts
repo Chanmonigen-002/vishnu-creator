@@ -336,6 +336,35 @@ async function runEngineDub(
     }
   }
 
+  try {
+    const reportBuf = await engine.downloadArtifact(jobId, 'timesync_report.json', stage.signal);
+    const reportFile = `VishnuCreator-timesync-${jobId}.json`;
+    const reportPath = join(stage.workdir, reportFile);
+    await writeFile(reportPath, reportBuf, { mode: 0o600 });
+    let parsedReport: CreatorJson = null;
+    try {
+      parsedReport = JSON.parse(reportBuf.toString('utf8')) as CreatorJson;
+    } catch {
+      // Ignore parse failure
+    }
+    outputs.push({
+      kind: 'timesync_report',
+      status: 'completed',
+      path: reportPath,
+      metadata: {
+        fileName: reportFile,
+        mime: 'application/json',
+        bytes: reportBuf.length,
+        sha256: createHash('sha256').update(reportBuf).digest('hex'),
+        provider: 'local-engine',
+        engineJobId: jobId,
+        ...(parsedReport ? { timesyncReport: parsedReport } : {})
+      }
+    });
+  } catch {
+    // Non-fatal
+  }
+
   return {
     outputs,
     progress: {

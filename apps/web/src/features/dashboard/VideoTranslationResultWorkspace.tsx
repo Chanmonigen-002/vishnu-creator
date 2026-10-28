@@ -39,7 +39,7 @@ import SubtitleTimeline from './SubtitleTimeline.js';
 import SubtitleFindReplace from './SubtitleFindReplace.js';
 import { sameSubtitleCues, subtitleSeconds } from './subtitle-editing.js';
 import { beginPaneResize, paneInlineDirection } from '../../components/layout/pane-resize-2026-07-29.js';
-import { calculateCueCps, calculateJobQualityReport, type CueCpsInfo, type JobQualityReport } from '@vishnucreator/protocol';
+import { calculateCueCps, calculateJobQualityReport, type CueCpsInfo, type JobQualityReport, type TimesyncReport } from '@vishnucreator/protocol';
 import './subtitle-editor.css';
 
 export type VideoTranslationResultTab = 'video' | 'subtitles' | 'voice';
@@ -166,6 +166,7 @@ export default function VideoTranslationResultWorkspace(props: {
   regenerationPending: boolean;
   execution?: VideoTranslationResultExecution;
   notice?: string;
+  timesyncReport?: TimesyncReport | null;
   onTabChange(tab: VideoTranslationResultTab): void;
   onVersionChange(version: number): void;
   onSubtitleChange(variant: SubtitleResultVariant, id: number, text: string, field?: 'text' | 'sourceText'): void;
@@ -277,6 +278,7 @@ export default function VideoTranslationResultWorkspace(props: {
 
   const effectiveTargetLang = props.targetLanguageCode || props.targetLanguage || 'km';
   const [showQualityReport, setShowQualityReport] = useState(false);
+  const [showTimesyncReport, setShowTimesyncReport] = useState(false);
   const [reDubbingCueId, setReDubbingCueId] = useState<number | null>(null);
   const [reDubNotice, setReDubNotice] = useState<string | null>(null);
 
@@ -992,6 +994,24 @@ export default function VideoTranslationResultWorkspace(props: {
                   </span>
                 </button>
               ) : null}
+              {props.timesyncReport ? (
+                <button
+                  type="button"
+                  className={`video-subtitle-timesync-badge timesync-status-${props.timesyncReport.summary.overflow > 0 ? 'overflow' : props.timesyncReport.summary.sped_up > 0 ? 'sped_up' : 'fit'}`}
+                  data-testid="timesync-report-toggle"
+                  onClick={() => setShowTimesyncReport(prev => !prev)}
+                  aria-expanded={showTimesyncReport}
+                  title={l('查看时间对齐报告', 'View Dub Timing Sync Report')}
+                >
+                  <span className="timesync-icon" aria-hidden="true">⏱️</span>
+                  <span>{l('时间对齐', 'Time Sync', 'ការតម្រឹមពេលវេលា')}</span>
+                  <span className="timesync-summary-pill">
+                    {props.timesyncReport.summary.overflow === 0
+                      ? `✓ ${props.timesyncReport.summary.fit} ${l('达标', 'Fit', 'ត្រូវម៉ោង')}`
+                      : `${props.timesyncReport.summary.overflow} ${l('溢出', 'Overflow', 'លើសម៉ោង')}`}
+                  </span>
+                </button>
+              ) : null}
               {availableSubtitleVariants.length > 1 && !(props.immersive && props.editorSettings?.output !== undefined) ? (
                 <div className="video-result-subtitle-variants" role="radiogroup" aria-label={l('字幕画幅', 'Subtitle format')}>
                   {availableSubtitleVariants.map(variant => (
@@ -1069,6 +1089,43 @@ export default function VideoTranslationResultWorkspace(props: {
                           qualityReport.status === 'passed' ? 'ជាប់ (Passed)' : qualityReport.status === 'warning' ? 'ត្រូវពិនិត្យ (Warning)' : 'ត្រូវកែសម្រួល'
                         )}
                   </span>
+                </div>
+              </div>
+            </div>
+          ) : null}
+          {showTimesyncReport && props.timesyncReport ? (
+            <div className="video-subtitle-timesync-card" role="region" aria-label={l('时间轴对齐报告', 'Dub Engine Timing Sync Report', 'របាយការណ៍តម្រឹមពេលវេលា')} data-testid="timesync-report-card">
+              <div className="timesync-card-header">
+                <h4>⏱️ {l('Dub Engine 智能时间轴对齐报告 (Timing Sync Report)', 'Dub Engine Timing Sync Report', 'របាយការណ៍តម្រឹមពេលវេលា Dub Engine (Time Sync)')}</h4>
+                <button
+                  type="button"
+                  className="quality-card-close"
+                  onClick={() => setShowTimesyncReport(false)}
+                  aria-label={l('关闭', 'Close')}
+                >
+                  <X size={15} />
+                </button>
+              </div>
+              <div className="timesync-metrics-grid">
+                <div className="quality-metric-item">
+                  <span className="quality-metric-label">{l('精准吻合 (Fit)', 'Fit Cues', 'ត្រូវតាមពេលវេលា (Fit)')}</span>
+                  <span className="quality-metric-value text-emerald-500 font-semibold">{props.timesyncReport.summary.fit} / {props.timesyncReport.summary.segments}</span>
+                </div>
+                <div className="quality-metric-item">
+                  <span className="quality-metric-label">{l('微调加速 (Sped Up)', 'Sped Up Cues', 'បង្កើនល្បឿន (Sped Up)')}</span>
+                  <span className="quality-metric-value text-amber-500 font-semibold">{props.timesyncReport.summary.sped_up}</span>
+                </div>
+                <div className="quality-metric-item">
+                  <span className="quality-metric-label">{l('需关注溢出 (Overflow)', 'Overflow Cues', 'លើសម៉ោងកំណត់ (Overflow)')}</span>
+                  <span className="quality-metric-value text-rose-500 font-semibold">{props.timesyncReport.summary.overflow}</span>
+                </div>
+                <div className="quality-metric-item">
+                  <span className="quality-metric-label">{l('最高加速倍率 (Max Speedup)', 'Max Speedup', 'ល្បឿនអតិបរមា (Max Speedup)')}</span>
+                  <span className="quality-metric-value">{props.timesyncReport.summary.max_tempo}x (max {props.timesyncReport.max_speedup}x)</span>
+                </div>
+                <div className="quality-metric-item">
+                  <span className="quality-metric-label">{l('最大时间漂移 (Max Drift)', 'Max Drift', 'គម្លាតអតិបរមា (Max Drift)')}</span>
+                  <span className="quality-metric-value">{props.timesyncReport.summary.max_drift}s</span>
                 </div>
               </div>
             </div>
@@ -1203,6 +1260,14 @@ export default function VideoTranslationResultWorkspace(props: {
                                 cpsInfo.status === 'normal' ? 'Normal' : cpsInfo.status === 'fast' ? 'Fast' : 'Overlong',
                                 cpsInfo.status === 'normal' ? 'ធម្មតា' : cpsInfo.status === 'fast' ? 'លឿន' : 'វែងពេក'
                               );
+                              const timesyncPlacement = props.timesyncReport?.segments?.[index] ?? props.timesyncReport?.segments?.find(p => p.index === index);
+                              const timesyncStatusLabel = timesyncPlacement
+                                ? l(
+                                    timesyncPlacement.status === 'fit' ? '对齐' : timesyncPlacement.status === 'sped_up' ? '加速' : '溢出',
+                                    timesyncPlacement.status === 'fit' ? 'Fit' : timesyncPlacement.status === 'sped_up' ? 'Sped Up' : 'Overflow',
+                                    timesyncPlacement.status === 'fit' ? 'ត្រូវម៉ោង' : timesyncPlacement.status === 'sped_up' ? 'បង្កើនល្បឿន' : 'លើសម៉ោង'
+                                  )
+                                : undefined;
                               const cueActions = (
                                 <div className="video-subtitle-cue-actions" key={`actions-${cue.id}`}>
                                   <span
@@ -1212,6 +1277,15 @@ export default function VideoTranslationResultWorkspace(props: {
                                   >
                                     {cpsInfo.cps} CPS · {cpsStatusLabel}
                                   </span>
+                                  {timesyncPlacement ? (
+                                    <span
+                                      className={`video-subtitle-timesync-cue-badge timesync-cue-status-${timesyncPlacement.status}`}
+                                      data-testid={`cue-timesync-${cue.id}`}
+                                      title={`${l('时间对齐', 'Time Sync', 'ការតម្រឹមពេលវេលា')}: ${timesyncStatusLabel} · ${timesyncPlacement.tempo.toFixed(2)}x (${timesyncPlacement.speech_duration.toFixed(2)}s / ${(timesyncPlacement.target_end - timesyncPlacement.target_start).toFixed(2)}s)${timesyncPlacement.overflow > 0 ? ` · ${l('溢出', 'Overflow', 'លើស')}: +${timesyncPlacement.overflow.toFixed(2)}s` : ''}`}
+                                    >
+                                      ⏱️ {timesyncPlacement.status === 'fit' ? 'Fit' : timesyncPlacement.status === 'sped_up' ? `${timesyncPlacement.tempo.toFixed(2)}x` : `+${timesyncPlacement.overflow.toFixed(2)}s`}
+                                    </span>
+                                  ) : null}
                                   {!editReadOnly ? (
                                     <button
                                       type="button"

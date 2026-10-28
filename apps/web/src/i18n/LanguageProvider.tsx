@@ -21,6 +21,7 @@ const messages = {
   'zh-CN': {
     'nav.home': '模版',
     'nav.dashboard': '工作台',
+    'nav.voices': '音色',
     'nav.plugins': '插件中心',
     'nav.projects': '我的项目',
     'nav.settings': '设置',
@@ -268,6 +269,7 @@ const messages = {
   'en-US': {
     'nav.home': 'Templates',
     'nav.dashboard': 'Dashboard',
+    'nav.voices': 'Voices',
     'nav.plugins': 'Plugins',
     'nav.projects': 'My Projects',
     'nav.settings': 'Settings',

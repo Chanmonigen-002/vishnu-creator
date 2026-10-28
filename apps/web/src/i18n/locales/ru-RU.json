@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Локальный движок дубляжа: не установлен",
   "Local dub engine: failed to start": "Локальный движок дубляжа: не удалось запустить",
   "Local dub engine: off": "Локальный движок дубляжа: выключен",
-  "Local dub engine: checking": "Локальный движок дубляжа: проверка"
+  "Local dub engine: checking": "Локальный движок дубляжа: проверка",
+  "Voices": "Голоса"
 }

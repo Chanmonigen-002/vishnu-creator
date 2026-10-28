@@ -241,6 +241,7 @@ export default function DashboardPage(props: {
   onCreateProject?(projectType: CreatorProjectType): boolean | void | Promise<boolean | void>;
   createProjectError?: string;
   onOpenRuntimeComponents?(): void;
+  onOpenVoices?(): void;
   onWorkspaceNavigate?(
     workspace: CreatorWorkspace | null,
     jobId?: string,
@@ -496,7 +497,7 @@ export default function DashboardPage(props: {
         <KhmerStudioHero
           service={props.creatorServicesService}
           onTranslateAndDub={() => openWorkspace('video-translation')}
-          onKhmerVoices={() => openWorkspace('smart-dubbing')}
+          onKhmerVoices={() => props.onOpenVoices ? props.onOpenVoices() : openWorkspace('smart-dubbing')}
         />
 
         <section className="dashboard-featured" aria-labelledby="dashboard-featured-title">

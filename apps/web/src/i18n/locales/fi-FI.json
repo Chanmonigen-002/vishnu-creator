@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Paikallinen dubbausmoottori: ei asennettu",
   "Local dub engine: failed to start": "Paikallinen dubbausmoottori: käynnistys epäonnistui",
   "Local dub engine: off": "Paikallinen dubbausmoottori: pois päältä",
-  "Local dub engine: checking": "Paikallinen dubbausmoottori: tarkistetaan"
+  "Local dub engine: checking": "Paikallinen dubbausmoottori: tarkistetaan",
+  "Voices": "Äänet"
 }

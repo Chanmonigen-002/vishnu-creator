@@ -81,7 +81,8 @@ import {
   type CreatorServicesConfig,
   type CreatorSubtitlePreviewRequest,
   type CreatorTtsProvider,
-  type VideoMetadataResponse
+  type VideoMetadataResponse,
+  type TimesyncReport
 } from '@vishnucreator/protocol';
 
 type SourceType = 'url' | 'file' | 'subtitle';
@@ -2451,6 +2452,26 @@ export default function VideoTranslationWorkspace(props: {
     ['dubbed_audio'],
     creatorSession?.state.resultSnapshots
   );
+  const selectedTimesyncArtifact = latestArtifactForResultVersion(
+    jobArtifacts,
+    resultVersion,
+    ['timesync_report'],
+    creatorSession?.state.resultSnapshots
+  );
+  const [fetchedTimesyncReport, setFetchedTimesyncReport] = useState<TimesyncReport | null>(null);
+  const selectedTimesyncReport = (selectedTimesyncArtifact?.metadata as { timesyncReport?: TimesyncReport } | undefined)?.timesyncReport ?? fetchedTimesyncReport;
+
+  useEffect(() => {
+    const engineJobId = (selectedTimesyncArtifact?.metadata as { engineJobId?: string } | undefined)?.engineJobId;
+    if (selectedTimesyncReport || !engineJobId || !props.creatorServicesService?.getDubEngineTimesyncReport) return;
+    let active = true;
+    props.creatorServicesService.getDubEngineTimesyncReport(engineJobId)
+      .then(report => {
+        if (active && report) setFetchedTimesyncReport(report);
+      })
+      .catch(() => {});
+    return () => { active = false; };
+  }, [selectedTimesyncArtifact?.id, selectedTimesyncReport, props.creatorServicesService]);
   const taskVideoVersion = taskProgress?.workflow?.resultVersion;
   const taskVideoArtifacts = taskVideoVersion === undefined ? undefined
     : videoArtifactsForResultVersion(jobArtifacts, taskVideoVersion, creatorSession?.state.resultSnapshots);
@@ -4164,6 +4185,7 @@ export default function VideoTranslationWorkspace(props: {
               regenerationPending={resultProposal !== undefined}
               execution={resultExecution}
               notice={visibleResultNotice}
+              timesyncReport={selectedTimesyncReport}
               onTabChange={tab => {
                 setResultTab(tab);
                 setResultNotice('');

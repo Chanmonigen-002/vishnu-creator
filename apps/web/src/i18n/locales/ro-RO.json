@@ -3378,5 +3378,6 @@
   "Local dub engine: not installed": "Motor local de dublaj: neinstalat",
   "Local dub engine: failed to start": "Motor local de dublaj: pornire eșuată",
   "Local dub engine: off": "Motor local de dublaj: oprit",
-  "Local dub engine: checking": "Motor local de dublaj: se verifică"
+  "Local dub engine: checking": "Motor local de dublaj: se verifică",
+  "Voices": "Voci"
 }
