@@ -20,14 +20,26 @@ import type {
   VoiceDesignRequest,
   VoiceDesignResponse,
   DubEngineRuntimeStatus,
-  TimesyncReport
+  TimesyncReport,
+  ModelCatalogItem,
+  ModelCatalogListResponse,
+  ModelDownloadProgress,
+  ModelDownloadRequest,
+  ModelVerifyRequest,
+  ModelVerifyResponse,
+  ModelDeleteResponse
 } from '@vishnucreator/protocol';
 import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'patch' | 'delete' | 'rawRequest'>;
 
-export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'exportVoiceDesign' | 'downloadVoiceArtifact' | 'importVoiceDesign' | 'getHardwarePerformance' | 'listLlmModels' | 'getDubEngineStatus' | 'startDubEngine' | 'stopDubEngine' | 'getDubEngineTimesyncReport' | 'streamTts'> & {
+export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'exportVoiceDesign' | 'downloadVoiceArtifact' | 'importVoiceDesign' | 'getHardwarePerformance' | 'listLlmModels' | 'getDubEngineStatus' | 'startDubEngine' | 'stopDubEngine' | 'getDubEngineTimesyncReport' | 'streamTts' | 'listDubModels' | 'downloadDubModel' | 'getDubModelProgress' | 'verifyDubModel' | 'deleteDubModel'> & {
   listLlmModels?: (input: { baseUrl: string; apiKey: string }) => Promise<{ models: string[] }>;
+  listDubModels?: () => Promise<ModelCatalogListResponse>;
+  downloadDubModel?: (request: ModelDownloadRequest) => Promise<ModelDownloadProgress>;
+  getDubModelProgress?: (modelId: string) => Promise<ModelDownloadProgress>;
+  verifyDubModel?: (request: ModelVerifyRequest) => Promise<ModelVerifyResponse>;
+  deleteDubModel?: (modelId: string) => Promise<ModelDeleteResponse>;
   getDubEngineStatus?: () => Promise<DubEngineRuntimeStatus>;
   startDubEngine?: () => Promise<DubEngineRuntimeStatus>;
   stopDubEngine?: () => Promise<DubEngineRuntimeStatus>;
@@ -309,6 +321,47 @@ export function createCreatorServicesService(client: ClientLike) {
       return client.rawRequest('/creator-services/dub-engine/tts/stream', {
         method: 'POST',
         body: request
+      });
+    },
+    listDubModels(): Promise<ModelCatalogListResponse> {
+      return client.get('/creator-services/dub/models');
+    },
+    downloadDubModel(request: ModelDownloadRequest): Promise<ModelDownloadProgress> {
+      return client.rawRequest('/creator-services/dub/models/download', {
+        method: 'POST',
+        body: request
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        return response.json();
+      });
+    },
+    getDubModelProgress(modelId: string): Promise<ModelDownloadProgress> {
+      return client.get(`/creator-services/dub/models/download/${encodeURIComponent(modelId)}`);
+    },
+    verifyDubModel(request: ModelVerifyRequest): Promise<ModelVerifyResponse> {
+      return client.rawRequest('/creator-services/dub/models/verify', {
+        method: 'POST',
+        body: request
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        return response.json();
+      });
+    },
+    deleteDubModel(modelId: string): Promise<ModelDeleteResponse> {
+      return client.rawRequest(`/creator-services/dub/models/${encodeURIComponent(modelId)}`, {
+        method: 'DELETE'
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        return response.json();
       });
     }
   };

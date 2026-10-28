@@ -95,4 +95,101 @@ describe('KhmerVoicesView', () => {
 
     expect(props.creatorServicesService?.stopDubEngine).toHaveBeenCalled();
   });
+
+  it('allows initiating VoxCPM2 weights download when uninstalled', async () => {
+    const downloadDubModel = vi.fn().mockResolvedValue({
+      modelId: 'voxcpm2-khmer',
+      status: 'downloading',
+      bytesDownloaded: 100000,
+      totalBytes: 1240000000,
+      percent: 0.1,
+      speedBytesPerSec: 15000000
+    });
+    const listDubModels = vi.fn().mockResolvedValue({
+      modelsRoot: 'D:\\.vishnucreator\\models',
+      availableDiskFreeBytes: 50000000000,
+      models: [
+        {
+          id: 'voxcpm2-khmer',
+          name: 'VoxCPM2 Khmer Voice Model',
+          category: 'tts',
+          description: 'VoxCPM2 model',
+          sizeBytes: 1240000000,
+          expectedSha256: 'abc',
+          sourceUrl: 'https://example.com',
+          filename: 'model.safetensors',
+          targetSubdir: 'voxcpm2',
+          recommendedForTier: ['T1'],
+          installed: false
+        }
+      ]
+    });
+
+    const { props } = renderView({
+      creatorServicesService: {
+        ...baseService,
+        listDubModels,
+        downloadDubModel
+      }
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('download-voxcpm-btn')).toBeInTheDocument();
+    });
+
+    const downloadBtn = screen.getByTestId('download-voxcpm-btn');
+    fireEvent.click(downloadBtn);
+
+    await waitFor(() => {
+      expect(downloadDubModel).toHaveBeenCalledWith({ modelId: 'voxcpm2-khmer' });
+    });
+  });
+
+  it('renders clone and design actions when VoxCPM2 weights are installed', async () => {
+    const listDubModels = vi.fn().mockResolvedValue({
+      modelsRoot: 'D:\\.vishnucreator\\models',
+      availableDiskFreeBytes: 50000000000,
+      models: [
+        {
+          id: 'voxcpm2-khmer',
+          name: 'VoxCPM2 Khmer Voice Model',
+          category: 'tts',
+          description: 'VoxCPM2 model',
+          sizeBytes: 1240000000,
+          expectedSha256: 'abc',
+          sourceUrl: 'https://example.com',
+          filename: 'model.safetensors',
+          targetSubdir: 'voxcpm2',
+          recommendedForTier: ['T1'],
+          installed: true
+        }
+      ]
+    });
+
+    renderView({
+      creatorServicesService: {
+        ...baseService,
+        listDubModels
+      }
+    });
+
+    await waitFor(() => {
+      expect(screen.getByTestId('open-clone-modal-btn')).toBeInTheDocument();
+      expect(screen.getByTestId('open-design-modal-btn')).toBeInTheDocument();
+    });
+
+    // Opening clone modal
+    fireEvent.click(screen.getByTestId('open-clone-modal-btn'));
+    expect(screen.getAllByText(/Zero-Shot Voice Cloning/i).length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText(/Voice Reference Audio/i)).toBeInTheDocument();
+
+    // Closing modal
+    const closeBtn = screen.getByLabelText(/Close/i);
+    fireEvent.click(closeBtn);
+
+    // Opening design modal
+    fireEvent.click(screen.getByTestId('open-design-modal-btn'));
+    expect(screen.getAllByText(/Prompt Timbre Design/i).length).toBeGreaterThanOrEqual(2);
+    expect(screen.getByText(/Voice Description Prompt/i)).toBeInTheDocument();
+  });
 });
