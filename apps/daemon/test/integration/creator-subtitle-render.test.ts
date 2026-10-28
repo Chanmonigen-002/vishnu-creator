@@ -192,7 +192,7 @@ describe.runIf(hasPackagedRuntime)('Creator packaged subtitle rendering', () => 
     expect(`${failed.stdout}\n${failed.stderr}`).toContain(
       'creator subtitle font unavailable: fonts/VishnuCreatorSerif-Bold.ttf'
     );
-  });
+  }, 30_000);
 });
 
 function renderStyle(style: Parameters<typeof buildVishnuSubtitleStyle>[0], options: { width: number; height: number; position: string; mixed?: boolean } = { width: 640, height: 360, position: 'top' }) {

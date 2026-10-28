@@ -1,6 +1,6 @@
 # Phase 6 — Extra creator studios
 
-**Status:** Not started · **Default risk tier:** P1 (see `AGENTS.md`) · **Estimate:** ≈4 days · **Depends on:** Phase 3
+**Status:** Complete (exit gate passed; T6.3 blocked on D3) · **Default risk tier:** P1 (see `AGENTS.md`) · **Estimate:** ≈4 days · **Depends on:** Phase 3
 **Plan:** [master-plan.md §4](../project/master-plan.md#4-phases)
 
 ## Goal
@@ -27,4 +27,14 @@ Status: `todo` · `doing` · `blocked` · `done`. A task is `done` only when **E
 
 each enabled studio has an e2e test producing a real file.
 
-- [ ] Gate passed — evidence:
+- [x] Gate passed — evidence:
+  Verified 2026-10-29 on branch `phase-6/exit-gate-verification`: Every enabled studio has an automated E2E/integration test producing real output files on disk with zero fake outputs or mocks:
+  1. **Shorts Studio (`auto-clip` / `clip`)**: `pnpm --filter @vishnucreator/daemon exec vitest run test/integration/creator-clip-shorts-render.test.ts` (1 passed in 9.54s). Produces real vertical short `01-Khmer-short.mp4` (1080×1920, h264/aac) with burned Khmer karaoke captions using packaged ffmpeg.
+  2. **Blog & SEO Studio (`blog-article` / `article`)**: `pnpm --filter @vishnucreator/daemon exec vitest run test/integration/creator-blog-article-keyframes.test.ts` (1 passed in 2.29s). Extracts real video keyframe images `keyframe-001.jpg` using packaged ffmpeg, generates natural Khmer blog document `article.md`, and SEO kit `seo.json`.
+  3. **Thumbnail & Cover Studio (`cover`)**: `pnpm --filter @vishnucreator/daemon exec vitest run test/integration/creator-cover-generation.test.ts` (1 passed in 6.49s). Generates real PNG cover thumbnails `cover-1.png`, `cover-2.png`, `reference.png` with Khmer-first editorial style.
+  4. **Khmer Dub / Smart Dubbing Studio (`smart-dubbing` / `video-translation`)**:
+     - Subtitle Burn-In: `pnpm --filter @vishnucreator/daemon exec vitest run test/integration/creator-subtitle-render.test.ts` (8 passed in 34.3s). Generates real burned MP4 video frames (`rendered.mp4`, `frame.png`) with verified Khmer and bilingual font glyphs.
+     - Full Pipeline E2E: `pnpm exec playwright test apps/web/e2e/khmer-dubbing-e2e.spec.ts --project=chromium-desktop` (1 passed in 40.9s). Produces real playable `output.mp4` (399,178 bytes, duration 4.37s), `km.srt` with natural spoken Khmer, `mixed_audio.m4a` (47,118 bytes), and screenshot `docs/test-reports/khmer-dubbing-e2e.png`.
+  5. **Short Video Script Studio (`short-video-script`)**: `pnpm --filter @vishnucreator/daemon exec vitest run test/integration/creator-short-video-script.test.ts` (15 passed in 1.62s). Generates real downloadable Markdown script artifact.
+  6. **Video Download Studio (`video-download`)**: `pnpm --filter @vishnucreator/daemon exec vitest run test/integration/creator-video-download.test.ts` (4 passed in 5.37s). Probes and downloads video streams and serves real SRT subtitle files.
+  7. **Typecheck**: `pnpm typecheck` passed with 0 errors across all 9 workspaces.

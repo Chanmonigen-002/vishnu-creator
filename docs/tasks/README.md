@@ -11,7 +11,7 @@ The master plan explains *why*; these files track *what is done*.
 | 3 | [Daemon ↔ engine integration](phase-3-daemon-integration.md) | 14 | 14 | 0 | 0 | 0 | Phase 2 | met (`v3-daemon-integration`) | Complete |
 | 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 7 | 0 | 0 | 0 | Phase 3 | met (`v4-quality-pipeline`) | Complete |
 | 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 10 | 10 | 0 | 0 | 0 | Phase 3 | met (T5.1–T5.10 + E2E cloned voice verified) | Complete |
-| 6 | [Extra creator studios](phase-6-creator-studios.md) | 9 | 8 | 0 | 1 | 0 | Phase 3 | — | In progress (T6.1, T6.2, T6.4–T6.9 done; T6.3 blocked on D3) |
+| 6 | [Extra creator studios](phase-6-creator-studios.md) | 9 | 8 | 0 | 1 | 0 | Phase 3 | met (E2E real file verified) | Complete (T6.3 blocked on D3) |
 | 7 | [Release](phase-7-release.md) | 7 | 0 | 0 | 0 | 7 | Phases 1–6 | — | Not started |
 | 8 | [More AI providers (free, paid, cloud, local)](phase-8-ai-providers.md) | 10 | 0 | 1 | 0 | 9 | Phase 3 | — | In progress |
 
