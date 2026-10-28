@@ -12,6 +12,7 @@ from typing import Any, Dict, List, Optional
 from urllib.parse import unquote, urlparse
 
 from vishnu_dub.config import Settings, resolve_ffmpeg_path, resolve_ytdlp_path
+from vishnu_dub.timesync import DEFAULT_MAX_SPEEDUP, build_synced_track, summarize
 
 
 class JobStatus(str, Enum):
@@ -576,23 +577,23 @@ class JobManager:
 
             tts_track_wav = work_dir / "tts_track.wav"
             if synthesized_any or not tts_track_wav.exists() or tts_track_wav.stat().st_size == 0:
-                concat_list = tts_dir / "concat.txt"
-                with open(concat_list, "w", encoding="utf-8") as f:
-                    for seg_file in segment_files:
-                        escaped = str(seg_file.resolve()).replace("'", "'\\''")
-                        f.write(f"file '{escaped}'\n")
-                proc = await asyncio.create_subprocess_exec(
-                    ffmpeg_bin, "-y",
-                    "-f", "concat", "-safe", "0",
-                    "-i", str(concat_list),
-                    "-acodec", "pcm_s16le", "-ar", "24000", "-ac", "1",
-                    str(tts_track_wav),
-                    stdout=asyncio.subprocess.PIPE,
-                    stderr=asyncio.subprocess.PIPE,
+                # Place each segment at its subtitle time (T4.5) instead of
+                # concatenating them back to back, which drifted from the video.
+                job.progress = JobProgress(stage="tts", percent=76, message="Aligning speech to subtitle timing...")
+                await self._save_job(job)
+                placements = await build_synced_track(
+                    ffmpeg_bin, km_segments, segment_files, tts_track_wav, work_dir,
+                    max_speedup=float(getattr(self.settings, "timesync_max_speedup", DEFAULT_MAX_SPEEDUP)),
                 )
-                _, stderr = await proc.communicate()
-                if proc.returncode != 0 or not tts_track_wav.exists():
-                    raise RuntimeError(f"Failed to concatenate TTS segments: {stderr.decode(errors='replace')}")
+                timing = summarize(placements)
+                job.progress = JobProgress(
+                    stage="tts",
+                    percent=78,
+                    message=(f"Aligned {timing['segments']} segments: {timing['fit']} fit, "
+                             f"{timing['sped_up']} sped up (max {timing['max_tempo']}x), "
+                             f"{timing['overflow']} too long for their slot"),
+                )
+                await self._save_job(job)
 
             job.tts_time = time.time() - tts_start
             if hasattr(tts_backend, "unload"):

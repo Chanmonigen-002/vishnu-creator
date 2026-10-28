@@ -152,6 +152,10 @@ class Settings(BaseSettings):
     # FFmpeg path (auto-detected if not set)
     ffmpeg_path: Optional[str] = Field(default_factory=resolve_ffmpeg_path)
 
+    # Fastest speed-up allowed when a dubbed segment is longer than its subtitle
+    # slot (T4.5). Env: TIMESYNC_MAX_SPEEDUP.
+    timesync_max_speedup: float = Field(default=1.3, ge=1.0, le=2.0)
+
 
 _settings: Optional[Settings] = None
 

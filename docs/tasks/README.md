@@ -9,7 +9,7 @@ The master plan explains *why*; these files track *what is done*.
 | 1 | [Khmer foundation, zero GPU](phase-1-khmer-foundation.md) | 9 | 8 | 1 | 0 | 0 | Phase 0 | **not met** | In progress |
 | 2 | [Bring the dub engine into the repo](phase-2-dub-engine-service.md) | 15 | 15 | 0 | 0 | 0 | Phase 0 · ADR-0005 (accepted) | **not met** | Tasks done · gate not met |
 | 3 | [Daemon ↔ engine integration](phase-3-daemon-integration.md) | 14 | 9 | 5 | 0 | 0 | Phase 2 | **not met** | In progress |
-| 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 4 | 1 | 0 | 2 | Phase 3 | **not met** | In progress |
+| 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 5 | 1 | 0 | 1 | Phase 3 | **not met** | In progress |
 | 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 10 | 2 | 6 | 2 | 0 | Phase 3 | **not met** | In progress |
 | 6 | [Extra creator studios](phase-6-creator-studios.md) | 5 | 1 | 0 | 0 | 4 | Phase 3 | — | T6.1 done (waived: owner-requested) |
 | 7 | [Release](phase-7-release.md) | 7 | 0 | 0 | 0 | 7 | Phases 1–6 | — | Not started |
