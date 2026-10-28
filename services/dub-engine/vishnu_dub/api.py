@@ -815,15 +815,24 @@ async def preview_voice_design(voice_id: str = Body(..., embed=True)):
     base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
     voice_dir = (base_jobs_dir / "voice_designs" / voice_id).resolve()
     
+    found_dir = None
     try:
-        if not voice_dir.is_relative_to(base_jobs_dir / "voice_designs") or not voice_dir.exists():
-            raise HTTPException(404, "Voice design not found")
+        if voice_dir.is_relative_to(base_jobs_dir / "voice_designs") and voice_dir.exists() and voice_dir.is_dir():
+            found_dir = voice_dir
     except (ValueError, RuntimeError):
+        pass
+
+    if not found_dir:
+        sample_dir = (Path(__file__).resolve().parent / "data" / "sample_voices" / voice_id).resolve()
+        if sample_dir.exists() and sample_dir.is_dir():
+            found_dir = sample_dir
+
+    if not found_dir:
         raise HTTPException(404, "Voice design not found")
     
     # Find audio file
     audio_file = None
-    for f in voice_dir.iterdir():
+    for f in found_dir.iterdir():
         if f.suffix in ('.wav', '.mp3'):
             audio_file = f
             break
@@ -831,9 +840,10 @@ async def preview_voice_design(voice_id: str = Body(..., embed=True)):
     if not audio_file:
         raise HTTPException(404, "Voice design audio not found")
     
+    media_type = "audio/mpeg" if audio_file.suffix == ".mp3" else "audio/wav"
     return FileResponse(
         audio_file,
-        media_type="audio/wav",
+        media_type=media_type,
         filename=audio_file.name,
     )
 

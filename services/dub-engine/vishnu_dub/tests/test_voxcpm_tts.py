@@ -502,4 +502,10 @@ async def test_default_sample_voices_and_manifest():
         assert exp_resp.json()["ok"] is True
         assert exp_resp.json()["filename"].endswith(".zip")
 
+        # 4. Can preview the default sample voice directly
+        prev_resp = await client.post("/v1/tts/voices/preview", json={"voice_id": "voxcpm2_default_speaker"})
+        assert prev_resp.status_code == 200
+        assert prev_resp.headers["content-type"] == "audio/wav"
+        assert len(prev_resp.content) > 100_000
+
 

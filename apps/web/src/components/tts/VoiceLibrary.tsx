@@ -302,7 +302,11 @@ export function VoiceLibrary(props: {
   }
 
   function formatDate(dateString: string): string {
+    if (!dateString) return l('内置预设', 'Built-in');
     const date = new Date(dateString);
+    if (isNaN(date.getTime())) {
+      return l('内置预设', 'Built-in');
+    }
     return date.toLocaleDateString(undefined, {
       year: 'numeric',
       month: 'short',
