@@ -102,7 +102,10 @@ await runParallelStages([
   ], { cwd: rootDir, env, timeoutMs: 25 * 60_000 }),
   () => runStage('准备 Codex Runtime', process.execPath, [
     resolve(scriptDir, 'prepare-codex-runtime.mjs')
-  ], { cwd: rootDir, env, timeoutMs: 10 * 60_000 })
+  ], { cwd: rootDir, env, timeoutMs: 10 * 60_000 }),
+  () => runStage('准备 Dub Engine Runtime', process.execPath, [
+    resolve(scriptDir, 'prepare-dub-engine-runtime.mjs')
+  ], { cwd: rootDir, env, timeoutMs: 25 * 60_000 })
 ]);
 const candidates = packageRootCandidates(platform, arch);
 for (const path of candidates) rmSync(path, { recursive: true, force: true });
@@ -170,6 +173,10 @@ const packageWithSigningEnvironment = async builderEnv => {
     resolve(desktopDir, '.pack', 'creator-runtime', 'vishnuai', 'manifest.json'),
     'utf8'
   ));
+  const dubEngineRuntimeManifestPath = resolve(desktopDir, '.pack', 'dub-engine-runtime', 'manifest.json');
+  const dubEngineRuntimeManifest = existsSync(dubEngineRuntimeManifestPath)
+    ? JSON.parse(readFileSync(dubEngineRuntimeManifestPath, 'utf8'))
+    : null;
   const stickmanRuntimeRoot = resolve(desktopDir, '.pack', 'stickman-runtime');
   const stickmanRuntimeManifest = verifyStickmanRuntime(
     stickmanRuntimeRoot,
@@ -265,6 +272,9 @@ const packageWithSigningEnvironment = async builderEnv => {
     ytDlpRuntimeMode: creatorRuntimeManifest.ytDlp?.mode,
     ytDlpVersion: creatorRuntimeManifest.ytDlp?.version,
     ytDlpPythonVersion: creatorRuntimeManifest.ytDlp?.pythonVersion,
+    dubEngineRuntimeVersion: dubEngineRuntimeManifest?.engineVersion ?? null,
+    dubEngineBuildType: dubEngineRuntimeManifest?.buildType ?? null,
+    dubEnginePythonVersion: dubEngineRuntimeManifest?.pythonVersion ?? null,
     macSigningMode: macSigning.mode,
     appleTeamId: macSigning.teamId ?? null,
     artifacts: [...artifacts, componentArchive].map(path => ({

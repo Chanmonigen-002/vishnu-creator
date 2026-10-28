@@ -68,9 +68,8 @@ export type {
 export { DubEngineError, DubEngineClient, defaultDubEngineConfig };
 
 /**
- * Engine folder: the configured path, else `services/dub-engine` under the
- * working directory, else under the repository root. The dev daemon runs from
- * `apps/daemon`, so the working directory alone never found it.
+ * Engine folder: the configured path, else packaged dub engine runtime,
+ * else `services/dub-engine` under the working directory or repository root.
  */
 export function resolveDubEngineDirectory(
   config: Pick<DubEngineConfig, 'enginePath'>,
@@ -78,24 +77,39 @@ export function resolveDubEngineDirectory(
   moduleDir: string = dirname(fileURLToPath(import.meta.url))
 ): string {
   if (config.enginePath) return resolve(config.enginePath);
+  const resourcesPath = (process as unknown as { resourcesPath?: string }).resourcesPath;
   const candidates = [
+    process.env.VISHNUCREATOR_DUB_ENGINE_ROOT,
+    resourcesPath ? join(resourcesPath, 'dub-engine-runtime') : undefined,
+    resourcesPath ? join(resourcesPath, 'dub-engine') : undefined,
+    join(cwd, 'runtime', 'dub-engine-runtime'),
+    join(cwd, 'runtime', 'dub-engine'),
+    resolve(moduleDir, '..', '..', '..', 'desktop', '.pack', 'dub-engine-runtime'),
     join(cwd, 'services', 'dub-engine'),
     // apps/daemon/{src,dist}/dub-engine -> repository root
-    resolve(moduleDir, '..', '..', '..', '..', 'services', 'dub-engine')
-  ];
-  return candidates.find(candidate => existsSync(join(candidate, 'vishnu_dub'))) ?? candidates[0]!;
+    resolve(moduleDir, '..', '..', '..', '..', 'services', 'dub-engine'),
+    resolve(moduleDir, '..', '..', 'services', 'dub-engine')
+  ].filter((candidate): candidate is string => typeof candidate === 'string' && candidate.length > 0);
+
+  return candidates.find(candidate => existsSync(join(candidate, 'vishnu_dub'))) ?? candidates[candidates.length - 1]!;
 }
 
-/** Python for the local engine: configured, else the engine's own venv, else `python`. */
+/** Python for the local engine: configured, else packaged portable python, else venv, else `python`. */
 export function resolveDubEnginePython(config: Pick<DubEngineConfig, 'pythonPath'>, engineDir: string): string {
   if (config.pythonPath) return config.pythonPath;
-  const venvPython = join(
-    engineDir,
-    '.venv',
-    process.platform === 'win32' ? 'Scripts' : 'bin',
-    process.platform === 'win32' ? 'python.exe' : 'python'
-  );
-  return existsSync(venvPython) ? venvPython : 'python';
+  if (process.env.VISHNUCREATOR_DUB_ENGINE_PYTHON && existsSync(process.env.VISHNUCREATOR_DUB_ENGINE_PYTHON)) {
+    return process.env.VISHNUCREATOR_DUB_ENGINE_PYTHON;
+  }
+  const isWin = process.platform === 'win32';
+  const candidates = [
+    join(engineDir, 'python', isWin ? 'Scripts' : 'bin', isWin ? 'python.exe' : 'python'),
+    join(engineDir, 'python', isWin ? 'python.exe' : 'python3'),
+    join(engineDir, 'python', isWin ? 'python.exe' : 'python'),
+    join(engineDir, '.venv', isWin ? 'Scripts' : 'bin', isWin ? 'python.exe' : 'python'),
+    join(engineDir, isWin ? 'python.exe' : 'python3'),
+    join(engineDir, isWin ? 'python.exe' : 'python')
+  ];
+  return candidates.find(candidate => existsSync(candidate)) ?? 'python';
 }
 
 export class DubEngineService {

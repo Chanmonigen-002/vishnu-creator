@@ -137,6 +137,10 @@ async function launchDesktop(): Promise<void> {
     ?? (development
       ? join(appRoot, '.pack', 'codex-runtime')
       : join(process.resourcesPath, 'codex-runtime'));
+  const dubEngineRuntimeRoot = process.env.VISHNUCREATOR_DUB_ENGINE_ROOT
+    ?? (development
+      ? join(appRoot, '.pack', 'dub-engine-runtime')
+      : join(process.resourcesPath, 'dub-engine-runtime'));
   const stickmanRuntimeRoot = process.env.VISHNUCREATOR_STICKMAN_RUNTIME_ROOT
     ?? join(dataDir, 'creator-runtime', 'stickman');
 
@@ -156,6 +160,7 @@ async function launchDesktop(): Promise<void> {
     dataDir,
     codexRuntimeRoot,
     creatorRuntimeRoot,
+    dubEngineRuntimeRoot,
     stickmanRuntimeRoot,
     defaultProjectRoot,
     development

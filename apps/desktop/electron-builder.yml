@@ -51,6 +51,8 @@ extraResources:
     to: creator-runtime
   - from: .pack/codex-runtime
     to: codex-runtime
+  - from: .pack/dub-engine-runtime
+    to: dub-engine-runtime
   - from: .pack/stickman-assets
     to: daemon/runtime/stickman-assets
   - from: .pack/components/remotion-component.json

@@ -37,6 +37,7 @@ import {
   hashFile as hashStickmanFile,
   verifyStickmanRuntime
 } from './stickman-runtime-contract.mjs';
+import { verifyDubEngineRuntime } from './dub-engine-runtime-contract.mjs';
 import {
   findPythonRuntimeMarker,
   verifyStickmanBuildBinding
@@ -70,6 +71,7 @@ const webCreatorPresetDir = join(webDir, 'creator-presets');
 const webCreatorSubtitleFontDir = join(webDir, 'fonts', 'vishnucreator');
 const creatorRuntimeDir = join(resourcesDir, 'creator-runtime', 'vishnuai');
 const codexRuntimeDir = join(resourcesDir, 'codex-runtime');
+const dubEngineRuntimeDir = join(resourcesDir, 'dub-engine-runtime');
 const stickmanRuntimeDir = join(resourcesDir, 'stickman-runtime');
 const sourceWebDir = resolve(desktopDir, '../web/dist');
 const sourceCreatorAgentRuntimeDir = resolve(
@@ -118,6 +120,7 @@ assertWebContents();
 assertCreatorRuntime();
 assertCreatorSubtitleFontContents();
 assertCodexRuntime();
+assertDubEngineRuntime();
 assertStickmanRuntime();
 assertNoUnexpectedPythonRuntime();
 assertNoLocalData();
@@ -629,6 +632,21 @@ function assertCodexRuntime() {
     || manifest.codexAppServerProtocolSha256 !== runtime.appServerProtocol.schemaSha256
   ) {
     throw new Error('Packaged Codex Runtime does not match the Desktop build manifest');
+  }
+}
+
+function assertDubEngineRuntime() {
+  if (!existsSync(dubEngineRuntimeDir)) return;
+  const runtime = verifyDubEngineRuntime(dubEngineRuntimeDir, targetPlatform, targetArch);
+  if (runtime.buildType !== 'cpu') {
+    throw new Error(`Packaged Dub Engine Runtime must be a CPU build by default, got ${runtime.buildType}`);
+  }
+  if (!runtime.gpuPack) {
+    throw new Error('Packaged Dub Engine Runtime is missing the optional GPU pack specification');
+  }
+  if (typeof manifest.packageRoot !== 'string') return;
+  if (manifest.dubEngineRuntimeVersion && manifest.dubEngineRuntimeVersion !== runtime.engineVersion) {
+    throw new Error('Packaged Dub Engine Runtime version does not match Desktop build manifest');
   }
 }
 

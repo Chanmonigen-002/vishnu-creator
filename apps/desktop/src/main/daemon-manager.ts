@@ -35,6 +35,7 @@ export type DaemonStartInput = {
   codexCommit: string | null;
   dataDir: string;
   creatorRuntimeRoot?: string;
+  dubEngineRuntimeRoot?: string;
   stickmanRuntimeRoot?: string;
   codexRuntimeRoot?: string;
   codexRuntimeMode?: 'bundled' | 'external';
@@ -329,6 +330,9 @@ export function buildDaemonEnvironment(
     ...(input.creatorRuntimeRoot === undefined
       ? {}
       : { VISHNUCREATOR_CREATOR_RUNTIME_ROOT: input.creatorRuntimeRoot }),
+    ...(input.dubEngineRuntimeRoot === undefined
+      ? {}
+      : { VISHNUCREATOR_DUB_ENGINE_ROOT: input.dubEngineRuntimeRoot }),
     ...(input.stickmanRuntimeRoot === undefined
       ? {}
       : { VISHNUCREATOR_STICKMAN_RUNTIME_ROOT: input.stickmanRuntimeRoot }),
