@@ -1,19 +1,23 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import {
   ArrowLeft,
   AudioLines,
   CheckCircle2,
   CircleAlert,
+  Download,
+  HardDriveDownload,
   LoaderCircle,
   Mic2,
   Play,
   Square,
   Settings,
   Sparkles,
+  Trash2,
+  Upload,
   Volume2,
-  ExternalLink
+  X
 } from 'lucide-react';
-import type { DubEngineRuntimeStatus } from '@vishnucreator/protocol';
+import type { DubEngineRuntimeStatus, ModelCatalogItem, ModelDownloadProgress, VoiceLibraryItem } from '@vishnucreator/protocol';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import type { CreatorServicesSettingsService } from '../../services/creator-services-service.js';
 import './khmer-voices.css';
@@ -65,6 +69,226 @@ export function KhmerVoicesView(props: {
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
   const [engineStatus, setEngineStatus] = useState<DubEngineRuntimeStatus>();
   const [engineStarting, setEngineStarting] = useState(false);
+
+  // VoxCPM2 Model & Custom Voices State
+  const [voxcpmModel, setVoxcpmModel] = useState<ModelCatalogItem | null>(null);
+  const [downloadProgress, setDownloadProgress] = useState<ModelDownloadProgress | null>(null);
+  const [isDownloading, setIsDownloading] = useState(false);
+  const [downloadError, setDownloadError] = useState<string | null>(null);
+  const [customVoices, setCustomVoices] = useState<VoiceLibraryItem[]>([]);
+  const [playingCustomId, setPlayingCustomId] = useState<string | null>(null);
+
+  // Dialogs
+  const [showCloneDialog, setShowCloneDialog] = useState(false);
+  const [cloneName, setCloneName] = useState('');
+  const [cloneAudioData, setCloneAudioData] = useState('');
+  const [cloneFileName, setCloneFileName] = useState('');
+  const [cloneConsent, setCloneConsent] = useState(false);
+  const [cloneSubmitting, setCloneSubmitting] = useState(false);
+  const [cloneError, setCloneError] = useState<string | null>(null);
+
+  const [showDesignDialog, setShowDesignDialog] = useState(false);
+  const [designPrompt, setDesignPrompt] = useState('');
+  const [designConsent, setDesignConsent] = useState(false);
+  const [designSubmitting, setDesignSubmitting] = useState(false);
+  const [designError, setDesignError] = useState<string | null>(null);
+
+  const customAudioRef = useRef<HTMLAudioElement | null>(null);
+  const customAudioUrlRef = useRef<string | null>(null);
+
+  const refreshModels = useCallback(async () => {
+    if (!props.creatorServicesService?.listDubModels) return;
+    try {
+      const resp = await props.creatorServicesService.listDubModels();
+      const vox = resp.models.find(m => m.id === 'voxcpm2-khmer') ?? null;
+      setVoxcpmModel(vox);
+      if (vox?.installed) {
+        setIsDownloading(false);
+      }
+    } catch {
+      // Ignore
+    }
+  }, [props.creatorServicesService]);
+
+  const refreshCustomVoices = useCallback(async () => {
+    if (!props.creatorServicesService?.listVoiceDesigns) return;
+    try {
+      const res = await props.creatorServicesService.listVoiceDesigns();
+      setCustomVoices(res.voices || []);
+    } catch {
+      // Ignore
+    }
+  }, [props.creatorServicesService]);
+
+  // Load models and custom voices on mount
+  useEffect(() => {
+    void refreshModels();
+    void refreshCustomVoices();
+  }, [refreshModels, refreshCustomVoices]);
+
+  // Poll download progress when downloading
+  useEffect(() => {
+    let timer: ReturnType<typeof setInterval> | undefined;
+    if (isDownloading && props.creatorServicesService?.getDubModelProgress) {
+      timer = setInterval(async () => {
+        try {
+          const p = await props.creatorServicesService!.getDubModelProgress!('voxcpm2-khmer');
+          setDownloadProgress(p);
+          if (p.status === 'installed') {
+            setIsDownloading(false);
+            setDownloadError(null);
+            void refreshModels();
+          } else if (p.status === 'error') {
+            setIsDownloading(false);
+            setDownloadError(p.error || 'Download failed');
+          }
+        } catch {
+          // Ignore
+        }
+      }, 1500);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isDownloading, props.creatorServicesService, refreshModels]);
+
+  const handleDownloadWeights = async () => {
+    if (!props.creatorServicesService?.downloadDubModel) return;
+    setIsDownloading(true);
+    setDownloadError(null);
+    try {
+      const p = await props.creatorServicesService.downloadDubModel({ modelId: 'voxcpm2-khmer' });
+      setDownloadProgress(p);
+      if (p.status === 'installed') {
+        setIsDownloading(false);
+        void refreshModels();
+      }
+    } catch (err) {
+      setIsDownloading(false);
+      setDownloadError(err instanceof Error ? err.message : 'Download failed');
+    }
+  };
+
+  const handleAudioFileSelected = (file: File) => {
+    setCloneFileName(file.name);
+    if (!cloneName.trim()) {
+      setCloneName(file.name.replace(/\.[^/.]+$/, ''));
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      if (typeof e.target?.result === 'string') {
+        setCloneAudioData(e.target.result);
+      }
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleCloneSubmit = async () => {
+    if (!cloneName.trim() || !cloneAudioData || !cloneConsent || !props.creatorServicesService?.importVoiceDesign) return;
+    setCloneSubmitting(true);
+    setCloneError(null);
+    try {
+      await props.creatorServicesService.importVoiceDesign({
+        name: cloneName.trim(),
+        prompt: cloneName.trim(),
+        audioData: cloneAudioData,
+        consent: true
+      });
+      setShowCloneDialog(false);
+      setCloneName('');
+      setCloneAudioData('');
+      setCloneFileName('');
+      setCloneConsent(false);
+      void refreshCustomVoices();
+    } catch (err) {
+      setCloneError(err instanceof Error ? err.message : 'Failed to clone voice');
+    } finally {
+      setCloneSubmitting(false);
+    }
+  };
+
+  const handleDesignSubmit = async () => {
+    if (!designPrompt.trim() || !designConsent || !props.creatorServicesService?.saveVoiceDesign) return;
+    setDesignSubmitting(true);
+    setDesignError(null);
+    try {
+      await props.creatorServicesService.saveVoiceDesign({
+        prompt: designPrompt.trim(),
+        consent: true
+      });
+      setShowDesignDialog(false);
+      setDesignPrompt('');
+      setDesignConsent(false);
+      void refreshCustomVoices();
+    } catch (err) {
+      setDesignError(err instanceof Error ? err.message : 'Failed to design voice');
+    } finally {
+      setDesignSubmitting(false);
+    }
+  };
+
+  const togglePlayCustomVoice = async (voice: VoiceLibraryItem) => {
+    if (playingCustomId === voice.id) {
+      if (customAudioRef.current) {
+        customAudioRef.current.pause();
+        customAudioRef.current.currentTime = 0;
+      }
+      setPlayingCustomId(null);
+      return;
+    }
+    if (customAudioRef.current) {
+      customAudioRef.current.pause();
+    }
+    if (customAudioUrlRef.current) {
+      URL.revokeObjectURL(customAudioUrlRef.current);
+      customAudioUrlRef.current = null;
+    }
+
+    if (props.creatorServicesService?.previewVoiceDesign) {
+      setPlayingCustomId(voice.id);
+      try {
+        const res = await props.creatorServicesService.previewVoiceDesign({ voiceId: voice.id });
+        const url = URL.createObjectURL(res.blob);
+        customAudioUrlRef.current = url;
+        if (customAudioRef.current) {
+          customAudioRef.current.src = url;
+          customAudioRef.current.onended = () => setPlayingCustomId(null);
+          customAudioRef.current.onerror = () => setPlayingCustomId(null);
+          await customAudioRef.current.play();
+        }
+      } catch {
+        setPlayingCustomId(null);
+      }
+    }
+  };
+
+  const handleDeleteCustomVoice = async (voiceId: string) => {
+    if (!props.creatorServicesService?.deleteVoiceDesign) return;
+    if (!window.confirm(l('确定要删除此音色吗？', 'Are you sure you want to delete this voice?'))) return;
+    try {
+      await props.creatorServicesService.deleteVoiceDesign({ voiceId });
+      setCustomVoices(prev => prev.filter(v => v.id !== voiceId));
+    } catch {
+      // Ignore
+    }
+  };
+
+  const formatBytes = (bytes?: number) => {
+    if (!bytes || bytes <= 0) return '0 B';
+    const units = ['B', 'KB', 'MB', 'GB'];
+    let size = bytes;
+    let unitIdx = 0;
+    while (size >= 1024 && unitIdx < units.length - 1) {
+      size /= 1024;
+      unitIdx++;
+    }
+    return `${size.toFixed(1)} ${units[unitIdx]}`;
+  };
+
+  const formatSpeed = (bytesPerSec?: number) => {
+    if (!bytesPerSec || bytesPerSec <= 0) return '0 KB/s';
+    return `${formatBytes(bytesPerSec)}/s`;
+  };
 
   const getStatus = props.creatorServicesService?.getDubEngineStatus;
   const startEngine = props.creatorServicesService?.startDubEngine;
@@ -324,14 +548,74 @@ export function KhmerVoicesView(props: {
                 )}
               </p>
             </div>
-            <span className="khmer-voices-pending-tag" data-testid="voxcpm-honest-status">
-              <CircleAlert size={14} />
-              {l('模型尚未配置 (Phase 5 / T5.1 待下载权重)', 'Weights not set up yet (T5.1)')}
-            </span>
+            {voxcpmModel?.installed ? (
+              <span className="khmer-voices-ready-tag" data-testid="voxcpm-honest-status">
+                <CheckCircle2 size={14} />
+                {l('权重已就绪 (1.24 GB · 随时可用)', 'Weights Ready (1.24 GB · Ready)')}
+              </span>
+            ) : isDownloading ? (
+              <span className="khmer-voices-engine-badge state-starting" data-testid="voxcpm-honest-status">
+                <LoaderCircle size={14} className="khmer-studio-spin" />
+                {l(`正在下载权重 (${downloadProgress?.percent ?? 0}%)`, `Downloading Weights (${downloadProgress?.percent ?? 0}%)`)}
+              </span>
+            ) : (
+              <span className="khmer-voices-pending-tag" data-testid="voxcpm-honest-status">
+                <CircleAlert size={14} />
+                {l('模型尚未配置 (Phase 5 / T5.1 待下载权重 · 1.24 GB)', 'Weights not set up yet (T5.1 · 1.24 GB)')}
+              </span>
+            )}
           </div>
 
+          {!voxcpmModel?.installed && !isDownloading ? (
+            <div className="khmer-voxcpm-download-banner">
+              <div className="khmer-voxcpm-download-info">
+                <div className="khmer-voxcpm-download-title-row">
+                  <HardDriveDownload size={18} className="khmer-voxcpm-download-icon" />
+                  <strong>{l('需下载 VoxCPM2 基础模型权重 (1.24 GB)', 'Requires VoxCPM2 Model Weights (1.24 GB)')}</strong>
+                </div>
+                <p>
+                  {l(
+                    '模型保存在本地 .vishnucreator/models 目录（默认选择剩余空间最大磁盘）。下载完成后即可开启零样本声音克隆与高保真音色生成。',
+                    'Weights are stored locally in .vishnucreator/models (on disk with most free space). Enables zero-shot cloning and bespoke prompt voice design.'
+                  )}
+                </p>
+                {downloadError ? <div className="khmer-voxcpm-error-msg">{downloadError}</div> : null}
+              </div>
+              <button
+                type="button"
+                className="khmer-voxcpm-download-btn"
+                onClick={handleDownloadWeights}
+                disabled={props.creatorServicesService?.downloadDubModel === undefined}
+                data-testid="download-voxcpm-btn"
+              >
+                <Download size={15} />
+                <span>{l('一键下载权重 (1.24 GB)', 'Download Weights (1.24 GB)')}</span>
+              </button>
+            </div>
+          ) : null}
+
+          {isDownloading ? (
+            <div className="khmer-voxcpm-progress-banner" data-testid="voxcpm-download-progress">
+              <div className="khmer-voxcpm-progress-header">
+                <div className="khmer-voxcpm-progress-title">
+                  <LoaderCircle size={16} className="khmer-studio-spin" />
+                  <strong>{l('正在下载 VoxCPM2 声学模型权重…', 'Downloading VoxCPM2 Model Weights…')}</strong>
+                </div>
+                <span className="khmer-voxcpm-progress-stats">
+                  {formatBytes(downloadProgress?.bytesDownloaded)} / {formatBytes(downloadProgress?.totalBytes || 1240000000)} ({downloadProgress?.percent ?? 0}%) · {formatSpeed(downloadProgress?.speedBytesPerSec)}
+                </span>
+              </div>
+              <div className="khmer-voxcpm-progress-track">
+                <div
+                  className="khmer-voxcpm-progress-fill"
+                  style={{ width: `${Math.min(100, Math.max(0, downloadProgress?.percent ?? 0))}%` }}
+                />
+              </div>
+            </div>
+          ) : null}
+
           <div className="khmer-voxcpm-grid">
-            <div className="khmer-voxcpm-card">
+            <div className="khmer-voxcpm-card" data-testid="card-zero-shot">
               <h4>🎯 {l('零样本声音克隆 (Zero-Shot Clone)', 'Zero-Shot Voice Cloning')}</h4>
               <p>
                 {l(
@@ -340,11 +624,26 @@ export function KhmerVoicesView(props: {
                 )}
               </p>
               <div className="khmer-voxcpm-status-note">
-                <span>{l('状态：待下载模型权重 (T5.1)', 'Status: Requires model weights (T5.1)')}</span>
+                {voxcpmModel?.installed ? (
+                  <span className="status-ready"><CheckCircle2 size={12} /> {l('已就绪 · 随时可克隆', 'Ready · Upload 3-10s sample')}</span>
+                ) : (
+                  <span>{l('状态：待下载模型权重 (T5.1 · 1.24 GB)', 'Status: Requires model weights (T5.1 · 1.24 GB)')}</span>
+                )}
               </div>
+              {voxcpmModel?.installed ? (
+                <button
+                  type="button"
+                  className="khmer-voxcpm-action-btn"
+                  onClick={() => setShowCloneDialog(true)}
+                  data-testid="open-clone-modal-btn"
+                >
+                  <Upload size={14} />
+                  <span>{l('上传人声克隆新音色', 'Clone Voice Sample')}</span>
+                </button>
+              ) : null}
             </div>
 
-            <div className="khmer-voxcpm-card">
+            <div className="khmer-voxcpm-card" data-testid="card-prompt-design">
               <h4>🎨 {l('提示词音色设计 (Prompt Timbre Design)', 'Prompt Voice Design')}</h4>
               <p>
                 {l(
@@ -353,10 +652,87 @@ export function KhmerVoicesView(props: {
                 )}
               </p>
               <div className="khmer-voxcpm-status-note">
-                <span>{l('状态：待下载模型权重 (T5.1)', 'Status: Requires model weights (T5.1)')}</span>
+                {voxcpmModel?.installed ? (
+                  <span className="status-ready"><CheckCircle2 size={12} /> {l('已就绪 · 支持提示词定制', 'Ready · Text-prompt timbre design')}</span>
+                ) : (
+                  <span>{l('状态：待下载模型权重 (T5.1 · 1.24 GB)', 'Status: Requires model weights (T5.1 · 1.24 GB)')}</span>
+                )}
               </div>
+              {voxcpmModel?.installed ? (
+                <button
+                  type="button"
+                  className="khmer-voxcpm-action-btn"
+                  onClick={() => setShowDesignDialog(true)}
+                  data-testid="open-design-modal-btn"
+                >
+                  <Sparkles size={14} />
+                  <span>{l('提示词设计新音色', 'Design Voice by Prompt')}</span>
+                </button>
+              ) : null}
             </div>
           </div>
+
+          {customVoices.length > 0 ? (
+            <div className="khmer-voxcpm-custom-section" data-testid="custom-voices-section">
+              <div className="khmer-voxcpm-custom-title-row">
+                <h3>{l('我的定制音色库 (My Custom Voices)', 'My Custom Voices')} ({customVoices.length})</h3>
+              </div>
+              <div className="khmer-voices-grid">
+                {customVoices.map(voice => (
+                  <div key={voice.id} className="khmer-voice-card" data-testid={`custom-voice-${voice.id}`}>
+                    <div className="khmer-voice-card-top">
+                      <div className="khmer-voice-avatar custom">
+                        <Mic2 size={20} />
+                      </div>
+                      <div className="khmer-voice-meta">
+                        <div className="khmer-voice-name-row">
+                          <strong className="khmer-voice-name">{voice.name}</strong>
+                          <span className="khmer-voice-badge custom">{l('定制音色', 'Custom')}</span>
+                        </div>
+                        <span className="khmer-voice-id">{voice.id}</span>
+                      </div>
+                    </div>
+                    <p className="khmer-voice-desc">{voice.prompt || l('零样本声音克隆', 'Zero-shot cloned voice')}</p>
+                    <div className="khmer-voice-card-actions">
+                      <button
+                        type="button"
+                        className="khmer-voice-listen-btn"
+                        onClick={() => togglePlayCustomVoice(voice)}
+                      >
+                        {playingCustomId === voice.id ? (
+                          <>
+                            <Square size={14} />
+                            <span>{l('停止', 'Stop')}</span>
+                          </>
+                        ) : (
+                          <>
+                            <Volume2 size={14} />
+                            <span>{l('试听', 'Play sample')}</span>
+                          </>
+                        )}
+                      </button>
+                      <button
+                        type="button"
+                        className="khmer-voice-use-btn"
+                        onClick={() => props.onUseVoice(voice.id, 'video-translation')}
+                      >
+                        <Sparkles size={14} />
+                        <span>{l('用于配音', 'Use in Video Translation')}</span>
+                      </button>
+                      <button
+                        type="button"
+                        className="khmer-voice-delete-btn"
+                        onClick={() => handleDeleteCustomVoice(voice.id)}
+                        title={l('删除', 'Delete')}
+                      >
+                        <Trash2 size={14} />
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ) : null}
         </section>
 
         {/* Section 4: Dub Engine Runtime Controller */}
@@ -425,6 +801,124 @@ export function KhmerVoicesView(props: {
           </section>
         ) : null}
       </main>
+
+      {/* Voice Clone Modal */}
+      {showCloneDialog ? (
+        <div className="khmer-voice-modal-overlay" onClick={() => setShowCloneDialog(false)}>
+          <div className="khmer-voice-modal" onClick={e => e.stopPropagation()}>
+            <div className="khmer-voice-modal-header">
+              <h3>{l('零样本声音克隆 (Zero-Shot Voice Cloning)', 'Zero-Shot Voice Cloning')}</h3>
+              <button
+                type="button"
+                className="khmer-voice-modal-close"
+                onClick={() => setShowCloneDialog(false)}
+                aria-label={l('关闭', 'Close')}
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="khmer-voice-modal-body">
+              <label className="khmer-voice-field">
+                <span>{l('音色名称', 'Voice Name')} *</span>
+                <input
+                  type="text"
+                  value={cloneName}
+                  onChange={e => setCloneName(e.target.value)}
+                  placeholder={l('例如：我的旁白男声', 'e.g. My Narrative Voice')}
+                />
+              </label>
+              <label className="khmer-voice-field">
+                <span>{l('人声参考音频 (3-10 秒 WAV/MP3)', 'Voice Reference Audio (3-10s WAV/MP3)')} *</span>
+                <input
+                  type="file"
+                  accept="audio/wav,audio/mp3,audio/mpeg,audio/ogg"
+                  onChange={e => {
+                    const file = e.target.files?.[0];
+                    if (file) handleAudioFileSelected(file);
+                  }}
+                />
+                {cloneFileName ? <span className="khmer-voice-file-hint">{cloneFileName}</span> : null}
+              </label>
+              <label className="khmer-voice-checkbox">
+                <input
+                  type="checkbox"
+                  checked={cloneConsent}
+                  onChange={e => setCloneConsent(e.target.checked)}
+                />
+                <span>{l('我确认已获得该人声音频所有者的合法授权，仅用于合规内容制作。', 'I confirm I have the legal consent of the voice owner for voice cloning.')}</span>
+              </label>
+              {cloneError ? <div className="khmer-voxcpm-error-msg">{cloneError}</div> : null}
+            </div>
+            <div className="khmer-voice-modal-actions">
+              <button type="button" className="khmer-voice-cancel-btn" onClick={() => setShowCloneDialog(false)}>
+                {l('取消', 'Cancel')}
+              </button>
+              <button
+                type="button"
+                className="khmer-voice-submit-btn"
+                disabled={!cloneName.trim() || !cloneAudioData || !cloneConsent || cloneSubmitting}
+                onClick={handleCloneSubmit}
+              >
+                {cloneSubmitting ? l('正在克隆…', 'Cloning…') : l('克隆并保存', 'Clone & Save')}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      {/* Voice Design Modal */}
+      {showDesignDialog ? (
+        <div className="khmer-voice-modal-overlay" onClick={() => setShowDesignDialog(false)}>
+          <div className="khmer-voice-modal" onClick={e => e.stopPropagation()}>
+            <div className="khmer-voice-modal-header">
+              <h3>{l('提示词音色设计 (Prompt Timbre Design)', 'Prompt Voice Design')}</h3>
+              <button
+                type="button"
+                className="khmer-voice-modal-close"
+                onClick={() => setShowDesignDialog(false)}
+                aria-label={l('关闭', 'Close')}
+              >
+                <X size={18} />
+              </button>
+            </div>
+            <div className="khmer-voice-modal-body">
+              <label className="khmer-voice-field">
+                <span>{l('音色描述提示词', 'Voice Description Prompt')} *</span>
+                <textarea
+                  rows={3}
+                  value={designPrompt}
+                  onChange={e => setDesignPrompt(e.target.value)}
+                  placeholder={l('例如：温暖慈祥的高棉语长辈女声，语速平稳，适合睡前故事和纪录片。', 'e.g. Warm and friendly mature female voice, steady pacing, suitable for documentaries.')}
+                />
+              </label>
+              <label className="khmer-voice-checkbox">
+                <input
+                  type="checkbox"
+                  checked={designConsent}
+                  onChange={e => setDesignConsent(e.target.checked)}
+                />
+                <span>{l('确认生成符合使用规范的高棉语 AI 音色。', 'Confirm generation of compliant AI vocal timbre.')}</span>
+              </label>
+              {designError ? <div className="khmer-voxcpm-error-msg">{designError}</div> : null}
+            </div>
+            <div className="khmer-voice-modal-actions">
+              <button type="button" className="khmer-voice-cancel-btn" onClick={() => setShowDesignDialog(false)}>
+                {l('取消', 'Cancel')}
+              </button>
+              <button
+                type="button"
+                className="khmer-voice-submit-btn"
+                disabled={!designPrompt.trim() || !designConsent || designSubmitting}
+                onClick={handleDesignSubmit}
+              >
+                {designSubmitting ? l('正在生成…', 'Generating…') : l('生成并保存', 'Generate & Save')}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
+      <audio ref={customAudioRef} style={{ display: 'none' }} />
     </div>
   );
 }
