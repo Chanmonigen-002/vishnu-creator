@@ -3358,5 +3358,19 @@
   "Benchmarking": "Benchmarking",
   "Run Benchmark": "Run Benchmark",
   "Benchmark": "Benchmark",
-  "Total": "Total"
+  "Total": "Total",
+  "Free tier": "Percuma",
+  "Paid": "Berbayar",
+  "Runs on this PC · no account": "Jalan pada PC ini · tanpa akaun",
+  "Not yet verified": "Belum disahkan",
+  "Get API key": "Dapatkan kunci API",
+  "Khmer voices": "Suara Khmer",
+  "Load models from service": "Muatkan model daripada perkhidmatan",
+  "{{0}} models loaded": "{{0}} model dimuatkan",
+  "The service returned no models": "Perkhidmatan tidak memulangkan sebarang model",
+  "Could not load the model list": "Tidak dapat memuatkan senarai model",
+  "Audio quality": "Kualiti audio",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Tiada model ElevenLabs menyokong bahasa Khmer buat masa ini. Gunakan untuk bahasa Inggeris dan bahasa lain.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Gunakan kunci sumber Azure Speech anda. URL asas ialah wilayah sumber anda, contohnya https://southeastasia.tts.speech.microsoft.com. Suara Khmer Sreymom dan Piseth telah sedia ada; anda juga boleh taip nama suara Azure lain (contohnya en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free ialah model percuma untuk pembangun. Suara ialah ID model Fish Audio; pilih daripada senarai atau taip sendiri. Sokongan Khmer belum disahkan, jadi dengar pratonton dahulu."
 }

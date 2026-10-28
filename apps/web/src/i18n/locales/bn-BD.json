@@ -3358,5 +3358,19 @@
   "Benchmarking": "Benchmarking",
   "Run Benchmark": "Run Benchmark",
   "Benchmark": "Benchmark",
-  "Total": "Total"
+  "Total": "Total",
+  "Free tier": "ফ্রি টিয়ার",
+  "Paid": "পেইড",
+  "Runs on this PC · no account": "এই কম্পিউটারে চলে · অ্যাকাউন্ট ছাড়াই",
+  "Not yet verified": "এখনও যাচাই করা হয়নি",
+  "Get API key": "API কী নিন",
+  "Khmer voices": "খেমার কণ্ঠস্বর",
+  "Load models from service": "সার্ভিস থেকে মডেল লোড করুন",
+  "{{0}} models loaded": "{{0}} টি মডেল লোড হয়েছে",
+  "The service returned no models": "সার্ভিস কোনো মডেল দেয়নি",
+  "Could not load the model list": "মডেল তালিকা লোড করা যায়নি",
+  "Audio quality": "অডিওর মান",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "এখনো কোনো ElevenLabs মডেল খেমার ভাষা সমর্থন করে না। ইংরেজি ও অন্য ভাষার জন্য ব্যবহার করুন।",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "আপনার Azure Speech রিসোর্স-এর কী ব্যবহার করুন। Base URL হলো আপনার রিসোর্সের অঞ্চল, যেমন https://southeastasia.tts.speech.microsoft.com। খেমার ভয়েস Sreymom ও Piseth ভেতরে ভেতরেই আছে; আপনি অন্য যেকোনো Azure ভয়েসের নামও লিখতে পারেন (যেমন en-US-JennyNeural)।",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free হলো ডেভেলপারদের জন্য ফ্রি মডেল। ভয়েসগুলো Fish Audio মডেল ID; তালিকা থেকে বেছে নিন বা নিজে লিখুন। খেমার সাপোর্ট এখনো নিশ্চিত না, তাই প্রথমে একবার শুনে দেখুন।"
 }

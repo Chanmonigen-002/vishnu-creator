@@ -3358,5 +3358,19 @@
   "Benchmarking": "Benchmarking",
   "Run Benchmark": "Run Benchmark",
   "Benchmark": "Benchmark",
-  "Total": "Total"
+  "Total": "Total",
+  "Free tier": "Gói miễn phí",
+  "Paid": "Trả phí",
+  "Runs on this PC · no account": "Chạy trên máy này · không cần tài khoản",
+  "Not yet verified": "Chưa được kiểm chứng",
+  "Get API key": "Lấy khóa API",
+  "Khmer voices": "Giọng tiếng Khmer",
+  "Load models from service": "Tải mô hình từ dịch vụ",
+  "{{0}} models loaded": "Đã tải {{0}} mô hình",
+  "The service returned no models": "Dịch vụ không trả về mô hình nào",
+  "Could not load the model list": "Không tải được danh sách mô hình",
+  "Audio quality": "Chất lượng âm thanh",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Hiện chưa có mô hình ElevenLabs nào hỗ trợ tiếng Khmer.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Sử dụng khóa tài nguyên Azure Speech của bạn. URL gốc là vùng miền của tài nguyên, ví dụ https://southeastasia.tts.speech.microsoft.com. Giọng tiếng Khmer Sreymom và Piseth đã có sẵn; bạn cũng có thể gõ tên giọng Azure khác (ví dụ en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free là mô hình miễn phí dành cho lập trình viên. Giọng là ID mô hình Fish Audio; chọn từ danh sách hoặc tự gõ. Hỗ trợ tiếng Khmer chưa được xác nhận nên hãy nghe thử trước."
 }

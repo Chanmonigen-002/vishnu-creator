@@ -3358,5 +3358,19 @@
   "Benchmarking": "Benchmarking",
   "Run Benchmark": "Run Benchmark",
   "Benchmark": "Benchmark",
-  "Total": "Total"
+  "Total": "Total",
+  "Free tier": "תוכנית חינמית",
+  "Paid": "בתשלום",
+  "Runs on this PC · no account": "פועל במחשב זה · ללא חשבון",
+  "Not yet verified": "טרם אומת",
+  "Get API key": "קבלו מפתח API",
+  "Khmer voices": "קולות בקמרית",
+  "Load models from service": "טען מודלים מהשירות",
+  "{{0}} models loaded": "{{0}} מודלים נטענו",
+  "The service returned no models": "השירות לא החזיר מודלים",
+  "Could not load the model list": "טעינת רשימת המודלים נכשלה",
+  "Audio quality": "איכות שמע",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "אף מודל של ElevenLabs אינו תומך כרגע בקמרית. השתמשו בו עבור אנגלית ושפות אחרות.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "השתמשו במפתח המשאב Azure Speech שלכם. כתובת הבסיס היא אזור המשאב, למשל https://southeastasia.tts.speech.microsoft.com. הקולות הקמרים Sreymom ו-Piseth מובנים בתוך השירות; אפשר גם להקליד כל שם קול אחר של Azure (למשל en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free הוא המודל החינמי למפתחים. הקולות הם מזהים של מודלים ב-Fish Audio; בחרו מהרשימה או הקלידו ידנית. תמיכה בקמרית עדיין לא אושרה, כדאי להאזין קודם."
 }

@@ -3358,5 +3358,19 @@
   "Benchmarking": "Benchmarking",
   "Run Benchmark": "Run Benchmark",
   "Benchmark": "Benchmark",
-  "Total": "Total"
+  "Total": "Total",
+  "Free tier": "Ücretsiz kullanım",
+  "Paid": "Ücretli",
+  "Runs on this PC · no account": "Bu bilgisayarda çalışır · hesap gerekmez",
+  "Not yet verified": "Henüz doğrulanmadı",
+  "Get API key": "API anahtarı edinin",
+  "Khmer voices": "Kmerce sesler",
+  "Load models from service": "Modelleri hizmetten yükleyin",
+  "{{0}} models loaded": "{{0}} model yüklendi",
+  "The service returned no models": "Hizmet hiçbir model döndürmedi",
+  "Could not load the model list": "Model listesi yüklenemedi",
+  "Audio quality": "Ses kalitesi",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Şu anda kmerceyi destekleyen bir ElevenLabs modeli yok. İngilizce ve diğer diller için kullanın.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Azure Speech kaynağınızın anahtarını kullanın. Temel URL kaynağınızın bölgesidir, örneğin https://southeastasia.tts.speech.microsoft.com. Kmerce sesler Sreymom ve Piseth dahilidir; başka bir Azure ses adı da yazabilirsiniz (örneğin en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free geliştiricilere yönelik ücretsiz modeldir. Sesler Fish Audio model kimlikleridir; listeden seçin ya da yazın. Kmerce desteği henüz doğrulanmadı, önce bir önizleme dinleyin."
 }

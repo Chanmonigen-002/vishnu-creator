@@ -3358,5 +3358,19 @@
   "Benchmarking": "Benchmark in corso",
   "Run Benchmark": "Esegui benchmark",
   "Benchmark": "Benchmark",
-  "Total": "Totale"
+  "Total": "Totale",
+  "Free tier": "Piano gratuito",
+  "Paid": "A pagamento",
+  "Runs on this PC · no account": "Funziona su questo PC · senza account",
+  "Not yet verified": "Non ancora verificato",
+  "Get API key": "Ottieni chiave API",
+  "Khmer voices": "Voci khmer",
+  "Load models from service": "Carica modelli dal servizio",
+  "{{0}} models loaded": "{{0}} modelli caricati",
+  "The service returned no models": "Il servizio non ha restituito modelli",
+  "Could not load the model list": "Impossibile caricare l’elenco dei modelli",
+  "Audio quality": "Qualità audio",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Nessun modello ElevenLabs supporta attualmente il khmer. Usalo per l’inglese e le altre lingue.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Usa la chiave della risorsa Azure Speech. L’URL di base è la regione della risorsa, ad esempio https://southeastasia.tts.speech.microsoft.com. Le voci khmer Sreymom e Piseth sono integrate; puoi anche digitare il nome di qualsiasi altra voce di Azure (ad esempio en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free è il modello gratuito per sviluppatori. Le voci sono ID di modelli Fish Audio; scegline una dall’elenco o digita la tua. Il supporto del khmer non è ancora confermato, ascolta prima un’anteprima."
 }

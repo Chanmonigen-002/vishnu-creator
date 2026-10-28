@@ -3358,5 +3358,19 @@
   "Benchmarking": "Benchmarking",
   "Run Benchmark": "Run Benchmark",
   "Benchmark": "Benchmark",
-  "Total": "Total"
+  "Total": "Total",
+  "Free tier": "Bezplatná úroveň",
+  "Paid": "Platené",
+  "Runs on this PC · no account": "Beží na tomto PC · bez účtu",
+  "Not yet verified": "Zatiaľ neoverené",
+  "Get API key": "Získať kľúč API",
+  "Khmer voices": "Khmérske hlasy",
+  "Load models from service": "Načítať modely zo služby",
+  "{{0}} models loaded": "Načítaných modelov: {{0}}",
+  "The service returned no models": "Služba nevrátila žiadne modely",
+  "Could not load the model list": "Nepodarilo sa načítať zoznam modelov",
+  "Audio quality": "Kvalita zvuku",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Momentálne žiadny model ElevenLabs nepodporuje khmérčinu. Používajte ho pre angličtinu a ďalšie jazyky.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Použite kľúč prostriedku Azure Speech. Základná adresa URL je región vášho prostriedku, napríklad https://southeastasia.tts.speech.microsoft.com. Khmérske hlasy Sreymom a Piseth sú vstavané; môžete zadať aj iný názov hlasu Azure (napríklad en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free je bezplatný model pre vývojárov. Hlasy sú ID modelov Fish Audio; vyberte zo zoznamu alebo zadajte vlastné. Podpora khmérčiny ešte nie je potvrdená, najprv si vypočujte ukážku."
 }

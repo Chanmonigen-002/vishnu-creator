@@ -3358,5 +3358,19 @@
   "Benchmarking": "Benchmarking",
   "Run Benchmark": "Run Benchmark",
   "Benchmark": "Benchmark",
-  "Total": "Total"
+  "Total": "Total",
+  "Free tier": "Besplatni nivo",
+  "Paid": "Plaćeno",
+  "Runs on this PC · no account": "Radi na ovom računaru · bez naloga",
+  "Not yet verified": "Još nije provereno",
+  "Get API key": "Nabavite API ključ",
+  "Khmer voices": "Kmerski glasovi",
+  "Load models from service": "Učitaj modele iz servisa",
+  "{{0}} models loaded": "Učitano modela: {{0}}",
+  "The service returned no models": "Servis nije vratio nijedan model",
+  "Could not load the model list": "Nije moguće učitati listu modela",
+  "Audio quality": "Kvalitet zvuka",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Trenutno nijedan ElevenLabs model ne podržava kmerski. Koristite ga za engleski i druge jezike.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Koristite ključ svog Azure Speech resursa. Osnovni URL je region vašeg resursa, na primer https://southeastasia.tts.speech.microsoft.com. Kmerski glasovi Sreymom i Piseth su ugrađeni; možete upisati i bilo koje drugo ime glasa Azure (na primer en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free je besplatni model za programere. Glasovi su ID-jevi modela Fish Audio; izaberite sa liste ili unesite svoj. Podrška za kmerski još nije potvrđena, prvo preslušajte uzorak."
 }

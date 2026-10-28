@@ -3358,5 +3358,19 @@
   "Benchmarking": "Benchmarking",
   "Run Benchmark": "Run Benchmark",
   "Benchmark": "Benchmark",
-  "Total": "Total"
+  "Total": "Total",
+  "Free tier": "May libreng quota",
+  "Paid": "May bayad",
+  "Runs on this PC · no account": "Tumatakbo sa PC na ito · walang account",
+  "Not yet verified": "Hindi pa na-verify",
+  "Get API key": "Kumuha ng API key",
+  "Khmer voices": "Mga boses sa Khmer",
+  "Load models from service": "Kunin ang mga model mula sa serbisyo",
+  "{{0}} models loaded": "Nai-load ang {{0}} model",
+  "The service returned no models": "Walang ibinalik na model ang serbisyo",
+  "Could not load the model list": "Hindi na-load ang listahan ng mga model",
+  "Audio quality": "Kalidad ng audio",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Sa ngayon, walang model na ElevenLabs na sumusuporta sa Khmer. Gamitin ito para sa Ingles at iba pang wika.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Gamitin ang API key ng iyong Azure Speech resource. Ang base URL ay ang region ng iyong resource, halimbawa https://southeastasia.tts.speech.microsoft.com. Ang mga Khmer voice na Sreymom at Piseth ay kasama na; puwede rin mag-type ng ibang pangalan ng Azure voice (halimbawa en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "Ang s2.1-pro-free ay ang libreng model para sa mga developer. Ang mga voice ay Fish Audio model IDs; piliin mula sa listahan o i-type. Hindi pa nakumpirma ang suporta sa Khmer, kaya makinig muna ng preview."
 }

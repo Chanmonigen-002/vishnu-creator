@@ -3358,5 +3358,19 @@
   "Benchmarking": "កំពុងធ្វើតេស្តគោល",
   "Run Benchmark": "ដំណើរការតេស្តគោល",
   "Benchmark": "តេស្តគោល",
-  "Total": "សរុប"
+  "Total": "សរុប",
+  "Free tier": "ឥតគិតថ្លៃ",
+  "Paid": "ត្រូវបង់លុយ",
+  "Runs on this PC · no account": "ដំណើរការក្នុងកុំព្យូទ័រនេះ · មិនចាំបាច់គណនី",
+  "Not yet verified": "មិនទាន់ផ្ទៀងផ្ទាត់",
+  "Get API key": "យក API key",
+  "Khmer voices": "សំឡេងខ្មែរ",
+  "Load models from service": "ទាញយកម៉ូដែលពីសេវាកម្ម",
+  "{{0}} models loaded": "ទាញយកម៉ូដែលបាន {{0}}",
+  "The service returned no models": "សេវាកម្មមិនបានបញ្ជូនម៉ូដែលមកឡើយ។",
+  "Could not load the model list": "មិនអាចទាញយកបញ្ជីម៉ូដែលបានទេ។",
+  "Audio quality": "គុណភាពសំឡេង",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "ElevenLabs មិនទាន់មានម៉ូដែលណាមួយគាំទ្រភាសាខ្មែរឡើយ។ សូមប្រើជាមួយភាសាអង់គ្លេសនិងភាសាដទៃទៀត។",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "សូមប្រើសោរAPIរបស់Azure Speech។ Base URL ជាតំបំរងនៃធនធានរបស់អ្នកជាឧទាហរណ៍ https://southeastasia.tts.speech.microsoft.com។ សំឡេងខ្មែរ Sreymom និង Piseth មានរួចក្នុងប្រព័ន្ធហើយ ហើយក៏អាចបញ្ចូលឈ្មោះសំឡេងAzureផ្សេងទៀតបានដែរ (ជាឧទាហរណ៍ en-US-JennyNeural)។",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free គឺជាម៉ូដែលសាកល្បងឥតគិតថ្លៃសម្រាប់អ្នកសរសេរកម្មវិធី។ សំឡេងនីមួយៗជាលេខសម្គាល់ម៉ូដែលរបស់Fish Audioដែលអាចជ្រើសរើសពីបញ្ជីឬចូលដោយខ្លួនឯង។ ការគាំទ្រភាសាខ្មែរមិនទាន់បានបញ្ជាក់នៅឡើយទេ សូមស្តាប់សាកល្បងមុននឹងប្រើ។"
 }
