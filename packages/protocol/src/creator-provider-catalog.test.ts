@@ -33,12 +33,20 @@ describe('creator provider catalog', () => {
 
   it('marks only implemented providers as supported', () => {
     expect(creatorProviderCatalog.some(entry => entry.status === 'planned')).toBe(false);
-    // Phase 8 presets stay experimental until a live call is recorded (T8.5, T8.7, T8.8).
-    const phase8Presets = ['azure', 'elevenlabs', 'fishaudio', 'fal', 'stability', 'replicate', 'together', 'comfyui'];
+    // Phase 8 presets stay experimental until a live call is recorded (T8.5, T8.7, T8.8, T8.9).
+    const phase8Presets = ['azure', 'elevenlabs', 'fishaudio', 'fal', 'stability', 'replicate', 'together', 'comfyui', 'runway', 'luma', 'minimax'];
     expect(creatorProviderCatalog
       .filter(entry => entry.kind !== 'llm' && entry.id !== 'codex-native' && !phase8Presets.includes(entry.id))
       .every(entry => entry.status === 'supported')).toBe(true);
     expect(creatorProviderCatalogById.image.gemini?.status).toBe('supported');
+  });
+
+  it('keeps new video presets experimental until a live call is recorded (T8.9)', () => {
+    for (const id of ['runway', 'luma', 'minimax', 'comfyui'] as const) {
+      expect(creatorProviderCatalogById.video[id]?.status).toBe('experimental');
+    }
+    expect(creatorProviderCatalogById.video.runway?.models[0]?.id).toBe('gen4.5');
+    expect(creatorProviderCatalogById.video.comfyui).toMatchObject({ access: 'local', credentials: [] });
   });
 
   it('keeps new image presets experimental until a live call is recorded (T8.8)', () => {

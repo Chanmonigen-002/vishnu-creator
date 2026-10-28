@@ -70,13 +70,21 @@ const sizes: Array<{ value: VideoGenerationSize; zh: string; en: string; ratio: 
 const providers: Array<{ value: VideoGenerationProvider; zh: string; en: string }> = [
   { value: 'seedance', zh: 'Seedance', en: 'Seedance' },
   { value: 'kling', zh: '可灵', en: 'Kling' },
-  { value: 'veo', zh: 'Veo', en: 'Veo' }
+  { value: 'veo', zh: 'Veo', en: 'Veo' },
+  { value: 'runway', zh: 'Runway', en: 'Runway' },
+  { value: 'luma', zh: 'Luma', en: 'Luma' },
+  { value: 'minimax', zh: 'MiniMax', en: 'MiniMax' },
+  { value: 'comfyui', zh: 'ComfyUI (本地)', en: 'ComfyUI (Local)' }
 ];
 
 const providerDurations: Record<VideoGenerationProvider, VideoGenerationDuration[]> = {
   seedance: [5, 10],
   kling: [5, 10],
-  veo: [4, 6, 8]
+  veo: [4, 6, 8],
+  runway: [5, 10],
+  luma: [5, 10],
+  minimax: [5, 10],
+  comfyui: [5, 10]
 };
 const modelLabels: Record<string, string> = {
   'doubao-seedance-2-5-260628': 'Seedance 2.5',
@@ -87,7 +95,16 @@ const modelLabels: Record<string, string> = {
   'doubao-seedance-1-0-pro-fast-251015': 'Seedance 1.0 Pro Fast',
   'doubao-seedance-1-0-pro-250528': 'Seedance 1.0 Pro',
   'kling-v2-1-master': 'Kling 2.1 Master',
-  'veo-3.1-generate-preview': 'Veo 3.1'
+  'veo-3.1-generate-preview': 'Veo 3.1',
+  'gen4.5': 'Gen-4.5',
+  'gen3a_turbo': 'Gen-3a Turbo',
+  'ray-2': 'Ray 2',
+  'ray-flash-2': 'Ray Flash 2',
+  'MiniMax-H3': 'MiniMax H3',
+  'MiniMax-H3-Highspeed': 'MiniMax H3 Highspeed',
+  'MiniMax-Hailuo-2.3': 'Hailuo 2.3',
+  'svd-workflow': 'SVD Workflow',
+  'animatediff-workflow': 'AnimateDiff Workflow'
 };
 
 const samplePromptZh = '一辆复古红色跑车沿着海岸公路行驶，黄昏金色阳光，低机位跟拍，海风吹动路边植物，电影级真实质感，镜头运动平稳';
@@ -985,7 +1002,11 @@ function videoModelDefaults(
   return {
     seedance: config.video.seedance.model.trim() || defaultVideoGenerationModels.seedance,
     kling: config.video.kling.model.trim() || defaultVideoGenerationModels.kling,
-    veo: config.video.veo.model.trim() || defaultVideoGenerationModels.veo
+    veo: config.video.veo.model.trim() || defaultVideoGenerationModels.veo,
+    runway: config.video.runway.model.trim() || defaultVideoGenerationModels.runway,
+    luma: config.video.luma.model.trim() || defaultVideoGenerationModels.luma,
+    minimax: config.video.minimax.model.trim() || defaultVideoGenerationModels.minimax,
+    comfyui: config.video.comfyui.model.trim() || defaultVideoGenerationModels.comfyui
   };
 }
 

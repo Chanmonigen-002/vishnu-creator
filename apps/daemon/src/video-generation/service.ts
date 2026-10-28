@@ -27,6 +27,12 @@ import {
 import { publicFactsFromFailure } from '../creator/public-error-facts.js';
 import type { GatewayCreatorBinding } from '../gateway/creator-service-source.js';
 import { writePrivateJsonFile } from '../config/private-json-file.js';
+import {
+  createHttpVideoJob,
+  HttpVideoProviderError,
+  isPhase8VideoProvider,
+  refreshHttpVideoJob
+} from '../creator/video/http-video-providers.js';
 
 const MAX_PROMPT_LENGTH = 4_000;
 const MAX_REFERENCE_IMAGE_BYTES = 5 * 1024 * 1024;
@@ -35,7 +41,7 @@ const MAX_VIDEO_BYTES = 1024 * 1024 * 1024;
 const REQUEST_TIMEOUT_MS = 180_000;
 const DOWNLOAD_TIMEOUT_MS = 10 * 60_000;
 const SAFE_RESULT_ID = /^[A-Za-z0-9_-]{12,64}$/;
-const videoProviders = ['seedance', 'kling', 'veo'] as const;
+const videoProviders = ['seedance', 'kling', 'veo', 'runway', 'luma', 'minimax', 'comfyui'] as const;
 
 type StoredVideoGeneration = {
   result: VideoGenerationResult;
@@ -427,6 +433,19 @@ async function createRemoteVideoJob(
 ): Promise<RemoteVideoJob> {
   if (request.provider === 'kling') return await createKlingVideoJob(request, config, signal, fetchImpl);
   if (request.provider === 'veo') return await createVeoVideoJob(request, config, signal, fetchImpl);
+  if (isPhase8VideoProvider(request.provider)) {
+    try {
+      return await createHttpVideoJob(request, config, signal, fetchImpl);
+    } catch (error) {
+      if (error instanceof HttpVideoProviderError) {
+        if (error.status === 401 || error.status === 403 || error.status === 409) {
+          throw new VideoGenerationError('VIDEO_GENERATION_CONFIG_REQUIRED', error.message, error.status);
+        }
+        throw new VideoGenerationError('VIDEO_GENERATION_UPSTREAM_ERROR', error.message, error.status);
+      }
+      throw error;
+    }
+  }
   return await createSeedanceVideoJob(request, config, signal, fetchImpl);
 }
 
@@ -437,6 +456,19 @@ async function refreshRemoteVideoJob(
   fetchImpl?: typeof fetch
 ): Promise<RemoteVideoJob> {
   const provider = stored.result.provider;
+  if (isPhase8VideoProvider(provider)) {
+    try {
+      return await refreshHttpVideoJob(stored, config, signal, fetchImpl);
+    } catch (error) {
+      if (error instanceof HttpVideoProviderError) {
+        if (error.status === 401 || error.status === 403 || error.status === 409) {
+          throw new VideoGenerationError('VIDEO_GENERATION_CONFIG_REQUIRED', error.message, error.status);
+        }
+        throw new VideoGenerationError('VIDEO_GENERATION_UPSTREAM_ERROR', error.message, error.status);
+      }
+      throw error;
+    }
+  }
   let endpoint: URL;
   let headers: Record<string, string>;
   if (provider === 'kling') {
@@ -671,14 +703,29 @@ function resolveVideoDownload(
   payload: Record<string, unknown>,
   config: CreatorServicesConfig
 ): { endpoint: URL; headers: Record<string, string> } {
-  const urlValue = stored.result.provider === 'kling'
+  const provider = stored.result.provider;
+  const urlValue = provider === 'kling'
     ? readString(payload, ['data', 'task_result', 'videos', '0', 'url'])
-    : stored.result.provider === 'veo'
+    : provider === 'veo'
       ? readString(payload, ['response', 'generateVideoResponse', 'generatedSamples', '0', 'video', 'uri'])
         ?? readString(payload, ['response', 'generatedVideos', '0', 'video', 'uri'])
-      : readString(payload, ['content', 'video_url'])
-        ?? readString(payload, ['content', 'videoUrl'])
-        ?? readString(payload, ['output_url']);
+      : provider === 'runway'
+        ? readString(payload, ['output', '0'])
+          ?? readString(payload, ['output_url'])
+          ?? readString(payload, ['result', '0'])
+        : provider === 'luma'
+          ? readString(payload, ['assets', 'video'])
+            ?? readString(payload, ['video', 'url'])
+          : provider === 'minimax'
+            ? readString(payload, ['download_url'])
+              ?? readString(payload, ['file_id'])
+              ?? readString(payload, ['video_url'])
+            : provider === 'comfyui'
+              ? readString(payload, ['download_url'])
+                ?? readString(payload, ['video_url'])
+              : readString(payload, ['content', 'video_url'])
+                ?? readString(payload, ['content', 'videoUrl'])
+                ?? readString(payload, ['output_url']);
   if (!urlValue) {
     throw new VideoGenerationError('VIDEO_GENERATION_UPSTREAM_ERROR', 'The video provider returned no downloadable video', 502);
   }
@@ -836,7 +883,13 @@ function validateRequest(request: CreateVideoGenerationRequest, validateProvider
   if (validateProvider && !(videoGenerationDurations as readonly unknown[]).includes(request.duration)) {
     throw new VideoGenerationError('VALIDATION_FAILED', 'video duration is invalid', 400);
   }
-  const validDurations = request.provider === 'veo' ? [4, 6, 8] : [5, 10];
+  const validDurations = request.provider === 'veo'
+    ? [4, 6, 8]
+    : request.provider === 'runway' || request.provider === 'comfyui'
+      ? [2, 3, 4, 5, 6, 7, 8, 9, 10]
+      : request.provider === 'minimax'
+        ? [4, 5, 6, 10]
+        : [5, 10];
   if (validateProvider && !validDurations.includes(request.duration)) {
     throw new VideoGenerationError('VALIDATION_FAILED', `video duration is not supported by ${request.provider}`, 400);
   }

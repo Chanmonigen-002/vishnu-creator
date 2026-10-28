@@ -1381,8 +1381,8 @@ function VideoSettings(props: SettingsGroupProps) {
     <SettingsFieldset
       title={l('视频生成', 'Video generation')}
       description={l(
-        '配置 Seedance、可灵或 Veo 视频生成服务，以及新任务使用的默认模型。',
-        'Configure Seedance, Kling, or Veo video generation and the default model for new tasks.'
+        '配置视频生成服务（Seedance、可灵、Veo、Runway、Luma、MiniMax、ComfyUI），以及新任务使用的默认模型。',
+        'Configure video generation (Seedance, Kling, Veo, Runway, Luma, MiniMax, ComfyUI) and default models for new tasks.'
       )}
     >
       <SelectField
@@ -1392,7 +1392,11 @@ function VideoSettings(props: SettingsGroupProps) {
         options={[
           ['seedance', 'Seedance'],
           ['kling', l('可灵', 'Kling')],
-          ['veo', 'Veo']
+          ['veo', 'Veo'],
+          ['runway', 'Runway (Gen-3 / Gen-4)'],
+          ['luma', 'Luma Dream Machine'],
+          ['minimax', 'MiniMax Hailuo'],
+          ['comfyui', 'ComfyUI (Local)']
         ]}
         onChange={value => props.update(config => {
           const nextProvider = value as CreatorServicesConfig['video']['provider'];
@@ -1404,9 +1408,14 @@ function VideoSettings(props: SettingsGroupProps) {
           if (!target.model && preset?.models[0] !== undefined) target.model = preset.models[0].id;
         })}
       />
+      <ProviderInfo kind="video" providerId={provider === 'kling' ? 'kling-video' : provider} />
       {provider === 'seedance' ? <OpenAiFields id="video-seedance" credential="video.seedance.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.video.seedance} modelLabel={l('默认模型', 'Default model')} modelPlaceholder={defaultVideoGenerationModels.seedance} modelSuggestions={videoGenerationModelIds.seedance} baseUrlPlaceholder="https://ark.cn-beijing.volces.com/api/v3" onChange={value => props.update(config => { config.video.seedance = value; })} /> : null}
       {provider === 'kling' ? <KlingFields id="video-kling" accessKeyCredential="video.kling.accessKey" secretKeyCredential="video.kling.secretKey" configuredCredentials={props.configuredCredentials} value={props.config.video.kling} modelLabel={l('默认模型', 'Default model')} modelPlaceholder={defaultVideoGenerationModels.kling} modelSuggestions={creatorProviderOfKind('video', 'kling-video')?.models.map(model => model.id)} onChange={value => props.update(config => { config.video.kling = value; })} /> : null}
       {provider === 'veo' ? <OpenAiFields id="video-veo" credential="video.veo.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.video.veo} modelLabel={l('默认模型', 'Default model')} modelPlaceholder={defaultVideoGenerationModels.veo} modelSuggestions={videoGenerationModelIds.veo} baseUrlPlaceholder="https://generativelanguage.googleapis.com/v1beta" onChange={value => props.update(config => { config.video.veo = value; })} /> : null}
+      {provider === 'runway' ? <OpenAiFields id="video-runway" credential="video.runway.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.video.runway} modelLabel={l('默认模型', 'Default model')} modelPlaceholder={defaultVideoGenerationModels.runway} modelSuggestions={videoGenerationModelIds.runway} baseUrlPlaceholder="https://api.dev.runwayml.com" onChange={value => props.update(config => { config.video.runway = value; })} /> : null}
+      {provider === 'luma' ? <OpenAiFields id="video-luma" credential="video.luma.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.video.luma} modelLabel={l('默认模型', 'Default model')} modelPlaceholder={defaultVideoGenerationModels.luma} modelSuggestions={videoGenerationModelIds.luma} baseUrlPlaceholder="https://api.lumalabs.ai/dream-machine/v1" onChange={value => props.update(config => { config.video.luma = value; })} /> : null}
+      {provider === 'minimax' ? <OpenAiFields id="video-minimax" credential="video.minimax.apiKey" configuredCredentials={props.configuredCredentials} value={props.config.video.minimax} modelLabel={l('默认模型', 'Default model')} modelPlaceholder={defaultVideoGenerationModels.minimax} modelSuggestions={videoGenerationModelIds.minimax} baseUrlPlaceholder="https://api.minimax.io/v1" onChange={value => props.update(config => { config.video.minimax = value; })} /> : null}
+      {provider === 'comfyui' ? <OpenAiFields id="video-comfyui" configuredCredentials={props.configuredCredentials} value={props.config.video.comfyui} modelLabel={l('默认工作流', 'Default workflow')} modelPlaceholder={defaultVideoGenerationModels.comfyui} modelSuggestions={videoGenerationModelIds.comfyui} baseUrlPlaceholder="http://127.0.0.1:8188" onChange={value => props.update(config => { config.video.comfyui = value; })} /> : null}
     </SettingsFieldset>
   );
 }
@@ -1429,7 +1438,7 @@ function SettingsFieldset(props: { title: string; description: string; children:
 }
 
 /** Cost, verification and key-page details for a catalog provider. */
-function ProviderInfo(props: { kind: 'llm' | 'tts' | 'image'; providerId: string }) {
+function ProviderInfo(props: { kind: 'llm' | 'tts' | 'image' | 'video'; providerId: string }) {
   const l = useLocalizedCopy();
   const preset = creatorProviderOfKind(props.kind, props.providerId);
   if (preset === undefined) return null;
