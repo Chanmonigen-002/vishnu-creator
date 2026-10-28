@@ -1,13 +1,15 @@
 """Vishnu Dub Engine — FastAPI application with versioned routes."""
 
 import asyncio
+import json
 import os
 import platform
+import re
 import subprocess
 import sys
 import uuid
 from contextlib import asynccontextmanager
-from datetime import datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
@@ -111,6 +113,7 @@ class ResynthesizeSegmentResponse(BaseModel):
 
 class VoiceDesignRequest(BaseModel):
     prompt: str
+    text: Optional[str] = None
     speed: float = 1.0
 
 
@@ -534,7 +537,7 @@ async def design_voice(request: VoiceDesignRequest):
     if not hasattr(tts_backend, "design_voice"):
         raise HTTPException(501, "Voice design not supported by this TTS backend")
 
-    safe_prompt = Path(prompt).name
+    safe_prompt = re.sub(r'[^\w\s-]', '_', prompt).strip()[:40] or "voice"
     cache_dir = Path(settings.jobs_path if settings else "jobs") / "voice_designs" / safe_prompt
     cache_dir.mkdir(parents=True, exist_ok=True)
     out_file = cache_dir / f"design_{uuid.uuid4().hex[:8]}.wav"
@@ -542,6 +545,7 @@ async def design_voice(request: VoiceDesignRequest):
     tts_result = await tts_backend.design_voice(
         prompt=prompt,
         output_path=out_file,
+        text=request.text,
         speed=request.speed,
     )
 
@@ -552,6 +556,18 @@ async def design_voice(request: VoiceDesignRequest):
         audio_data_url = f"data:audio/wav;base64,{base64.b64encode(audio_bytes).decode('ascii')}"
 
     audio_url = f"/v1/tts/artifacts/{out_file.name}"
+
+    # Auto-write metadata.json in voice design folder
+    meta = {
+        "id": safe_prompt,
+        "name": prompt,
+        "prompt": prompt,
+        "duration": tts_result.duration,
+        "createdAt": datetime.now(timezone.utc).isoformat(),
+        "audioUrl": audio_url,
+        "consent": True,
+    }
+    (cache_dir / "metadata.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
 
     return VoiceDesignResponse(
         ok=True,
@@ -617,6 +633,16 @@ async def list_voice_designs():
     for design_dir in voice_designs_dir.iterdir():
         if not design_dir.is_dir():
             continue
+
+        meta_file = design_dir / "metadata.json"
+        if meta_file.exists():
+            try:
+                loaded = json.loads(meta_file.read_text(encoding="utf-8"))
+                if isinstance(loaded, dict) and loaded.get("id"):
+                    voices.append(loaded)
+                    continue
+            except Exception:
+                pass
         
         # Find audio file
         audio_file = None
@@ -628,29 +654,20 @@ async def list_voice_designs():
         if not audio_file:
             continue
         
-        # Try to read metadata from a sidecar file
         metadata = {
             "id": design_dir.name,
             "name": design_dir.name,
             "prompt": design_dir.name,
             "duration": 0.0,
-            "createdAt": datetime.fromtimestamp(design_dir.stat().st_ctime).isoformat(),
+            "createdAt": datetime.fromtimestamp(design_dir.stat().st_ctime, tz=timezone.utc).isoformat(),
             "audioUrl": f"/v1/tts/artifacts/{audio_file.name}",
             "consent": True,
         }
         
-        # Try to get duration from audio file
         try:
-            from vishnu_dub.config import resolve_ffprobe_path
-            ffprobe_bin = resolve_ffprobe_path()
-            result = subprocess.run([
-                ffprobe_bin, "-v", "error",
-                "-show_entries", "format=duration",
-                "-of", "default=noprint_wrappers=1:nokey=1",
-                str(audio_file)
-            ], capture_output=True, text=True, timeout=10)
-            if result.stdout.strip():
-                metadata["duration"] = float(result.stdout.strip())
+            import soundfile as sf
+            info = sf.info(str(audio_file))
+            metadata["duration"] = info.duration
         except Exception:
             pass
         
@@ -665,10 +682,43 @@ async def save_voice_design(prompt: str = Body(...), consent: bool = Body(...)):
     if not consent:
         raise HTTPException(400, "Consent is required to save voice design")
     
-    # This is called after design_voice creates the audio file
-    # We just need to register it in the library
-    # The actual audio file was already created by design_voice
-    return {"ok": True, "message": "Voice design saved"}
+    clean_prompt = prompt.strip()
+    safe_prompt = re.sub(r'[^\w\s-]', '_', clean_prompt).strip()[:40] or "voice"
+    base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
+    cache_dir = base_jobs_dir / "voice_designs" / safe_prompt
+    cache_dir.mkdir(parents=True, exist_ok=True)
+
+    audio_file = None
+    for f in cache_dir.iterdir():
+        if f.suffix in ('.wav', '.mp3'):
+            audio_file = f
+            break
+
+    duration = 0.0
+    if audio_file:
+        try:
+            import soundfile as sf
+            info = sf.info(str(audio_file))
+            duration = info.duration
+        except Exception:
+            pass
+
+    created_at = datetime.now(timezone.utc).isoformat()
+    audio_url = f"/v1/tts/artifacts/{audio_file.name}" if audio_file else ""
+    metadata = {
+        "id": safe_prompt,
+        "name": clean_prompt,
+        "prompt": clean_prompt,
+        "duration": duration,
+        "createdAt": created_at,
+        "audioUrl": audio_url,
+        "consent": True,
+    }
+
+    meta_file = cache_dir / "metadata.json"
+    meta_file.write_text(json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    return metadata
 
 
 @app.post("/v1/tts/voices/delete")
@@ -1003,21 +1053,30 @@ async def download_voice_design_artifact(filename: str):
     """Download a voice design artifact."""
     safe_filename = Path(filename).name
     base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
-    custom_candidate = (base_jobs_dir / "voice_designs" / safe_filename).resolve()
+    voice_designs_dir = base_jobs_dir / "voice_designs"
+
+    path = None
+    custom_candidate = (voice_designs_dir / safe_filename).resolve()
     try:
         if custom_candidate.is_relative_to(base_jobs_dir) and custom_candidate.exists() and custom_candidate.is_file():
             path = str(custom_candidate)
-        else:
-            path = None
+        elif voice_designs_dir.exists():
+            for sub in voice_designs_dir.iterdir():
+                if sub.is_dir():
+                    cand = (sub / safe_filename).resolve()
+                    if cand.is_relative_to(base_jobs_dir) and cand.exists() and cand.is_file():
+                        path = str(cand)
+                        break
     except (ValueError, RuntimeError):
         path = None
 
     if not path:
         raise HTTPException(404, f"Voice design artifact '{safe_filename}' not found")
 
+    media_type = "audio/mpeg" if safe_filename.endswith(".mp3") else "audio/wav"
     return FileResponse(
         path,
-        media_type="audio/wav",
+        media_type=media_type,
         filename=safe_filename,
     )
 

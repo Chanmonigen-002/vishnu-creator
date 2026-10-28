@@ -283,7 +283,14 @@ class OpenAITTSBackend(TTSBackend):
                     yield chunk
 
 class VoxCPM2Backend(TTSBackend):
-    """VoxCPM2 — voice cloning and design (requires GPU or CPU with high RAM)."""
+    """VoxCPM2 — voice cloning and design (T5.1, T5.2).
+
+    Defaults to CPU on T1 hardware (GPU VRAM < 8 GB, such as GT 1030 2GB),
+    and switches to CUDA when >= 8 GB VRAM is available (T2/T3 tiers).
+    Outputs audio at 48 kHz per task requirement.
+    """
+
+    SAMPLE_RATE: int = 48000
 
     def __init__(self, model_path: str = "", device: str = "auto"):
         self.model_path = model_path
@@ -316,64 +323,147 @@ class VoxCPM2Backend(TTSBackend):
             {"id": "design", "name": "Voice Design (text prompt)"},
         ]
 
+    def _resolve_device(self) -> str:
+        """Resolve device for VoxCPM2 inference.
+
+        Per ADR-0003 and hardware tiering rules:
+        - T1 tier (GPU VRAM < 8 GB, like GT 1030 2GB): defaults to 'cpu'.
+        - T2/T3 tier (GPU VRAM >= 8 GB): uses 'cuda'.
+        """
+        if self.device != "auto":
+            return self.device
+        try:
+            import torch
+            if torch.cuda.is_available():
+                props = torch.cuda.get_device_properties(0)
+                vram_gb = props.total_memory / (1024 ** 3)
+                if vram_gb >= 8.0:
+                    return "cuda"
+            return "cpu"
+        except Exception:
+            return "cpu"
+
+    def _resolve_model_path(self) -> str:
+        """Resolve model weights path or HuggingFace model ID."""
+        if self.model_path and (Path(self.model_path).exists() or "/" in self.model_path):
+            return self.model_path
+        env_path = os.environ.get("VOXCPM_MODEL_PATH")
+        if env_path and Path(env_path).exists():
+            return env_path
+        try:
+            from vishnu_dub.config import settings
+            candidates = [
+                settings.model_dir / "VoxCPM2",
+                settings.model_dir / "openbmb" / "VoxCPM2",
+            ]
+            for candidate in candidates:
+                if candidate.exists() and (candidate / "model.safetensors").exists():
+                    return str(candidate)
+        except Exception:
+            pass
+        return "openbmb/VoxCPM2"
+
+    def _load_model(self):
+        """Load VoxCPM2 model with honest error handling and proper device tiering."""
+        if self._model is not None:
+            return self._model
+        if not self.is_available():
+            raise RuntimeError("voxcpm or torch is not installed in the python environment")
+
+        import voxcpm
+        resolved_path = self._resolve_model_path()
+        resolved_device = self._resolve_device()
+
+        if Path(resolved_path).is_absolute() and not Path(resolved_path).exists():
+            raise RuntimeError(
+                f"VoxCPM2 model path '{resolved_path}' does not exist. "
+                "Please download openbmb/VoxCPM2 or set VOXCPM_MODEL_PATH."
+            )
+
+        try:
+            self._model = voxcpm.VoxCPM.from_pretrained(
+                resolved_path,
+                device=resolved_device,
+                load_denoiser=False,
+            )
+        except Exception as e:
+            raise RuntimeError(
+                f"Failed to load VoxCPM2 model from '{resolved_path}' on device '{resolved_device}': {e}"
+            ) from e
+
+        # Try to load Khmer LoRA if available
+        if not self._khmer_lora:
+            lora_path = self._resolve_khmer_lora()
+            if lora_path:
+                try:
+                    self._model.load_lora(lora_path)
+                    self._khmer_lora = True
+                except Exception:
+                    pass
+
+        return self._model
+
     async def design_voice(
         self,
         prompt: str,
         output_path: Path,
+        text: Optional[str] = None,
         speed: float = 1.0,
     ) -> TTSResult:
-        """Design a voice from a text description (zero-shot voice design)."""
+        """Design a voice from a text description (zero-shot voice design, T5.2).
+
+        VoxCPM2 conditions voice characteristics using control instructions
+        enclosed in parentheses, e.g.: f"({prompt}){sample_text}".
+        Outputs 48 kHz audio.
+        """
         if not self.is_available():
             raise RuntimeError("VoxCPM not installed")
 
-        import torch
-        import voxcpm
-        import tempfile
-        import torchaudio
-
-        if self._model is None:
-            self._model = voxcpm.VoxCPM.from_pretrained(
-                self.model_path or "Mariya987/VoxCPM2",
-                device=self.device,
-                load_denoiser=False,
-            )
-
-            # Try to load Khmer LoRA
-            if not self._khmer_lora:
-                lora_path = self._resolve_khmer_lora()
-                if lora_path:
-                    self._model.load_lora(lora_path)
-                    self._khmer_lora = True
-
+        import soundfile as sf
+        model = self._load_model()
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Map speed to inference_timesteps and cfg_value
+        sample_text = (text or "").strip() or "សួស្តី នេះគឺជាគំរូសំឡេងដែលបានរចនាឡើង។"
+        final_text = f"({prompt}){sample_text}" if prompt else sample_text
+
         inference_timesteps = max(5, min(20, int(10 / speed)))
         cfg_value = 2.0
 
-        # Voice design: provide prompt_text without reference_wav_path
-        # The model generates a voice matching the text description
-        audio = self._model.generate(
-            text="",  # Empty text, we just want the voice characteristics
-            prompt_text=prompt,
+        audio = model.generate(
+            text=final_text,
             reference_wav_path=None,
             prompt_wav_path=None,
+            prompt_text=None,
             inference_timesteps=inference_timesteps,
             cfg_value=cfg_value,
             max_len=4096,
+            normalize=True,
         )
 
-        # Save
-        torchaudio.save(str(output_path), audio.unsqueeze(0).cpu(), 24000)
+        sample_rate = self.SAMPLE_RATE
+        if hasattr(audio, "cpu") and hasattr(audio, "numpy"):
+            audio_np = audio.cpu().numpy()
+        elif isinstance(audio, np.ndarray):
+            audio_np = audio
+        else:
+            audio_np = np.array(audio)
+        if audio_np.ndim > 1:
+            audio_np = audio_np.squeeze()
 
-        # Get duration
-        duration = audio.shape[-1] / 24000
+        sf.write(str(output_path), audio_np, sample_rate)
+        duration = float(len(audio_np)) / sample_rate
+
+        # Embed watermark into newly designed voice sample
+        try:
+            self._embed_watermark_in_wav(output_path, voice_id=f"design:{prompt[:30]}", user_id="creator")
+        except Exception:
+            pass
 
         return TTSResult(
             audio_path=output_path,
             duration=duration,
             format="wav",
-            provider="voxcpm",
+            provider="voxcpm2",
             voice_id=f"design:{prompt[:30]}",
         )
 
@@ -386,61 +476,61 @@ class VoxCPM2Backend(TTSBackend):
         reference_audio: Optional[Path] = None,
         reference_text: Optional[str] = None,
     ) -> TTSResult:
+        """Synthesize speech using VoxCPM2 at 48 kHz (T5.1).
+
+        Supports zero-shot voice cloning (reference_audio alone) and
+        'ultimate' cloning (paired reference_audio + reference_text transcript).
+        """
         if not self.is_available():
             raise RuntimeError("VoxCPM not installed")
 
-        import torch
-        import voxcpm
-        import tempfile
-        import torchaudio
-
-        if self._model is None:
-            self._model = voxcpm.VoxCPM.from_pretrained(
-                self.model_path or "Mariya987/VoxCPM2",
-                device=self.device,
-                load_denoiser=False,  # Disable denoiser for speed
-            )
-
-            # Try to load Khmer LoRA
-            if not self._khmer_lora:
-                lora_path = self._resolve_khmer_lora()
-                if lora_path:
-                    self._model.load_lora(lora_path)
-                    self._khmer_lora = True
-
+        import soundfile as sf
+        model = self._load_model()
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        # Map speed to inference_timesteps and cfg_value
-        # speed > 1.0 = faster (fewer timesteps), speed < 1.0 = slower
         inference_timesteps = max(5, min(20, int(10 / speed)))
         cfg_value = 2.0
 
-        # Synthesize using correct VoxCPM API
-        # reference_audio -> reference_wav_path (voice cloning)
-        # reference_text -> prompt_text (paired with prompt_wav_path for continuation)
-        # For voice cloning, we use reference_wav_path only
-        # For continuation, we need both prompt_wav_path and prompt_text
-        audio = self._model.generate(
+        ref_path_str = str(reference_audio) if reference_audio else None
+        prompt_path_str = str(reference_audio) if (reference_audio and reference_text) else None
+        prompt_txt = reference_text if (reference_audio and reference_text) else None
+
+        audio = model.generate(
             text=text,
-            reference_wav_path=str(reference_audio) if reference_audio else None,
-            prompt_text=reference_text if reference_audio else None,
-            prompt_wav_path=str(reference_audio) if reference_audio and reference_text else None,
+            reference_wav_path=ref_path_str,
+            prompt_wav_path=prompt_path_str,
+            prompt_text=prompt_txt,
             inference_timesteps=inference_timesteps,
             cfg_value=cfg_value,
             max_len=4096,
+            normalize=True,
         )
 
-        # Save
-        torchaudio.save(str(output_path), audio.unsqueeze(0).cpu(), 24000)
+        sample_rate = self.SAMPLE_RATE
+        if hasattr(audio, "cpu") and hasattr(audio, "numpy"):
+            audio_np = audio.cpu().numpy()
+        elif isinstance(audio, np.ndarray):
+            audio_np = audio
+        else:
+            audio_np = np.array(audio)
+        if audio_np.ndim > 1:
+            audio_np = audio_np.squeeze()
 
-        # Get duration
-        duration = audio.shape[-1] / 24000
+        sf.write(str(output_path), audio_np, sample_rate)
+        duration = float(len(audio_np)) / sample_rate
+
+        # Cloned voices get watermarked for consent and authenticity guard (T5.9)
+        if reference_audio:
+            try:
+                self._embed_watermark_in_wav(output_path, voice_id=voice_id, user_id="creator")
+            except Exception:
+                pass
 
         return TTSResult(
             audio_path=output_path,
             duration=duration,
             format="wav",
-            provider="voxcpm",
+            provider="voxcpm2",
             voice_id=voice_id,
         )
 
@@ -452,62 +542,38 @@ class VoxCPM2Backend(TTSBackend):
         reference_audio: Optional[Path] = None,
         reference_text: Optional[str] = None,
     ) -> AsyncGenerator[bytes, None]:
-        """Stream audio chunks as they are generated."""
+        """Stream audio chunks as they are generated (T5.7)."""
         if not self.is_available():
             raise RuntimeError("VoxCPM not installed")
 
-        import torch
-        import voxcpm
-
-        if self._model is None:
-            self._model = voxcpm.VoxCPM.from_pretrained(
-                self.model_path or "Mariya987/VoxCPM2",
-                device=self.device,
-                load_denoiser=False,
-            )
-
-            # Try to load Khmer LoRA
-            if not self._khmer_lora:
-                lora_path = self._resolve_khmer_lora()
-                if lora_path:
-                    self._model.load_lora(lora_path)
-                    self._khmer_lora = True
-
-        # Map speed to inference_timesteps and cfg_value
+        model = self._load_model()
         inference_timesteps = max(5, min(20, int(10 / speed)))
         cfg_value = 2.0
 
-        # Stream audio chunks
-        async for chunk in self._model.generate_streaming(
+        ref_path_str = str(reference_audio) if reference_audio else None
+        prompt_path_str = str(reference_audio) if (reference_audio and reference_text) else None
+        prompt_txt = reference_text if (reference_audio and reference_text) else None
+
+        generator = model.generate_streaming(
             text=text,
-            reference_wav_path=str(reference_audio) if reference_audio else None,
-            prompt_text=reference_text if reference_audio else None,
-            prompt_wav_path=str(reference_audio) if reference_audio else None,
+            reference_wav_path=ref_path_str,
+            prompt_wav_path=prompt_path_str,
+            prompt_text=prompt_txt,
             inference_timesteps=inference_timesteps,
             cfg_value=cfg_value,
             max_len=4096,
-        ):
-            # Convert numpy array to bytes (16-bit PCM)
-            audio_bytes = (chunk * 32767).astype(np.int16).tobytes()
-            yield audio_bytes
-
-    def is_available(self) -> bool:
-        try:
-            import torch
-            import voxcpm
-            return True
-        except ImportError:
-            return False
-
-    @property
-    def name(self) -> str:
-        return "voxcpm2"
-
-    def get_voices(self) -> list:
-        return [
-            {"id": "clone", "name": "Voice Clone (reference audio)"},
-            {"id": "design", "name": "Voice Design (text prompt)"},
-        ]
+            normalize=True,
+        )
+        for chunk in generator:
+            if hasattr(chunk, "cpu") and hasattr(chunk, "numpy"):
+                chunk_np = chunk.cpu().numpy()
+            elif isinstance(chunk, np.ndarray):
+                chunk_np = chunk
+            else:
+                chunk_np = np.array(chunk)
+            audio_int16 = np.clip(chunk_np * 32767.0, -32768, 32767).astype(np.int16)
+            yield audio_int16.tobytes()
+            await asyncio.sleep(0)
 
     def _resolve_khmer_lora(self) -> Optional[str]:
         """Locate Khmer LoRA checkpoint."""
@@ -520,6 +586,31 @@ class VoxCPM2Backend(TTSBackend):
             if p and p.exists():
                 return str(p)
         return None
+
+    def _embed_watermark_in_wav(
+        self,
+        audio_path: Path,
+        voice_id: str,
+        user_id: str = "creator",
+        timestamp: Optional[int] = None,
+    ) -> None:
+        """Embed cryptographic watermark into output WAV file at its native sample rate."""
+        import time
+        import soundfile as sf
+        ts = int(time.time()) if timestamp is None else timestamp
+        watermark_payload = self._generate_watermark(voice_id, user_id, ts)
+
+        data, sr = sf.read(str(audio_path))
+        if data.ndim > 1:
+            audio_np = data[:, 0].astype(np.float32)
+        else:
+            audio_np = data.astype(np.float32)
+
+        watermark_sig = self._encode_watermark_audio(
+            watermark_payload, duration=len(audio_np) / sr, sample_rate=sr
+        )
+        watermarked = self._embed_watermark(audio_np, watermark_sig)
+        sf.write(str(audio_path), watermarked, sr)
 
     # ─── Watermark & Consent Guard ──────────────────────────────────────
 
