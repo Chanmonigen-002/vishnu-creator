@@ -9,11 +9,13 @@ These rules apply to every contributor: people, Claude Code, Hermes, Codex and a
 | What | Where |
 |---|---|
 | Master plan: goals, scope, phases, risks | [`docs/project/master-plan.md`](docs/project/master-plan.md) |
+| Repo layout: backend, frontend, services, data | [`docs/project/STRUCTURE.md`](docs/project/STRUCTURE.md) |
 | Task tracking: status + evidence per task | [`docs/tasks/`](docs/tasks/README.md), one file per phase |
 | Architecture decisions | [`docs/adr/`](docs/adr/README.md) |
 | Docs index | [`docs/README.md`](docs/README.md) |
-| Superseded plans | `docs/plans/archive/` (read-only history) |
-| Upstream reference sources | `File clone Resource/` (read-only, see ADR-0004) |
+| Superseded plans | `docs/plans/archive/`; upstream history in `docs/archive/upstream/` (read-only) |
+| Agent handoff notes | `docs/handoffs/` |
+| Upstream reference sources | `reference/` (read-only, see ADR-0004 and ADR-0006) |
 
 Don't create plan or TODO files in the repo root. Update the existing ones above.
 
@@ -44,7 +46,7 @@ Don't create plan or TODO files in the repo root. Update the existing ones above
 
 ### Reference folder and copied code
 
-- Never build, run, install or edit anything in `File clone Resource/`. No repo script or config may point into it.
+- Never build, run, install or edit anything in `reference/`. No repo script or config may point into it.
 - Code taken from a reference source must be copied into the repo, adapted and rebranded, then **security-reviewed**. That means no telemetry, no hidden network calls, no `eval` or shell injection, no hard-coded keys, and no auto-update URLs.
 - Each copied file gets a header naming its origin and license. ZastTranslate code may be copied only once ADR-0005 is accepted.
 

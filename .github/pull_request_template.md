@@ -48,6 +48,6 @@
 - [ ] Focused change — no unrelated refactors or fixes mixed in
 - [ ] Docs updated in the same PR if user-visible behavior changed
 - [ ] No `.runtime/`, credentials, Codex sessions, build caches, or user data committed
-- [ ] Nothing builds, runs, or points into `File clone Resource/` (ADR-0004)
+- [ ] Nothing builds, runs, or points into `reference/` (ADR-0004, ADR-0006)
 - [ ] Copied third-party code has an origin/license header and a security review (AGENTS.md)
 - [ ] No check reported as passed that was not actually run; no mocked result used to pass a gate

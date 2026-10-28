@@ -167,7 +167,7 @@ Full task lists with status and evidence are in [`docs/tasks/`](../tasks/README.
 | ZastTranslate license unclear (F9) | Medium | High | D2 before copying; re-implement if needed |
 | Khmer TTS quality / timing | Medium | Medium | CPS calibration (4.3), segment re-synthesis (4.6), LoRA (5.5) |
 | Khmer text rendering bugs in burn-in | Medium | Medium | Parity test (1.6), multiple fonts (1.5) |
-| Upstream OpenCreator drift | Medium | Low | Keep `File clone Resource/OpenCreator-source` as reference; periodic diff review |
+| Upstream OpenCreator drift | Medium | Low | Keep `reference/OpenCreator-source` as reference; periodic diff review |
 | Voice-clone misuse | Low | High | Consent flag + guard (5.9) |
 
 ---
@@ -179,7 +179,7 @@ Full task lists with status and evidence are in [`docs/tasks/`](../tasks/README.
 3. The app detects the PC's tier and runs on any of them: fast on a strong GPU, slow on CPU, resumable, with the same voice and the same quality gates. API assist and a remote engine are optional speed-ups set in one Settings panel.
 4. Khmer UI locale available; Khmer text renders correctly in preview and burn-in.
 5. All checks green: `pnpm typecheck`, `pnpm test`, `pytest`, `pnpm e2e`, desktop installer smoke test.
-6. All reused code reviewed, rebranded, attributed, and owned in this repo — nothing runs from `File clone Resource/`.
+6. All reused code reviewed, rebranded, attributed, and owned in this repo — nothing runs from `reference/`.
 
 ---
 
