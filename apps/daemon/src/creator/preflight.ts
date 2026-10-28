@@ -493,6 +493,14 @@ async function checkProviderConfig(
     if (provider?.available !== true) return;
     if (config.transcription.provider === 'openai' && !config.transcription.openai.apiKey.trim()) {
       checkOpenAi(config.transcription.openai, 'transcription', 'Speech recognition', '#/settings?tab=ai-services&section=transcription', add);
+    } else if (config.transcription.provider === 'groq' && !config.transcription.groq.apiKey.trim()) {
+      checkOpenAi(config.transcription.groq, 'transcription', 'Groq Whisper speech recognition', '#/settings?tab=ai-services&section=transcription', add);
+    } else if (config.transcription.provider === 'elevenlabs' && !config.transcription.elevenlabs.apiKey.trim()) {
+      checkOpenAi(config.transcription.elevenlabs, 'transcription', 'ElevenLabs Scribe speech recognition', '#/settings?tab=ai-services&section=transcription', add);
+    } else if (config.transcription.provider === 'assemblyai' && !config.transcription.assemblyai.apiKey.trim()) {
+      checkOpenAi(config.transcription.assemblyai, 'transcription', 'AssemblyAI speech recognition', '#/settings?tab=ai-services&section=transcription', add);
+    } else if (config.transcription.provider === 'deepgram' && !config.transcription.deepgram.apiKey.trim()) {
+      checkOpenAi(config.transcription.deepgram, 'transcription', 'Deepgram speech recognition', '#/settings?tab=ai-services&section=transcription', add);
     } else if (config.transcription.provider === 'aliyun' && (!config.transcription.aliyun.speech.accessKeyId.trim() || !config.transcription.aliyun.speech.accessKeySecret.trim() || !config.transcription.aliyun.speech.appKey.trim())) {
       add('blocked', { id: 'transcription-config', title: 'Speech recognition credentials missing', message: 'Complete the Aliyun speech recognition credentials.', executionMode: 'remote' }, { label: 'Open AI service settings', deepLink: '#/settings?tab=ai-services&section=transcription' });
     } else if (config.transcription.provider === 'funasr' && (!config.transcription.funasr.baseUrl.trim() || !config.transcription.funasr.model.trim())) {

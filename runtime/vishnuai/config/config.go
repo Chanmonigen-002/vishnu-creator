@@ -99,6 +99,10 @@ type Transcribe struct {
 	Provider              string                 `toml:"provider"`
 	EnableGpuAcceleration bool                   `toml:"enable_gpu_acceleration"`
 	Openai                OpenaiCompatibleConfig `toml:"openai"`
+	Groq                  OpenaiCompatibleConfig `toml:"groq"`
+	Elevenlabs            OpenaiCompatibleConfig `toml:"elevenlabs"`
+	AssemblyAI            OpenaiCompatibleConfig `toml:"assemblyai"`
+	Deepgram              OpenaiCompatibleConfig `toml:"deepgram"`
 	Fasterwhisper         LocalModelConfig       `toml:"fasterwhisper"`
 	Whisperkit            LocalModelConfig       `toml:"whisperkit"`
 	Whispercpp            LocalModelConfig       `toml:"whispercpp"`
@@ -244,6 +248,22 @@ func ValidateTranscriptionConfig() error {
 	case "openai":
 		if Conf.Transcribe.Openai.ApiKey == "" {
 			return errors.New("使用OpenAI转录服务需要配置 OpenAI API Key")
+		}
+	case "groq":
+		if Conf.Transcribe.Groq.ApiKey == "" {
+			return errors.New("使用 Groq 转录服务需要配置 API Key")
+		}
+	case "elevenlabs":
+		if Conf.Transcribe.Elevenlabs.ApiKey == "" {
+			return errors.New("使用 ElevenLabs 转录服务需要配置 API Key")
+		}
+	case "assemblyai":
+		if Conf.Transcribe.AssemblyAI.ApiKey == "" {
+			return errors.New("使用 AssemblyAI 转录服务需要配置 API Key")
+		}
+	case "deepgram":
+		if Conf.Transcribe.Deepgram.ApiKey == "" {
+			return errors.New("使用 Deepgram 转录服务需要配置 API Key")
 		}
 	case "fasterwhisper":
 		if Conf.Transcribe.Fasterwhisper.Model != "tiny" && Conf.Transcribe.Fasterwhisper.Model != "medium" && Conf.Transcribe.Fasterwhisper.Model != "large-v2" {

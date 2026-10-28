@@ -6,6 +6,9 @@ import (
 	"vishnu-ai/internal/types"
 	"vishnu-ai/log"
 	"vishnu-ai/pkg/aliyun"
+	"vishnu-ai/pkg/assemblyai"
+	"vishnu-ai/pkg/deepgram"
+	"vishnu-ai/pkg/elevenlabs"
 	"vishnu-ai/pkg/fasterwhisper"
 	"vishnu-ai/pkg/funasr"
 	pkgimage "vishnu-ai/pkg/image"
@@ -63,6 +66,22 @@ func NewService() *Service {
 			config.Conf.Transcribe.Volcengine.ResourceId,
 			config.Conf.App.Proxy,
 		)
+	case "groq":
+		baseUrl := config.Conf.Transcribe.Groq.BaseUrl
+		if baseUrl == "" {
+			baseUrl = "https://api.groq.com/openai/v1"
+		}
+		model := config.Conf.Transcribe.Groq.Model
+		if model == "" {
+			model = "whisper-large-v3"
+		}
+		transcriber = whisper.NewOfficialClient(baseUrl, config.Conf.Transcribe.Groq.ApiKey, config.Conf.App.Proxy, model)
+	case "elevenlabs":
+		transcriber = elevenlabs.NewTranscribeClient(config.Conf.Transcribe.Elevenlabs.BaseUrl, config.Conf.Transcribe.Elevenlabs.ApiKey, config.Conf.Transcribe.Elevenlabs.Model, config.Conf.App.Proxy)
+	case "deepgram":
+		transcriber = deepgram.NewTranscribeClient(config.Conf.Transcribe.Deepgram.BaseUrl, config.Conf.Transcribe.Deepgram.ApiKey, config.Conf.Transcribe.Deepgram.Model, config.Conf.App.Proxy)
+	case "assemblyai":
+		transcriber = assemblyai.NewTranscribeClient(config.Conf.Transcribe.AssemblyAI.BaseUrl, config.Conf.Transcribe.AssemblyAI.ApiKey, config.Conf.Transcribe.AssemblyAI.Model, config.Conf.App.Proxy)
 	}
 	log.GetLogger().Info("当前选择的转录源： ", zap.String("transcriber", config.Conf.Transcribe.Provider))
 

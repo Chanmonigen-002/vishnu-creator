@@ -68,5 +68,9 @@ export function creatorTranscriptionModel(config: import('./creator-services.js'
     case 'funasr': return config.transcription.funasr.model;
     case 'aliyun': return 'app-key-bound';
     case 'volcengine': return config.transcription.volcengine.resourceId;
+    case 'groq': return config.transcription.groq.model || 'whisper-large-v3';
+    case 'elevenlabs': return config.transcription.elevenlabs.model || 'scribe_v1';
+    case 'assemblyai': return config.transcription.assemblyai.model || 'universal';
+    case 'deepgram': return config.transcription.deepgram.model || 'nova-3';
   }
 }

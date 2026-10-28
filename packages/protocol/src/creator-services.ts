@@ -366,7 +366,11 @@ export const creatorTranscriptionProviders = [
   'whisper.cpp',
   'aliyun',
   'volcengine',
-  'funasr'
+  'funasr',
+  'groq',
+  'elevenlabs',
+  'assemblyai',
+  'deepgram'
 ] as const;
 export type CreatorTranscriptionProvider = (typeof creatorTranscriptionProviders)[number];
 
@@ -395,6 +399,10 @@ export type CreatorServicesConfig = {
     };
     volcengine: VolcengineAsrConfig;
     funasr: OpenAiCompatibleConfig & { timeoutMs: number };
+    groq: OpenAiCompatibleConfig;
+    elevenlabs: OpenAiCompatibleConfig;
+    assemblyai: OpenAiCompatibleConfig;
+    deepgram: OpenAiCompatibleConfig;
   };
   tts: {
     provider: CreatorTtsProvider;
@@ -514,6 +522,10 @@ export function creatorPreflightFailure(result: CreatorPreflightResponse): {
 export type CreatorServicesCredentialField =
   | 'llm.apiKey'
   | 'transcription.openai.apiKey'
+  | 'transcription.groq.apiKey'
+  | 'transcription.elevenlabs.apiKey'
+  | 'transcription.assemblyai.apiKey'
+  | 'transcription.deepgram.apiKey'
   | 'transcription.aliyun.oss.accessKeyId'
   | 'transcription.aliyun.oss.accessKeySecret'
   | 'transcription.aliyun.speech.accessKeyId'
@@ -577,6 +589,26 @@ export function createDefaultCreatorServicesConfig(): CreatorServicesConfig {
         accessToken: '',
         resourceId: defaultVolcengineAsrResourceId,
         baseUrl: defaultVolcengineSpeechBaseUrl
+      },
+      groq: {
+        baseUrl: 'https://api.groq.com/openai/v1',
+        apiKey: '',
+        model: 'whisper-large-v3'
+      },
+      elevenlabs: {
+        baseUrl: 'https://api.elevenlabs.io',
+        apiKey: '',
+        model: 'scribe_v1'
+      },
+      assemblyai: {
+        baseUrl: 'https://api.assemblyai.com',
+        apiKey: '',
+        model: 'universal'
+      },
+      deepgram: {
+        baseUrl: 'https://api.deepgram.com',
+        apiKey: '',
+        model: 'nova-3'
       }
     },
     tts: {

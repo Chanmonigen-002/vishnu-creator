@@ -56,7 +56,11 @@ export function createVishnuConfigToml(
         access_token: config.transcription.volcengine.accessToken,
         resource_id: config.transcription.volcengine.resourceId,
         base_url: config.transcription.volcengine.baseUrl
-      }
+      },
+      groq: openAi(config.transcription.groq),
+      elevenlabs: openAi(config.transcription.elevenlabs),
+      assemblyai: openAi(config.transcription.assemblyai),
+      deepgram: openAi(config.transcription.deepgram)
     },
     tts: {
       provider: config.tts.provider,

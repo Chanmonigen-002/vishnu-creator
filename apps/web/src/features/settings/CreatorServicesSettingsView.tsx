@@ -947,6 +947,94 @@ function TranscriptionSettings(props: SettingsGroupProps & {
             ) : null}
         </>
       ) : null}
+      {provider === 'groq' ? (
+        <>
+          <OpenAiFields
+            id="transcription-groq"
+            credential="transcription.groq.apiKey"
+            configuredCredentials={props.configuredCredentials}
+            value={props.config.transcription.groq}
+            modelPlaceholder="whisper-large-v3"
+            modelSuggestions={['whisper-large-v3', 'whisper-large-v3-turbo']}
+            baseUrlPlaceholder="https://api.groq.com/openai/v1"
+            onChange={value => props.update(config => {
+              config.transcription.groq = value;
+            })}
+          />
+          <p className="creator-services-inline-note">
+            {l(
+              'Groq 提供超高速 Whisper 识别，包含免费额度，支持高棉语（km）。',
+              'Groq offers fast Whisper transcription with a free tier and Khmer (km) support.'
+            )}
+          </p>
+        </>
+      ) : null}
+      {provider === 'elevenlabs' ? (
+        <>
+          <OpenAiFields
+            id="transcription-elevenlabs"
+            credential="transcription.elevenlabs.apiKey"
+            configuredCredentials={props.configuredCredentials}
+            value={props.config.transcription.elevenlabs}
+            modelPlaceholder="scribe_v1"
+            modelSuggestions={['scribe_v1', 'scribe_v2']}
+            baseUrlPlaceholder="https://api.elevenlabs.io"
+            onChange={value => props.update(config => {
+              config.transcription.elevenlabs = value;
+            })}
+          />
+          <p className="creator-services-inline-note">
+            {l(
+              'ElevenLabs Scribe 提供多语言高精度语音转录，支持高棉语（khm）。',
+              'ElevenLabs Scribe provides multilingual speech-to-text with Khmer (khm) support.'
+            )}
+          </p>
+        </>
+      ) : null}
+      {provider === 'assemblyai' ? (
+        <>
+          <OpenAiFields
+            id="transcription-assemblyai"
+            credential="transcription.assemblyai.apiKey"
+            configuredCredentials={props.configuredCredentials}
+            value={props.config.transcription.assemblyai}
+            modelPlaceholder="universal"
+            modelSuggestions={['universal', 'nano']}
+            baseUrlPlaceholder="https://api.assemblyai.com"
+            onChange={value => props.update(config => {
+              config.transcription.assemblyai = value;
+            })}
+          />
+          <p className="creator-services-inline-note">
+            {l(
+              'AssemblyAI 支持 99 种语言，包括高棉语（km），提供免费额度。',
+              'AssemblyAI supports 99 languages including Khmer (km) and provides free credit.'
+            )}
+          </p>
+        </>
+      ) : null}
+      {provider === 'deepgram' ? (
+        <>
+          <OpenAiFields
+            id="transcription-deepgram"
+            credential="transcription.deepgram.apiKey"
+            configuredCredentials={props.configuredCredentials}
+            value={props.config.transcription.deepgram}
+            modelPlaceholder="nova-3"
+            modelSuggestions={['nova-3', 'nova-2']}
+            baseUrlPlaceholder="https://api.deepgram.com"
+            onChange={value => props.update(config => {
+              config.transcription.deepgram = value;
+            })}
+          />
+          <p className="creator-services-inline-note is-warning">
+            {l(
+              'Deepgram Nova-3/2 支持英语、中文等 55 种语言，但暂不支持高棉语。',
+              'Deepgram Nova-3/2 supports 55 languages including English and Chinese, but currently has no Khmer support.'
+            )}
+          </p>
+        </>
+      ) : null}
       {provider === 'faster-whisper' ? (
         <>
           <SelectField
@@ -1945,6 +2033,14 @@ function selectedTranscriptionModel(config: CreatorServicesConfig): string {
       return config.transcription.funasr.model;
     case 'volcengine':
       return config.transcription.volcengine.resourceId;
+    case 'groq':
+      return config.transcription.groq.model;
+    case 'elevenlabs':
+      return config.transcription.elevenlabs.model;
+    case 'assemblyai':
+      return config.transcription.assemblyai.model;
+    case 'deepgram':
+      return config.transcription.deepgram.model;
   }
 }
 
@@ -1967,6 +2063,14 @@ function transcriptionProviderLabel(
       return l('FunASR / SenseVoice', 'FunASR / SenseVoice');
     case 'volcengine':
       return l('火山引擎', 'Volcengine');
+    case 'groq':
+      return 'Groq Whisper';
+    case 'elevenlabs':
+      return 'ElevenLabs Scribe';
+    case 'assemblyai':
+      return 'AssemblyAI';
+    case 'deepgram':
+      return 'Deepgram';
   }
 }
 

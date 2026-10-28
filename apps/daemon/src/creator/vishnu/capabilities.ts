@@ -47,14 +47,18 @@ export function createVishnuCreatorServicesCapabilities(
         ),
         cloudProvider('aliyun', []),
         cloudProvider('volcengine', []),
-        cloudProvider('funasr', ['sensevoice', 'paraformer', 'fun-asr-nano'])
+        cloudProvider('funasr', ['sensevoice', 'paraformer', 'fun-asr-nano']),
+        cloudProvider('groq', ['whisper-large-v3', 'whisper-large-v3-turbo']),
+        cloudProvider('elevenlabs', ['scribe_v1', 'scribe_v2']),
+        cloudProvider('assemblyai', ['universal', 'nano']),
+        cloudProvider('deepgram', ['nova-3', 'nova-2'])
       ]
     }
   };
 }
 
 function cloudProvider(
-  provider: 'openai' | 'aliyun' | 'volcengine' | 'funasr',
+  provider: import('@vishnucreator/protocol').CreatorTranscriptionProvider,
   models: string[]
 ): CreatorTranscriptionProviderCapability {
   return {

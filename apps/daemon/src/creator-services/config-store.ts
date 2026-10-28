@@ -151,7 +151,11 @@ export const creatorServicesConfigSchema = z.object({
     whisperCpp: z.object({ model: z.enum(['tiny', 'medium', 'large-v2', 'large-v3-turbo']) }).strict(),
     aliyun: aliyunSchema,
     volcengine: volcengineAsrSchema.default(creatorServicesDefaults.transcription.volcengine),
-    funasr: funasrSchema.default(creatorServicesDefaults.transcription.funasr)
+    funasr: funasrSchema.default(creatorServicesDefaults.transcription.funasr),
+    groq: openAiCompatibleSchema.default(creatorServicesDefaults.transcription.groq),
+    elevenlabs: openAiCompatibleSchema.default(creatorServicesDefaults.transcription.elevenlabs),
+    assemblyai: openAiCompatibleSchema.default(creatorServicesDefaults.transcription.assemblyai),
+    deepgram: openAiCompatibleSchema.default(creatorServicesDefaults.transcription.deepgram)
   }).strict(),
   tts: ttsConfigSchema,
   image: z.union([imageConfigSchema, legacyImageConfigSchema]),
@@ -349,6 +353,10 @@ const creatorCredentialPaths = [
   'transcription.volcengine.appId',
   'transcription.volcengine.accessToken',
   'transcription.funasr.apiKey',
+  'transcription.groq.apiKey',
+  'transcription.elevenlabs.apiKey',
+  'transcription.assemblyai.apiKey',
+  'transcription.deepgram.apiKey',
   'tts.openai.apiKey',
   'tts.minimax.apiKey',
   'tts.aliyun.apiKey',
@@ -453,6 +461,18 @@ export function presentCreatorServicesConfig(
   redact('transcription.funasr.apiKey', redacted.transcription.funasr.apiKey, () => {
     redacted.transcription.funasr.apiKey = '';
   });
+  redact('transcription.groq.apiKey', redacted.transcription.groq.apiKey, () => {
+    redacted.transcription.groq.apiKey = '';
+  });
+  redact('transcription.elevenlabs.apiKey', redacted.transcription.elevenlabs.apiKey, () => {
+    redacted.transcription.elevenlabs.apiKey = '';
+  });
+  redact('transcription.assemblyai.apiKey', redacted.transcription.assemblyai.apiKey, () => {
+    redacted.transcription.assemblyai.apiKey = '';
+  });
+  redact('transcription.deepgram.apiKey', redacted.transcription.deepgram.apiKey, () => {
+    redacted.transcription.deepgram.apiKey = '';
+  });
   redact('tts.openai.apiKey', redacted.tts.openai.apiKey, () => { redacted.tts.openai.apiKey = ''; });
   redact('tts.minimax.apiKey', redacted.tts.minimax.apiKey, () => { redacted.tts.minimax.apiKey = ''; });
   redact('tts.aliyun.apiKey', redacted.tts.aliyun.apiKey, () => { redacted.tts.aliyun.apiKey = ''; });
@@ -504,6 +524,10 @@ export function retainCreatorServicesCredentials(
       current.transcription.funasr.apiKey
     );
   }
+  retainBlank(() => merged.transcription.groq.apiKey, value => { merged.transcription.groq.apiKey = value; }, current.transcription.groq.apiKey);
+  retainBlank(() => merged.transcription.elevenlabs.apiKey, value => { merged.transcription.elevenlabs.apiKey = value; }, current.transcription.elevenlabs.apiKey);
+  retainBlank(() => merged.transcription.assemblyai.apiKey, value => { merged.transcription.assemblyai.apiKey = value; }, current.transcription.assemblyai.apiKey);
+  retainBlank(() => merged.transcription.deepgram.apiKey, value => { merged.transcription.deepgram.apiKey = value; }, current.transcription.deepgram.apiKey);
   retainBlank(() => merged.tts.openai.apiKey, value => { merged.tts.openai.apiKey = value; }, current.tts.openai.apiKey);
   retainBlank(() => merged.tts.minimax.apiKey, value => { merged.tts.minimax.apiKey = value; }, current.tts.minimax.apiKey);
   retainBlank(() => merged.tts.aliyun.apiKey, value => { merged.tts.aliyun.apiKey = value; }, current.tts.aliyun.apiKey);

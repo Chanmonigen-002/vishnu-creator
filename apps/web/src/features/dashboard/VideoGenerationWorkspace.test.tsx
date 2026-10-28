@@ -932,25 +932,7 @@ function createVideoConfig() {
       jsonMode: false,
       source: 'codex' as const
     },
-    transcription: {
-      provider: 'openai' as const,
-      enableGpuAcceleration: false,
-      openai: { baseUrl: '', apiKey: '', model: 'whisper-1' },
-      fasterWhisper: { model: 'medium' as const },
-      whisperKit: { model: 'large-v2' as const },
-      whisperCpp: { model: 'tiny' as const },
-      aliyun: {
-        oss: { accessKeyId: '', accessKeySecret: '', bucket: '', region: 'cn-shanghai', endpoint: '' },
-        speech: { accessKeyId: '', accessKeySecret: '', appKey: '' }
-      },
-      volcengine: {
-        appId: '',
-        accessToken: '',
-        resourceId: 'volc.seedasr.auc',
-        baseUrl: 'https://openspeech.bytedance.com'
-      },
-      funasr: { baseUrl: 'http://127.0.0.1:8000/v1', apiKey: '', model: 'sensevoice', timeoutMs: 120000 }
-    },
+    transcription: createDefaultCreatorServicesConfig().transcription,
     tts: {
       provider: 'openai' as const,
       openai: { baseUrl: '', apiKey: '', model: '', defaultVoiceId: '' },
