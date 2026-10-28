@@ -62,9 +62,13 @@ function presetModelName(
   if (config === undefined) return model;
   if (module === 'image-generation' || module === 'cover-generator') {
     const provider = readImageProvider(defaults.provider, config.image.provider);
-    return provider === 'codex-native'
-      ? codexImageModel || localize(locale, 'Codex 原生生图', 'Codex native image generation')
-      : config.image[provider].model.trim() || undefined;
+    if (provider === 'codex-native') {
+      return codexImageModel || localize(locale, 'Codex 原生生图', 'Codex native image generation');
+    }
+    if (provider === 'qwen-image') {
+      return 'Qwen-Image';
+    }
+    return config.image[provider].model.trim() || undefined;
   }
   if (module === 'video-generation') {
     const provider = defaults.provider === 'seedance' || defaults.provider === 'kling' || defaults.provider === 'veo'
@@ -379,6 +383,7 @@ function qualityLabel(value: string | undefined, locale: CreatorPresetLocale): s
 
 function coverStyleLabel(value: string | undefined, locale: CreatorPresetLocale): string {
   const labels: Record<string, [string, string]> = {
+    'khmer-editorial': ['高棉社论风', 'Khmer editorial'],
     'personal-growth': ['个人成长风格', 'Personal growth'],
     psychology: ['心理学风格', 'Psychology'],
     'wealth-platinum-red': ['财富白金红', 'Wealth platinum red'],
@@ -391,6 +396,7 @@ function coverStyleLabel(value: string | undefined, locale: CreatorPresetLocale)
 function coverLanguageLabel(value: string | undefined, locale: CreatorPresetLocale): string {
   const labels: Record<string, [string, string]> = {
     auto: ['自动文字语言', 'Automatic text language'],
+    'km-KH': ['高棉语文字', 'Khmer text'],
     'zh-CN': ['简体中文文字', 'Simplified Chinese text'],
     'zh-TW': ['繁体中文文字', 'Traditional Chinese text'],
     'en-US': ['英文文字', 'English text'],

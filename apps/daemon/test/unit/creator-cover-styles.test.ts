@@ -1,8 +1,14 @@
 import { describe, expect, it } from 'vitest';
-import { coverStyleInstructions } from '../../src/creator/cover/styles.js';
+import {
+  coverLanguageLabel,
+  coverStyleInstructions,
+  readCoverStyle,
+  readCoverTextLanguage
+} from '../../src/creator/cover/styles.js';
 
 describe('creator cover styles', () => {
   it.each([
+    ['khmer-editorial', 'vibrant gold, deep royal indigo, warm saffron'],
     ['personal-growth', 'deep navy, warm gold, and bright white'],
     ['psychology', 'deep green, blue-gray, white, and a small coral accent'],
     ['wealth-platinum-red', 'white, platinum, charcoal, and strong red'],
@@ -14,5 +20,12 @@ describe('creator cover styles', () => {
   it('uses the user description for a custom style', () => {
     expect(coverStyleInstructions('custom', 'Black and neon green technical style'))
       .toContain('Black and neon green technical style');
+  });
+
+  it('defaults style and language to Khmer-first', () => {
+    expect(readCoverStyle(undefined)).toBe('khmer-editorial');
+    expect(readCoverTextLanguage(undefined)).toBe('km-KH');
+    expect(coverLanguageLabel('km-KH')).toBe('Khmer');
+    expect(coverLanguageLabel('en-US')).toBe('English');
   });
 });

@@ -99,7 +99,11 @@ export default function ImageGenerationWorkspace(props: {
   const [officialQuality, setOfficialQuality] = useState(() => readString(session?.state.officialQuality));
   const [modelQuality, setModelQuality] = useState(() => readString(session?.state.modelQuality));
   const [imageConfig, setImageConfig] = useState<CreatorServicesConfig['image'] | null>(null);
-  const configuredModel = provider === 'codex-native' ? '' : (imageConfig ?? defaultImageConfig)[provider].model;
+  const configuredModel = provider === 'codex-native'
+    ? ''
+    : provider === 'qwen-image'
+    ? 'qwen-image'
+    : (imageConfig ?? defaultImageConfig)[provider].model;
   const imageOptions = useMemo(() => official.official
     ? official.model?.imageOptions ?? {}
     : provider === 'codex-native' ? undefined : imageModelOptions(provider, configuredModel),
@@ -323,7 +327,12 @@ export default function ImageGenerationWorkspace(props: {
   function updateProvider(value: ImageGenerationProvider) {
     if (official.official) return;
     setProvider(value);
-    const options = imageModelOptions(value, value === 'codex-native' ? '' : (imageConfig ?? defaultImageConfig)[value].model);
+    const model = value === 'codex-native'
+      ? ''
+      : value === 'qwen-image'
+      ? 'qwen-image'
+      : (imageConfig ?? defaultImageConfig)[value].model;
+    const options = imageModelOptions(value, model);
     const nextRatio = options.aspectRatios?.includes(aspectRatio) ? aspectRatio : options.aspectRatios?.[0] ?? '';
     const nextResolution = options.resolutions?.includes(resolution) ? resolution : options.resolutions?.[0] ?? '';
     const nextQuality = options.qualities?.includes(modelQuality) ? modelQuality : options.qualities?.includes(quality) ? quality : options.qualities?.[0] ?? '';
