@@ -36,12 +36,14 @@ import {
   Mic2,
   RefreshCcw,
   RotateCcw,
-  Save
+  Save,
+  Sparkles
 } from 'lucide-react';
 import { lazy, Suspense, useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { readTranslationContinuation, saveTranslationContinuation, ttsServiceConfigured } from '../dashboard/video-translation-continuation.js';
 import { useConfirmDialog } from '../../components/dialogs/ConfirmDialogProvider.js';
 import { TtsVoicePicker } from '../../components/tts/TtsVoicePicker.js';
+import { VoiceLibrary } from '../../components/tts/VoiceLibrary.js';
 import { useLocalizedCopy } from '../../i18n/useLocalizedCopy.js';
 import type { CreatorServicesSettingsService } from '../../services/creator-services-service.js';
 import type { ConnectionService } from '../../services/connection-service.js';
@@ -55,7 +57,7 @@ const CodexImageStatusNotice = lazy(async () => {
   return { default: module.CodexImageStatusNotice };
 });
 
-export type CreatorServicesSection = 'text' | 'transcription' | 'tts' | 'image' | 'video' | 'dubEngine';
+export type CreatorServicesSection = 'text' | 'transcription' | 'tts' | 'voiceLibrary' | 'image' | 'video' | 'dubEngine';
 type ModelSettingsService = Pick<ConnectionService, 'getCodexProvider' | 'updateCodexProvider'> & {
   getCodexModels?: ConnectionService['getCodexModels'];
 };
@@ -267,6 +269,7 @@ export function CreatorServicesSettingsView(props: {
     { id: 'text', label: l('模型服务', 'Models'), icon: Languages },
     { id: 'transcription', label: l('语音识别', 'Transcription'), icon: Mic2 },
     { id: 'tts', label: l('配音服务', 'Voice'), icon: AudioLines },
+    { id: 'voiceLibrary', label: l('音色库', 'Voice Library'), icon: Sparkles },
     { id: 'dubEngine', label: l('本地配音引擎', 'Dub Engine'), icon: HardDriveDownload },
     { id: 'image', label: l('图像生成', 'Images'), icon: Image },
     { id: 'video', label: l('视频生成', 'Video'), icon: Clapperboard }
@@ -523,6 +526,9 @@ export function CreatorServicesSettingsView(props: {
               service={props.service}
             />
           ) : null}
+          {activeSection === 'voiceLibrary' ? (
+            <VoiceLibrary service={props.service} />
+          ) : null}
           {activeSection === 'image' ? (
             <ImageSettings config={config} update={updateConfig} configuredCredentials={configuredCredentials} service={props.service} enabled={savedImageProvider === config.image.provider} />
           ) : null}
@@ -544,41 +550,43 @@ export function CreatorServicesSettingsView(props: {
             />
           ) : null}
 
-          <footer className="creator-services-actions">
-            <div aria-live="polite">
-              {validationError ? <p className="settings-error" role="alert">{validationError}</p> : null}
-              {notice ? <p className="settings-notice">{notice}</p> : null}
-            </div>
-            <button
-              className="settings-secondary-button"
-              type="button"
-              disabled={saving}
-              onClick={() => void reset()}
-            >
-              <RotateCcw size={15} aria-hidden="true" />
-              {l('恢复默认', 'Restore defaults')}
-            </button>
-            <button
-              className="settings-primary-button"
-              type="submit"
-              disabled={
-                saving
-                || (
-                  activeSection === 'text'
-                  && textModelMode === 'codex'
-                  && modelProvider === undefined
-                )
-              }
-            >
-              {saving ? (
-                <LoaderCircle className="creator-services-spinner" size={15} aria-hidden="true" />
-              ) : (
-                <Save size={15} aria-hidden="true" />
-              )}
-              {saving ? l('保存中', 'Saving') : activeSection === 'tts' && props.onReturnToTranslation && readTranslationContinuation()?.status === 'configure'
-                ? l('保存并继续配音合成', 'Save and continue composing') : l('保存配置', 'Save settings')}
-            </button>
-          </footer>
+          {activeSection !== 'voiceLibrary' ? (
+            <footer className="creator-services-actions">
+              <div aria-live="polite">
+                {validationError ? <p className="settings-error" role="alert">{validationError}</p> : null}
+                {notice ? <p className="settings-notice">{notice}</p> : null}
+              </div>
+              <button
+                className="settings-secondary-button"
+                type="button"
+                disabled={saving}
+                onClick={() => void reset()}
+              >
+                <RotateCcw size={15} aria-hidden="true" />
+                {l('恢复默认', 'Restore defaults')}
+              </button>
+              <button
+                className="settings-primary-button"
+                type="submit"
+                disabled={
+                  saving
+                  || (
+                    activeSection === 'text'
+                    && textModelMode === 'codex'
+                    && modelProvider === undefined
+                  )
+                }
+              >
+                {saving ? (
+                  <LoaderCircle className="creator-services-spinner" size={15} aria-hidden="true" />
+                ) : (
+                  <Save size={15} aria-hidden="true" />
+                )}
+                {saving ? l('保存中', 'Saving') : activeSection === 'tts' && props.onReturnToTranslation && readTranslationContinuation()?.status === 'configure'
+                  ? l('保存并继续配音合成', 'Save and continue composing') : l('保存配置', 'Save settings')}
+              </button>
+            </footer>
+          ) : null}
         </form>
       )}
       <IssueList

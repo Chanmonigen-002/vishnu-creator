@@ -75,7 +75,13 @@ export function usePageIssueState(surface: string): PageIssueState {
     [byOperation]
   );
 
-  return { issues, captureOperationFailure, resolveOperation, dismissIssue, clearIssues };
+  return useMemo(() => ({
+    issues,
+    captureOperationFailure,
+    resolveOperation,
+    dismissIssue,
+    clearIssues
+  }), [issues, captureOperationFailure, resolveOperation, dismissIssue, clearIssues]);
 }
 
 export function normalizePageIssue(

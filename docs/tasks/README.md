@@ -9,8 +9,8 @@ The master plan explains *why*; these files track *what is done*.
 | 1 | [Khmer foundation, zero GPU](phase-1-khmer-foundation.md) | 9 | 9 | 0 | 0 | 0 | Phase 0 | met (T1.8 E2E verified) | Complete |
 | 2 | [Bring the dub engine into the repo](phase-2-dub-engine-service.md) | 15 | 15 | 0 | 0 | 0 | Phase 0 · ADR-0005 (accepted) | met (72/72 pytest green) | Complete |
 | 3 | [Daemon ↔ engine integration](phase-3-daemon-integration.md) | 14 | 14 | 0 | 0 | 0 | Phase 2 | met (`v3-daemon-integration`) | Complete |
-| 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 7 | 0 | 0 | 0 | Phase 3 | **not met** | Tasks done · gate pending |
-| 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 10 | 2 | 6 | 2 | 0 | Phase 3 | **not met** | In progress |
+| 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 7 | 0 | 0 | 0 | Phase 3 | met (`v4-quality-pipeline`) | Complete |
+| 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 10 | 4 | 4 | 2 | 0 | Phase 3 | **not met** | In progress (T5.3, T5.6, T5.9, T5.10 done) |
 | 6 | [Extra creator studios](phase-6-creator-studios.md) | 9 | 7 | 0 | 0 | 2 | Phase 3 | — | In progress (T6.1, T6.2, T6.5–T6.9 done) |
 | 7 | [Release](phase-7-release.md) | 7 | 0 | 0 | 0 | 7 | Phases 1–6 | — | Not started |
 | 8 | [More AI providers (free, paid, cloud, local)](phase-8-ai-providers.md) | 10 | 0 | 1 | 0 | 9 | Phase 3 | — | In progress |

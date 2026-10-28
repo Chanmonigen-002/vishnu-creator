@@ -616,6 +616,21 @@ describe('CreatorServicesSettingsView', () => {
     await user.click(testBtn);
     expect(await screen.findByText(/已连接|Connected/i)).toBeInTheDocument();
   });
+
+  it('switches to voice library section and displays voice library controls', async () => {
+    const service = createService();
+    render(
+      <CreatorServicesSettingsView
+        connected
+        service={service}
+        modelService={createModelService()}
+        initialSection="voiceLibrary"
+      />
+    );
+
+    expect(await screen.findByRole('heading', { name: /我的音色库|My Voice Library/i })).toBeInTheDocument();
+    expect(service.listVoiceDesigns).toHaveBeenCalled();
+  });
 });
 
 function createService(

@@ -14,11 +14,11 @@ import numpy as np
 from pydantic import BaseModel
 
 # Watermark constants
-WATERMARK_SAMPLE_RATE = 24000
-WATERMARK_BIT_DURATION = 0.1  # 100ms per bit
-WATERMARK_FREQ_0 = 18000  # Hz for bit 0
-WATERMARK_FREQ_1 = 19000  # Hz for bit 1
-WATERMARK_AMPLITUDE = 0.01  # -40 dB relative to full scale
+WATERMARK_SAMPLE_RATE = 48000
+WATERMARK_BIT_DURATION = 0.005  # 5ms per bit for compact, fast watermark
+WATERMARK_FREQ_0 = 18000  # Hz for bit 0 (at 44.1k/48k)
+WATERMARK_FREQ_1 = 19000  # Hz for bit 1 (at 44.1k/48k)
+WATERMARK_AMPLITUDE = 0.02  # -34 dB relative to full scale
 
 
 class TTSResult(BaseModel):
@@ -472,12 +472,41 @@ class VoxCPM2Backend(TTSBackend):
 
     # ─── Watermark & Consent Guard ──────────────────────────────────────
 
+    @staticmethod
+    def _get_watermark_secret() -> bytes:
+        """Retrieve or dynamically generate a persistent machine-local secret key without hardcoding."""
+        env_secret = os.environ.get("WATERMARK_SECRET")
+        if env_secret:
+            return env_secret.encode("utf-8")
+        try:
+            from vishnu_dub.config import settings
+            key_file = settings.model_dir / ".watermark_key"
+            if key_file.exists():
+                key_data = key_file.read_bytes().strip()
+                if key_data:
+                    return key_data
+            import secrets
+            generated = secrets.token_bytes(32)
+            key_file.parent.mkdir(parents=True, exist_ok=True)
+            key_file.write_bytes(generated)
+            return generated
+        except Exception:
+            return hashlib.sha256(str(Path.home()).encode("utf-8")).digest()
+
+    @staticmethod
+    def _get_watermark_frequencies(sample_rate: int) -> tuple[float, float]:
+        """Return (freq_0, freq_1) strictly within the audio band below Nyquist."""
+        nyquist = sample_rate / 2.0
+        if nyquist >= 20000.0:
+            # 44.1kHz or 48kHz audio: near-ultrasonic inaudible band
+            return 18000.0, 19000.0
+        # Lower sample rates (e.g. 24kHz, Nyquist 12kHz): top safe band below Nyquist
+        return nyquist * 0.88, nyquist * 0.94
+
     def _generate_watermark(self, voice_id: str, user_id: str, timestamp: int) -> bytes:
         """Generate a cryptographic watermark payload."""
-        # Create a watermark containing: voice_id, user_id, timestamp, and a hash
-        payload = f"{voice_id}|{user_id}|{timestamp}".encode()
-        # Add a HMAC for integrity
-        secret = os.environ.get("WATERMARK_SECRET", "vishnu-default-secret").encode()
+        payload = f"{voice_id}|{user_id}|{timestamp}".encode("utf-8")
+        secret = self._get_watermark_secret()
         hmac_digest = hashlib.sha256(secret + payload).digest()[:8]
         return payload + hmac_digest
 
@@ -491,74 +520,69 @@ class VoxCPM2Backend(TTSBackend):
         samples_per_bit = int(sample_rate * WATERMARK_BIT_DURATION)
         total_samples = len(bits) * samples_per_bit
         t = np.arange(total_samples) / sample_rate
+        freq_0, freq_1 = self._get_watermark_frequencies(sample_rate)
         
         # Generate FSK signal
         signal = np.zeros(total_samples, dtype=np.float32)
         for i, bit in enumerate(bits):
             start = i * samples_per_bit
             end = start + samples_per_bit
-            freq = WATERMARK_FREQ_1 if bit else WATERMARK_FREQ_0
+            freq = freq_1 if bit else freq_0
             signal[start:end] = WATERMARK_AMPLITUDE * np.sin(2 * np.pi * freq * t[start:end])
         
         return signal
 
     def _embed_watermark(self, audio: np.ndarray, watermark_signal: np.ndarray) -> np.ndarray:
         """Embed watermark into audio by adding it to the high-frequency range."""
-        # Ensure watermark fits in audio
         if len(watermark_signal) > len(audio):
             watermark_signal = watermark_signal[:len(audio)]
         
-        # Add watermark to the end of the audio (last N samples)
         start_idx = len(audio) - len(watermark_signal)
         if start_idx < 0:
             start_idx = 0
         
         watermarked = audio.copy()
         watermarked[start_idx:] += watermark_signal
-        
-        # Prevent clipping
         np.clip(watermarked, -1.0, 1.0, out=watermarked)
         return watermarked
 
     def _extract_watermark(self, audio: np.ndarray, expected_length: int, sample_rate: int = WATERMARK_SAMPLE_RATE) -> Optional[bytes]:
         """Extract watermark from audio using FFT analysis."""
-        if len(audio) < expected_length * sample_rate * WATERMARK_BIT_DURATION / 8:
-            return None
-        
-        # Extract the last portion of audio where watermark is embedded
         samples_per_bit = int(sample_rate * WATERMARK_BIT_DURATION)
         watermark_samples = expected_length * 8 * samples_per_bit
-        if watermark_samples > len(audio):
+        if watermark_samples > len(audio) or len(audio) == 0:
             return None
         
         watermark_audio = audio[-watermark_samples:]
+        freq_0, freq_1 = self._get_watermark_frequencies(sample_rate)
         
         bits = []
-        for i in range(0, len(watermark_audio), int(sample_rate * WATERMARK_BIT_DURATION)):
-            chunk = watermark_audio[i:i + int(sample_rate * WATERMARK_BIT_DURATION)]
-            if len(chunk) < sample_rate * WATERMARK_BIT_DURATION // 2:
+        for i in range(0, len(watermark_audio), samples_per_bit):
+            chunk = watermark_audio[i:i + samples_per_bit]
+            if len(chunk) < samples_per_bit:
                 break
             
-            # FFT to detect frequency
-            fft = np.fft.rfft(chunk)
-            freqs = np.fft.rfftfreq(len(chunk), 1 / WATERMARK_SAMPLE_RATE)
+            # Apply Hann window to eliminate spectral leakage at chunk boundaries
+            window = np.hanning(len(chunk))
+            fft = np.fft.rfft(chunk * window)
+            freqs = np.fft.rfftfreq(len(chunk), 1 / sample_rate)
             
-            # Find peak frequency
-            peak_idx = np.argmax(np.abs(fft))
-            peak_freq = freqs[peak_idx]
+            idx_0 = np.argmin(np.abs(freqs - freq_0))
+            idx_1 = np.argmin(np.abs(freqs - freq_1))
             
-            # Determine bit based on frequency proximity
-            if abs(peak_freq - WATERMARK_FREQ_1) < abs(peak_freq - WATERMARK_FREQ_0):
+            mag_0 = np.abs(fft[idx_0])
+            mag_1 = np.abs(fft[idx_1])
+            
+            if mag_1 > mag_0:
                 bits.append(1)
             else:
                 bits.append(0)
         
-        # Convert bits to bytes
-        if len(bits) < 8:
+        if len(bits) < expected_length * 8:
             return None
         
         bytes_out = bytearray()
-        for i in range(0, min(len(bits), 64), 8):  # Max 8 bytes (48 bits payload + 8 HMAC)
+        for i in range(0, expected_length * 8, 8):
             byte = 0
             for j in range(8):
                 if i + j < len(bits):
@@ -569,12 +593,20 @@ class VoxCPM2Backend(TTSBackend):
 
     def verify_watermark(self, audio_path: Path, voice_id: str, user_id: str, timestamp: int) -> bool:
         """Verify watermark in an audio file."""
-        import torchaudio
-        audio, sr = torchaudio.load(str(audio_path))
-        audio_np = audio[0].numpy()  # Mono
+        try:
+            import soundfile as sf
+            data, sr = sf.read(str(audio_path))
+            if data.ndim > 1:
+                audio_np = data[:, 0].astype(np.float32)
+            else:
+                audio_np = data.astype(np.float32)
+        except Exception:
+            import torchaudio
+            audio, sr = torchaudio.load(str(audio_path))
+            audio_np = audio[0].numpy()
         
         expected_watermark = self._generate_watermark(voice_id, user_id, timestamp)
-        extracted = self._extract_watermark(audio_np, len(expected_watermark), WATERMARK_SAMPLE_RATE)
+        extracted = self._extract_watermark(audio_np, len(expected_watermark), sr)
         
         if extracted is None:
             return False

@@ -50,13 +50,14 @@ export function VoiceLibrary(props: {
   const previewUrlRef = useRef('');
   const previewRequestRef = useRef(0);
   const pageIssues = usePageIssueState('voice-library');
+  const { resolveOperation, captureOperationFailure } = pageIssues;
 
   useEffect(() => {
     let active = true;
     if (props.service === null) {
       setVoices([]);
       setLoading(false);
-      pageIssues.resolveOperation('voice-library.load');
+      resolveOperation('voice-library.load');
       return () => { active = false; };
     }
     setLoading(true);
@@ -64,12 +65,12 @@ export function VoiceLibrary(props: {
       .then(response => {
         if (!active) return;
         setVoices(response.voices);
-        pageIssues.resolveOperation('voice-library.load');
+        resolveOperation('voice-library.load');
       })
       .catch(cause => {
         if (active) {
           setVoices([]);
-          pageIssues.captureOperationFailure(
+          captureOperationFailure(
             'voice-library.load',
             cause,
             l('无法加载音色库，请稍后重试。', 'Could not load voice library. Please try again later.'),
@@ -81,7 +82,7 @@ export function VoiceLibrary(props: {
         if (active) setLoading(false);
       });
     return () => { active = false; };
-  }, [props.service, reloadToken, pageIssues, l]);
+  }, [props.service, reloadToken, resolveOperation, captureOperationFailure, l]);
 
   useEffect(() => {
     const audio = audioRef.current;
