@@ -88,6 +88,9 @@ export type DubHardwareProfile = {
   tierDescription: string;
   recommendedTts?: string | null;
   recommendedWhisper?: string | null;
+  canTrainLora?: boolean;
+  voxcpmMode?: string;
+  recommendedBatchSize?: number;
 };
 
 export type DubBenchmarkResponse = {
@@ -633,6 +636,71 @@ export class DubEngineClient {
     );
   }
 
+  async exportVoiceDesign(voiceId: string): Promise<{
+    ok: boolean;
+    voiceId: string;
+    filename: string;
+    exportUrl: string;
+  }> {
+    const body = await this.request<Record<string, unknown>>(
+      'POST',
+      '/v1/tts/voices/export',
+      { voice_id: voiceId }
+    );
+    const rec = asRecord(body);
+    return {
+      ok: readBoolean(rec.ok),
+      voiceId: typeof rec.voice_id === 'string' ? rec.voice_id : voiceId,
+      filename: typeof rec.filename === 'string' ? rec.filename : '',
+      exportUrl: typeof rec.export_url === 'string' ? rec.export_url : '',
+    };
+  }
+
+  async importVoiceDesign(params: {
+    name: string;
+    prompt?: string;
+    audioData: string;
+    consent: boolean;
+    loraWeightsBase64?: string;
+  }): Promise<{
+    id: string;
+    name: string;
+    prompt: string;
+    duration: number;
+    createdAt: string;
+    audioUrl: string;
+    consent: boolean;
+  }> {
+    const body = await this.request<Record<string, unknown>>(
+      'POST',
+      '/v1/tts/voices/import',
+      {
+        name: params.name,
+        prompt: params.prompt,
+        audio_data: params.audioData,
+        consent: params.consent,
+        lora_weights_base64: params.loraWeightsBase64,
+      }
+    );
+    const rec = asRecord(body);
+    return {
+      id: typeof rec.id === 'string' ? rec.id : '',
+      name: typeof rec.name === 'string' ? rec.name : '',
+      prompt: typeof rec.prompt === 'string' ? rec.prompt : '',
+      duration: readNumber(rec.duration),
+      createdAt: typeof rec.createdAt === 'string' ? rec.createdAt : (typeof rec.created_at === 'string' ? rec.created_at : ''),
+      audioUrl: typeof rec.audioUrl === 'string' ? rec.audioUrl : (typeof rec.audio_url === 'string' ? rec.audio_url : ''),
+      consent: readBoolean(rec.consent),
+    };
+  }
+
+  async getHardwarePerformance(): Promise<Record<string, unknown>> {
+    return this.request<Record<string, unknown>>(
+      'GET',
+      '/v1/hardware/performance'
+    );
+  }
+
   async previewVoiceDesign(params: { voiceId: string }): Promise<Buffer> {
     const response = await this.fetchWithRetry(
       '/v1/tts/voices/preview',
@@ -831,6 +899,9 @@ export function fromSnakeHardware(body: unknown): DubHardwareProfile {
     tierDescription: typeof record.tier_description === 'string' ? record.tier_description : '',
     recommendedTts: readStringOrNull(record.recommended_tts),
     recommendedWhisper: readStringOrNull(record.recommended_whisper),
+    canTrainLora: readBoolean(record.can_train_lora),
+    voxcpmMode: readStringOrNull(record.voxcpm_mode) ?? undefined,
+    recommendedBatchSize: typeof record.recommended_batch_size === 'number' ? record.recommended_batch_size : undefined,
   };
 }
 

@@ -1,6 +1,7 @@
 import {
   AudioLines,
   CircleCheck,
+  Download,
   LoaderCircle,
   Mic2,
   Play,
@@ -9,6 +10,7 @@ import {
   Search,
   Star,
   Trash2,
+  Upload,
   X
 } from 'lucide-react';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -30,7 +32,10 @@ export type VoiceLibraryItem = {
 };
 
 export function VoiceLibrary(props: {
-  service: Pick<CreatorServicesSettingsService, 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign'> | null;
+  service: Pick<CreatorServicesSettingsService, 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign'> & {
+    exportVoiceDesign?: (request: { voiceId: string }) => Promise<{ ok: boolean; voiceId: string; filename: string; exportUrl: string }>;
+    importVoiceDesign?: (request: { name: string; prompt?: string; audioData: string; consent: boolean; loraWeightsBase64?: string }) => Promise<VoiceLibraryItem>;
+  } | null;
   disabled?: boolean;
   onVoiceSaved?: (voice: VoiceLibraryItem) => void;
   onVoiceDeleted?: (voiceId: string) => void;
@@ -45,6 +50,14 @@ export function VoiceLibrary(props: {
   const [showCreateDialog, setShowCreateDialog] = useState(false);
   const [createPrompt, setCreatePrompt] = useState('');
   const [createConsent, setCreateConsent] = useState(false);
+  const [showImportDialog, setShowImportDialog] = useState(false);
+  const [importName, setImportName] = useState('');
+  const [importPrompt, setImportPrompt] = useState('');
+  const [importAudioData, setImportAudioData] = useState('');
+  const [importFileName, setImportFileName] = useState('');
+  const [importConsent, setImportConsent] = useState(false);
+  const [importing, setImporting] = useState(false);
+  const [exportingVoiceId, setExportingVoiceId] = useState<string | null>(null);
   const [reloadToken, setReloadToken] = useState(0);
   const audioRef = useRef<HTMLAudioElement>(null);
   const previewUrlRef = useRef('');
@@ -209,6 +222,78 @@ export function VoiceLibrary(props: {
     }
   }
 
+  async function handleExport(voiceId: string) {
+    if (props.service === null || !props.service.exportVoiceDesign || exportingVoiceId) return;
+    setExportingVoiceId(voiceId);
+    try {
+      const res = await props.service.exportVoiceDesign({ voiceId });
+      if (res.exportUrl) {
+        const link = document.createElement('a');
+        link.href = res.exportUrl;
+        link.download = res.filename || `voice_${voiceId}.zip`;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+      pageIssues.resolveOperation('voice-library.export');
+    } catch (cause) {
+      pageIssues.captureOperationFailure(
+        'voice-library.export',
+        cause,
+        l('导出音色失败，请稍后重试。', 'Failed to export voice. Please try again later.'),
+        { retryable: true }
+      );
+    } finally {
+      setExportingVoiceId(null);
+    }
+  }
+
+  function handleAudioFileSelected(file: File) {
+    setImportFileName(file.name);
+    if (!importName.trim()) {
+      setImportName(file.name.replace(/\.[^/.]+$/, ''));
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      const result = e.target?.result;
+      if (typeof result === 'string') {
+        setImportAudioData(result);
+      }
+    };
+    reader.readAsDataURL(file);
+  }
+
+  async function handleImportSubmit() {
+    if (!importName.trim() || !importAudioData || !importConsent || props.service === null || !props.service.importVoiceDesign || importing) return;
+    setImporting(true);
+    try {
+      const imported = await props.service.importVoiceDesign({
+        name: importName.trim(),
+        prompt: importPrompt.trim() || importName.trim(),
+        audioData: importAudioData,
+        consent: true,
+      });
+      setVoices(prev => [imported, ...prev]);
+      pageIssues.resolveOperation('voice-library.import');
+      props.onVoiceSaved?.(imported);
+      setShowImportDialog(false);
+      setImportName('');
+      setImportPrompt('');
+      setImportAudioData('');
+      setImportFileName('');
+      setImportConsent(false);
+    } catch (cause) {
+      pageIssues.captureOperationFailure(
+        'voice-library.import',
+        cause,
+        l('导入音色失败，请稍后重试。', 'Failed to import voice. Please try again later.'),
+        { retryable: true }
+      );
+    } finally {
+      setImporting(false);
+    }
+  }
+
   function formatDuration(seconds: number): string {
     const mins = Math.floor(seconds / 60);
     const secs = Math.floor(seconds % 60);
@@ -251,6 +336,16 @@ export function VoiceLibrary(props: {
             onClick={() => { setReloadToken(t => t + 1); loadVoices(); }}
           >
             {loading ? <LoaderCircle className="voice-library-spinner" size={16} aria-hidden="true" /> : <RefreshCw size={16} aria-hidden="true" />}
+          </button>
+          <button
+            type="button"
+            className="voice-library-import-btn"
+            disabled={props.disabled || loading || saving || importing}
+            onClick={() => setShowImportDialog(true)}
+            style={{ display: 'flex', alignItems: 'center', gap: '6px', padding: '8px 12px', borderRadius: 'var(--vishnucreator-radius-sm)', border: '1px solid var(--vishnucreator-border-color)', background: 'var(--vishnucreator-surface)', color: 'var(--vishnucreator-text-primary)', cursor: 'pointer', fontSize: '13px', fontWeight: 500 }}
+          >
+            <Upload size={16} aria-hidden="true" />
+            <span>{l('导入音色', 'Import Voice')}</span>
           </button>
           <button
             type="button"
@@ -336,6 +431,93 @@ export function VoiceLibrary(props: {
         </div>
       ) : null}
 
+      {showImportDialog ? (
+        <div className="voice-library-dialog-overlay" onClick={() => setShowImportDialog(false)}>
+          <div className="voice-library-dialog" onClick={e => e.stopPropagation()}>
+            <h3>{l('导入音色', 'Import Voice')}</h3>
+            <button className="voice-library-dialog-close" onClick={() => setShowImportDialog(false)} aria-label={l('关闭', 'Close')}>
+              <X size={20} aria-hidden="true" />
+            </button>
+            <div className="voice-library-dialog-content">
+              <label className="voice-library-field">
+                <span>{l('音色名称', 'Voice Name')}</span>
+                <input
+                  type="text"
+                  value={importName}
+                  onChange={e => setImportName(e.target.value)}
+                  placeholder={l('例如：Khmer Narration Master', 'e.g., Khmer Narration Master')}
+                  disabled={importing}
+                  maxLength={50}
+                  style={{ width: '100%', padding: '8px 12px', borderRadius: 'var(--vishnucreator-radius-sm)', border: '1px solid var(--vishnucreator-border-color)', background: 'var(--vishnucreator-surface)' }}
+                />
+              </label>
+              <label className="voice-library-field">
+                <span>{l('音频参考文件 (WAV / MP3)', 'Audio Reference File (WAV / MP3)')}</span>
+                <input
+                  type="file"
+                  accept="audio/wav,audio/mp3,audio/mpeg,audio/*"
+                  onChange={e => {
+                    const f = e.target.files?.[0];
+                    if (f) handleAudioFileSelected(f);
+                  }}
+                  disabled={importing}
+                  style={{ width: '100%', padding: '6px' }}
+                />
+                {importFileName ? <small style={{ color: 'var(--vishnucreator-text-secondary)' }}>{importFileName}</small> : null}
+              </label>
+              <label className="voice-library-field">
+                <span>{l('音色描述 (可选)', 'Voice Description (Optional)')}</span>
+                <textarea
+                  value={importPrompt}
+                  onChange={e => setImportPrompt(e.target.value)}
+                  placeholder={l('例如：沉稳男中音旁白', 'e.g., Deep baritone narrator')}
+                  rows={2}
+                  disabled={importing}
+                  maxLength={200}
+                />
+              </label>
+              <label className="voice-library-consent">
+                <input
+                  type="checkbox"
+                  checked={importConsent}
+                  onChange={e => setImportConsent(e.target.checked)}
+                  disabled={importing}
+                />
+                <span>{l('我确认拥有此音频的使用权限，并同意将其导入本地音色库。', 'I confirm I have permission to use this audio and agree to import it locally.')}</span>
+              </label>
+            </div>
+            <div className="voice-library-dialog-actions">
+              <button
+                type="button"
+                className="voice-library-btn-secondary"
+                onClick={() => setShowImportDialog(false)}
+                disabled={importing}
+              >
+                {l('取消', 'Cancel')}
+              </button>
+              <button
+                type="button"
+                className="voice-library-btn-primary"
+                onClick={handleImportSubmit}
+                disabled={importing || !importName.trim() || !importAudioData || !importConsent}
+              >
+                {importing ? (
+                  <>
+                    <LoaderCircle className="voice-library-spinner" size={16} aria-hidden="true" />
+                    <span>{l('导入中', 'Importing')}</span>
+                  </>
+                ) : (
+                  <>
+                    <Upload size={16} aria-hidden="true" />
+                    <span>{l('开始导入', 'Import Voice')}</span>
+                  </>
+                )}
+              </button>
+            </div>
+          </div>
+        </div>
+      ) : null}
+
       {loading ? (
         <div className="voice-library-empty" role="status">
           <LoaderCircle className="voice-library-spinner" size={24} aria-hidden="true" />
@@ -368,16 +550,33 @@ export function VoiceLibrary(props: {
                     <span className="voice-library-consent-badge voice-library-consent-pending" aria-label={l('待授权', 'Pending consent')}>{l('待授权', 'Pending')}</span>
                   )}
                 </div>
-                <button
-                  type="button"
-                  className="voice-library-delete"
-                  disabled={props.disabled || loading}
-                  aria-label={l('删除音色', 'Delete voice')}
-                  title={l('删除音色', 'Delete voice')}
-                  onClick={() => handleDelete(voice.id)}
-                >
-                  <Trash2 size={16} aria-hidden="true" />
-                </button>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                  <button
+                    type="button"
+                    className="voice-library-action-btn"
+                    disabled={props.disabled || loading || exportingVoiceId === voice.id}
+                    aria-label={l('导出音色', 'Export voice')}
+                    title={l('导出音色', 'Export voice')}
+                    onClick={() => handleExport(voice.id)}
+                    style={{ background: 'transparent', border: 'none', cursor: 'pointer', padding: '4px', color: 'var(--vishnucreator-text-secondary)', display: 'flex', alignItems: 'center', borderRadius: '4px' }}
+                  >
+                    {exportingVoiceId === voice.id ? (
+                      <LoaderCircle className="voice-library-spinner" size={16} aria-hidden="true" />
+                    ) : (
+                      <Download size={16} aria-hidden="true" />
+                    )}
+                  </button>
+                  <button
+                    type="button"
+                    className="voice-library-delete"
+                    disabled={props.disabled || loading}
+                    aria-label={l('删除音色', 'Delete voice')}
+                    title={l('删除音色', 'Delete voice')}
+                    onClick={() => handleDelete(voice.id)}
+                  >
+                    <Trash2 size={16} aria-hidden="true" />
+                  </button>
+                </div>
               </div>
               <div className="voice-library-card-prompt">
                 <span>{voice.prompt}</span>

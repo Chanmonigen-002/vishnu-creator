@@ -4,10 +4,12 @@ from .validate import validate_manifest, print_validation_report, ValidationResu
 from .lora_training import (
     LoRATrainer,
     TrainingConfig,
+    check_hardware_requirements,
     run_lora_training,
-    run_lora_training_background,
     get_training_status,
     list_trainings,
+    delete_training_job,
+    update_registry_job,
 )
 
 __all__ = [
@@ -16,8 +18,10 @@ __all__ = [
     "ValidationResult",
     "LoRATrainer",
     "TrainingConfig",
+    "check_hardware_requirements",
     "run_lora_training",
-    "run_lora_training_background",
     "get_training_status",
     "list_trainings",
+    "delete_training_job",
+    "update_registry_job",
 ]

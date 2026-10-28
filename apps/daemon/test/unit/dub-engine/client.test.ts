@@ -114,7 +114,10 @@ describe('snake_case ↔ camelCase wire-format mappers', () => {
       gpu_compute_capability: null,
       disk_free_gb: { 'C:': 24.5, 'D:': 302.4 },
       tier: 'T1',
-      tier_description: 'Low — CPU only'
+      tier_description: 'Low — CPU only',
+      can_train_lora: false,
+      voxcpm_mode: 'cpu',
+      recommended_batch_size: 1
     });
     expect(result.cpuCores).toBe(8);
     expect(result.cpuThreads).toBe(16);
@@ -127,6 +130,9 @@ describe('snake_case ↔ camelCase wire-format mappers', () => {
     expect(result.diskFreeGb).toEqual({ 'C:': 24.5, 'D:': 302.4 });
     expect(result.tier).toBe('T1');
     expect(result.tierDescription).toBe('Low — CPU only');
+    expect(result.canTrainLora).toBe(false);
+    expect(result.voxcpmMode).toBe('cpu');
+    expect(result.recommendedBatchSize).toBe(1);
   });
 
   it('fromSnakeHardware tolerates missing fields', () => {

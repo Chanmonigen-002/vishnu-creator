@@ -654,6 +654,90 @@ export async function registerCreatorServicesRoutes(
       ));
     }
   });
+
+  server.post<{
+    Body: { voiceId?: string };
+  }>('/creator-services/tts/voices/export', async (request, reply) => {
+    const voiceId = request.body?.voiceId;
+    if (!voiceId) {
+      return reply.code(400).send(apiError('VALIDATION_FAILED', 'Voice ID is required'));
+    }
+    try {
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      const result = await client.exportVoiceDesign(voiceId);
+      return result;
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Voice export failed'
+      ));
+    }
+  });
+
+  server.post<{
+    Body: { name?: string; prompt?: string; audioData?: string; consent?: boolean; loraWeightsBase64?: string };
+  }>('/creator-services/tts/voices/import', async (request, reply) => {
+    const { name, prompt, audioData, consent, loraWeightsBase64 } = request.body || {};
+    if (!name || typeof name !== 'string' || !name.trim()) {
+      return reply.code(400).send(apiError('VALIDATION_FAILED', 'Voice name is required'));
+    }
+    if (!audioData || typeof audioData !== 'string') {
+      return reply.code(400).send(apiError('VALIDATION_FAILED', 'Audio data is required'));
+    }
+    if (!consent) {
+      return reply.code(400).send(apiError('VALIDATION_FAILED', 'Consent is required'));
+    }
+    try {
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      const result = await client.importVoiceDesign({
+        name: name.trim(),
+        prompt: prompt?.trim(),
+        audioData,
+        consent: true,
+        loraWeightsBase64,
+      });
+      return result;
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Voice import failed'
+      ));
+    }
+  });
+
+  server.get('/creator-services/hardware/performance', async (_request, reply) => {
+    try {
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      const result = await client.getHardwarePerformance();
+      return result;
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Failed to query hardware performance'
+      ));
+    }
+  });
 }
 
 

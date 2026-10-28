@@ -26,7 +26,7 @@ import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'patch' | 'delete' | 'rawRequest'>;
 
-export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'listLlmModels' | 'getDubEngineStatus' | 'startDubEngine' | 'stopDubEngine' | 'getDubEngineTimesyncReport' | 'streamTts'> & {
+export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'exportVoiceDesign' | 'importVoiceDesign' | 'getHardwarePerformance' | 'listLlmModels' | 'getDubEngineStatus' | 'startDubEngine' | 'stopDubEngine' | 'getDubEngineTimesyncReport' | 'streamTts'> & {
   listLlmModels?: (input: { baseUrl: string; apiKey: string }) => Promise<{ models: string[] }>;
   getDubEngineStatus?: () => Promise<DubEngineRuntimeStatus>;
   startDubEngine?: () => Promise<DubEngineRuntimeStatus>;
@@ -58,6 +58,9 @@ export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreato
   deleteVoiceDesign: (request: DeleteVoiceDesignRequest) => Promise<void>;
   previewVoiceDesign: (request: PreviewVoiceDesignRequest) => Promise<PreviewVoiceDesignResponse>;
   designVoice: (request: VoiceDesignRequest) => Promise<VoiceDesignResponse>;
+  exportVoiceDesign?: (request: { voiceId: string }) => Promise<{ ok: boolean; voiceId: string; filename: string; exportUrl: string }>;
+  importVoiceDesign?: (request: { name: string; prompt?: string; audioData: string; consent: boolean; loraWeightsBase64?: string }) => Promise<VoiceLibraryItem>;
+  getHardwarePerformance?: () => Promise<Record<string, unknown>>;
   streamTts?: (request: {
     text: string;
     voiceId?: string;
@@ -240,6 +243,41 @@ export function createCreatorServicesService(client: ClientLike) {
       return client.rawRequest('/creator-services/tts/design-voice', {
         method: 'POST',
         body: request
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        return response.json();
+      });
+    },
+    exportVoiceDesign(request: { voiceId: string }): Promise<{ ok: boolean; voiceId: string; filename: string; exportUrl: string }> {
+      return client.rawRequest('/creator-services/tts/voices/export', {
+        method: 'POST',
+        body: request
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        return response.json();
+      });
+    },
+    importVoiceDesign(request: { name: string; prompt?: string; audioData: string; consent: boolean; loraWeightsBase64?: string }): Promise<VoiceLibraryItem> {
+      return client.rawRequest('/creator-services/tts/voices/import', {
+        method: 'POST',
+        body: request
+      }).then(async response => {
+        if (!response.ok) {
+          const body = await response.json().catch(() => undefined);
+          throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
+        }
+        return response.json();
+      });
+    },
+    getHardwarePerformance(): Promise<Record<string, unknown>> {
+      return client.rawRequest('/creator-services/hardware/performance', {
+        method: 'GET'
       }).then(async response => {
         if (!response.ok) {
           const body = await response.json().catch(() => undefined);
