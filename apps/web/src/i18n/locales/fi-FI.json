@@ -3386,5 +3386,20 @@
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
   "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
-  "Voice Library": "Voice Library"
+  "Free tier": "Ilmainen taso",
+  "Paid": "Maksullinen",
+  "Runs on this PC · no account": "Toimii tällä koneella · ei tiliä",
+  "Not yet verified": "Ei vielä vahvistettu",
+  "Get API key": "Hae API-avain",
+  "Load models from service": "Lataa mallit palvelusta",
+  "{{0}} models loaded": "{{0}} mallia ladattu",
+  "The service returned no models": "Palvelu ei palauttanut malleja",
+  "Could not load the model list": "Mallilistan lataaminen epäonnistui",
+  "Audio quality": "Äänenlaatu",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Mikään ElevenLabs-malli ei tällä hetkellä tue khmeriä. Käytä sitä englannille ja muille kielille.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Käytä Azure Speech -resurssisi avainta. Perus-URL on resurssisi alue, esimerkiksi https://southeastasia.tts.speech.microsoft.com. Khmer-äänet Sreymom ja Piseth sisältyvät; voit myös kirjoittaa toisen Azure-äänen nimen (esimerkiksi en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free on ilmainen kehittäjämalli. Äänet ovat Fish Audio -mallitunnisteita; valitse listasta tai kirjoita itse. Khmer-tuki ei ole vielä vahvistettu, joten kuuntele ensin esikatselu.",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "Tämän palveluntarjoajan khmer-tuotos ei ole vielä vahvistettu. Testaa ensin lyhyellä khmer-lauseella, kun avain toimii.",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "Khmerin laatu riippuu paikallisesta mallista: Gemma 4 (gemma4:latest) tuotti oikeaa khmeriä todellisessa testissä; Qwen 3 ja vastaavat mallit voivat jättää khmerin tuottamatta.",
+  "Voice Library": "Äänikirjasto"
 }

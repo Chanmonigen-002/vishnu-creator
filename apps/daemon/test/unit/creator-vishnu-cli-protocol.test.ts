@@ -262,4 +262,25 @@ describe('VishnuAI CLI protocol', () => {
       }
     });
   });
+
+  it('bridges the Phase 8 voice provider credentials into VishnuAI TTS config', () => {
+    const config = createDefaultCreatorServicesConfig();
+    config.tts.provider = 'azure';
+    config.tts.azure.apiKey = 'azure-key';
+    config.tts.elevenlabs.apiKey = 'eleven-key';
+    config.tts.fishaudio.apiKey = 'fish-key';
+
+    const document = parse(createVishnuConfigToml(config)) as {
+      tts: { azure: Record<string, string>; elevenlabs: Record<string, string>; fishaudio: Record<string, string> };
+    };
+    expect(document.tts.azure).toMatchObject({
+      base_url: 'https://southeastasia.tts.speech.microsoft.com', api_key: 'azure-key', model: '24khz'
+    });
+    expect(document.tts.elevenlabs).toMatchObject({
+      base_url: 'https://api.elevenlabs.io', api_key: 'eleven-key', model: 'eleven_multilingual_v2'
+    });
+    expect(document.tts.fishaudio).toMatchObject({
+      base_url: 'https://api.fish.audio', api_key: 'fish-key', model: 's2.1-pro-free'
+    });
+  });
 });

@@ -476,6 +476,42 @@
   margin-top: 8px;
 }
 
+.creator-services-provider-info,
+.creator-services-provider-models {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+}
+
+.creator-services-provider-info a {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  color: var(--accent);
+}
+
+.creator-services-provider-badge {
+  padding: 2px 8px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  background: var(--surface-2);
+  color: var(--text);
+}
+
+.creator-services-provider-badge.is-free,
+.creator-services-provider-badge.is-local {
+  border-color: color-mix(in srgb, var(--success) 40%, var(--border));
+  color: var(--success);
+}
+
+.creator-services-provider-badge.is-warning,
+.creator-services-provider-models .is-warning {
+  border-color: color-mix(in srgb, var(--warning) 45%, var(--border));
+  color: var(--warning);
+}
+
 .creator-services-inline-note.is-warning {
   border-color: color-mix(in srgb, var(--warning) 45%, var(--border));
   background: color-mix(in srgb, var(--warning) 8%, var(--surface));

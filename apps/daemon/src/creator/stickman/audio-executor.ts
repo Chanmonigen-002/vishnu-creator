@@ -1,3 +1,4 @@
+import { isCreatorTtsProvider } from '@vishnucreator/protocol';
 import { createHash } from 'node:crypto';
 import { execFile } from 'node:child_process';
 import { readFile, rm, writeFile } from 'node:fs/promises';
@@ -288,11 +289,7 @@ async function buildAudioTiming(
 
 function resolveTtsSelection(stage: CreatorExecutorInput, config: CreatorServicesConfig) {
   const gateway = gatewayCreatorBinding(config);
-  const provider = gateway ? 'openai' : stage.job.state.ttsProvider === 'openai'
-    || stage.job.state.ttsProvider === 'aliyun'
-    || stage.job.state.ttsProvider === 'edge-tts'
-    || stage.job.state.ttsProvider === 'minimax'
-    || stage.job.state.ttsProvider === 'volcengine'
+  const provider = gateway ? 'openai' : isCreatorTtsProvider(stage.job.state.ttsProvider)
     ? stage.job.state.ttsProvider
     : config.tts.provider;
   if (provider === undefined) {

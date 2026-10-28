@@ -19,6 +19,7 @@ import {
   verifyVishnuRuntimeManifest
 } from './manifest.js';
 import { listBundledTtsVoices } from './tts-voice-catalog.js';
+import { httpTtsRequest, isHttpTtsProvider, listHttpTtsVoices, type HttpTtsProvider } from './http-tts-providers.js';
 import {
   resolveVolcengineTtsRoute,
   volcengineSpeechRate
@@ -172,6 +173,18 @@ export function createVishnuTtsService(input: {
       return { provider, model: '', voices: listBundledTtsVoices(provider, '') ?? [] };
     }
     const prepared = prepareConfig(config, provider, model);
+    if (isHttpTtsProvider(provider)) {
+      if (provider !== 'azure') ensureCredentials(prepared.config, provider);
+      try {
+        return { provider, model: prepared.model, voices: await listHttpTtsVoices(prepared.config, provider) };
+      } catch (error) {
+        throw new VishnuTtsServiceError(
+          'creator_tts_upstream_error',
+          error instanceof Error ? error.message : 'Voice list request failed',
+          502
+        );
+      }
+    }
     const bundledVoices = listBundledTtsVoices(provider, prepared.model);
     if (bundledVoices !== undefined) {
       return {
@@ -391,7 +404,18 @@ async function executeProviderSynthesis(
   if (input.provider === 'aliyun') return synthesizeAliyun(input);
   if (input.provider === 'minimax') return synthesizeMinimax(input);
   if (input.provider === 'volcengine') return synthesizeVolcengine(input);
+  if (isHttpTtsProvider(input.provider)) return synthesizeHttpProvider({ ...input, provider: input.provider });
   return synthesizeOpenAi(input);
+}
+
+async function synthesizeHttpProvider(
+  input: ExecuteSynthesisInput & { timeoutMs: number; provider: HttpTtsProvider }
+): Promise<ExecuteSynthesisResult> {
+  const request = httpTtsRequest(input);
+  const response = await timedFetch(request.url, request.init, input);
+  if (!response.ok) await throwProviderHttpError(response, input.provider);
+  const content = await readAudioResponse(response);
+  return { content, format: audioFormat(response.headers.get('content-type'), undefined, detectAudioFormat(content, input.format)) };
 }
 
 async function synthesizeVolcengine(

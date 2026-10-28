@@ -121,6 +121,9 @@ type Tts struct {
 	Aliyun     AliyunTtsConfig        `toml:"aliyun"`
 	Minimax    OpenaiCompatibleConfig `toml:"minimax"`
 	Volcengine VolcengineTtsConfig    `toml:"volcengine"`
+	Azure      OpenaiCompatibleConfig `toml:"azure"`
+	Elevenlabs OpenaiCompatibleConfig `toml:"elevenlabs"`
+	Fishaudio  OpenaiCompatibleConfig `toml:"fishaudio"`
 }
 
 type Dubbing struct {

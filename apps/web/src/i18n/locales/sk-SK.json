@@ -3386,5 +3386,20 @@
   "Local + API assist (Cloud ASR/LLM + Local Voice)": "Local + API assist (Cloud ASR/LLM + Local Voice)",
   "Model folder": "Model folder",
   "Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)": "Default: drive with most free space (e.g. D:\\\\VishnuCreatorData\\\\models)",
-  "Voice Library": "Voice Library"
+  "Free tier": "Bezplatná úroveň",
+  "Paid": "Platené",
+  "Runs on this PC · no account": "Beží na tomto PC · bez účtu",
+  "Not yet verified": "Zatiaľ neoverené",
+  "Get API key": "Získať kľúč API",
+  "Load models from service": "Načítať modely zo služby",
+  "{{0}} models loaded": "Načítaných modelov: {{0}}",
+  "The service returned no models": "Služba nevrátila žiadne modely",
+  "Could not load the model list": "Nepodarilo sa načítať zoznam modelov",
+  "Audio quality": "Kvalita zvuku",
+  "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "Momentálne žiadny model ElevenLabs nepodporuje khmérčinu. Používajte ho pre angličtinu a ďalšie jazyky.",
+  "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "Použite kľúč prostriedku Azure Speech. Základná adresa URL je región vášho prostriedku, napríklad https://southeastasia.tts.speech.microsoft.com. Khmérske hlasy Sreymom a Piseth sú vstavané; môžete zadať aj iný názov hlasu Azure (napríklad en-US-JennyNeural).",
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free je bezplatný model pre vývojárov. Hlasy sú ID modelov Fish Audio; vyberte zo zoznamu alebo zadajte vlastné. Podpora khmérčiny ešte nie je potvrdená, najprv si vypočujte ukážku.",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "Khmérsky výstup tohto poskytovateľa ešte nie je overený. Keď kľúč funguje, najprv otestujte krátkou khmérskou vetou.",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "Kvalita khmérčiny závisí od lokálneho modelu: Gemma 4 (gemma4:latest) pri otestovaní vygenerovala správnu khmérčinu; Qwen 3 a podobné modely nemusia khmérčinu vypisovať.",
+  "Voice Library": "Knižnica hlasov"
 }
