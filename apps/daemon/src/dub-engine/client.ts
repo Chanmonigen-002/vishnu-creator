@@ -656,6 +656,42 @@ export class DubEngineClient {
     return Buffer.from(arrayBuffer);
   }
 
+  async streamTts(params: {
+    text: string;
+    voiceId: string;
+    provider?: string;
+    speed?: number;
+    referenceAudio?: string;
+    referenceText?: string;
+  }): Promise<Response> {
+    const response = await this.fetchWithRetry(
+      '/v1/tts/stream',
+      {
+        method: 'POST',
+        headers: headersFor(this.config),
+        body: JSON.stringify({
+          text: params.text,
+          voice_id: params.voiceId,
+          provider: params.provider,
+          speed: params.speed ?? 1.0,
+          reference_audio: params.referenceAudio,
+          reference_text: params.referenceText,
+        }),
+      }
+    );
+
+    if (!response.ok) {
+      throw new DubEngineError(
+        `ENGINE_HTTP_${response.status}`,
+        `TTS stream failed with status ${response.status}`,
+        response.status,
+        response.status >= 500
+      );
+    }
+
+    return response;
+  }
+
   generateJobId(): string {
     return createHash('sha256').update(`${Date.now()}:${crypto.randomUUID()}`).digest('hex').slice(0, 12);
   }

@@ -26,7 +26,7 @@ import type { RuntimeClient } from '../runtime/client.js';
 
 type ClientLike = Pick<RuntimeClient, 'get' | 'patch' | 'delete' | 'rawRequest'>;
 
-export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'listLlmModels' | 'getDubEngineStatus' | 'startDubEngine' | 'stopDubEngine' | 'getDubEngineTimesyncReport'> & {
+export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreatorServicesService>, 'getCodexImageStatus' | 'getCodexModelStatus' | 'getNetwork' | 'saveNetwork' | 'runDubEngineBenchmark' | 'estimateDubEngineJob' | 'resynthesizeSegment' | 'listVoiceDesigns' | 'saveVoiceDesign' | 'deleteVoiceDesign' | 'previewVoiceDesign' | 'designVoice' | 'listLlmModels' | 'getDubEngineStatus' | 'startDubEngine' | 'stopDubEngine' | 'getDubEngineTimesyncReport' | 'streamTts'> & {
   listLlmModels?: (input: { baseUrl: string; apiKey: string }) => Promise<{ models: string[] }>;
   getDubEngineStatus?: () => Promise<DubEngineRuntimeStatus>;
   startDubEngine?: () => Promise<DubEngineRuntimeStatus>;
@@ -58,6 +58,14 @@ export type CreatorServicesSettingsService = Omit<ReturnType<typeof createCreato
   deleteVoiceDesign: (request: DeleteVoiceDesignRequest) => Promise<void>;
   previewVoiceDesign: (request: PreviewVoiceDesignRequest) => Promise<PreviewVoiceDesignResponse>;
   designVoice: (request: VoiceDesignRequest) => Promise<VoiceDesignResponse>;
+  streamTts?: (request: {
+    text: string;
+    voiceId?: string;
+    provider?: string;
+    speed?: number;
+    referenceAudio?: string;
+    referenceText?: string;
+  }) => Promise<Response>;
 };
 
 export function createCreatorServicesService(client: ClientLike) {
@@ -238,6 +246,19 @@ export function createCreatorServicesService(client: ClientLike) {
           throw new Error(typeof body?.message === 'string' ? body.message : `HTTP ${response.status}`);
         }
         return response.json();
+      });
+    },
+    streamTts(request: {
+      text: string;
+      voiceId?: string;
+      provider?: string;
+      speed?: number;
+      referenceAudio?: string;
+      referenceText?: string;
+    }): Promise<Response> {
+      return client.rawRequest('/creator-services/dub-engine/tts/stream', {
+        method: 'POST',
+        body: request
       });
     }
   };

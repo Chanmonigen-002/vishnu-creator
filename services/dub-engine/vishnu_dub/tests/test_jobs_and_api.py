@@ -284,3 +284,85 @@ def test_resynthesize_segment_endpoint(tmp_path, monkeypatch):
     assert art_res.content == b"ID3mockmp3data"
 
 
+def test_stream_tts_endpoint(tmp_path, monkeypatch):
+    """Verify POST /v1/tts/stream yields audio chunks in real-time."""
+    from fastapi.testclient import TestClient
+    import vishnu_dub.api as api_mod
+
+    class MockStreamingTTSBackend:
+        async def synthesize_streaming(self, text, voice_id, speed=1.0, reference_audio=None, reference_text=None):
+            yield b"RIFFchunk1"
+            yield b"DATAchunk2"
+
+    monkeypatch.setattr("vishnu_dub.tts.get_tts_backend", lambda _provider, _cfg=None: MockStreamingTTSBackend())
+    api_mod.settings = Settings(jobs_path=tmp_path / "jobs")
+    client = TestClient(api_mod.app)
+
+    # Empty text returns 400
+    res_bad = client.post("/v1/tts/stream", json={"text": "   ", "voice_id": "km-KH-SreymomNeural"})
+    assert res_bad.status_code == 400
+
+    # Valid streaming call
+    response = client.post("/v1/tts/stream", json={
+        "text": "ជំរាបសួរ ភ្នំពេញ",
+        "voice_id": "km-KH-SreymomNeural",
+        "provider": "edge-tts",
+        "speed": 1.0,
+    })
+    assert response.status_code == 200
+    assert response.headers["content-type"] == "audio/mpeg"
+    assert response.content == b"RIFFchunk1DATAchunk2"
+
+
+def test_extract_reference_audio_trims_to_30s(tmp_path):
+    """Verify that auto-clone reference audio is extracted and trimmed to <= 30 seconds."""
+    from vishnu_dub.jobs import Job, JobManager
+    from vishnu_dub.config import Settings, resolve_ffmpeg_path
+    import subprocess
+
+    ffmpeg_bin = resolve_ffmpeg_path()
+    # Generate 5 seconds of sine tone WAV as dummy source
+    source_wav = tmp_path / "source.wav"
+    subprocess.run([
+        ffmpeg_bin, "-y", "-f", "lavfi", "-i", "sine=frequency=440:duration=5",
+        "-ar", "44100", "-ac", "2", str(source_wav)
+    ], check=True, capture_output=True)
+
+    manager = JobManager(Settings(jobs_path=tmp_path / "jobs"))
+
+    async def _run():
+        job = await manager.create_job(
+            job_id="job_clone",
+            source_url=str(source_wav),
+            source_language="en",
+            target_language="km",
+            tts_provider="edge-tts",
+            auto_clone_speaker=True
+        )
+        extracted = await manager._extract_reference_audio(
+            job, tmp_path / "work", ffmpeg_bin, source_wav, max_duration=3.0
+        )
+        assert extracted is not None
+        assert extracted.exists()
+        assert extracted.stat().st_size > 0
+
+        # When auto_clone_speaker is False, returns None
+        job_disabled = await manager.create_job(
+            job_id="job_no_clone",
+            source_url=str(source_wav),
+            source_language="en",
+            target_language="km",
+            tts_provider="edge-tts",
+            auto_clone_speaker=False
+        )
+        assert await manager._extract_reference_audio(
+            job_disabled, tmp_path / "work", ffmpeg_bin, source_wav, max_duration=3.0
+        ) is None
+        return extracted
+
+    ref = asyncio.run(_run())
+    assert ref.name == "reference_audio.wav"
+
+
+
+

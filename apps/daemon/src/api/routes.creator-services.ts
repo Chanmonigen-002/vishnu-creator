@@ -8,6 +8,7 @@ import {
   estimateDubJob
 } from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
+import { Readable } from 'node:stream';
 import { ZodError } from 'zod/v3';
 import {
   CreatorServicesConfigStoreError,
@@ -332,6 +333,53 @@ export async function registerCreatorServicesRoutes(
       return reply.code(502).send(apiError(
         'DUB_ENGINE_ERROR',
         error instanceof Error ? error.message : 'Re-synthesis failed'
+      ));
+    }
+  });
+
+  server.post<{
+    Body: {
+      text: string;
+      voiceId?: string;
+      provider?: string;
+      speed?: number;
+      referenceAudio?: string;
+      referenceText?: string;
+    };
+  }>('/creator-services/dub-engine/tts/stream', async (request, reply) => {
+    try {
+      const { text, voiceId, provider, speed, referenceAudio, referenceText } = request.body || {};
+      if (!text || typeof text !== 'string' || !text.trim()) {
+        return reply.code(400).send(apiError('VALIDATION_FAILED', 'text is required'));
+      }
+      const saved = await store.read();
+      const client = new DubEngineClient({
+        ...saved.dubEngine,
+        enabled: true,
+      });
+      const upstream = await client.streamTts({
+        text: text.trim(),
+        voiceId: voiceId || 'km-KH-SreymomNeural',
+        provider,
+        speed,
+        referenceAudio,
+        referenceText,
+      });
+      const contentType = upstream.headers.get('content-type') || 'audio/mpeg';
+      reply.header('Content-Type', contentType);
+      reply.header('Cache-Control', 'no-cache');
+      reply.header('X-Content-Type-Options', 'nosniff');
+      if (upstream.body) {
+        return reply.send(Readable.fromWeb(upstream.body as any));
+      }
+      return reply.send(Buffer.from(await upstream.arrayBuffer()));
+    } catch (error) {
+      if (error instanceof DubEngineError) {
+        return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
+      }
+      return reply.code(502).send(apiError(
+        'DUB_ENGINE_ERROR',
+        error instanceof Error ? error.message : 'Streaming TTS failed'
       ));
     }
   });

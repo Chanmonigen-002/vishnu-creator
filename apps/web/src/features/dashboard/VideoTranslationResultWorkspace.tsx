@@ -336,6 +336,50 @@ export default function VideoTranslationResultWorkspace(props: {
     }
   };
 
+  const [streamingCueId, setStreamingCueId] = useState<number | null>(null);
+
+  const handleStreamPreview = async (cue: SubtitleCue, index: number) => {
+    if (streamingCueId !== null) return;
+    setStreamingCueId(cue.id);
+    try {
+      const payload = JSON.stringify({
+        text: cue.text.trim(),
+        voiceId: effectiveTargetLang.startsWith('km') ? 'km-KH-SreymomNeural' : undefined,
+        provider: 'edge-tts',
+        speed: 1.0,
+      });
+      const headers = { 'Content-Type': 'application/json' };
+      let res = await fetch('/creator-services/dub-engine/tts/stream', {
+        method: 'POST',
+        headers,
+        body: payload
+      });
+      if (res.status === 404) {
+        res = await fetch('/.vishnucreator/runtime/creator-services/dub-engine/tts/stream', {
+          method: 'POST',
+          headers,
+          body: payload
+        });
+      }
+      if (!res.ok) {
+        const errBody = await res.json().catch(() => ({}));
+        throw new Error(errBody?.error?.message || errBody?.message || `HTTP ${res.status}`);
+      }
+      const blob = await res.blob();
+      const url = URL.createObjectURL(blob);
+      const audio = new Audio(url);
+      audio.onended = () => {
+        URL.revokeObjectURL(url);
+        setStreamingCueId(null);
+      };
+      await audio.play();
+    } catch (err) {
+      setReDubNotice(l(`试听失败: ${err instanceof Error ? err.message : String(err)}`, `Preview failed: ${err instanceof Error ? err.message : String(err)}`));
+      setTimeout(() => setReDubNotice(null), 4000);
+      setStreamingCueId(null);
+    }
+  };
+
   const generatedArtifactCount = props.videoOutputs.length
     + props.subtitleOutputs.length
     + (props.voiceOutput === undefined ? 0 : 1);
@@ -1287,21 +1331,38 @@ export default function VideoTranslationResultWorkspace(props: {
                                     </span>
                                   ) : null}
                                   {!editReadOnly ? (
-                                    <button
-                                      type="button"
-                                      className="video-subtitle-redub-btn"
-                                      data-testid={`cue-redub-${cue.id}`}
-                                      disabled={reDubbingCueId === cue.id || !cue.text.trim()}
-                                      onClick={() => handleResynthesizeSegment(cue, index)}
-                                      aria-label={l(`重新合成第 ${index + 1} 句配音`, `Re-dub cue ${index + 1}`)}
-                                      title={l('重新合成该句配音', 'Re-synthesize speech for this line')}
-                                    >
-                                      {reDubbingCueId === cue.id ? (
-                                        <span className="video-subtitle-redub-loading">⚡ {l('合成中…', 'Synthesizing…')}</span>
-                                      ) : (
-                                        <span>⚡ {l('重新合成', 'Re-dub')}</span>
-                                      )}
-                                    </button>
+                                    <>
+                                      <button
+                                        type="button"
+                                        className="video-subtitle-stream-btn"
+                                        data-testid={`cue-stream-preview-${cue.id}`}
+                                        disabled={streamingCueId === cue.id || !cue.text.trim()}
+                                        onClick={() => handleStreamPreview(cue, index)}
+                                        aria-label={l(`试听第 ${index + 1} 句配音`, `Preview cue ${index + 1}`)}
+                                        title={l('实时流式试听该句配音', 'Stream preview speech for this line in real-time')}
+                                      >
+                                        {streamingCueId === cue.id ? (
+                                          <span className="video-subtitle-stream-loading">🔊 {l('试听中…', 'Playing…')}</span>
+                                        ) : (
+                                          <span>🔊 {l('试听', 'Preview')}</span>
+                                        )}
+                                      </button>
+                                      <button
+                                        type="button"
+                                        className="video-subtitle-redub-btn"
+                                        data-testid={`cue-redub-${cue.id}`}
+                                        disabled={reDubbingCueId === cue.id || !cue.text.trim()}
+                                        onClick={() => handleResynthesizeSegment(cue, index)}
+                                        aria-label={l(`重新合成第 ${index + 1} 句配音`, `Re-dub cue ${index + 1}`)}
+                                        title={l('重新合成该句配音', 'Re-synthesize speech for this line')}
+                                      >
+                                        {reDubbingCueId === cue.id ? (
+                                          <span className="video-subtitle-redub-loading">⚡ {l('合成中…', 'Synthesizing…')}</span>
+                                        ) : (
+                                          <span>⚡ {l('重新合成', 'Re-dub')}</span>
+                                        )}
+                                      </button>
+                                    </>
                                   ) : null}
                                 </div>
                               );

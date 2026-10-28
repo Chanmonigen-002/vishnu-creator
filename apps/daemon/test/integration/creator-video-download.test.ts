@@ -119,7 +119,7 @@ describe('creator video download', () => {
     expect(resumed.statusCode).toBe(202);
     const stage = resumed.json().stage;
     await fixture.wait(stage.id, 'running');
-    expect(fixture.attempts[1]).toMatchObject({ workdir: fixture.attempts[0]!.workdir, partial: 'downloaded-first-part' });
+    await expect.poll(() => fixture.attempts[1]).toMatchObject({ workdir: fixture.attempts[0]!.workdir, partial: 'downloaded-first-part' });
     await fixture.control(stage.id, 'pause');
     await fixture.wait(stage.id, 'interrupted');
     expect((await fixture.control(stage.id, 'cancel')).statusCode).toBe(200);
