@@ -573,8 +573,9 @@ class JobManager:
             segment_files: List[Path] = []
             synthesized_any = False
 
+            ext = ".wav" if getattr(tts_backend, "SAMPLE_RATE", 24000) == 48000 or tts_backend.name == "voxcpm2" else ".mp3"
             for idx, seg in enumerate(km_segments):
-                seg_path = tts_dir / f"seg_{idx:04d}.mp3"
+                seg_path = tts_dir / f"seg_{idx:04d}{ext}"
                 if not seg_path.exists() or seg_path.stat().st_size == 0:
                     # Only cloning backends (VoxCPM2) accept reference_audio; the
                     # TTSBackend contract and the Edge/OpenAI backends do not.

@@ -1,0 +1,11 @@
+{
+  "id": "voxcpm2_default_speaker",
+  "name": "VoxCPM2 Official Speaker (Clone Sample)",
+  "prompt": "Natural balanced voice reading sample for voice cloning",
+  "duration": 12.8,
+  "createdAt": "2026-10-28T00:00:00Z",
+  "audioUrl": "/v1/tts/artifacts/default_clone_speaker.wav",
+  "consent": true,
+  "isSample": true,
+  "description": "Clean 48 kHz voice reading recording from VoxCPM2. Suitable as reference audio for voice cloning and testing."
+}

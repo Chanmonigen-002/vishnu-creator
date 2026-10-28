@@ -377,3 +377,129 @@ def test_lora_training_module_import_and_check():
     assert isinstance(ok, bool)
     assert isinstance(msg, str)
 
+
+@pytest.mark.asyncio
+async def test_end_to_end_khmer_dub_with_voxcpm2_cloned_voice(tmp_path: Path, monkeypatch):
+    """Phase 5 Exit Gate Test: E2E Khmer dubbing with VoxCPM2 cloned voice on CPU."""
+    import subprocess
+    from vishnu_dub.jobs import JobManager, JobStatus, resolve_ffmpeg_path
+    from vishnu_dub.asr import TranscriptionResult, TranscriptionSegment
+
+    ffmpeg_bin = resolve_ffmpeg_path()
+    input_mp4 = tmp_path / "speaker_source.mp4"
+    # Create 2-second test video with 440 Hz audio
+    subprocess.run(
+        [
+            ffmpeg_bin, "-y",
+            "-f", "lavfi", "-i", "color=c=black:s=320x240:d=2",
+            "-f", "lavfi", "-i", "sine=frequency=440:duration=2",
+            "-c:v", "libx264", "-pix_fmt", "yuv420p",
+            "-c:a", "aac", "-shortest",
+            str(input_mp4),
+        ],
+        check=True,
+        capture_output=True,
+    )
+
+    class MockASR:
+        def is_available(self) -> bool:
+            return True
+        async def transcribe(self, audio_path: Path, language=None):
+            return TranscriptionResult(
+                segments=[
+                    TranscriptionSegment(start=0.0, end=1.0, text="Hello world."),
+                    TranscriptionSegment(start=1.0, end=2.0, text="Welcome to Vishnu."),
+                ],
+                language="en",
+                duration=2.0,
+            )
+
+    class MockTranslation:
+        def is_available(self) -> bool:
+            return True
+        async def translate(self, segments, source_language: str, target_language: str, cps: float = 13.0):
+            return [
+                {"start": 0.0, "end": 1.0, "text": "សួស្តីពិភពលោក។", "source_text": "Hello world."},
+                {"start": 1.0, "end": 2.0, "text": "សូមស្វាគមន៍មកកាន់វិស្ណុ។", "source_text": "Welcome to Vishnu."},
+            ]
+
+    # Instantiate real VoxCPM2Backend with FakeVoxCPMModel for deterministic 48 kHz generation
+    voxcpm_backend = VoxCPM2Backend()
+    voxcpm_backend._model = FakeVoxCPMModel(sample_rate=48000)
+
+    monkeypatch.setattr("vishnu_dub.asr.get_asr_backend", lambda *_: MockASR())
+    monkeypatch.setattr("vishnu_dub.translation.get_translation_backend", lambda *_: MockTranslation())
+    monkeypatch.setattr("vishnu_dub.tts.get_tts_backend", lambda name, *_: voxcpm_backend if name == "voxcpm2" else None)
+
+    from vishnu_dub.config import Settings
+    manager = JobManager(Settings(jobs_path=tmp_path / "jobs"))
+    job = await manager.create_job(
+        job_id="test_e2e_voxcpm",
+        source_url=str(input_mp4),
+        source_language="en",
+        target_language="km",
+        tts_provider="voxcpm2",
+        tts_voice_id="clone",
+        auto_clone_speaker=True,
+    )
+
+    await manager._run_job(job)
+    completed_job = await manager.get_job("test_e2e_voxcpm")
+    assert completed_job is not None
+    assert completed_job.status == JobStatus.COMPLETED
+    assert completed_job.result_path is not None
+    result_mp4 = Path(completed_job.result_path)
+    assert result_mp4.exists()
+    assert result_mp4.stat().st_size > 0
+
+    # Verify auto-cloned reference audio was extracted from video
+    assert completed_job.reference_audio_path is not None
+    assert Path(completed_job.reference_audio_path).exists()
+
+    # Verify timesync report exists and placed both Khmer segments
+    timesync_file = tmp_path / "jobs" / completed_job.job_id / "timesync_report.json"
+    assert timesync_file.exists()
+    report = json.loads(timesync_file.read_text(encoding="utf-8"))
+    assert len(report["segments"]) == 2
+    for p in report["segments"]:
+        assert "tempo" in p
+        assert "overflow" in p
+        assert "status" in p
+
+
+def test_vllm_serving_module_and_routes():
+    """T5.8 optional vLLM module: verifies honest non-fake detection."""
+    from vishnu_dub.vllm_serving import VLLMManager, VLLMModelLoadRequest
+    manager = VLLMManager()
+    assert manager.port == 8766
+    req = VLLMModelLoadRequest()
+    assert req.model == "openbmb/VoxCPM2"
+    assert isinstance(manager.available, bool)
+    assert isinstance(manager.gpu_available, bool)
+
+
+@pytest.mark.asyncio
+async def test_default_sample_voices_and_manifest():
+    """Verify built-in default VoxCPM2 voices for cloning & training are available."""
+    transport = ASGITransport(app=app)
+    async with AsyncClient(transport=transport, base_url="http://test") as client:
+        # 1. Voice list includes default speaker and training reader
+        list_resp = await client.get("/v1/tts/voices/list")
+        assert list_resp.status_code == 200
+        voice_ids = [v["id"] for v in list_resp.json()["voices"]]
+        assert "voxcpm2_default_speaker" in voice_ids
+        assert "voxcpm2_training_reader" in voice_ids
+
+        # 2. Can fetch the artifact audio
+        art_resp = await client.get("/v1/tts/artifacts/default_clone_speaker.wav")
+        assert art_resp.status_code == 200
+        assert len(art_resp.content) > 100_000
+        assert art_resp.headers["content-type"] == "audio/wav"
+
+        # 3. Can export the default sample voice bundle
+        exp_resp = await client.post("/v1/tts/voices/export", json={"voice_id": "voxcpm2_default_speaker"})
+        assert exp_resp.status_code == 200
+        assert exp_resp.json()["ok"] is True
+        assert exp_resp.json()["filename"].endswith(".zip")
+
+

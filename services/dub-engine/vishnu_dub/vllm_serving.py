@@ -59,7 +59,7 @@ class TTSGenerationResponse(BaseModel):
 
 class VLLMModelLoadRequest(BaseModel):
     """Request to load a model into vLLM."""
-    model: str = "Mariya987/VoxCPM2"
+    model: str = "openbmb/VoxCPM2"
     tensor_parallel_size: int = 1
     dtype: str = "float16"
     max_model_len: int = 4096
@@ -84,7 +84,6 @@ class VLLMManager:
         self.process: Optional[asyncio.subprocess.Process] = None
         self.model: Optional[str] = None
         self.port: int = 8766
-        self.base_url: str = f"http://localhost:{self.port}"
         self._running = False
 
     @property

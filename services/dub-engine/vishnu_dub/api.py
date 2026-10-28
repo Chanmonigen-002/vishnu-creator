@@ -684,52 +684,65 @@ async def list_voice_designs():
     base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
     voice_designs_dir = base_jobs_dir / "voice_designs"
     
-    if not voice_designs_dir.exists():
-        return {"voices": []}
-    
     voices = []
-    for design_dir in voice_designs_dir.iterdir():
-        if not design_dir.is_dir():
-            continue
+    if voice_designs_dir.exists():
+        for design_dir in voice_designs_dir.iterdir():
+            if not design_dir.is_dir():
+                continue
 
-        meta_file = design_dir / "metadata.json"
-        if meta_file.exists():
+            meta_file = design_dir / "metadata.json"
+            if meta_file.exists():
+                try:
+                    loaded = json.loads(meta_file.read_text(encoding="utf-8"))
+                    if isinstance(loaded, dict) and loaded.get("id"):
+                        voices.append(loaded)
+                        continue
+                except Exception:
+                    pass
+            
+            # Find audio file
+            audio_file = None
+            for f in design_dir.iterdir():
+                if f.suffix in ('.wav', '.mp3'):
+                    audio_file = f
+                    break
+            
+            if not audio_file:
+                continue
+            
+            metadata = {
+                "id": design_dir.name,
+                "name": design_dir.name,
+                "prompt": design_dir.name,
+                "duration": 0.0,
+                "createdAt": datetime.fromtimestamp(design_dir.stat().st_ctime, tz=timezone.utc).isoformat(),
+                "audioUrl": f"/v1/tts/artifacts/{audio_file.name}",
+                "consent": True,
+            }
+            
             try:
-                loaded = json.loads(meta_file.read_text(encoding="utf-8"))
-                if isinstance(loaded, dict) and loaded.get("id"):
-                    voices.append(loaded)
-                    continue
+                import soundfile as sf
+                info = sf.info(str(audio_file))
+                metadata["duration"] = info.duration
             except Exception:
                 pass
-        
-        # Find audio file
-        audio_file = None
-        for f in design_dir.iterdir():
-            if f.suffix in ('.wav', '.mp3'):
-                audio_file = f
-                break
-        
-        if not audio_file:
-            continue
-        
-        metadata = {
-            "id": design_dir.name,
-            "name": design_dir.name,
-            "prompt": design_dir.name,
-            "duration": 0.0,
-            "createdAt": datetime.fromtimestamp(design_dir.stat().st_ctime, tz=timezone.utc).isoformat(),
-            "audioUrl": f"/v1/tts/artifacts/{audio_file.name}",
-            "consent": True,
-        }
-        
-        try:
-            import soundfile as sf
-            info = sf.info(str(audio_file))
-            metadata["duration"] = info.duration
-        except Exception:
-            pass
-        
-        voices.append(metadata)
+            
+            voices.append(metadata)
+
+    # Include built-in sample/default voices if not already overridden by custom voices
+    existing_ids = {v["id"] for v in voices}
+    sample_dir = Path(__file__).resolve().parent / "data" / "sample_voices"
+    if sample_dir.exists():
+        for sub_dir in sample_dir.iterdir():
+            if sub_dir.is_dir() and sub_dir.name not in existing_ids:
+                meta_path = sub_dir / "metadata.json"
+                if meta_path.exists():
+                    try:
+                        s_meta = json.loads(meta_path.read_text(encoding="utf-8"))
+                        if isinstance(s_meta, dict) and s_meta.get("id"):
+                            voices.append(s_meta)
+                    except Exception:
+                        pass
     
     return {"voices": voices}
 
@@ -839,20 +852,30 @@ async def export_voice_design(voice_id: str = Body(..., embed=True)):
     base_jobs_dir = Path(settings.jobs_path if settings else "jobs").resolve()
     voice_dir = (base_jobs_dir / "voice_designs" / voice_id).resolve()
 
+    found_dir = None
     try:
-        if not (voice_dir.is_relative_to(base_jobs_dir / "voice_designs") and voice_dir.exists() and voice_dir.is_dir()):
-            raise HTTPException(404, f"Voice design '{voice_id}' not found")
+        if voice_dir.is_relative_to(base_jobs_dir / "voice_designs") and voice_dir.exists() and voice_dir.is_dir():
+            found_dir = voice_dir
     except (ValueError, RuntimeError):
+        pass
+
+    if not found_dir:
+        sample_dir = (Path(__file__).resolve().parent / "data" / "sample_voices" / voice_id).resolve()
+        if sample_dir.exists() and sample_dir.is_dir():
+            found_dir = sample_dir
+
+    if not found_dir:
         raise HTTPException(404, f"Voice design '{voice_id}' not found")
 
     import zipfile
     export_filename = f"voice_export_{voice_id}.zip"
+    (base_jobs_dir / "voice_designs").mkdir(parents=True, exist_ok=True)
     export_path = base_jobs_dir / "voice_designs" / export_filename
 
     with zipfile.ZipFile(export_path, "w", compression=zipfile.ZIP_DEFLATED) as zf:
-        for item in voice_dir.rglob("*"):
+        for item in found_dir.rglob("*"):
             if item.is_file():
-                zf.write(item, arcname=item.relative_to(voice_dir))
+                zf.write(item, arcname=item.relative_to(found_dir))
 
     return {
         "ok": True,
@@ -1217,9 +1240,27 @@ async def download_voice_design_artifact(filename: str):
         path = None
 
     if not path:
+        # Check built-in sample voices
+        sample_voices_dir = (Path(__file__).resolve().parent / "data" / "sample_voices").resolve()
+        if sample_voices_dir.exists():
+            direct_sample = (sample_voices_dir / safe_filename).resolve()
+            try:
+                if direct_sample.is_relative_to(sample_voices_dir) and direct_sample.exists() and direct_sample.is_file():
+                    path = str(direct_sample)
+                else:
+                    for sub in sample_voices_dir.iterdir():
+                        if sub.is_dir():
+                            sub_cand = (sub / safe_filename).resolve()
+                            if sub_cand.is_relative_to(sample_voices_dir) and sub_cand.exists() and sub_cand.is_file():
+                                path = str(sub_cand)
+                                break
+            except (ValueError, RuntimeError):
+                pass
+
+    if not path:
         raise HTTPException(404, f"Voice design artifact '{safe_filename}' not found")
 
-    media_type = "audio/mpeg" if safe_filename.endswith(".mp3") else "audio/wav"
+    media_type = "audio/mpeg" if safe_filename.endswith(".mp3") else ("application/zip" if safe_filename.endswith(".zip") else "audio/wav")
     return FileResponse(
         path,
         media_type=media_type,
