@@ -81,14 +81,14 @@ test('Khmer dubbing E2E: EN source -> Khmer subtitles + Edge-TTS Khmer dub -> pl
     }
   });
 
-  // Navigate to Workbench
-  await page.addInitScript(({ projectId, threadId }) => {
+  // Open App in baseline runtime
+  await runtime.openApp(page);
+
+  // Set Khmer locale and navigate to Smart Dubbing Workbench
+  await page.evaluate(() => {
     localStorage.setItem('vishnucreator.preferences.dynamicBackground', 'false');
     localStorage.setItem('vishnucreator.preferences.language', 'km-KH');
-    localStorage.setItem('vishnucreator.navigation.v3', JSON.stringify({ currentProjectId: projectId, selectedThreadId: threadId }));
-  }, { projectId: runtime.projectId, threadId: runtime.ordinaryThreadId });
-
-  await runtime.openApp(page);
+  });
   await page.goto(`${runtime.origin}/#/workbench?tool=smart-dubbing&jobId=${encodeURIComponent(job.id)}`);
 
   // Verify the smart dubbing script editor renders the Khmer script cleanly
