@@ -8,6 +8,8 @@ import {
   estimateDubJob
 } from '@vishnucreator/protocol';
 import type { FastifyInstance, FastifyReply } from 'fastify';
+import { existsSync, readFileSync, readdirSync } from 'node:fs';
+import { join } from 'node:path';
 import { Readable } from 'node:stream';
 import { ZodError } from 'zod/v3';
 import {
@@ -19,6 +21,7 @@ import {
 } from '../creator-services/config-store.js';
 import { createVishnuCreatorServicesCapabilities } from '../creator/vishnu/capabilities.js';
 import { DubEngineClient, DubEngineError } from '../dub-engine/client.js';
+import { resolveDubEngineDirectory } from '../dub-engine/service.js';
 import {
   VishnuTtsServiceError,
   type VishnuTtsService
@@ -522,12 +525,106 @@ export async function registerCreatorServicesRoutes(
     }
   });
 
+  function readLocalVoiceDesignsFallback(enginePath?: string): Array<{
+    id: string;
+    name: string;
+    prompt: string;
+    duration: number;
+    createdAt: string;
+    audioUrl: string;
+    consent: boolean;
+    isSample: boolean;
+  }> {
+    try {
+      const engineDir = resolveDubEngineDirectory({ enginePath: enginePath ?? '' });
+      const sampleDir = join(engineDir, 'vishnu_dub', 'data', 'sample_voices');
+      const voices: Array<{
+        id: string;
+        name: string;
+        prompt: string;
+        duration: number;
+        createdAt: string;
+        audioUrl: string;
+        consent: boolean;
+        isSample: boolean;
+      }> = [];
+      if (existsSync(sampleDir)) {
+        for (const entry of readdirSync(sampleDir, { withFileTypes: true })) {
+          if (entry.isDirectory()) {
+            const metaFile = join(sampleDir, entry.name, 'metadata.json');
+            if (existsSync(metaFile)) {
+              try {
+                const parsed = JSON.parse(readFileSync(metaFile, 'utf8'));
+                if (parsed && typeof parsed.id === 'string') {
+                  voices.push({
+                    id: parsed.id,
+                    name: typeof parsed.name === 'string' ? parsed.name : parsed.id,
+                    prompt: typeof parsed.prompt === 'string' ? parsed.prompt : '',
+                    duration: typeof parsed.duration === 'number' ? parsed.duration : 0,
+                    createdAt: typeof parsed.createdAt === 'string' ? parsed.createdAt : '',
+                    audioUrl: typeof parsed.audioUrl === 'string' ? parsed.audioUrl : `/creator-services/tts/artifacts/${parsed.id}.wav`,
+                    consent: parsed.consent === true,
+                    isSample: parsed.isSample === true,
+                  });
+                }
+              } catch {}
+            }
+          }
+        }
+      }
+      return voices;
+    } catch {
+      return [];
+    }
+  }
+
+  function readLocalArtifactFallback(filename: string, enginePath?: string): Buffer | null {
+    try {
+      const safeName = filename.replace(/^(\.\.(\/|\\|$))+/, '');
+      const engineDir = resolveDubEngineDirectory({ enginePath: enginePath ?? '' });
+      const sampleDir = join(engineDir, 'vishnu_dub', 'data', 'sample_voices');
+      const directPath = join(sampleDir, safeName);
+      if (existsSync(directPath)) return readFileSync(directPath);
+      if (existsSync(sampleDir)) {
+        for (const sub of readdirSync(sampleDir, { withFileTypes: true })) {
+          if (sub.isDirectory()) {
+            const subPath = join(sampleDir, sub.name, safeName);
+            if (existsSync(subPath)) return readFileSync(subPath);
+          }
+        }
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
+  function readLocalPreviewFallback(voiceId: string, enginePath?: string): Buffer | null {
+    try {
+      const safeId = voiceId.replace(/^(\.\.(\/|\\|$))+/, '');
+      const engineDir = resolveDubEngineDirectory({ enginePath: enginePath ?? '' });
+      const sampleVoiceDir = join(engineDir, 'vishnu_dub', 'data', 'sample_voices', safeId);
+      if (existsSync(sampleVoiceDir)) {
+        for (const file of readdirSync(sampleVoiceDir)) {
+          if (file.endsWith('.wav') || file.endsWith('.mp3')) {
+            return readFileSync(join(sampleVoiceDir, file));
+          }
+        }
+      }
+      return null;
+    } catch {
+      return null;
+    }
+  }
+
   server.get<{
     Params: { filename: string };
   }>('/creator-services/tts/artifacts/:filename', async (request, reply) => {
+    let enginePath: string | undefined;
     try {
       const { filename } = request.params;
       const saved = await store.read();
+      enginePath = saved.dubEngine.enginePath;
       const client = new DubEngineClient({
         ...saved.dubEngine,
         enabled: true,
@@ -539,6 +636,14 @@ export async function registerCreatorServicesRoutes(
         .header('Cache-Control', 'public, max-age=3600')
         .send(buffer);
     } catch (error) {
+      const fallback = readLocalArtifactFallback(request.params.filename, enginePath);
+      if (fallback) {
+        return reply
+          .header('Content-Type', 'audio/wav')
+          .header('Content-Length', String(fallback.length))
+          .header('Cache-Control', 'public, max-age=3600')
+          .send(fallback);
+      }
       if (error instanceof DubEngineError) {
         return reply.code(error.statusCode === 404 ? 404 : 502).send(apiError('DUB_ENGINE_ERROR', error.message));
       }
@@ -550,8 +655,10 @@ export async function registerCreatorServicesRoutes(
   });
 
   server.get('/creator-services/tts/voices/list', async (_request, reply) => {
+    let enginePath: string | undefined;
     try {
       const saved = await store.read();
+      enginePath = saved.dubEngine.enginePath;
       const client = new DubEngineClient({
         ...saved.dubEngine,
         enabled: true,
@@ -559,6 +666,10 @@ export async function registerCreatorServicesRoutes(
       const result = await client.listVoiceDesigns();
       return result;
     } catch (error) {
+      const fallbackVoices = readLocalVoiceDesignsFallback(enginePath);
+      if (fallbackVoices.length > 0) {
+        return { voices: fallbackVoices };
+      }
       if (error instanceof DubEngineError) {
         return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
       }
@@ -632,8 +743,10 @@ export async function registerCreatorServicesRoutes(
     if (!voiceId) {
       return reply.code(400).send(apiError('VALIDATION_FAILED', 'Voice ID is required'));
     }
+    let enginePath: string | undefined;
     try {
       const saved = await store.read();
+      enginePath = saved.dubEngine.enginePath;
       const client = new DubEngineClient({
         ...saved.dubEngine,
         enabled: true,
@@ -645,6 +758,14 @@ export async function registerCreatorServicesRoutes(
         .header('Cache-Control', 'no-store')
         .send(blob);
     } catch (error) {
+      const fallback = readLocalPreviewFallback(voiceId, enginePath);
+      if (fallback) {
+        return reply
+          .header('Content-Type', 'audio/wav')
+          .header('Content-Length', String(fallback.length))
+          .header('Cache-Control', 'no-store')
+          .send(fallback);
+      }
       if (error instanceof DubEngineError) {
         return reply.code(502).send(apiError('DUB_ENGINE_ERROR', error.message));
       }

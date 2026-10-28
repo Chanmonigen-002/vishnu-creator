@@ -10,7 +10,7 @@ import type { CreatorServicesConfigStore } from '../../src/creator-services/conf
 import { registerCreatorServicesRoutes } from '../../src/api/routes.creator-services.js';
 import { createVishnuCreatorServicesCapabilities } from '../../src/creator/vishnu/capabilities.js';
 import type { VishnuTtsService } from '../../src/creator/vishnu/tts-service.js';
-import { DubEngineClient } from '../../src/dub-engine/client.js';
+import { DubEngineClient, DubEngineError } from '../../src/dub-engine/client.js';
 
 describe('creator services API', () => {
   let server: FastifyInstance;
@@ -308,6 +308,43 @@ describe('creator services API', () => {
       language: 'ja-JP',
       text: '试听文本'
     });
+  });
+
+  it('lists voice designs from dub engine and falls back to local sample voices', async () => {
+    vi.spyOn(DubEngineClient.prototype, 'listVoiceDesigns').mockResolvedValueOnce({
+      voices: [{
+        id: 'mock_voice',
+        name: 'Mock Voice',
+        prompt: 'test prompt',
+        duration: 5.0,
+        createdAt: '2026-10-28T00:00:00Z',
+        audioUrl: '/v1/tts/artifacts/mock.wav',
+        consent: true
+      }]
+    });
+
+    const response = await server.inject({
+      method: 'GET',
+      url: '/creator-services/tts/voices/list'
+    });
+    expect(response.statusCode).toBe(200);
+    expect(response.json()).toMatchObject({
+      voices: [expect.objectContaining({ id: 'mock_voice', name: 'Mock Voice' })]
+    });
+
+    // When client throws, fallback reads local sample voices
+    vi.spyOn(DubEngineClient.prototype, 'listVoiceDesigns').mockRejectedValueOnce(
+      new DubEngineError('ENGINE_UNREACHABLE', 'Connection refused', 502)
+    );
+    const fallbackResponse = await server.inject({
+      method: 'GET',
+      url: '/creator-services/tts/voices/list'
+    });
+    expect(fallbackResponse.statusCode).toBe(200);
+    const body = fallbackResponse.json();
+    expect(Array.isArray(body.voices)).toBe(true);
+    expect(body.voices.length).toBeGreaterThan(0);
+    expect(body.voices.some((v: any) => v.id === 'voxcpm2_default_speaker')).toBe(true);
   });
 
   it('resynthesizes a segment via dub-engine and validates required text', async () => {
