@@ -63,6 +63,19 @@ type ModelSettingsService = Pick<ConnectionService, 'getCodexProvider' | 'update
 type ModelFieldErrors = Partial<Record<'baseUrl' | 'apiKey' | 'model' | 'proxy', string>>;
 type TextModelMode = 'codex' | 'custom';
 
+/** Per-provider Khmer-quality notes for text presets, from recorded live tests (T8.4/T8.5). */
+const DEFAULT_LLM_KHMER_NOTE = {
+  zh: '该服务商的高棉语输出尚未实测。密钥可用后请先用一句短高棉语测试。',
+  en: 'Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.'
+} as const;
+const llmKhmerSupportNotes: Readonly<Record<string, { zh: string; en: string }>> = {
+  // Ollama: live call recorded 2026-10-27; Khmer quality differs by model (T8.5).
+  ollama: {
+    zh: '高棉语质量取决于本机模型：Gemma 4（gemma4:latest）已实测输出正确高棉语；Qwen 3 等其他模型可能不输出高棉语。',
+    en: 'Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.'
+  }
+};
+
 export function CreatorServicesSettingsView(props: {
   connected: boolean;
   service: CreatorServicesSettingsService | null;
@@ -684,6 +697,14 @@ function TextModelSettings(props: SettingsGroupProps & {
           </AppSelect>
         </label> : null}
         {props.mode === 'custom' ? <ProviderInfo kind="llm" providerId={props.providerId} /> : null}
+        {props.mode === 'custom' && llmKhmerSupportNotes !== undefined ? (
+          <p className="creator-services-inline-note">
+            {(() => {
+              const note = llmKhmerSupportNotes[props.providerId] ?? DEFAULT_LLM_KHMER_NOTE;
+              return l(note.zh, note.en);
+            })()}
+          </p>
+        ) : null}
         {props.mode === 'custom' ? <OpenAiFields
           id="llm"
           credential="llm.apiKey"

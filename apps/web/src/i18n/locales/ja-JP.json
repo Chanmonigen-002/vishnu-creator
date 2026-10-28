@@ -3372,5 +3372,7 @@
   "Audio quality": "音声品質",
   "No ElevenLabs model currently supports Khmer. Use it for English and other languages.": "現時点でクメール語をサポートするElevenLabsモデルはありません。英語などの言語にご利用ください。",
   "Use your Azure Speech resource key. Base URL is your resource region, for example https://southeastasia.tts.speech.microsoft.com. Khmer voices Sreymom and Piseth are built in; you can also type any other Azure voice name (for example en-US-JennyNeural).": "ご利用の Azure Speech リソースのキーを使用してください。ベース URL はリソースのリージョンです。例: https://southeastasia.tts.speech.microsoft.com。クメール語音声 Sreymom と Piseth は内蔵されています。他の Azure 音声名も入力できます（例: en-US-JennyNeural）。",
-  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free は開発者向けの無料モデルです。音声は Fish Audio のモデル ID で、一覧から選択または手入力できます。クメール語対応は未確認のため、まずプレビューで確認してください。"
+  "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free は開発者向けの無料モデルです。音声は Fish Audio のモデル ID で、一覧から選択または手入力できます。クメール語対応は未確認のため、まずプレビューで確認してください。",
+  "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "このプロバイダーのクメール語出力は未検証です。キーが動作したら、まず短いクメール語の文で確認してください。",
+  "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "クメール語の品質はローカルモデルに依存します: Gemma 4 (gemma4:latest) は実テストで正しいクメール語を出力しましたが、Qwen 3 などでは出力されない場合があります。"
 }
