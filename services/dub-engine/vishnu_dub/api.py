@@ -55,6 +55,7 @@ class DubRequest(BaseModel):
     llm_base_url: Optional[str] = None
     llm_api_key: Optional[str] = None
     llm_model: Optional[str] = None
+    auto_clone_speaker: bool = False
 
 
 class DubResponse(BaseModel):
@@ -172,6 +173,7 @@ class LoRATrainingListResponse(BaseModel):
 class TTSStreamingRequest(BaseModel):
     text: str
     voice_id: str
+    provider: Optional[str] = None
     speed: float = 1.0
     reference_audio: Optional[str] = None
     reference_text: Optional[str] = None
@@ -365,6 +367,7 @@ async def create_dub_job(request: DubRequest):
         llm_base_url=request.llm_base_url,
         llm_api_key=request.llm_api_key,
         llm_model=request.llm_model,
+        auto_clone_speaker=request.auto_clone_speaker,
     )
 
     return DubResponse(
@@ -567,9 +570,13 @@ async def stream_tts(request: TTSStreamingRequest):
 
     from vishnu_dub.tts import get_tts_backend
 
-    tts_backend = get_tts_backend("voxcpm2")
+    provider = (
+        request.provider
+        or ("voxcpm2" if request.voice_id in ("clone", "design") or request.reference_audio else "edge-tts")
+    )
+    tts_backend = get_tts_backend(provider)
     if not hasattr(tts_backend, "synthesize_streaming"):
-        raise HTTPException(501, "Streaming TTS not supported by this TTS backend")
+        raise HTTPException(501, f"Streaming TTS not supported by {provider} backend")
 
     reference_audio = Path(request.reference_audio) if request.reference_audio else None
     reference_text = request.reference_text
@@ -584,11 +591,13 @@ async def stream_tts(request: TTSStreamingRequest):
         ):
             yield chunk
 
+    media_type = "audio/mpeg" if provider in ("edge-tts", "openai") else "audio/wav"
+    ext = "mp3" if media_type == "audio/mpeg" else "wav"
     return StreamingResponse(
         audio_generator(),
-        media_type="audio/wav",
+        media_type=media_type,
         headers={
-            "Content-Disposition": "inline; filename=stream.wav",
+            "Content-Disposition": f"inline; filename=stream.{ext}",
             "Cache-Control": "no-cache",
             "X-Content-Type-Options": "nosniff",
         },

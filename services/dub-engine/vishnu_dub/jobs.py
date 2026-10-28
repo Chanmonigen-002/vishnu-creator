@@ -227,6 +227,7 @@ class JobManager:
         llm_base_url: Optional[str] = None,
         llm_api_key: Optional[str] = None,
         llm_model: Optional[str] = None,
+        auto_clone_speaker: bool = False,
     ) -> "Job":
         async with self._lock:
             job = Job(
@@ -244,6 +245,7 @@ class JobManager:
                 llm_base_url=llm_base_url,
                 llm_api_key=llm_api_key,
                 llm_model=llm_model,
+                auto_clone_speaker=auto_clone_speaker,
             )
             job.work_dir = str(self.settings.jobs_path / job_id)
             Path(job.work_dir).mkdir(parents=True, exist_ok=True)
@@ -368,6 +370,7 @@ class JobManager:
             return None
         
         reference_audio = work_dir / "reference_audio.wav"
+        reference_audio.parent.mkdir(parents=True, exist_ok=True)
         
         # Extract first 30 seconds of audio for voice cloning reference
         proc = await asyncio.create_subprocess_exec(

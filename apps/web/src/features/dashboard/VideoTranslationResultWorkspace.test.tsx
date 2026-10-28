@@ -1150,6 +1150,52 @@ describe('VideoTranslationResultWorkspace', () => {
     );
   });
 
+  it('triggers streaming preview for individual subtitle cues', async () => {
+    window.HTMLMediaElement.prototype.play = vi.fn().mockResolvedValue(undefined);
+    window.URL.createObjectURL = vi.fn(() => 'blob:mock-stream-url');
+    window.URL.revokeObjectURL = vi.fn();
+
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValueOnce(
+      new Response(Buffer.from('mock-audio-stream'), {
+        status: 200,
+        headers: { 'Content-Type': 'audio/mpeg' }
+      })
+    );
+
+    render(
+      <VideoTranslationResultWorkspace
+        {...baseProps}
+        activeTab="subtitles"
+        targetLanguage="km"
+        subtitleOutputs={[{
+          artifactId: 'subtitle-horizontal-v1',
+          variant: 'horizontal',
+          artifactVersion: 1,
+          fileName: 'horizontal.srt',
+          cues: [
+            { id: 101, start: '00:00:00,000', end: '00:00:02,000', text: 'សួស្តី ភ្នំពេញ' },
+          ],
+          readOnly: false
+        }]}
+      />
+    );
+
+    const streamBtn = screen.getByTestId('cue-stream-preview-101');
+    expect(streamBtn).toHaveTextContent(/试听|Preview/);
+
+    await act(async () => {
+      fireEvent.click(streamBtn);
+    });
+
+    expect(fetchSpy).toHaveBeenCalledWith(
+      '/creator-services/dub-engine/tts/stream',
+      expect.objectContaining({
+        method: 'POST',
+        body: expect.stringContaining('សួស្តី ភ្នំពេញ')
+      })
+    );
+  });
+
   it('toggles interactive Quality Report panel displaying drift, overlong cues, Khmer CPS and CER', () => {
     render(
       <VideoTranslationResultWorkspace

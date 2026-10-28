@@ -365,6 +365,45 @@ describe('creator services API', () => {
     expect(art.rawPayload).toEqual(Buffer.from('mock-audio-data'));
   });
 
+  it('streams TTS audio chunks via /creator-services/dub-engine/tts/stream', async () => {
+    const bad = await server.inject({
+      method: 'POST',
+      url: '/creator-services/dub-engine/tts/stream',
+      payload: {
+        text: '   '
+      }
+    });
+    expect(bad.statusCode).toBe(400);
+
+    const streamSpy = vi.spyOn(DubEngineClient.prototype, 'streamTts').mockResolvedValueOnce(
+      new Response(Buffer.from('mock-streamed-mp3-bytes'), {
+        status: 200,
+        headers: {
+          'Content-Type': 'audio/mpeg'
+        }
+      })
+    );
+
+    const good = await server.inject({
+      method: 'POST',
+      url: '/creator-services/dub-engine/tts/stream',
+      payload: {
+        text: 'ជំរាបសួរ ភ្នំពេញ',
+        voiceId: 'km-KH-SreymomNeural',
+        provider: 'edge-tts'
+      }
+    });
+
+    expect(good.statusCode).toBe(200);
+    expect(good.headers['content-type']).toBe('audio/mpeg');
+    expect(good.rawPayload).toEqual(Buffer.from('mock-streamed-mp3-bytes'));
+    expect(streamSpy).toHaveBeenCalledWith(expect.objectContaining({
+      text: 'ជំរាបសួរ ភ្នំពេញ',
+      voiceId: 'km-KH-SreymomNeural',
+      provider: 'edge-tts'
+    }));
+  });
+
   it('calculates job time and cost estimates via /creator-services/dub-engine/estimate', async () => {
     vi.spyOn(DubEngineClient.prototype, 'getHardware').mockResolvedValueOnce({
       cpuCores: 12,

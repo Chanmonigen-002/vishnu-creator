@@ -98,18 +98,22 @@ class EdgeTTSBackend(TTSBackend):
             if rate_pct != 0:
                 cmd.extend(["--rate", f"{rate_pct:+d}%"])
 
-        proc = await asyncio.create_subprocess_exec(
-            *cmd,
-            stdout=asyncio.subprocess.PIPE,
-            stderr=asyncio.subprocess.PIPE,
-        )
-        stdout, stderr = await proc.communicate()
+        last_error = ""
+        for attempt in range(3):
+            proc = await asyncio.create_subprocess_exec(
+                *cmd,
+                stdout=asyncio.subprocess.PIPE,
+                stderr=asyncio.subprocess.PIPE,
+            )
+            stdout, stderr = await proc.communicate()
 
-        if proc.returncode != 0:
-            raise RuntimeError(f"edge-tts failed: {stderr.decode()}")
-
-        if not output_path.exists() or output_path.stat().st_size == 0:
-            raise RuntimeError("edge-tts produced empty output")
+            if proc.returncode == 0 and output_path.exists() and output_path.stat().st_size > 0:
+                break
+            last_error = stderr.decode()
+            if attempt < 2:
+                await asyncio.sleep(1.0)
+        else:
+            raise RuntimeError(f"edge-tts failed after 3 attempts: {last_error}")
 
         # Get duration via ffprobe
         from vishnu_dub.config import resolve_ffprobe_path
@@ -133,12 +137,31 @@ class EdgeTTSBackend(TTSBackend):
             voice_id=voice_id,
         )
 
+    async def synthesize_streaming(
+        self,
+        text: str,
+        voice_id: str,
+        speed: float = 1.0,
+        reference_audio: Optional[Path] = None,
+        reference_text: Optional[str] = None,
+    ):
+        """Stream Edge-TTS audio chunks."""
+        import edge_tts
+        rate_pct = int(round((speed - 1.0) * 100))
+        rate_str = f"{rate_pct:+d}%" if rate_pct != 0 else "+0%"
+        communicate = edge_tts.Communicate(text, voice_id, rate=rate_str)
+        async for chunk in communicate.stream():
+            if chunk.get("type") == "audio" and chunk.get("data"):
+                yield chunk["data"]
+
     def is_available(self) -> bool:
+        if Path(self.command).is_file():
+            return True
         try:
             result = subprocess.run(
                 [self.command, "--version"],
                 capture_output=True,
-                timeout=5,
+                timeout=10,
             )
             return result.returncode == 0
         except Exception:
@@ -230,6 +253,34 @@ class OpenAITTSBackend(TTSBackend):
                 provider="openai-tts",
                 voice_id=voice_id,
             )
+
+    async def synthesize_streaming(
+        self,
+        text: str,
+        voice_id: str,
+        speed: float = 1.0,
+        reference_audio: Optional[Path] = None,
+        reference_text: Optional[str] = None,
+    ):
+        """Stream OpenAI TTS audio chunks."""
+        import httpx
+        url = f"{self.base_url.rstrip('/')}/audio/speech"
+        headers = {
+            "Authorization": f"Bearer {self.api_key}",
+            "Content-Type": "application/json",
+        }
+        payload = {
+            "model": self.model,
+            "input": text,
+            "voice": voice_id or self.default_voice,
+            "speed": speed,
+            "response_format": "mp3",
+        }
+        async with httpx.AsyncClient(timeout=120) as client:
+            async with client.stream("POST", url, headers=headers, json=payload) as resp:
+                resp.raise_for_status()
+                async for chunk in resp.aiter_bytes(4096):
+                    yield chunk
 
 class VoxCPM2Backend(TTSBackend):
     """VoxCPM2 — voice cloning and design (requires GPU or CPU with high RAM)."""
