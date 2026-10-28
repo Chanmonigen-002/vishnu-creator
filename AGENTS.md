@@ -2,6 +2,8 @@
 
 These rules apply to every contributor: people, Claude Code, Hermes, Codex and any other AI agent. `CLAUDE.md` imports this file.
 
+**Working loop:** follow [`docs/AGENT_RULES.md`](docs/AGENT_RULES.md): scan and fix before you build, one task at a time, commit, push and open a PR, wait for the owner's `merge #N`, record the build, then start the next task. `pnpm gate:start` (session start), `pnpm gate:scan` (before every push, also in CI) and `pnpm gate:finish` (before you say done) enforce it; the Claude Code hooks in `.claude/settings.json` run the start and finish checks automatically.
+
 ## Vishnu Creator Project Rules
 
 ### Where things live (single source of truth)
@@ -9,11 +11,15 @@ These rules apply to every contributor: people, Claude Code, Hermes, Codex and a
 | What | Where |
 |---|---|
 | Master plan: goals, scope, phases, risks | [`docs/project/master-plan.md`](docs/project/master-plan.md) |
+| Repo layout: backend, frontend, services, data | [`docs/project/STRUCTURE.md`](docs/project/STRUCTURE.md) |
 | Task tracking: status + evidence per task | [`docs/tasks/`](docs/tasks/README.md), one file per phase |
 | Architecture decisions | [`docs/adr/`](docs/adr/README.md) |
 | Docs index | [`docs/README.md`](docs/README.md) |
-| Superseded plans | `docs/plans/archive/` (read-only history) |
-| Upstream reference sources | `File clone Resource/` (read-only, see ADR-0004) |
+| Superseded plans | `docs/plans/archive/`; upstream history in `docs/archive/upstream/` (read-only) |
+| Agent handoff notes | `docs/handoffs/` (template: `docs/templates/HANDOFF.md`) |
+| Working loop, push/PR/merge rules | [`docs/AGENT_RULES.md`](docs/AGENT_RULES.md) |
+| Merged builds log | [`docs/FINAL_BUILDS.md`](docs/FINAL_BUILDS.md) |
+| Upstream reference sources | `reference/` (read-only, see ADR-0004 and ADR-0006) |
 
 Don't create plan or TODO files in the repo root. Update the existing ones above.
 
@@ -44,7 +50,7 @@ Don't create plan or TODO files in the repo root. Update the existing ones above
 
 ### Reference folder and copied code
 
-- Never build, run, install or edit anything in `File clone Resource/`. No repo script or config may point into it.
+- Never build, run, install or edit anything in `reference/`. No repo script or config may point into it.
 - Code taken from a reference source must be copied into the repo, adapted and rebranded, then **security-reviewed**. That means no telemetry, no hidden network calls, no `eval` or shell injection, no hard-coded keys, and no auto-update URLs.
 - Each copied file gets a header naming its origin and license. ZastTranslate code may be copied only once ADR-0005 is accepted.
 

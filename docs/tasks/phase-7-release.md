@@ -17,7 +17,7 @@ Status: `todo` · `doing` · `blocked` · `done`. A task is `done` only when **E
 | T7.2 | Model download manager with progress, cache in `.vishnucreator/models`, checksum verify | todo | |
 | T7.3 | Full matrix: `pnpm typecheck`, `pnpm test`, `pytest`, `pnpm e2e`, `pnpm desktop:dist` | todo | |
 | T7.4 | Performance baselines (`pnpm perf:check`) incl. dub timing | todo | |
-| T7.5 | Docs: `docs/dub-studio.md` update, `docs/LOCAL_DUB_ENGINE.md`, Khmer user guide, attribution/NOTICE for OpenCreator, ZastTranslate, VoxCPM | todo | |
+| T7.5 | Docs: `docs/guides/dub-studio.md` update, `docs/guides/local-dub-engine.md`, Khmer user guide, attribution/NOTICE for OpenCreator, ZastTranslate, VoxCPM | todo | |
 | T7.6 | Windows installer smoke test on a clean machine | todo | |
 | T7.7 | Tag `v1.0.0-khmer` | todo | |
 

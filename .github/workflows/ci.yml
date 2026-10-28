@@ -56,6 +56,27 @@ jobs:
           echo "release-only=$release_only" >> "$GITHUB_OUTPUT"
           echo "Release-only change: $release_only"
 
+  agent-gate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Test the agent gate
+        run: node --test scripts/agent-gate.test.mjs
+      - name: Block fake builds, weakened tests, broken assets, secrets and board drift
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -z "$BASE_SHA" ] || ! git cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null; then
+            BASE_SHA="$(git rev-parse HEAD~1)"
+          fi
+          node scripts/agent-gate.mjs scan --base "$BASE_SHA"
+
   release-checks:
     if: needs.classify.outputs.release-only == 'true'
     needs: classify

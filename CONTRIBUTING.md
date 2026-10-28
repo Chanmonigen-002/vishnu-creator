@@ -1,6 +1,6 @@
 # Contributing to Vishnu Creator
 
-> English | [日本語](./docs/ja/CONTRIBUTING.md) | [한국어](./docs/ko/CONTRIBUTING.md) | [Bahasa Indonesia](./docs/id/CONTRIBUTING.md) | [Español](./docs/es/CONTRIBUTING.md) | [Français](./docs/fr/CONTRIBUTING.md) | [Deutsch](./docs/de/CONTRIBUTING.md) | [Português](./docs/pt/CONTRIBUTING.md) | [Русский](./docs/ru/CONTRIBUTING.md) | [العربية](./docs/ar/CONTRIBUTING.md)
+> English | [日本語](docs/i18n/ja/CONTRIBUTING.md) | [한국어](docs/i18n/ko/CONTRIBUTING.md) | [Bahasa Indonesia](docs/i18n/id/CONTRIBUTING.md) | [Español](docs/i18n/es/CONTRIBUTING.md) | [Français](docs/i18n/fr/CONTRIBUTING.md) | [Deutsch](docs/i18n/de/CONTRIBUTING.md) | [Português](docs/i18n/pt/CONTRIBUTING.md) | [Русский](docs/i18n/ru/CONTRIBUTING.md) | [العربية](docs/i18n/ar/CONTRIBUTING.md)
 
 Thanks for thinking about contributing. Vishnu Creator is a local-first creator workspace built on the Codex agent loop, and most of its value lives in focused additions: one Skill folder, one creation template, one well-scoped fix. This guide tells you where each type of contribution lives and what bar a PR has to clear before we merge it.
 
