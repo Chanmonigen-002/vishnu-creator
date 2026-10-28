@@ -71,7 +71,7 @@ Live results so far (2026-10-27, CLI-shaped request with `response_format: json_
 
 Notes:
 - Azure documents a full voice list only on per-resource endpoints (`https://{resource}.cognitiveservices.azure.com/tts/cognitiveservices/voices/list`). The preset uses the regional endpoint, so it ships the two documented Khmer voices and lets users type any other Azure voice name.
-- These providers work in **Text to Speech, Smart Dubbing and stick-figure videos** (TypeScript speech service). **Video translation** dubs inside the `vishnuai` CLI, which only supports OpenAI, Alibaba, Edge TTS, MiniMax and Volcengine; preflight blocks the new providers there with a clear message (follow-up task T8.11).
+- These providers work in **Text to Speech, Smart Dubbing and stick-figure videos** (TypeScript speech service). **Video translation** dubs inside the `vishnuai` CLI, which now also supports Azure, ElevenLabs and Fish Audio (T8.11, Go clients in `runtime/vishnuai/pkg/{azure,elevenlabs,fishaudio}`); real dub runs still need the owner's keys.
 
 ## Transcription, image, video
 
