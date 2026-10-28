@@ -75,6 +75,8 @@ import { DubEngineRuntime } from '../dub-engine/runtime.js';
 import { createXiaohongshuPostExecutor } from '../creator/xiaohongshu/executor.js';
 import { createShortVideoScriptExecutor } from '../creator/short-video-script/executor.js';
 import { createWechatArticleExecutor } from '../creator/article/executor.js';
+import { createBlogArticleExecutor } from '../creator/article/blog-executor.js';
+import { createBlogArticleModel } from '../creator/article/blog-model.js';
 import { createArticleImageGenerator } from '../creator/article/image-generator.js';
 import { createArticleSourceExtractor } from '../creator/article/source-extractor.js';
 import { createWechatArticleModel } from '../creator/article/model.js';
@@ -1074,6 +1076,12 @@ export async function buildServer(input: BuildServerInput) {
         configStore: creatorServicesConfigStore,
         codexNative: codexImageRuntime
       })
+    }));
+    creatorExecutors.push(createBlogArticleExecutor({
+      model: createBlogArticleModel({ configStore: creatorServicesConfigStore }),
+      ...(creatorFfmpegPath === undefined || creatorFfprobePath === undefined
+        ? {}
+        : { ffmpegPath: creatorFfmpegPath, ffprobePath: creatorFfprobePath })
     }));
   }
   const creatorPreflight = createCreatorPreflight({

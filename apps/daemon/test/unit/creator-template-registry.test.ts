@@ -11,7 +11,8 @@ import {
   createDefaultCreatorTemplateRegistry,
   createStickmanVideoTemplate,
   createVideoTranslationTemplate,
-  createAutoClipTemplate
+  createAutoClipTemplate,
+  createBlogArticleTemplate
 } from '../../src/creator/templates/registry.js';
 
 describe('creator template registry', () => {
@@ -394,6 +395,42 @@ describe('creator template registry', () => {
         optional: true
       });
     }
+  });
+
+  it('registers blog article generation with subtitle input and optional source video', () => {
+    const template = createBlogArticleTemplate();
+
+    expect(template).toMatchObject({
+      id: 'blog-article',
+      version: 1,
+      renderer: 'blog-article',
+      stages: [{
+        id: 'generate',
+        executor: 'blog-article',
+        outputArtifacts: [
+          { kind: 'article_document', status: 'completed' },
+          { kind: 'seo_kit', status: 'completed' },
+          { kind: 'article_keyframe', status: 'completed' }
+        ]
+      }],
+      outputs: [
+        { kind: 'article_document', required: true },
+        { kind: 'seo_kit', required: true }
+      ]
+    });
+    expect(template.inputSchema.parse({})).toMatchObject({
+      sourceTitle: '',
+      targetLanguage: 'km',
+      keyframeCount: 4,
+      extraRequirements: ''
+    });
+    const generate = template.stages.find(stage => stage.id === 'generate');
+    expect(generate?.inputArtifacts).toContainEqual({ kind: 'target_subtitle', selector: 'latest-completed' });
+    expect(generate?.inputArtifacts).toContainEqual({
+      kind: 'source_video',
+      selector: 'latest-completed',
+      optional: true
+    });
   });
 
   it('rejects duplicate template versions and cyclic stage graphs', () => {

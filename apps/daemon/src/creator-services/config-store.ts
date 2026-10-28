@@ -133,7 +133,7 @@ const ttsConfigSchema = z.object({
     legacyAliyunTtsSchema
   ]),
   volcengine: volcengineTtsSchema.default(creatorServicesDefaults.tts.volcengine)
-}).strict();
+}).passthrough();
 
 export const creatorServicesConfigSchema = z.object({
   proxy: boundedString(2048),

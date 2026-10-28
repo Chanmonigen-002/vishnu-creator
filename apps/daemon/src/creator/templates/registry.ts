@@ -19,6 +19,7 @@ import { createSmartDubbingTemplate } from './smart-dubbing.js';
 import { createXiaohongshuPostTemplate } from './xiaohongshu-post.js';
 import { createShortVideoScriptTemplate } from './short-video-script.js';
 import { createWechatArticleTemplate } from './wechat-article.js';
+import { createBlogArticleTemplate } from './blog-article.js';
 import type {
   CreatorTemplateDefinition,
   CreatorTemplateRegistry
@@ -38,6 +39,7 @@ export {
   createXiaohongshuPostTemplate,
   createShortVideoScriptTemplate,
   createWechatArticleTemplate,
+  createBlogArticleTemplate,
   createLegacyVideoDownloadTemplate,
   createVideoDownloadTemplate,
   createLegacyVideoTranslationTemplate,
@@ -59,6 +61,7 @@ export function createDefaultCreatorTemplateRegistry(): CreatorTemplateRegistry 
     createVideoGenerationTemplate(),
     createShortVideoScriptTemplate(),
     createWechatArticleTemplate(),
+    createBlogArticleTemplate(),
     createLegacyAutoClipTemplate(),
     createAutoClipTemplateV2(),
     createAutoClipTemplate(),
