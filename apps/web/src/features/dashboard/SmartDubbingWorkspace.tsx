@@ -86,7 +86,7 @@ export default function SmartDubbingWorkspace(props: {
   const [audioUrl, setAudioUrl] = useState('');
   const [notice, setNotice] = useState('');
   const [error, setError] = useState('');
-  const [taskControlPending, setTaskControlPending] = useState<'canceling' | 'resuming'>();
+  const [taskControlPending, setTaskControlPending] = useState<'canceling' | 'resuming' | 'pausing'>();
   const characterCount = useMemo(() => [...text.trim()].length, [text]);
   const textDurationSeconds = Math.max(5, Math.round(characterCount / 12));
   const jobEstimate = useMemo(() => {
@@ -283,6 +283,16 @@ export default function SmartDubbingWorkspace(props: {
     }
   }
 
+  async function pauseTask() {
+    if (session === null || taskControlPending !== undefined) return;
+    setTaskControlPending('pausing');
+    try {
+      await session.pauseJob();
+    } catch {} finally {
+      setTaskControlPending(undefined);
+    }
+  }
+
   async function resumeTask() {
     if (session === null || taskControlPending !== undefined) return;
     setTaskControlPending('resuming');
@@ -371,6 +381,7 @@ export default function SmartDubbingWorkspace(props: {
       onBack={props.onBack}
       onCommand={handleCommand}
       onCancelTask={() => void cancelTask()}
+      onPauseTask={() => void pauseTask()}
       onResumeTask={() => void resumeTask()}
       taskControlPending={taskControlPending}
       pageClassName="smart-dubbing-workspace-page"

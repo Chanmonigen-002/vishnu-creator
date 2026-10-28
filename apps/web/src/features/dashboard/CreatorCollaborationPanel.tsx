@@ -14,6 +14,7 @@ import {
   LoaderCircle,
   MessageSquareText,
   MoreHorizontal,
+  Pause,
   Play,
   RefreshCw,
   ServerOff,
@@ -107,8 +108,9 @@ export default function CreatorCollaborationPanel(props: {
   currentIssue?: string;
   quickActions?: CreatorPanelQuickAction[];
   onCancelTask?(): void;
+  onPauseTask?(): void;
   onResumeTask?(): void;
-  taskControlPending?: 'canceling' | 'resuming';
+  taskControlPending?: 'canceling' | 'resuming' | 'pausing';
 }) {
   const l = useLocalizedCopy();
   const session = useOptionalCreatorSession();
@@ -330,6 +332,9 @@ export default function CreatorCollaborationPanel(props: {
                   adapter={props.adapter}
                   onCancel={item.stage.id === activeTaskStage?.id
                     ? props.onCancelTask
+                    : undefined}
+                  onPause={item.stage.id === activeTaskStage?.id
+                    ? props.onPauseTask
                     : undefined}
                   onResume={item.stage.id === resumableTaskStage?.id
                     ? props.onResumeTask
@@ -608,10 +613,11 @@ export function CreatorTaskProgressBar(props: {
   task: NonNullable<ReturnType<typeof useCreatorTaskProgress>>;
   onDetails(): void;
   onCancel?(): void;
+  onPause?(): void;
   onResume?(): void;
   onPreview?(): void;
   onDownload?(): void;
-  controlPending?: 'canceling' | 'resuming';
+  controlPending?: 'canceling' | 'resuming' | 'pausing';
 }) {
   const l = useLocalizedCopy();
   const { task } = props;
@@ -648,9 +654,14 @@ export function CreatorTaskProgressBar(props: {
           onBlur={event => { if (!event.currentTarget.contains(event.relatedTarget as Node)) event.currentTarget.removeAttribute('open'); }}
           onKeyDown={event => { if (event.key === 'Escape') { event.preventDefault(); event.stopPropagation(); event.currentTarget.removeAttribute('open'); event.currentTarget.querySelector('summary')?.focus(); } }}>
           <summary aria-label={l('更多任务操作', 'More task actions')}><MoreHorizontal size={18} aria-hidden="true" /></summary>
-          <div><button type="button" disabled={busy || task.canceling} onClick={event => {
-            event.currentTarget.closest('details')?.removeAttribute('open'); props.onCancel?.();
-          }}>{task.canceling || props.controlPending === 'canceling' ? l('正在终止…', 'Stopping…') : l('终止当前任务', 'Stop current task')}</button></div>
+          <div>
+            {props.onPause ? <button type="button" disabled={busy || task.canceling} onClick={event => {
+              event.currentTarget.closest('details')?.removeAttribute('open'); props.onPause?.();
+            }}>{props.controlPending === 'pausing' ? l('正在暂停…', 'Pausing…') : l('暂停任务', 'Pause task')}</button> : null}
+            <button type="button" disabled={busy || task.canceling} onClick={event => {
+              event.currentTarget.closest('details')?.removeAttribute('open'); props.onCancel?.();
+            }}>{task.canceling || props.controlPending === 'canceling' ? l('正在终止…', 'Stopping…') : l('终止当前任务', 'Stop current task')}</button>
+          </div>
         </details> : null}
         {success ? <button type="button" aria-label={l('关闭完成提示', 'Dismiss completion notice')} onClick={task.dismiss}><X size={15} /></button> : null}
       </div>
@@ -733,8 +744,9 @@ function CollaborationStageView(props: {
   actor: CreatorActivity['actor'];
   adapter: CreatorPanelAdapter;
   onCancel?(): void;
+  onPause?(): void;
   onResume?(): void;
-  controlPending?: 'canceling' | 'resuming';
+  controlPending?: 'canceling' | 'resuming' | 'pausing';
 }) {
   const l = useLocalizedCopy();
   const { stage, actor, adapter } = props;
@@ -765,6 +777,17 @@ function CollaborationStageView(props: {
         </div>
         <div className="creator-collaboration-stage-controls">
           {showPercent ? <b>{percent}%</b> : null}
+          {props.onPause !== undefined && (stage.status === 'running' || stage.status === 'queued') ? (
+            <button
+              type="button"
+              disabled={props.controlPending !== undefined}
+              onClick={props.onPause}
+              aria-label={l(`暂停${label}`, `Pause ${label}`)}
+              title={l('暂停当前阶段', 'Pause current stage')}
+            >
+              <Pause size={14} strokeWidth={1.9} aria-hidden="true" />
+            </button>
+          ) : null}
           {props.onCancel !== undefined ? (
             <button
               type="button"

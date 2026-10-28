@@ -14,8 +14,9 @@ export default function VideoTranslationAgentPanel(props: {
   currentIssue?: string;
   quickActions?: VideoTranslationAgentQuickAction[];
   onCancelTask?(): void;
+  onPauseTask?(): void;
   onResumeTask?(): void;
-  taskControlPending?: 'canceling' | 'resuming';
+  taskControlPending?: 'canceling' | 'resuming' | 'pausing';
 }) {
   return (
     <CreatorCollaborationPanel

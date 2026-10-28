@@ -112,7 +112,7 @@ export async function registerCreatorRoutes(
     jobsRoot: string;
     dispatcher: CreatorCommandDispatcher;
     preflight?: Pick<CreatorPreflight, 'check'>;
-    stageRunner?: Pick<CreatorStageRunner, 'cancel' | 'cancelJob' | 'pauseDownload' | 'resumeDownload'>;
+    stageRunner?: Pick<CreatorStageRunner, 'cancel' | 'cancelJob' | 'pauseJob' | 'pauseDownload' | 'resumeDownload'>;
     presets?: CreatorPresetRegistry;
     presetCatalogRoot?: string;
     readServicesConfig?(): Promise<CreatorServicesConfig>;
@@ -810,6 +810,63 @@ export async function registerCreatorRoutes(
         stage,
         stages,
         control: canceling ? 'canceling' : 'canceled'
+      });
+    } catch (error) {
+      return sendCreatorError(reply, error);
+    }
+  });
+
+  server.post('/creator/jobs/:id/pause', async (request, reply) => {
+    const { id } = request.params as { id: string };
+    try {
+      if (options.stageRunner === undefined) {
+        throw new CreatorServiceError(
+          'creator_job_control_unavailable',
+          'Creator job control is unavailable'
+        );
+      }
+      const job = requireCreatorJob(service, id);
+      const activeStages = job.stages.filter(stage => (
+        stage.status === 'queued' || stage.status === 'running'
+      ));
+      if (activeStages.length === 0) {
+        const latest = job.stages.at(-1);
+        if (latest?.status === 'interrupted' || latest?.progress.downloadControl === 'paused') {
+          return {
+            job,
+            stage: latest,
+            control: 'paused'
+          };
+        }
+        throw new CreatorServiceError(
+          'creator_job_not_running',
+          'Creator job has no active stage'
+        );
+      }
+      const firstActive = activeStages[0];
+      if (firstActive === undefined) {
+        throw new CreatorServiceError(
+          'creator_job_not_running',
+          'Creator job has no active stage'
+        );
+      }
+      const stages = options.stageRunner.pauseJob
+        ? options.stageRunner.pauseJob(id)
+        : [options.stageRunner.pauseDownload(firstActive.id)].filter((s): s is CreatorStageRun => s !== undefined);
+      const stage = stages.at(-1);
+      if (stage === undefined) {
+        throw new CreatorServiceError(
+          'creator_job_not_running',
+          'Creator job has no active stage'
+        );
+      }
+      const latestJob = requireCreatorJob(service, id);
+      const pausing = stage.status === 'queued' || stage.status === 'running';
+      return reply.code(pausing ? 202 : 200).send({
+        job: latestJob,
+        stage,
+        stages,
+        control: pausing ? 'pausing' : 'paused'
       });
     } catch (error) {
       return sendCreatorError(reply, error);

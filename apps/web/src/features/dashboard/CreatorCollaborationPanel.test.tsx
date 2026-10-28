@@ -865,6 +865,36 @@ describe('CreatorCollaborationPanel', () => {
     expect(container.querySelectorAll('.creator-collaboration-stage')).toHaveLength(1);
   });
 
+  it('renders pause button for running stage and invokes onPauseTask when clicked', () => {
+    const current = downloadJob();
+    const onPauseTask = vi.fn();
+    const onCancelTask = vi.fn();
+    render(
+      <LanguageProvider initialPreference="en-US">
+        <CreatorSessionProvider
+          initialJob={current}
+          service={{
+            applyAction: vi.fn(),
+            runAgentTurn: vi.fn()
+          } as never}
+        >
+          <CreatorCollaborationPanel
+            adapter={videoDownloadPanelAdapter}
+            stepLabel="Download"
+            contextSummary="YouTube"
+            onPauseTask={onPauseTask}
+            onCancelTask={onCancelTask}
+          />
+        </CreatorSessionProvider>
+      </LanguageProvider>
+    );
+
+    const pauseButton = screen.getByRole('button', { name: 'Pause Download to project' });
+    expect(pauseButton).toBeInTheDocument();
+    fireEvent.click(pauseButton);
+    expect(onPauseTask).toHaveBeenCalledTimes(1);
+  });
+
   it('将视频下载网络故障显示为可操作提示', () => {
     const current = downloadJob();
     current.status = 'failed';

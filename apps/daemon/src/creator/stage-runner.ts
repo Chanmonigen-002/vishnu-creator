@@ -580,6 +580,23 @@ export function createCreatorStageRunner(input: {
         .map(stage => cancelStage(stage.id))
         .filter((stage): stage is CreatorStageRun => stage !== undefined);
     },
+    pauseJob(jobId: string): CreatorStageRun[] {
+      return input.repository.listStageRuns(jobId)
+        .filter(stage => stage.status === 'queued' || stage.status === 'running')
+        .map(stage => {
+          const control = processControls.get(stage.id);
+          if (control && stage.status === 'running' && stage.progress.cancelRequested !== true) {
+            control.pause();
+            return updateStageRun({
+              id: stage.id,
+              status: 'running',
+              progress: { downloadControl: 'paused', cancelRequested: false, bytesPerSecond: null }
+            });
+          }
+          return cancelStage(stage.id, { downloadControl: 'paused' });
+        })
+        .filter((stage): stage is CreatorStageRun => stage !== undefined);
+    },
     cancel(stageRunId: string, options?: { downloadControl: 'paused' | 'canceled' }): CreatorStageRun | undefined {
       return cancelStage(stageRunId, options);
     },
@@ -598,12 +615,12 @@ export function createCreatorStageRunner(input: {
   function cancelStage(stageRunId: string, options?: { downloadControl: 'paused' | 'canceled' }): CreatorStageRun | undefined {
       const stage = input.repository.getStageRun(stageRunId);
       if (stage === undefined) return undefined;
-      if (options && (input.repository.getJob(stage.jobId)?.templateId !== 'video-download' || stage.stageId !== 'download')) {
+      if (options && options.downloadControl !== 'paused' && options.downloadControl !== 'canceled' && (input.repository.getJob(stage.jobId)?.templateId !== 'video-download' || stage.stageId !== 'download')) {
         throw new CreatorExecutorError('creator_action_invalid', 'Download controls require a download stage');
       }
       if (options?.downloadControl === 'canceled' && ['canceled', 'interrupted'].includes(stage.status)) {
         const canceled = updateStageRun({ id: stage.id, status: 'canceled', progress: { downloadControl: 'canceled', cancelRequested: false },
-          errorCode: 'creator_stage_canceled', errorMessage: 'Download was canceled' });
+          errorCode: 'creator_stage_canceled', errorMessage: stage.stageId === 'download' ? 'Download was canceled' : 'Creator stage was canceled' });
         const job = input.repository.getJob(stage.jobId);
         if (job) updateJob(input.repository, job, downloadControlJobStatus(job, stage.id, false), {}, input.onJobChanged);
         return canceled;
@@ -616,7 +633,7 @@ export function createCreatorStageRunner(input: {
         const canceling = updateStageRun({
           id: stageRunId,
           status: stage.status,
-          progress: { cancelRequested: true, downloadControl: null, ...(options ?? {}) }
+          progress: { cancelRequested: true, downloadControl: options?.downloadControl ?? null, ...(options ?? {}) }
         });
         controller.abort();
         return canceling;
@@ -633,8 +650,12 @@ export function createCreatorStageRunner(input: {
           id: stageRunId,
           status: options?.downloadControl === 'paused' ? 'interrupted' : 'canceled',
           progress: { cancelRequested: true, ...(options ?? {}) },
-          errorCode: options?.downloadControl === 'paused' ? 'creator_download_paused' : 'creator_stage_canceled',
-          errorMessage: options?.downloadControl === 'paused' ? 'Download was paused' : 'Creator stage was canceled'
+          errorCode: options?.downloadControl === 'paused'
+            ? (stage.stageId === 'download' ? 'creator_download_paused' : 'creator_stage_paused')
+            : 'creator_stage_canceled',
+          errorMessage: options?.downloadControl === 'paused'
+            ? (stage.stageId === 'download' ? 'Download was paused' : 'Creator stage was paused')
+            : 'Creator stage was canceled'
         });
         const job = input.repository.getJob(current.jobId);
         if (job !== undefined) {

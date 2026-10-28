@@ -1819,7 +1819,7 @@ export default function VideoTranslationWorkspace(props: {
   const [subtitleImportPending, setSubtitleImportPending] = useState(false);
   const [submissionPhase, setSubmissionPhase] = useState<'uploading' | 'starting'>();
   const [startRevisionConflict, setStartRevisionConflict] = useState(false);
-  const [taskControlPending, setTaskControlPending] = useState<'canceling' | 'resuming'>();
+  const [taskControlPending, setTaskControlPending] = useState<'canceling' | 'resuming' | 'pausing'>();
   const [cancelDialogOpen, setCancelDialogOpen] = useState(false);
   const [styleDrawerSnapshot, setStyleDrawerSnapshot] = useState<SubtitleStyleSettings>();
   const styleDrawerTriggerRef = useRef<HTMLButtonElement>(null);
@@ -3363,6 +3363,24 @@ export default function VideoTranslationWorkspace(props: {
     }
   }
 
+  async function pauseTask() {
+    if (creatorSession === null || activeStage === undefined || taskControlPending !== undefined) return;
+    setTaskControlPending('pausing');
+    creatorSession.clearError();
+    setResultNotice(l('正在暂停当前阶段...', 'Pausing the current stage...'));
+    try {
+      await creatorSession.pauseJob();
+      setResultNotice(l(
+        '暂停请求已发送。已完成阶段和产物会保留；继续时当前阶段将重新开始。',
+        'Pause requested. Completed stages and outputs are preserved; the current stage will restart when resumed.'
+      ));
+    } catch (cause) {
+      setResultNotice(creatorErrorMessage(cause, l));
+    } finally {
+      setTaskControlPending(undefined);
+    }
+  }
+
   async function resumeTask() {
     if (creatorSession === null || resumableStage === undefined || taskControlPending !== undefined) return;
     setTaskControlPending('resuming');
@@ -4075,6 +4093,7 @@ export default function VideoTranslationWorkspace(props: {
                   setTaskDetailsRequest(previous => ({ key: (previous?.key ?? 0) + 1, stageRunId: taskProgress.stage?.id }));
                 }}
                 onCancel={activeStage ? requestCancelTask : undefined}
+                onPause={activeStage ? () => void pauseTask() : undefined}
                 onResume={resumableStage ? () => void resumeTask() : undefined}
                 controlPending={taskControlPending}
                 onPreview={taskVideoArtifact && taskVideoVersion !== undefined ? () => {
@@ -4403,6 +4422,7 @@ export default function VideoTranslationWorkspace(props: {
               }
             ]}
             onCancelTask={requestCancelTask}
+            onPauseTask={() => void pauseTask()}
             onResumeTask={() => void resumeTask()}
             taskControlPending={taskControlPending}
           />}

@@ -363,6 +363,111 @@ describe('creator api', () => {
     });
   });
 
+  it('pauses and resumes a creator job workflow across stages', async () => {
+    let runningAttempts = 0;
+    const executor: CreatorExecutor = {
+      id: 'vishnuai',
+      async run({ stageRun, signal }) {
+        if (stageRun.stageId === 'subtitle') {
+          runningAttempts += 1;
+          if (runningAttempts === 1) {
+            await new Promise<void>(resolve => {
+              if (signal.aborted) resolve();
+              else signal.addEventListener('abort', () => resolve(), { once: true });
+            });
+            return { outputs: [] };
+          }
+          return {
+            outputs: [
+              { kind: 'source_video', status: 'completed', path: null },
+              { kind: 'target_subtitle', status: 'completed', path: null }
+            ]
+          };
+        }
+        return {
+          outputs: [{
+            kind: 'horizontal_video',
+            status: 'completed',
+            path: null
+          }]
+        };
+      }
+    };
+    await setupServer({ creatorExecutors: [executor] });
+    const created = await request('POST', '/creator/jobs', {
+      projectId: 'project_job_pause_control',
+      templateId: 'video-translation',
+      creationKey: 'job-pause-control',
+      state: {
+        sourceType: 'url',
+        sourceUrl: 'https://www.youtube.com/watch?v=job-pause-control',
+        targetLanguage: 'zh_cn',
+        skipVideoDownload: true,
+        composeVideo: true,
+        videoFormat: 'horizontal'
+      }
+    });
+    const job = created.json().job;
+    const started = await request('POST', `/creator/jobs/${job.id}/actions`, {
+      action: 'run-stage',
+      expectedRevision: job.revision,
+      idempotencyKey: 'start-job-pause-control-workflow',
+      input: { stageId: 'subtitle', workflow: true }
+    });
+    expect(started.statusCode).toBe(200);
+
+    const running = await waitForCreatorJob(job.id, candidate => (
+      candidate.stages.at(-1)?.status === 'running'
+    ));
+    const pausedStageId = running.stages.at(-1).id;
+    const paused = await request('POST', `/creator/jobs/${job.id}/pause`);
+    expect(paused.statusCode).toBe(202);
+    expect(paused.json()).toMatchObject({
+      control: 'pausing',
+      stage: {
+        id: pausedStageId
+      }
+    });
+
+    const stopped = await waitForCreatorJob(job.id, candidate => (
+      candidate.status === 'needs_input'
+      && candidate.stages.at(-1)?.status === 'interrupted'
+    ));
+    expect(stopped.status).toBe('needs_input');
+    const repeatedPause = await request('POST', `/creator/jobs/${job.id}/pause`);
+    expect(repeatedPause.statusCode).toBe(200);
+    expect(repeatedPause.json()).toMatchObject({
+      control: 'paused',
+      stage: { id: pausedStageId, status: 'interrupted' }
+    });
+
+    const resumed = await request('POST', `/creator/jobs/${job.id}/resume`);
+    expect(resumed.statusCode).toBe(202);
+    expect(resumed.json()).toMatchObject({
+      control: 'resumed',
+      stage: {
+        stageId: 'subtitle',
+        progress: {
+          workflow: true,
+          resumedFromStageRunId: pausedStageId
+        }
+      }
+    });
+
+    const completed = await waitForCreatorJob(job.id, candidate => (
+      candidate.status === 'completed'
+      && candidate.stages.at(-1)?.stageId === 'render-horizontal'
+      && candidate.stages.at(-1)?.status === 'succeeded'
+    ));
+    expect(completed.stages.map((stage: { stageId: string; status: string }) => (
+      `${stage.stageId}:${stage.status}`
+    ))).toEqual([
+      'subtitle:interrupted',
+      'subtitle:succeeded',
+      'render-horizontal:succeeded'
+    ]);
+  });
+
   it('replays creator job creation after the response is lost', async () => {
     await setupServer();
     const requestBody = {

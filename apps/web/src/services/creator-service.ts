@@ -47,7 +47,7 @@ const CREATOR_DOCUMENT_UPLOAD_CONTENT_TYPE =
 export type CreatorJobControlResponse = {
   job: CreatorJob;
   stage: CreatorStageRun;
-  control: 'canceling' | 'canceled' | 'resumed';
+  control: 'canceling' | 'canceled' | 'resumed' | 'pausing' | 'paused';
 };
 
 export type CreatorDownloadControl = 'pause' | 'resume' | 'cancel';
@@ -250,6 +250,11 @@ export function createCreatorService(client: ClientLike) {
     cancelJob(jobId: string): Promise<CreatorJobControlResponse> {
       return client.post(
         `/creator/jobs/${encodeURIComponent(jobId)}/cancel`
+      ) as Promise<CreatorJobControlResponse>;
+    },
+    pauseJob(jobId: string): Promise<CreatorJobControlResponse> {
+      return client.post(
+        `/creator/jobs/${encodeURIComponent(jobId)}/pause`
       ) as Promise<CreatorJobControlResponse>;
     },
     resumeJob(jobId: string): Promise<CreatorJobControlResponse> {

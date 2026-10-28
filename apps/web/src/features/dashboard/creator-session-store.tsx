@@ -65,6 +65,7 @@ export type CreatorSessionContextValue = {
   applyRemoteSnapshot(job: CreatorJob): void;
   applyAction(request: Omit<CreatorActionRequest, 'expectedRevision'>): Promise<CreatorJob>;
   cancelJob(): Promise<void>;
+  pauseJob(): Promise<void>;
   resumeJob(): Promise<void>;
   controlDownload?(stageRunId: string, action: 'pause' | 'resume' | 'cancel'): Promise<void>;
   uploadSourceVideo(file: File): Promise<void>;
@@ -182,6 +183,7 @@ export function CreatorSessionProvider(props: {
     | 'uploadSourceVideo'
     | 'uploadSourceDocument'
     | 'cancelJob'
+    | 'pauseJob'
     | 'resumeJob'
     | 'controlDownload'
     | 'preflight'
@@ -812,6 +814,24 @@ export function CreatorSessionProvider(props: {
     }
   }, [applyRemoteSnapshot, captureCreatorFailure, ensurePersistedJob, props.service]);
 
+  const pauseJob = useCallback(async () => {
+    if (props.service.pauseJob === undefined) {
+      const cause = new Error('Creator job pause is unavailable');
+      captureCreatorFailure('creator.pause-job', cause);
+      throw cause;
+    }
+    try {
+      await ensurePersistedJob();
+      const response = await props.service.pauseJob(confirmedRef.current.id);
+      applyRemoteSnapshot(response.job);
+      setError(null);
+    } catch (cause) {
+      setError(toSessionError(cause));
+      captureCreatorFailure('creator.pause-job', cause);
+      throw cause;
+    }
+  }, [applyRemoteSnapshot, captureCreatorFailure, ensurePersistedJob, props.service]);
+
   const resumeJob = useCallback(async () => {
     if (props.service.resumeJob === undefined) {
       const cause = new Error('Creator job resume is unavailable');
@@ -1029,6 +1049,7 @@ export function CreatorSessionProvider(props: {
     applyRemoteSnapshot,
     applyAction,
     cancelJob,
+    pauseJob,
     resumeJob,
     ...(props.service.controlDownload ? { controlDownload } : {}),
     uploadReferenceImage,
@@ -1051,7 +1072,7 @@ export function CreatorSessionProvider(props: {
     steerAgentTurn,
     interruptAgentTurn,
     respondAgentApproval
-  }), [connection, reconnect, agentBusy, agentSession, askPendingIssue, applyAction, applyRemoteSnapshot, approvals, cancelJob, captureCreatorFailure, clearError, confirmedJob, controlDownload, conflictedFields, draft, error, flush, focusIssue, focusedIssue, interruptAgentTurn, issues, items, openArtifact, openDownloadThumbnail, openArtifactJson, preflight, props.service.controlDownload, props.service.openSubtitlePreview, props.service.prepareSubtitleRender, props.service.openSubtitleFont, props.service.uploadVideoReference, repairIssue, respondAgentApproval, resumeJob, runAgentTurn, runPreflight, steerAgentTurn, turns, updateDraft, uploadArticleImage, uploadReferenceImage, uploadSourceDocument, uploadSourceVideo]);
+  }), [connection, reconnect, agentBusy, agentSession, askPendingIssue, applyAction, applyRemoteSnapshot, approvals, cancelJob, pauseJob, captureCreatorFailure, clearError, confirmedJob, controlDownload, conflictedFields, draft, error, flush, focusIssue, focusedIssue, interruptAgentTurn, issues, items, openArtifact, openDownloadThumbnail, openArtifactJson, preflight, props.service.controlDownload, props.service.openSubtitlePreview, props.service.prepareSubtitleRender, props.service.openSubtitleFont, props.service.uploadVideoReference, repairIssue, respondAgentApproval, resumeJob, runAgentTurn, runPreflight, steerAgentTurn, turns, updateDraft, uploadArticleImage, uploadReferenceImage, uploadSourceDocument, uploadSourceVideo]);
 
   return (
     <CreatorSessionContext.Provider value={value}>

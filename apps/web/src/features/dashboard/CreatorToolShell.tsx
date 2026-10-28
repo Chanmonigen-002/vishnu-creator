@@ -24,8 +24,9 @@ export default function CreatorToolShell(props: {
   currentIssue?: string;
   quickActions?: CreatorPanelQuickAction[];
   onCancelTask?(): void;
+  onPauseTask?(): void;
   onResumeTask?(): void;
-  taskControlPending?: 'canceling' | 'resuming';
+  taskControlPending?: 'canceling' | 'resuming' | 'pausing';
   children: ReactNode;
   onBack(): void;
   onCommand?(command: string): string;
@@ -69,6 +70,7 @@ export default function CreatorToolShell(props: {
           currentIssue={props.currentIssue}
           quickActions={quickActions}
           onCancelTask={props.onCancelTask}
+          onPauseTask={props.onPauseTask}
           onResumeTask={props.onResumeTask}
           taskControlPending={props.taskControlPending}
         />}
