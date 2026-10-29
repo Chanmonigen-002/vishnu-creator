@@ -418,7 +418,7 @@ async function runEngineDub(
 function readRequest(state: Record<string, CreatorJson>): {
   text: string;
   sourceUrl?: string;
-  provider?: Exclude<CreatorTtsProvider, 'edge-tts'>;
+  provider?: CreatorTtsProvider;
   model?: string;
   voiceCode?: string;
   voiceName?: string;
@@ -455,7 +455,7 @@ function readRequest(state: Record<string, CreatorJson>): {
     ...(sourceUrl === undefined ? {} : { sourceUrl }),
     ...(provider === undefined
       ? {}
-      : { provider: provider as Exclude<CreatorTtsProvider, 'edge-tts'> }),
+      : { provider: provider as CreatorTtsProvider }),
     ...(readString(state.ttsModel) === undefined ? {} : { model: readString(state.ttsModel) }),
     ...(readString(state.voiceCode) === undefined ? {} : { voiceCode: readString(state.voiceCode) }),
     ...(readString(state.voiceName) === undefined ? {} : { voiceName: readString(state.voiceName) }),

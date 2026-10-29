@@ -8,9 +8,12 @@ import type {
   RuntimeErrorCode
 } from '@vishnucreator/protocol';
 import { gatewayDefaultVoiceId } from '@vishnucreator/protocol';
-import { mkdir, mkdtemp, rm, writeFile } from 'node:fs/promises';
+import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
+import { existsSync } from 'node:fs';
 import { join, resolve } from 'node:path';
-import { spawn } from 'node:child_process';
+import { execFile, spawn } from 'node:child_process';
+import { tmpdir } from 'node:os';
+import { randomUUID } from 'node:crypto';
 import type { CreatorServicesConfigStore } from '../../creator-services/config-store.js';
 import { createVishnuConfigToml } from './config-bridge.js';
 import {
@@ -98,12 +101,87 @@ export type VishnuTtsSynthesisRequest = {
 export type VishnuTtsSynthesisResult = {
   content: Buffer;
   mime: 'audio/mpeg' | 'audio/wav';
-  provider: Exclude<CreatorTtsProvider, 'edge-tts'>;
+  provider: CreatorTtsProvider;
   model: string;
   voiceId: string;
   format: 'mp3' | 'wav';
   language?: string;
 };
+
+function resolveEdgeTtsCommand(): { command: string; argsPrefix: string[] } {
+  if (process.env.VISHNUCREATOR_EDGE_TTS_COMMAND?.trim()) {
+    return { command: process.env.VISHNUCREATOR_EDGE_TTS_COMMAND.trim(), argsPrefix: [] };
+  }
+  const root = process.cwd();
+  const venvEdgeTts = join(root, 'services', 'dub-engine', '.venv', process.platform === 'win32' ? 'Scripts/edge-tts.exe' : 'bin/edge-tts');
+  if (existsSync(venvEdgeTts)) {
+    return { command: venvEdgeTts, argsPrefix: [] };
+  }
+  const venvPython = join(root, 'services', 'dub-engine', '.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
+  if (existsSync(venvPython)) {
+    return { command: venvPython, argsPrefix: ['-m', 'edge_tts'] };
+  }
+  const packagedPython = join(root, 'apps', 'desktop', '.pack', 'dub-engine-runtime', 'python', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
+  if (existsSync(packagedPython)) {
+    return { command: packagedPython, argsPrefix: ['-m', 'edge_tts'] };
+  }
+  return { command: 'edge-tts', argsPrefix: [] };
+}
+
+async function synthesizeEdgeTts(input: {
+  text: string;
+  voiceId: string;
+  speed?: number;
+}): Promise<VishnuTtsSynthesisResult> {
+  const outputPath = join(tmpdir(), `edge-tts-${randomUUID()}.mp3`);
+  const resolved = resolveEdgeTtsCommand();
+  const args = [
+    ...resolved.argsPrefix,
+    '--voice', input.voiceId,
+    '--text', input.text,
+    '--write-media', outputPath
+  ];
+  if (input.speed !== undefined && input.speed !== 1.0) {
+    const ratePct = Math.round((input.speed - 1.0) * 100);
+    if (ratePct !== 0) {
+      args.push('--rate', `${ratePct >= 0 ? '+' : ''}${ratePct}%`);
+    }
+  }
+  try {
+    await new Promise<void>((resolvePromise, rejectPromise) => {
+      const isBatch = process.platform === 'win32' && /\.(cmd|bat)$/i.test(resolved.command);
+      execFile(resolved.command, args, {
+        timeout: 60_000,
+        windowsHide: true,
+        shell: isBatch
+      }, error => {
+        if (error) rejectPromise(error);
+        else resolvePromise();
+      });
+    });
+    const content = await readFile(outputPath);
+    if (content.length === 0) {
+      throw new Error('Edge TTS returned an empty audio file');
+    }
+    return {
+      content,
+      mime: 'audio/mpeg',
+      provider: 'edge-tts',
+      model: '',
+      voiceId: input.voiceId,
+      format: 'mp3',
+      language: input.voiceId.startsWith('km-') ? 'km-KH' : undefined
+    };
+  } catch (error) {
+    throw new VishnuTtsServiceError(
+      'creator_tts_upstream_error',
+      `Edge TTS generation failed: ${error instanceof Error ? error.message : String(error)}`,
+      502
+    );
+  } finally {
+    await rm(outputPath, { force: true }).catch(() => {});
+  }
+}
 
 export type VishnuTtsService = ReturnType<typeof createVishnuTtsService>;
 
@@ -226,11 +304,12 @@ export function createVishnuTtsService(input: {
     if (gateway && request.model && request.model !== gateway.models.speech && (gateway.stageRunId || !selected)) throw new VishnuTtsServiceError('VALIDATION_FAILED', 'Select an official speech model for this task', 400);
     const provider = gateway ? 'openai' : request.provider ?? configured.tts.provider;
     if (provider === 'edge-tts') {
-      throw new VishnuTtsServiceError(
-        'unsupported_capability',
-        'VishnuAI speech utility does not support edge-tts',
-        409
-      );
+      const voiceId = request.voiceId?.trim() || 'km-KH-SreymomNeural';
+      return synthesizeEdgeTts({
+        text,
+        voiceId,
+        speed: request.speed
+      });
     }
     const prepared = prepareConfig(configured, provider, request.model);
     ensureCredentials(prepared.config, provider);

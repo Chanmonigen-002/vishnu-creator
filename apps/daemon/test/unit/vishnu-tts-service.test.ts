@@ -1,5 +1,5 @@
 import { createDefaultCreatorServicesConfig } from '@vishnucreator/protocol';
-import { mkdtemp } from 'node:fs/promises';
+import { chmod, mkdtemp, writeFile } from 'node:fs/promises';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { afterEach, describe, expect, it, vi } from 'vitest';
@@ -456,6 +456,56 @@ describe('VishnuTtsService', () => {
       code: 'creator_tts_config_missing',
       statusCode: 409
     } satisfies Partial<VishnuTtsServiceError>);
+  });
+
+  it('synthesizes speech with edge-tts when configured or requested', async () => {
+    const root = await temporaryRoot();
+    const cjsPath = join(root, 'mock-edge.cjs');
+    await writeFile(cjsPath, `
+      const fs = require('node:fs');
+      const idx = process.argv.indexOf('--write-media');
+      if (idx !== -1 && process.argv[idx + 1]) {
+        fs.writeFileSync(process.argv[idx + 1], Buffer.from('mock-edge-audio'));
+      }
+    `);
+    const scriptPath = process.platform === 'win32' ? join(root, 'mock-edge.cmd') : join(root, 'mock-edge.sh');
+    if (process.platform === 'win32') {
+      await writeFile(scriptPath, `@echo off\r\nnode "${cjsPath}" %*`);
+    } else {
+      await writeFile(scriptPath, `#!/bin/sh\nnode "${cjsPath}" "$@"\n`);
+      await chmod(scriptPath, 0o755);
+    }
+    const previous = process.env.VISHNUCREATOR_EDGE_TTS_COMMAND;
+    process.env.VISHNUCREATOR_EDGE_TTS_COMMAND = scriptPath;
+    try {
+      const service = createVishnuTtsService({
+        resourceRoot: join(root, 'runtime'),
+        workRoot: join(root, 'work'),
+        configStore: createConfigStore(createDefaultCreatorServicesConfig()),
+        executeUtility: vi.fn()
+      });
+
+      const result = await service.synthesize({
+        text: 'ជំរាបសួរ',
+        provider: 'edge-tts',
+        voiceId: 'km-KH-SreymomNeural'
+      });
+
+      expect(result).toMatchObject({
+        provider: 'edge-tts',
+        voiceId: 'km-KH-SreymomNeural',
+        mime: 'audio/mpeg',
+        format: 'mp3',
+        language: 'km-KH'
+      });
+      expect(result.content.toString()).toBe('mock-edge-audio');
+    } finally {
+      if (previous === undefined) {
+        delete process.env.VISHNUCREATOR_EDGE_TTS_COMMAND;
+      } else {
+        process.env.VISHNUCREATOR_EDGE_TTS_COMMAND = previous;
+      }
+    }
   });
 
   async function temporaryRoot() {

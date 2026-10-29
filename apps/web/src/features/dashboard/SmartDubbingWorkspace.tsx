@@ -40,7 +40,7 @@ type DubbingResult = {
   artifact: CreatorArtifact;
   fileName: string;
   size: number;
-  provider: Exclude<CreatorTtsProvider, 'edge-tts'>;
+  provider: CreatorTtsProvider;
   model: string;
   voice: string;
   voiceName: string;
