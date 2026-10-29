@@ -2143,28 +2143,24 @@ function DubEngineSettings(props: {
   const engine = props.config.dubEngine;
   const isRemote = engine.mode === 'remote';
   return (
-    <div className="creator-services-panel creator-services-dub-engine">
-      <h2>
-        <HardDriveDownload size={17} strokeWidth={1.8} aria-hidden="true" />
-        {l('本地配音引擎', 'Local / Remote Dub Engine')}
-      </h2>
-      <p>{l(
+    <SettingsFieldset
+      title={l('本地配音引擎', 'Local / Remote Dub Engine')}
+      description={l(
         '将视频配音任务交给本地或远程运行的 Vishnu Dub 引擎；关闭后，配音使用云端 TTS 合成。',
         'Send dubbing jobs to a local or remote Vishnu Dub engine; when off, cloud TTS synthesis is used.'
-      )}</p>
-      <div className="settings-field">
-        <label>
-          <input
-            type="checkbox"
-            checked={engine.enabled}
-            onChange={event => props.update(draft => { draft.dubEngine.enabled = event.target.checked; })}
-          />
-          {l('启用本地/远程配音引擎', 'Enable dub engine')}
-        </label>
-      </div>
-      <div className="settings-field">
-        <label>{l('运行模式', 'Compute Mode')}</label>
+      )}
+    >
+      <ToggleField
+        label={l('启用本地/远程配音引擎', 'Enable dub engine')}
+        description={l('在本地端口或远程服务器上运行配音管道', 'Run dubbing pipeline on local port or remote server')}
+        checked={engine.enabled}
+        onChange={checked => props.update(draft => { draft.dubEngine.enabled = checked; })}
+      />
+
+      <div className="creator-services-field is-wide">
+        <label htmlFor="dub-engine-mode">{l('运行模式', 'Compute Mode')}</label>
         <AppSelect
+          id="dub-engine-mode"
           aria-label={l('运行模式', 'Compute Mode')}
           value={engine.mode}
           onChange={event => props.update(draft => { draft.dubEngine.mode = event.target.value as any; })}
@@ -2175,11 +2171,14 @@ function DubEngineSettings(props: {
           <option value="remote">{l('远程引擎 (URL + 令牌)', 'Remote engine (URL + token)')}</option>
         </AppSelect>
       </div>
+
       {!isRemote ? (
         <>
-          <div className="settings-field">
-            <label>{l('监听端口', 'Port')}</label>
+          <label className="creator-services-field" htmlFor="dub-engine-port">
+            <span>{l('监听端口', 'Port')}</span>
             <input
+              id="dub-engine-port"
+              aria-label={l('监听端口', 'Port')}
               type="number"
               min={1}
               max={65535}
@@ -2188,59 +2187,68 @@ function DubEngineSettings(props: {
                 draft.dubEngine.port = Number(event.target.value) || 8765;
               })}
             />
-          </div>
-          <div className="settings-field">
-            <label>{l('Python 路径', 'Python path')}</label>
-            <input
-              value={engine.pythonPath}
-              onChange={event => props.update(draft => { draft.dubEngine.pythonPath = event.target.value; })}
-            />
-          </div>
-          <div className="settings-field">
-            <label>{l('引擎目录', 'Engine directory')}</label>
-            <input
-              value={engine.enginePath}
-              onChange={event => props.update(draft => { draft.dubEngine.enginePath = event.target.value; })}
-            />
-          </div>
-          <div className="settings-field">
-            <label>{l('模型存储目录', 'Model folder')}</label>
-            <input
-              aria-label={l('模型存储目录', 'Model folder')}
-              value={engine.modelFolder ?? ''}
-              placeholder={l('默认最大剩余空间磁盘 (如 D:\\VishnuCreatorData\\models)', 'Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)')}
-              onChange={event => props.update(draft => { draft.dubEngine.modelFolder = event.target.value; })}
-            />
-          </div>
-          <div className="settings-field">
-            <label>
-              <input
-                type="checkbox"
-                checked={engine.autoStart}
-                onChange={event => props.update(draft => { draft.dubEngine.autoStart = event.target.checked; })}
-              />
-              {l('Runtime 启动时自动启动引擎', 'Auto-start engine with Runtime')}
-            </label>
-          </div>
+          </label>
+
+          <PasswordField
+            id="dub-engine-token"
+            label={l('访问令牌', 'Access token')}
+            value={engine.token}
+            onChange={value => props.update(draft => { draft.dubEngine.token = value; })}
+          />
+
+          <TextField
+            id="dub-engine-python-path"
+            label={l('Python 路径', 'Python path')}
+            placeholder="services/dub-engine/.venv/Scripts/python.exe"
+            value={engine.pythonPath}
+            onChange={value => props.update(draft => { draft.dubEngine.pythonPath = value; })}
+          />
+
+          <TextField
+            id="dub-engine-engine-path"
+            label={l('引擎目录', 'Engine directory')}
+            placeholder="services/dub-engine"
+            value={engine.enginePath}
+            onChange={value => props.update(draft => { draft.dubEngine.enginePath = value; })}
+          />
+
+          <TextField
+            id="dub-engine-model-folder"
+            label={l('模型存储目录', 'Model folder')}
+            placeholder={l('默认最大剩余空间磁盘 (如 D:\\VishnuCreatorData\\models)', 'Default: drive with most free space (e.g. D:\\VishnuCreatorData\\models)')}
+            value={engine.modelFolder ?? ''}
+            wide
+            onChange={value => props.update(draft => { draft.dubEngine.modelFolder = value; })}
+          />
+
+          <ToggleField
+            label={l('Runtime 启动时自动启动引擎', 'Auto-start engine with Runtime')}
+            description={l('本地服务启动时自动拉起后台配音引擎进程', 'Automatically launch background dubbing engine process when runtime starts')}
+            checked={engine.autoStart}
+            onChange={checked => props.update(draft => { draft.dubEngine.autoStart = checked; })}
+          />
         </>
       ) : (
-        <div className="settings-field">
-          <label>{l('引擎地址', 'Engine URL')}</label>
-          <input
+        <>
+          <TextField
+            id="dub-engine-url"
+            label={l('引擎地址', 'Engine URL')}
+            placeholder="http://127.0.0.1:8765"
             value={engine.url}
-            onChange={event => props.update(draft => { draft.dubEngine.url = event.target.value; })}
+            wide
+            onChange={value => props.update(draft => { draft.dubEngine.url = value; })}
           />
-        </div>
+
+          <PasswordField
+            id="dub-engine-token"
+            label={l('访问令牌', 'Access token')}
+            value={engine.token}
+            onChange={value => props.update(draft => { draft.dubEngine.token = value; })}
+          />
+        </>
       )}
-      <div className="settings-field">
-        <label>{l('访问令牌', 'Access token')}</label>
-        <input
-          type="password"
-          value={engine.token}
-          onChange={event => props.update(draft => { draft.dubEngine.token = event.target.value; })}
-        />
-      </div>
-      <div className="settings-field settings-actions">
+
+      <div className="creator-services-dub-actions">
         <button
           className="settings-secondary-button"
           type="button"
@@ -2269,27 +2277,44 @@ function DubEngineSettings(props: {
             {props.benchmarking ? l('基准测试中', 'Benchmarking') : l('运行基准测试', 'Run Benchmark')}
           </button>
         ) : null}
+        {props.result !== null ? (
+          props.result.connected ? (
+            <div className="settings-notice" role="status">
+              <Check size={14} aria-hidden="true" />
+              {l('已连接', 'Connected')} — {props.result.version ?? '0.1.0'}
+              {props.result.tier !== undefined ? ` · ${l('算力等级', 'Tier')} ${props.result.tier}` : ''}
+              {props.result.ramTotalGb !== undefined ? ` · ${l('内存', 'RAM')} ${props.result.ramTotalGb.toFixed(1)} GB` : ''}
+            </div>
+          ) : (
+            <div className="settings-notice is-warning" role="status">
+              {l('连接失败', 'Connection failed')}
+            </div>
+          )
+        ) : null}
         {props.error !== undefined ? (
           <p className="settings-error" role="alert">{props.error}</p>
         ) : null}
         {props.benchmarkError !== undefined ? (
           <p className="settings-error" role="alert">{props.benchmarkError}</p>
         ) : null}
-        {props.result !== null && props.result.connected ? (
-          <div className="settings-notice" role="status">
-            <Check size={14} aria-hidden="true" />
-            {l('已连接', 'Connected')} — {props.result.version ?? ''}
-            {props.result.tier !== undefined ? ` · ${l('算力等级', 'Tier')} ${props.result.tier}` : ''}
-            {props.result.ramTotalGb !== undefined ? ` · ${l('内存', 'RAM')} ${props.result.ramTotalGb.toFixed(1)} GB` : ''}
-          </div>
-        ) : null}
-        {props.benchmarkResult ? (
-          <div className="settings-notice" role="status">
-            <Check size={14} aria-hidden="true" />
-            {l('基准测试结果', 'Benchmark')}: ASR {props.benchmarkResult.asrTimeSeconds?.toFixed(1) ?? '0.0'}s · TTS {props.benchmarkResult.ttsTimeSeconds?.toFixed(1) ?? '0.0'}s · {l('总计', 'Total')} {props.benchmarkResult.totalTimeSeconds?.toFixed(1) ?? '0.0'}s ({props.benchmarkResult.tier ?? ''})
-          </div>
-        ) : null}
       </div>
-    </div>
+
+      {props.result?.connected && props.result.gpuName ? (
+        <div className="creator-services-model-status is-wide">
+          <span><Check size={13} aria-hidden="true" />{l('硬件层级', 'Hardware Tier')}: <strong>{props.result.tier ?? 'T1'}</strong></span>
+          <span>{l('显卡', 'GPU')}: <strong>{props.result.gpuName}</strong></span>
+          {props.result.ramTotalGb !== undefined ? <span>{l('内存', 'RAM')}: <strong>{props.result.ramTotalGb.toFixed(1)} GB</strong></span> : null}
+        </div>
+      ) : null}
+
+      {props.benchmarkResult ? (
+        <div className="creator-services-model-status is-wide">
+          <span>{l('基准测试结果', 'Benchmark')}:</span>
+          <span>ASR: <strong>{props.benchmarkResult.asrTimeSeconds?.toFixed(1) ?? '0.0'}s</strong></span>
+          <span>TTS: <strong>{props.benchmarkResult.ttsTimeSeconds?.toFixed(1) ?? '0.0'}s</strong></span>
+          <span>{l('总计', 'Total')}: <strong>{props.benchmarkResult.totalTimeSeconds?.toFixed(1) ?? '0.0'}s</strong> ({props.benchmarkResult.tier ?? ''})</span>
+        </div>
+      ) : null}
+    </SettingsFieldset>
   );
 }

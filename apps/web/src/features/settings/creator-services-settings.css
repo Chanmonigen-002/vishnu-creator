@@ -144,7 +144,8 @@
 .creator-services-toggle,
 .creator-services-inline-note,
 .creator-services-runtime-note,
-.creator-services-model-status {
+.creator-services-model-status,
+.creator-services-dub-actions {
   grid-column: 1 / -1;
 }
 
@@ -477,11 +478,12 @@
 }
 
 .creator-services-provider-info,
-.creator-services-provider-models {
+.creator-services-provider-models,
+.creator-services-dub-actions {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   font-size: 12px;
 }
 
@@ -531,7 +533,9 @@
 }
 
 .creator-services-actions .settings-notice,
-.creator-services-actions .settings-error {
+.creator-services-actions .settings-error,
+.creator-services-dub-actions .settings-notice,
+.creator-services-dub-actions .settings-error {
   width: fit-content;
   margin: 0;
   padding: 7px 9px;
@@ -558,7 +562,8 @@
   .creator-services-tts-voice,
   .creator-services-toggle,
   .creator-services-inline-note,
-  .creator-services-runtime-note { grid-column: auto; }
+  .creator-services-runtime-note,
+  .creator-services-dub-actions { grid-column: auto; }
   .creator-services-runtime-note { align-items: flex-start; flex-direction: column; gap: 3px; }
   .creator-services-actions { grid-template-columns: 1fr 1fr; }
   .creator-services-actions > div { grid-column: 1 / -1; }
