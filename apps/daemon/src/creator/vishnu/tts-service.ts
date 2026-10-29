@@ -10,7 +10,8 @@ import type {
 import { gatewayDefaultVoiceId } from '@vishnucreator/protocol';
 import { mkdir, mkdtemp, readFile, rm, writeFile } from 'node:fs/promises';
 import { existsSync } from 'node:fs';
-import { join, resolve } from 'node:path';
+import { dirname, join, resolve } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { execFile, spawn } from 'node:child_process';
 import { tmpdir } from 'node:os';
 import { randomUUID } from 'node:crypto';
@@ -112,18 +113,30 @@ function resolveEdgeTtsCommand(): { command: string; argsPrefix: string[] } {
   if (process.env.VISHNUCREATOR_EDGE_TTS_COMMAND?.trim()) {
     return { command: process.env.VISHNUCREATOR_EDGE_TTS_COMMAND.trim(), argsPrefix: [] };
   }
-  const root = process.cwd();
-  const venvEdgeTts = join(root, 'services', 'dub-engine', '.venv', process.platform === 'win32' ? 'Scripts/edge-tts.exe' : 'bin/edge-tts');
-  if (existsSync(venvEdgeTts)) {
-    return { command: venvEdgeTts, argsPrefix: [] };
-  }
-  const venvPython = join(root, 'services', 'dub-engine', '.venv', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
-  if (existsSync(venvPython)) {
-    return { command: venvPython, argsPrefix: ['-m', 'edge_tts'] };
-  }
-  const packagedPython = join(root, 'apps', 'desktop', '.pack', 'dub-engine-runtime', 'python', process.platform === 'win32' ? 'Scripts/python.exe' : 'bin/python');
-  if (existsSync(packagedPython)) {
-    return { command: packagedPython, argsPrefix: ['-m', 'edge_tts'] };
+  const isWin = process.platform === 'win32';
+  const moduleDir = dirname(fileURLToPath(import.meta.url));
+  const rootCandidates = [
+    process.cwd(),
+    resolve(process.cwd(), '..'),
+    resolve(process.cwd(), '..', '..'),
+    resolve(moduleDir, '..', '..', '..', '..'),
+    resolve(moduleDir, '..', '..', '..', '..', '..'),
+    process.env.VISHNUCREATOR_DUB_ENGINE_ROOT ? resolve(process.env.VISHNUCREATOR_DUB_ENGINE_ROOT, '..', '..') : undefined
+  ].filter((c): c is string => typeof c === 'string' && c.length > 0);
+
+  for (const root of rootCandidates) {
+    const venvEdgeTts = join(root, 'services', 'dub-engine', '.venv', isWin ? 'Scripts/edge-tts.exe' : 'bin/edge-tts');
+    if (existsSync(venvEdgeTts)) {
+      return { command: venvEdgeTts, argsPrefix: [] };
+    }
+    const venvPython = join(root, 'services', 'dub-engine', '.venv', isWin ? 'Scripts/python.exe' : 'bin/python');
+    if (existsSync(venvPython)) {
+      return { command: venvPython, argsPrefix: ['-m', 'edge_tts'] };
+    }
+    const packagedPython = join(root, 'apps', 'desktop', '.pack', 'dub-engine-runtime', 'python', isWin ? 'Scripts/python.exe' : 'bin/python');
+    if (existsSync(packagedPython)) {
+      return { command: packagedPython, argsPrefix: ['-m', 'edge_tts'] };
+    }
   }
   return { command: 'edge-tts', argsPrefix: [] };
 }
