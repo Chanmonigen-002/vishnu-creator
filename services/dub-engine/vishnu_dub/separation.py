@@ -42,8 +42,9 @@ class SeparationBackend:
         model = model or self.model
         device = self.device
 
+        import os
         import sys
-        from vishnu_dub.config import resolve_ffprobe_path
+        from vishnu_dub.config import resolve_ffmpeg_path, resolve_ffprobe_path
 
         cmd = [
             sys.executable, "-m", "demucs.separate",
@@ -54,10 +55,17 @@ class SeparationBackend:
             str(audio_path),
         ]
 
+        env = os.environ.copy()
+        ffmpeg_bin = resolve_ffmpeg_path()
+        ffmpeg_dir = str(Path(ffmpeg_bin).parent)
+        if ffmpeg_dir and ffmpeg_dir != ".":
+            env["PATH"] = f"{ffmpeg_dir}{os.pathsep}{env.get('PATH', '')}"
+
         proc = await asyncio.create_subprocess_exec(
             *cmd,
             stdout=asyncio.subprocess.PIPE,
             stderr=asyncio.subprocess.PIPE,
+            env=env,
         )
         stdout, stderr = await proc.communicate()
 
