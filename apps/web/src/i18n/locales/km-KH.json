@@ -3401,5 +3401,11 @@
   "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free គឺជាម៉ូដែលសាកល្បងឥតគិតថ្លៃសម្រាប់អ្នកសរសេរកម្មវិធី។ សំឡេងនីមួយៗជាលេខសម្គាល់ម៉ូដែលរបស់Fish Audioដែលអាចជ្រើសរើសពីបញ្ជីឬចូលដោយខ្លួនឯង។ ការគាំទ្រភាសាខ្មែរមិនទាន់បានបញ្ជាក់នៅឡើយទេ សូមស្តាប់សាកល្បងមុននឹងប្រើ។",
   "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "ការចេញភាសាខ្មែររបស់សេវាកម្មនេះមិនទាន់បានផ្ទៀងផ្ទាត់ឡើយ។ ពេលសោរដំណើរការរួច សូមសាកល្បងសម្តីខ្មែរខ្លីមួយសិន។",
   "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "គុណភាពខ្មែរអាស្រ័យលើម៉ូដែលក្នុងម៉ាស៊ីន៖ Gemma 4 (gemma4:latest) ក្នុងការសាកល្បងពិតបាននិយាយខ្មែរត្រូវ។ Qwen 3 និងម៉ូដែលស្រដៀងគ្នាអាចមិនចេញភាសាខ្មែរ។",
-  "Voice Library": "បណ្ណាល័យសំឡេង"
+  "Voice Library": "បណ្ណាល័យសំឡេង",
+  "Configure video generation (Seedance, Kling, Veo, Runway, Luma, MiniMax, ComfyUI) and default models for new tasks.": "កំណត់រចនាសម្ព័ន្ធការបង្កើតវីដេអូ (Seedance, Kling, Veo, Runway, Luma, MiniMax, ComfyUI) និងម៉ូដែលលំនាំដើមសម្រាប់កិច្ចការថ្មី។",
+  "Default workflow": "លំហូរការងារលំនាំដើម",
+  "Groq offers fast Whisper transcription with a free tier and Khmer (km) support.": "Groq ផ្ដល់នូវការចម្លងសំឡេង Whisper ល្បឿនលឿនបំផុត មានកម្រិតឥតគិតថ្លៃ និងគាំទ្រភាសាខ្មែរ (km)។",
+  "ElevenLabs Scribe provides multilingual speech-to-text with Khmer (khm) support.": "ElevenLabs Scribe ផ្ដល់នូវការចម្លងសំឡេងជាអត្ថបទច្រើនភាសាប្រកបដោយភាពសុក្រឹតខ្ពស់ និងគាំទ្រភាសាខ្មែរ (khm)។",
+  "AssemblyAI supports 99 languages including Khmer (km) and provides free credit.": "AssemblyAI គាំទ្រ 99 ភាសារួមទាំងភាសាខ្មែរ (km) និងផ្ដល់នូវក្រេឌីតឥតគិតថ្លៃ។",
+  "Deepgram Nova-3/2 supports 55 languages including English and Chinese, but currently has no Khmer support.": "Deepgram Nova-3/2 គាំទ្រ 55 ភាសារួមមានភាសាអង់គ្លេស និងចិន ប៉ុន្តែបច្ចុប្បន្នមិនទាន់គាំទ្រភាសាខ្មែរទេ។"
 }

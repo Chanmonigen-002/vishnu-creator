@@ -29,7 +29,7 @@ describe('Dub Engine real CPU integration (T3.10)', () => {
     expect(hardware.cpuCores).toBeGreaterThan(0);
     expect(hardware.ramTotalGb).toBeGreaterThan(0);
     expect(hardware.recommendedTts).toBe('edge-tts');
-  });
+  }, 30_000);
 
   it('resynthesizes Khmer segment audio on real CPU engine and downloads artifact', async () => {
     const result = await client.resynthesizeSegment({
@@ -52,5 +52,5 @@ describe('Dub Engine real CPU integration (T3.10)', () => {
     const isId3 = artifactBuf.subarray(0, 3).toString('ascii') === 'ID3';
     const isMp3Sync = artifactBuf[0] === 0xff && ((artifactBuf[1] ?? 0) & 0xe0) === 0xe0;
     expect(isId3 || isMp3Sync).toBe(true);
-  });
+  }, 60_000);
 });

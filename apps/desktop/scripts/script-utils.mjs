@@ -20,11 +20,16 @@ export async function runStage(label, command, args, options = {}) {
   const startedAt = Date.now();
   console.log(`[desktop-package] 开始：${label}`);
 
-  const child = spawn(command, args, {
+  const isWindowsShell = process.platform === 'win32' && !isAbsolute(command);
+  const normalizedArgs = isWindowsShell && Array.isArray(args)
+    ? args.map(arg => typeof arg === 'string' && arg.includes(' ') && !arg.startsWith('"') ? `"${arg}"` : arg)
+    : args;
+
+  const child = spawn(command, normalizedArgs, {
     cwd: options.cwd,
     env: options.env ?? process.env,
     stdio: options.stdio ?? 'inherit',
-    shell: process.platform === 'win32' && !isAbsolute(command),
+    shell: isWindowsShell,
     detached: process.platform !== 'win32'
   });
 

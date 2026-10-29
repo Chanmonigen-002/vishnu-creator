@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 
 const packageDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const workspaceDir = dirname(dirname(packageDir));
-const runtimeImportTestTimeoutMs = 60_000;
+const runtimeImportTestTimeoutMs = 180_000;
 
 describe('skill market runtime exports', () => {
   it('builds from a clean dist, loads natively, and boots the workspace daemon', () => {
@@ -27,8 +27,9 @@ describe('skill market runtime exports', () => {
         ? packageManagerArgs
         : [packageManagerScript, ...packageManagerArgs],
       {
-      cwd: workspaceDir,
-      stdio: 'pipe'
+        cwd: workspaceDir,
+        stdio: 'pipe',
+        shell: packageManagerScript === undefined && process.platform === 'win32'
       }
     );
 

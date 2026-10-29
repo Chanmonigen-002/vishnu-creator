@@ -96,13 +96,13 @@ export function resolveDubEngineDirectory(
     process.env.VISHNUCREATOR_DUB_ENGINE_ROOT,
     resourcesPath ? join(resourcesPath, 'dub-engine-runtime') : undefined,
     resourcesPath ? join(resourcesPath, 'dub-engine') : undefined,
+    // Source tree services/dub-engine (primary source of truth in development/test)
+    resolve(moduleDir, '..', '..', '..', '..', 'services', 'dub-engine'),
+    resolve(moduleDir, '..', '..', 'services', 'dub-engine'),
+    join(cwd, 'services', 'dub-engine'),
     join(cwd, 'runtime', 'dub-engine-runtime'),
     join(cwd, 'runtime', 'dub-engine'),
-    resolve(moduleDir, '..', '..', '..', 'desktop', '.pack', 'dub-engine-runtime'),
-    join(cwd, 'services', 'dub-engine'),
-    // apps/daemon/{src,dist}/dub-engine -> repository root
-    resolve(moduleDir, '..', '..', '..', '..', 'services', 'dub-engine'),
-    resolve(moduleDir, '..', '..', 'services', 'dub-engine')
+    resolve(moduleDir, '..', '..', '..', 'desktop', '.pack', 'dub-engine-runtime')
   ].filter((candidate): candidate is string => typeof candidate === 'string' && candidate.length > 0);
 
   return candidates.find(candidate => existsSync(join(candidate, 'vishnu_dub'))) ?? candidates[candidates.length - 1]!;

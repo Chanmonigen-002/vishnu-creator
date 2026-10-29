@@ -3401,5 +3401,11 @@
   "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free مدل رایگان مخصوص توسعه‌دهندگان است. صداها شناسه‌ی مدل‌های Fish Audio هستند؛ از فهرست انتخاب کنید یا دستی بنویسید. پشتیبانی خمر هنوز تأیید نشده، ابتدا نمونه را گوش دهید.",
   "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "خروجی خمر این تأمین‌کننده هنوز تأیید نشده است. پس از کارکردن کلید، اول با یک جمله کوتاه خمر آزمایش کنید.",
   "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "کیفیت خمر به مدل محلی بستگی دارد: Gemma 4 (gemma4:latest) در آزمایش واقعی خمر درست تولید کرد؛ Qwen 3 و مدل‌های مشابه ممکن است خمر تولید نکنند.",
-  "Voice Library": "کتابخانه صدا"
+  "Voice Library": "کتابخانه صدا",
+  "Configure video generation (Seedance, Kling, Veo, Runway, Luma, MiniMax, ComfyUI) and default models for new tasks.": "Configure video generation (Seedance, Kling, Veo, Runway, Luma, MiniMax, ComfyUI) and default models for new tasks.",
+  "Default workflow": "Default workflow",
+  "Groq offers fast Whisper transcription with a free tier and Khmer (km) support.": "Groq offers fast Whisper transcription with a free tier and Khmer (km) support.",
+  "ElevenLabs Scribe provides multilingual speech-to-text with Khmer (khm) support.": "ElevenLabs Scribe provides multilingual speech-to-text with Khmer (khm) support.",
+  "AssemblyAI supports 99 languages including Khmer (km) and provides free credit.": "AssemblyAI supports 99 languages including Khmer (km) and provides free credit.",
+  "Deepgram Nova-3/2 supports 55 languages including English and Chinese, but currently has no Khmer support.": "Deepgram Nova-3/2 supports 55 languages including English and Chinese, but currently has no Khmer support."
 }
