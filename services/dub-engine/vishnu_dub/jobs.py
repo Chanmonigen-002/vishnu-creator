@@ -1,6 +1,7 @@
 """Vishnu Dub Engine — job management with checkpointing."""
 
 import asyncio
+import inspect
 import json
 import shutil
 import subprocess
@@ -574,6 +575,11 @@ class JobManager:
             synthesized_any = False
 
             ext = ".wav" if getattr(tts_backend, "SAMPLE_RATE", 24000) == 48000 or tts_backend.name == "voxcpm2" else ".mp3"
+            synth_params = inspect.signature(tts_backend.synthesize).parameters
+            accepts_reference_audio = (
+                "reference_audio" in synth_params
+                or any(p.kind == inspect.Parameter.VAR_KEYWORD for p in synth_params.values())
+            )
             for idx, seg in enumerate(km_segments):
                 seg_path = tts_dir / f"seg_{idx:04d}{ext}"
                 if not seg_path.exists() or seg_path.stat().st_size == 0:
@@ -581,7 +587,7 @@ class JobManager:
                     # TTSBackend contract and the Edge/OpenAI backends do not.
                     clone_kwargs = (
                         {"reference_audio": Path(job.reference_audio_path)}
-                        if job.reference_audio_path
+                        if job.reference_audio_path and accepts_reference_audio
                         else {}
                     )
                     await tts_backend.synthesize(

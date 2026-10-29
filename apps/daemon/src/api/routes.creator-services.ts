@@ -539,7 +539,6 @@ export async function registerCreatorServicesRoutes(
   }> {
     try {
       const engineDir = resolveDubEngineDirectory({ enginePath: enginePath ?? '' });
-      const sampleDir = join(engineDir, 'vishnu_dub', 'data', 'sample_voices');
       const voices: Array<{
         id: string;
         name: string;
@@ -550,14 +549,22 @@ export async function registerCreatorServicesRoutes(
         consent: boolean;
         isSample: boolean;
       }> = [];
-      if (existsSync(sampleDir)) {
-        for (const entry of readdirSync(sampleDir, { withFileTypes: true })) {
+      const candidateDirs = [
+        join(engineDir, 'vishnu_dub', 'data', 'sample_voices'),
+        join(engineDir, 'jobs', 'voice_designs'),
+        join(process.cwd(), 'jobs', 'voice_designs'),
+      ];
+      const seenIds = new Set<string>();
+      for (const baseDir of candidateDirs) {
+        if (!existsSync(baseDir)) continue;
+        for (const entry of readdirSync(baseDir, { withFileTypes: true })) {
           if (entry.isDirectory()) {
-            const metaFile = join(sampleDir, entry.name, 'metadata.json');
+            const metaFile = join(baseDir, entry.name, 'metadata.json');
             if (existsSync(metaFile)) {
               try {
                 const parsed = JSON.parse(readFileSync(metaFile, 'utf8'));
-                if (parsed && typeof parsed.id === 'string') {
+                if (parsed && typeof parsed.id === 'string' && !seenIds.has(parsed.id)) {
+                  seenIds.add(parsed.id);
                   voices.push({
                     id: parsed.id,
                     name: typeof parsed.name === 'string' ? parsed.name : parsed.id,
@@ -584,14 +591,16 @@ export async function registerCreatorServicesRoutes(
     try {
       const safeId = voiceId.replace(/^(\.\.(\/|\\|$))+/, '');
       const engineDir = resolveDubEngineDirectory({ enginePath: enginePath ?? '' });
-      const sampleVoiceDir = join(engineDir, 'vishnu_dub', 'data', 'sample_voices', safeId);
+      const candidateVoiceDirs = [
+        join(engineDir, 'vishnu_dub', 'data', 'sample_voices', safeId),
+        join(engineDir, 'jobs', 'voice_designs', safeId),
+        join(process.cwd(), 'jobs', 'voice_designs', safeId),
+      ];
       let targetDir = '';
-      if (existsSync(sampleVoiceDir)) {
-        targetDir = sampleVoiceDir;
-      } else {
-        const jobsVoiceDir = join(process.cwd(), 'jobs', 'voice_designs', safeId);
-        if (existsSync(jobsVoiceDir)) {
-          targetDir = jobsVoiceDir;
+      for (const candidateDir of candidateVoiceDirs) {
+        if (existsSync(candidateDir)) {
+          targetDir = candidateDir;
+          break;
         }
       }
       if (!targetDir) return null;
@@ -620,19 +629,23 @@ export async function registerCreatorServicesRoutes(
     try {
       const safeName = filename.replace(/^(\.\.(\/|\\|$))+/, '');
       const engineDir = resolveDubEngineDirectory({ enginePath: enginePath ?? '' });
-      const sampleDir = join(engineDir, 'vishnu_dub', 'data', 'sample_voices');
-      const directPath = join(sampleDir, safeName);
-      if (existsSync(directPath)) return readFileSync(directPath);
-      if (existsSync(sampleDir)) {
-        for (const sub of readdirSync(sampleDir, { withFileTypes: true })) {
-          if (sub.isDirectory()) {
-            const subPath = join(sampleDir, sub.name, safeName);
-            if (existsSync(subPath)) return readFileSync(subPath);
+      const searchRoots = [
+        join(engineDir, 'vishnu_dub', 'data', 'sample_voices'),
+        join(engineDir, 'jobs', 'voice_designs'),
+        join(process.cwd(), 'jobs', 'voice_designs'),
+      ];
+      for (const rootDir of searchRoots) {
+        const directPath = join(rootDir, safeName);
+        if (existsSync(directPath)) return readFileSync(directPath);
+        if (existsSync(rootDir)) {
+          for (const sub of readdirSync(rootDir, { withFileTypes: true })) {
+            if (sub.isDirectory()) {
+              const subPath = join(rootDir, sub.name, safeName);
+              if (existsSync(subPath)) return readFileSync(subPath);
+            }
           }
         }
       }
-      const jobsDesignPath = join(process.cwd(), 'jobs', 'voice_designs', safeName);
-      if (existsSync(jobsDesignPath)) return readFileSync(jobsDesignPath);
 
       const zipMatch = safeName.match(/^voice_export_(.+)\.zip$/);
       if (zipMatch && zipMatch[1]) {
@@ -650,11 +663,17 @@ export async function registerCreatorServicesRoutes(
     try {
       const safeId = voiceId.replace(/^(\.\.(\/|\\|$))+/, '');
       const engineDir = resolveDubEngineDirectory({ enginePath: enginePath ?? '' });
-      const sampleVoiceDir = join(engineDir, 'vishnu_dub', 'data', 'sample_voices', safeId);
-      if (existsSync(sampleVoiceDir)) {
-        for (const file of readdirSync(sampleVoiceDir)) {
-          if (file.endsWith('.wav') || file.endsWith('.mp3')) {
-            return readFileSync(join(sampleVoiceDir, file));
+      const candidateVoiceDirs = [
+        join(engineDir, 'vishnu_dub', 'data', 'sample_voices', safeId),
+        join(engineDir, 'jobs', 'voice_designs', safeId),
+        join(process.cwd(), 'jobs', 'voice_designs', safeId),
+      ];
+      for (const candidateDir of candidateVoiceDirs) {
+        if (existsSync(candidateDir)) {
+          for (const file of readdirSync(candidateDir)) {
+            if (file.endsWith('.wav') || file.endsWith('.mp3')) {
+              return readFileSync(join(candidateDir, file));
+            }
           }
         }
       }
