@@ -35,10 +35,13 @@ The repo-wide layout (backend, frontend, services, data, reference) is in [proje
 ## Feature guides
 
 - [Dub Studio (Khmer-first)](guides/dub-studio.md)
+- [Local Dub Engine Setup & Reference](guides/local-dub-engine.md)
+- [Khmer User Guide (ការណែនាំជាភាសាខ្មែរ)](guides/khmer-user-guide.md)
 - [User guide and troubleshooting](guides/user-guide-and-troubleshooting.md)
 - [FunASR transcription](guides/funasr-transcription.md)
 - [Cached model credentials](guides/cached-model-credentials.md)
 - [OpenRouter model availability](guides/openrouter-model-availability.md)
+- [Third-Party Notices and Attributions](../NOTICE)
 
 ## Engineering reference
 
