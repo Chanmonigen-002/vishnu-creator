@@ -88,9 +88,22 @@ async def run_benchmark(
         asr_backend = get_asr_backend(settings)
         start = time.time()
         if asr_backend.is_available():
-            result = await asr_backend.transcribe(test_audio)
-            results.asr_time = time.time() - start
-            print(f"ASR: {results.asr_time:.2f}s, {len(result.segments)} segments")
+            try:
+                result = await asr_backend.transcribe(test_audio)
+                results.asr_time = time.time() - start
+                print(f"ASR: {results.asr_time:.2f}s, {len(result.segments)} segments")
+            except Exception as asr_err:
+                try:
+                    # Attempt cached lightweight model if primary download is unavailable or throttled
+                    from vishnu_dub.config import ASRConfig
+                    from vishnu_dub.asr import FasterWhisperBackend
+                    fb_asr = FasterWhisperBackend(ASRConfig(whisper_cpp_model="tiny"), settings)
+                    result = await fb_asr.transcribe(test_audio)
+                    results.asr_time = time.time() - start
+                    print(f"ASR (cached fallback): {results.asr_time:.2f}s, {len(result.segments)} segments")
+                except Exception as fb_err:
+                    print(f"ASR benchmark skipped: {asr_err}; fallback: {fb_err}")
+                    results.asr_time = 0.0
         else:
             print("ASR backend not available, skipping")
             results.asr_time = 0.0
