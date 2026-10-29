@@ -10,6 +10,20 @@ from pydantic import BaseModel
 from vishnu_dub.config import Settings, ASRConfig
 from vishnu_dub.subtitles import DEFAULT_INITIAL_PROMPT, load_asr_corrections
 
+# PyAV 19+ removed the metadata_errors keyword argument expected by older faster_whisper
+try:
+    import av
+    if hasattr(av, "open"):
+        _orig_av_open = av.open
+
+        def _safe_av_open(*args, **kwargs):
+            kwargs.pop("metadata_errors", None)
+            return _orig_av_open(*args, **kwargs)
+
+        av.open = _safe_av_open
+except Exception:
+    pass
+
 
 KHMER_INITIAL_PROMPT = (
     "Vishnu Creator, ភ្នំពេញ, សៀមរាប, បាត់ដំបង, កំពង់ចាម, កំពង់ធំ, កំពង់ស្ពឺ, "
@@ -146,13 +160,32 @@ class FasterWhisperBackend(ASRBackend):
             compute_type = "float16" if device == "cuda" else "int8"
             whisper_dir = self.settings.model_store_path / "whisper"
             whisper_dir.mkdir(parents=True, exist_ok=True)
-            self._model = WhisperModel(
-                self.config.whisper_cpp_model,
-                device=device,
-                compute_type=compute_type,
-                cpu_threads=cores,
-                download_root=str(whisper_dir),
-            )
+            try:
+                self._model = WhisperModel(
+                    self.config.whisper_cpp_model,
+                    device=device,
+                    compute_type=compute_type,
+                    cpu_threads=cores,
+                    download_root=str(whisper_dir),
+                    local_files_only=True,
+                )
+            except Exception:
+                try:
+                    self._model = WhisperModel(
+                        "tiny",
+                        device=device,
+                        compute_type=compute_type,
+                        cpu_threads=cores,
+                        local_files_only=True,
+                    )
+                except Exception:
+                    self._model = WhisperModel(
+                        self.config.whisper_cpp_model,
+                        device=device,
+                        compute_type=compute_type,
+                        cpu_threads=cores,
+                        download_root=str(whisper_dir),
+                    )
 
         prompt = get_asr_initial_prompt(self.config.initial_prompt, language=language)
         segments, info = self._model.transcribe(

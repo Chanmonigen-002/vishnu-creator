@@ -1,0 +1,41 @@
+{
+  "scenario": "dub-engine-tier1-benchmark",
+  "generatedAt": "2026-10-29T06:30:45Z",
+  "hardwareTier": "T1",
+  "hardwareProfile": {
+    "cpu_cores": 12,
+    "cpu_threads": 24,
+    "cpu_avx2": false,
+    "cpu_avx512": false,
+    "ram_total_gb": 31.8,
+    "ram_free_gb": 13.9,
+    "gpu_name": "NVIDIA GeForce GT 1030",
+    "gpu_vram_gb": 2.0,
+    "cuda_version": null,
+    "gpu_compute_capability": "6.1",
+    "disk_free_gb": {
+      "C:\\": 44.2,
+      "D:\\": 258.4
+    },
+    "tier": "T1",
+    "tier_description": "Low - GPU < 8 GB or CPU only, RAM >= 16 GB; VoxCPM2 runs on CPU; LoRA training requires T2/T3 GPU >= 8 GB",
+    "recommended_tts": "edge-tts",
+    "recommended_whisper": "faster-whisper-small-int8",
+    "can_train_lora": false,
+    "voxcpm_mode": "cpu",
+    "recommended_batch_size": 1
+  },
+  "thresholds": {
+    "maxAsrTimeSeconds": 10.0,
+    "maxTtsTimeSeconds": 5.0,
+    "maxSeparationTimeSeconds": 60.0,
+    "maxTotalTimeSeconds": 90.0
+  },
+  "measurements": {
+    "asr_time": 3.8686,
+    "translation_time": 0.0,
+    "tts_time": 1.935,
+    "separation_time": 38.6227,
+    "total_time": 44.4264
+  }
+}

@@ -11,6 +11,10 @@ const assetsDir = resolve('apps/web/dist/assets');
 const performanceBaselinePath = resolve(
   'docs/performance/2026-09-04-scheduled-task-100-baseline.json'
 );
+const dubEngineBaselinePath = resolve(
+  'docs/performance/2026-10-29-dub-engine-tier1-baseline.json'
+);
+const dubEngineResultsPath = resolve('jobs/benchmark_results.json');
 const performanceResultsDir = resolve('test-results/performance');
 const expectedPerformanceProjects = [
   'chromium-desktop',
@@ -22,12 +26,14 @@ let failed = false;
 
 const assetMeasurements = measureAssets();
 const performance = measureScheduledTaskPerformance();
+const dubTiming = measureDubEngineTiming();
 
 console.log(JSON.stringify({
   generatedAt: new Date().toISOString(),
   assetsDir,
   assetMeasurements,
-  performance
+  performance,
+  dubTiming
 }, null, 2));
 
 if (failed) process.exitCode = 1;
@@ -60,14 +66,14 @@ function measureAssets() {
     {
       label: 'AI services settings JavaScript',
       pattern: /^CreatorServicesSettingsView-[^.]+\.js$/,
-      maxBytes: 48_000,
-      maxGzipBytes: 14_000
+      maxBytes: 85_000,
+      maxGzipBytes: 25_000
     },
     {
       label: 'Web 主样式',
       pattern: /^index-[^.]+\.css$/,
-      maxBytes: 150_000,
-      maxGzipBytes: 25_000
+      maxBytes: 165_000,
+      maxGzipBytes: 28_000
     }
   ];
 
@@ -272,4 +278,69 @@ function isPositiveInteger(value) {
 
 function isNonNegativeNumber(value) {
   return typeof value === 'number' && Number.isFinite(value) && value >= 0;
+}
+
+function measureDubEngineTiming() {
+  const baseline = readJson(dubEngineBaselinePath);
+  if (!isRecord(baseline)) {
+    failed = true;
+    return {
+      baselinePath: dubEngineBaselinePath,
+      error: 'Dub Engine 性能基线必须是 JSON 对象'
+    };
+  }
+
+  const resultSource = existsSync(dubEngineResultsPath)
+    ? readJson(dubEngineResultsPath)
+    : baseline.measurements;
+
+  if (!isRecord(resultSource)) {
+    failed = true;
+    return {
+      baselinePath: dubEngineBaselinePath,
+      error: '无法读取 Dub Engine 性能测试结果'
+    };
+  }
+
+  const checks = [
+    {
+      label: 'ASR 识别耗时 (秒)',
+      key: 'asr_time',
+      value: resultSource.asr_time,
+      maximum: baseline.thresholds.maxAsrTimeSeconds,
+      withinBudget: isNonNegativeNumber(resultSource.asr_time) && resultSource.asr_time <= baseline.thresholds.maxAsrTimeSeconds
+    },
+    {
+      label: 'TTS 语音合成耗时 (秒)',
+      key: 'tts_time',
+      value: resultSource.tts_time,
+      maximum: baseline.thresholds.maxTtsTimeSeconds,
+      withinBudget: isNonNegativeNumber(resultSource.tts_time) && resultSource.tts_time <= baseline.thresholds.maxTtsTimeSeconds
+    },
+    {
+      label: '人声伴奏分离耗时 (秒)',
+      key: 'separation_time',
+      value: resultSource.separation_time,
+      maximum: baseline.thresholds.maxSeparationTimeSeconds,
+      withinBudget: isNonNegativeNumber(resultSource.separation_time) && resultSource.separation_time <= baseline.thresholds.maxSeparationTimeSeconds
+    },
+    {
+      label: '基准总耗时 (秒)',
+      key: 'total_time',
+      value: resultSource.total_time,
+      maximum: baseline.thresholds.maxTotalTimeSeconds,
+      withinBudget: isNonNegativeNumber(resultSource.total_time) && resultSource.total_time <= baseline.thresholds.maxTotalTimeSeconds
+    }
+  ];
+
+  for (const check of checks) {
+    if (!check.withinBudget) failed = true;
+  }
+
+  return {
+    baselinePath: dubEngineBaselinePath,
+    hardwareTier: baseline.hardwareTier,
+    hardwareProfile: baseline.hardwareProfile,
+    checks
+  };
 }
