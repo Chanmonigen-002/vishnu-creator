@@ -192,4 +192,49 @@ describe('KhmerVoicesView', () => {
     expect(screen.getAllByText(/Prompt Timbre Design/i).length).toBeGreaterThanOrEqual(2);
     expect(screen.getByText(/Voice Description Prompt/i)).toBeInTheDocument();
   });
+
+  it('plays sample audio using previewTtsVoice for Edge-TTS voices', async () => {
+    const playSpy = vi.spyOn(HTMLMediaElement.prototype, 'play').mockResolvedValue(undefined);
+    const pauseSpy = vi.spyOn(HTMLMediaElement.prototype, 'pause').mockImplementation(() => {});
+    const createUrl = vi.fn(() => 'blob:test-edge-audio');
+    const revokeUrl = vi.fn();
+    Object.defineProperty(URL, 'createObjectURL', { configurable: true, value: createUrl });
+    Object.defineProperty(URL, 'revokeObjectURL', { configurable: true, value: revokeUrl });
+
+    const previewTtsVoice = vi.fn().mockResolvedValue(
+      new Response(new Blob(['mock-mp3'], { type: 'audio/mpeg' }), { status: 200 })
+    );
+
+    renderView({
+      creatorServicesService: {
+        ...baseService,
+        previewTtsVoice
+      }
+    });
+
+    const listenBtn = screen.getByTestId('listen-btn-km-KH-SreymomNeural');
+    expect(listenBtn).toHaveTextContent(/Play sample/i);
+
+    fireEvent.click(listenBtn);
+
+    await waitFor(() => {
+      expect(previewTtsVoice).toHaveBeenCalledWith({
+        provider: 'edge-tts',
+        voiceId: 'km-KH-SreymomNeural',
+        language: 'km-KH',
+        text: expect.stringContaining('ស្រីមុំ')
+      });
+      expect(playSpy).toHaveBeenCalled();
+      expect(listenBtn).toHaveTextContent(/Stop/i);
+    });
+
+    // Clicking again stops playback
+    fireEvent.click(listenBtn);
+    expect(pauseSpy).toHaveBeenCalled();
+    expect(revokeUrl).toHaveBeenCalledWith('blob:test-edge-audio');
+    expect(listenBtn).toHaveTextContent(/Play sample/i);
+
+    playSpy.mockRestore();
+    pauseSpy.mockRestore();
+  });
 });

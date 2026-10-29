@@ -220,7 +220,7 @@ function isSmartDubbingResult(value: unknown): value is SmartDubbingResult {
     && typeof value.fileName === 'string'
     && (value.mime === 'audio/mpeg' || value.mime === 'audio/wav')
     && typeof value.size === 'number'
-    && isCreatorTtsProvider(value.provider) && value.provider !== 'edge-tts'
+    && isCreatorTtsProvider(value.provider)
     && typeof value.model === 'string'
     && typeof value.voice === 'string'
     && value.voice.length > 0

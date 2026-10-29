@@ -801,3 +801,16 @@
   background: rgba(148, 163, 184, 0.12);
   color: #94a3b8;
 }
+
+.khmer-studio-spin {
+  animation: khmer-voices-spin 1s linear infinite;
+}
+
+@keyframes khmer-voices-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}

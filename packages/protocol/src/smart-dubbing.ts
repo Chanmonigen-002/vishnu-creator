@@ -27,7 +27,7 @@ export type SmartDubbingResult = {
   fileName: string;
   mime: 'audio/mpeg' | 'audio/wav';
   size: number;
-  provider: Exclude<CreatorTtsProvider, 'edge-tts'>;
+  provider: CreatorTtsProvider;
   model: string;
   voice: SmartDubbingVoice;
   voiceName?: string;

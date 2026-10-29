@@ -67,6 +67,7 @@ export function KhmerVoicesView(props: {
   const l = useLocalizedCopy();
   const [azureConfigured, setAzureConfigured] = useState<boolean | null>(null);
   const [playingVoiceId, setPlayingVoiceId] = useState<string | null>(null);
+  const [loadingVoiceId, setLoadingVoiceId] = useState<string | null>(null);
   const [engineStatus, setEngineStatus] = useState<DubEngineRuntimeStatus>();
   const [engineStarting, setEngineStarting] = useState(false);
 
@@ -93,6 +94,8 @@ export function KhmerVoicesView(props: {
   const [designSubmitting, setDesignSubmitting] = useState(false);
   const [designError, setDesignError] = useState<string | null>(null);
 
+  const sampleAudioRef = useRef<HTMLAudioElement | null>(null);
+  const sampleAudioUrlRef = useRef<string | null>(null);
   const customAudioRef = useRef<HTMLAudioElement | null>(null);
   const customAudioUrlRef = useRef<string | null>(null);
 
@@ -243,6 +246,19 @@ export function KhmerVoicesView(props: {
       URL.revokeObjectURL(customAudioUrlRef.current);
       customAudioUrlRef.current = null;
     }
+    if (sampleAudioRef.current) {
+      sampleAudioRef.current.pause();
+      sampleAudioRef.current.currentTime = 0;
+    }
+    if (sampleAudioUrlRef.current) {
+      URL.revokeObjectURL(sampleAudioUrlRef.current);
+      sampleAudioUrlRef.current = null;
+    }
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    setPlayingVoiceId(null);
+    setLoadingVoiceId(null);
 
     if (props.creatorServicesService?.previewVoiceDesign) {
       setPlayingCustomId(voice.id);
@@ -324,20 +340,118 @@ export function KhmerVoicesView(props: {
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
+      if (sampleAudioRef.current) {
+        sampleAudioRef.current.pause();
+      }
+      if (sampleAudioUrlRef.current) {
+        URL.revokeObjectURL(sampleAudioUrlRef.current);
+        sampleAudioUrlRef.current = null;
+      }
+      if (customAudioRef.current) {
+        customAudioRef.current.pause();
+      }
+      if (customAudioUrlRef.current) {
+        URL.revokeObjectURL(customAudioUrlRef.current);
+        customAudioUrlRef.current = null;
+      }
     };
   }, [props.creatorServicesService, refreshEngine]);
 
-  const togglePlaySample = (voice: KhmerVoiceInfo) => {
-    if (playingVoiceId === voice.id) {
+  const togglePlaySample = async (voice: KhmerVoiceInfo) => {
+    if (playingVoiceId === voice.id || loadingVoiceId === voice.id) {
+      if (sampleAudioRef.current) {
+        sampleAudioRef.current.pause();
+        sampleAudioRef.current.currentTime = 0;
+      }
+      if (sampleAudioUrlRef.current) {
+        URL.revokeObjectURL(sampleAudioUrlRef.current);
+        sampleAudioUrlRef.current = null;
+      }
       if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
         window.speechSynthesis.cancel();
       }
       setPlayingVoiceId(null);
+      setLoadingVoiceId(null);
+      return;
+    }
+
+    if (sampleAudioRef.current) {
+      sampleAudioRef.current.pause();
+      sampleAudioRef.current.currentTime = 0;
+    }
+    if (sampleAudioUrlRef.current) {
+      URL.revokeObjectURL(sampleAudioUrlRef.current);
+      sampleAudioUrlRef.current = null;
+    }
+    if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    if (customAudioRef.current) {
+      customAudioRef.current.pause();
+      customAudioRef.current.currentTime = 0;
+    }
+    if (customAudioUrlRef.current) {
+      URL.revokeObjectURL(customAudioUrlRef.current);
+      customAudioUrlRef.current = null;
+    }
+    setPlayingCustomId(null);
+    setPlayingVoiceId(null);
+
+    if (voice.provider !== 'voxcpm' && props.creatorServicesService?.previewTtsVoice) {
+      setLoadingVoiceId(voice.id);
+      try {
+        const response = await props.creatorServicesService.previewTtsVoice({
+          provider: voice.provider,
+          voiceId: voice.id,
+          language: 'km-KH',
+          text: voice.sampleText
+        });
+        if (!response.ok) {
+          throw new Error(`TTS preview failed with status ${response.status}`);
+        }
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+        sampleAudioUrlRef.current = url;
+        if (sampleAudioRef.current) {
+          sampleAudioRef.current.src = url;
+          sampleAudioRef.current.onended = () => {
+            setPlayingVoiceId(null);
+            if (sampleAudioUrlRef.current) {
+              URL.revokeObjectURL(sampleAudioUrlRef.current);
+              sampleAudioUrlRef.current = null;
+            }
+          };
+          sampleAudioRef.current.onerror = () => {
+            setPlayingVoiceId(null);
+            if (sampleAudioUrlRef.current) {
+              URL.revokeObjectURL(sampleAudioUrlRef.current);
+              sampleAudioUrlRef.current = null;
+            }
+          };
+          await sampleAudioRef.current.play();
+          setPlayingVoiceId(voice.id);
+        }
+      } catch {
+        // Fallback to window.speechSynthesis if server request fails
+        if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
+          const utterance = new SpeechSynthesisUtterance(voice.sampleText);
+          utterance.lang = 'km-KH';
+          utterance.rate = 1.0;
+          utterance.onend = () => setPlayingVoiceId(null);
+          utterance.onerror = () => setPlayingVoiceId(null);
+          setPlayingVoiceId(voice.id);
+          window.speechSynthesis.speak(utterance);
+        } else {
+          setPlayingVoiceId(voice.id);
+          setTimeout(() => setPlayingVoiceId(null), 3000);
+        }
+      } finally {
+        setLoadingVoiceId(null);
+      }
       return;
     }
 
     if (typeof window !== 'undefined' && 'speechSynthesis' in window) {
-      window.speechSynthesis.cancel();
       const utterance = new SpeechSynthesisUtterance(voice.sampleText);
       utterance.lang = 'km-KH';
       utterance.rate = 1.0;
@@ -457,8 +571,14 @@ export function KhmerVoicesView(props: {
                     className="khmer-voice-listen-btn"
                     onClick={() => togglePlaySample(voice)}
                     data-testid={`listen-btn-${voice.id}`}
+                    disabled={loadingVoiceId === voice.id}
                   >
-                    {playingVoiceId === voice.id ? (
+                    {loadingVoiceId === voice.id ? (
+                      <>
+                        <LoaderCircle size={14} className="khmer-studio-spin" />
+                        <span>{l('正在加载…', 'Loading…')}</span>
+                      </>
+                    ) : playingVoiceId === voice.id ? (
                       <>
                         <Square size={14} />
                         <span>{l('停止试听', 'Stop')}</span>
@@ -918,6 +1038,7 @@ export function KhmerVoicesView(props: {
         </div>
       ) : null}
 
+      <audio ref={sampleAudioRef} style={{ display: 'none' }} />
       <audio ref={customAudioRef} style={{ display: 'none' }} />
     </div>
   );
