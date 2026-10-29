@@ -1,0 +1,96 @@
+========================================================================
+Vishnu Creator Third-Party Notices and Attributions
+========================================================================
+
+Vishnu Creator incorporates or is derived from several open-source
+software projects and libraries. This file lists copyright notices and
+attributions for these components in compliance with their licenses.
+
+------------------------------------------------------------------------
+1. OpenCreator (Fork Base & Architecture)
+------------------------------------------------------------------------
+Portions of this software are derived from OpenCreator:
+  Repository: https://github.com/krillinai/OpenCreator
+  License: Apache License 2.0
+  Copyright (c) 2026 Krillin AI Contributors
+
+Vishnu Creator builds upon the OpenCreator pnpm monorepo structure
+(`apps/daemon`, `apps/web`, `apps/desktop`, and `packages/*`),
+re-architecting it for Khmer-first dubbing workflows, local hardware
+adaptation tiers, and unified agent collaboration panels.
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at:
+    http://www.apache.org/licenses/LICENSE-2.0
+
+------------------------------------------------------------------------
+2. ZastTranslate (Dubbing Workflow Reference & Inspiration)
+------------------------------------------------------------------------
+Architectural patterns, CPS-fitted length reformulations, and audio/video
+mixing time-sync concepts are inspired by ZastTranslate:
+  Repository: https://github.com/zast57/ZastTranslate
+  Author: zast57
+
+Per Architecture Decision Record ADR-0005, the Dub Engine in
+`services/dub-engine` is a clean, independent implementation designed to
+provide high-reliability loopback FastAPI endpoints, robust Windows
+subtitles burn-in, and strict Khmer script integrity rules without
+verbatim source copying. We gratefully acknowledge zast57 for pioneering
+automated dubbing pipeline concepts.
+
+------------------------------------------------------------------------
+3. VoxCPM / VoxCPM2 (Multilingual Voice Cloning)
+------------------------------------------------------------------------
+Zero-shot voice cloning architectures and model configurations are
+derived from VoxCPM2:
+  Repository: https://github.com/OpenBMB/VoxCPM
+  License: Apache License 2.0
+  Copyright (c) 2026 ModelBest Inc. & OpenBMB Contributors
+
+Vishnu Creator utilizes VoxCPM2 weights and tokenization pipelines for
+high-fidelity Khmer voice cloning, equipped with Nyquist-safe watermark
+protection.
+
+------------------------------------------------------------------------
+4. Faster-Whisper & CTranslate2 (Speech Recognition)
+------------------------------------------------------------------------
+Fast local speech-to-text inference is powered by Faster-Whisper and
+CTranslate2:
+  Repository: https://github.com/SYSTRAN/faster-whisper
+  Repository: https://github.com/OpenNMT/CTranslate2
+  License: MIT License / Apache License 2.0
+  Copyright (c) 2023 Guillaume Klein, SYSTRAN
+
+------------------------------------------------------------------------
+5. Demucs (Vocal & Accompaniment Separation)
+------------------------------------------------------------------------
+Vocal and instrumental track separation is powered by Demucs:
+  Repository: https://github.com/facebookresearch/demucs
+  License: MIT License
+  Copyright (c) Meta Platforms, Inc. and affiliates.
+
+------------------------------------------------------------------------
+6. Noto Sans Khmer (Khmer Subtitle Typography)
+------------------------------------------------------------------------
+Khmer on-screen subtitle rendering uses the Noto Sans Khmer font family:
+  Project: https://fonts.google.com/noto/specimen/Noto+Sans+Khmer
+  License: SIL Open Font License 1.1 (OFL-1.1)
+  Copyright 2022 The Noto Project Authors (https://github.com/notofonts/khmer)
+
+------------------------------------------------------------------------
+7. FFmpeg (Audio/Video Processing & Encoding)
+------------------------------------------------------------------------
+Audio demuxing, video filtering, ASS subtitle burn-in, and final container
+assembly utilize the FFmpeg multimedia framework:
+  Project: https://ffmpeg.org
+  License: LGPL v2.1+ / GPL v2+ (depending on build configuration)
+  Copyright (c) FFmpeg developers
+
+------------------------------------------------------------------------
+8. edge-tts (Neural Voice Synthesis)
+------------------------------------------------------------------------
+Zero-GPU Khmer neural speech synthesis utilizes Microsoft Edge TTS:
+  Repository: https://github.com/rany2/edge-tts
+  License: GNU Lesser General Public License v3.0 (LGPL-3.0)
+  Copyright (c) rany2

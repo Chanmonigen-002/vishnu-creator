@@ -12,7 +12,7 @@ The master plan explains *why*; these files track *what is done*.
 | 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 7 | 0 | 0 | 0 | Phase 3 | met (`v4-quality-pipeline`) | Complete |
 | 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 10 | 10 | 0 | 0 | 0 | Phase 3 | met (T5.1–T5.10 + E2E cloned voice verified) | Complete |
 | 6 | [Extra creator studios](phase-6-creator-studios.md) | 9 | 8 | 0 | 1 | 0 | Phase 3 | met (E2E real file verified) | Complete (T6.3 blocked on D3) |
-| 7 | [Release](phase-7-release.md) | 7 | 4 | 0 | 0 | 3 | Phases 1–6 | — | In progress |
+| 7 | [Release](phase-7-release.md) | 7 | 5 | 0 | 0 | 2 | Phases 1–6 | — | In progress |
 | 8 | [More AI providers (free, paid, cloud, local)](phase-8-ai-providers.md) | 11 | 3 | 8 | 0 | 0 | Phase 3 | — | In progress — see [Remaining work](phase-8-ai-providers.md#remaining-work-and-what-to-fix-2026-10-28) |
 
 ## Audit 2026-10-27
