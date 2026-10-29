@@ -3401,5 +3401,11 @@
   "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free என்பது உருவாக்குநர்களுக்கான இலவச மாதிரி. குரல்கள் Fish Audio மாதிரி அடையாளங்கள்; பட்டியலிலிருந்து தேர்வு செய்யவும் அல்லது தட்டச்சு செய்யவும். கெமர் ஆதரவு இன்னும் உறுதிப்படுத்தப்படாததால் முதலில் செவிமடுத்துப் பாருங்கள்.",
   "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "இந்த சேவையின் கெமர் வெளியீடு இன்னும் சரிபார்க்கப்படவில்லை. விசை வேலை செய்தபின் முதலில் ஒரு சிறிய கெமர் வாக்கியத்துடன் சோதிக்கவும்.",
   "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "கெமர் மொழியின் தரம் உள்ளூர் மாதிரியைப் பொறுத்தது: Gemma 4 (gemma4:latest) உண்மையான சோதனையில் சரியான கெமரை வழங்கியது; Qwen 3 போன்றவை வழங்காமல் இருக்கலாம்.",
-  "Voice Library": "குரல் நூலகம்"
+  "Voice Library": "குரல் நூலகம்",
+  "Configure video generation (Seedance, Kling, Veo, Runway, Luma, MiniMax, ComfyUI) and default models for new tasks.": "Configure video generation (Seedance, Kling, Veo, Runway, Luma, MiniMax, ComfyUI) and default models for new tasks.",
+  "Default workflow": "Default workflow",
+  "Groq offers fast Whisper transcription with a free tier and Khmer (km) support.": "Groq offers fast Whisper transcription with a free tier and Khmer (km) support.",
+  "ElevenLabs Scribe provides multilingual speech-to-text with Khmer (khm) support.": "ElevenLabs Scribe provides multilingual speech-to-text with Khmer (khm) support.",
+  "AssemblyAI supports 99 languages including Khmer (km) and provides free credit.": "AssemblyAI supports 99 languages including Khmer (km) and provides free credit.",
+  "Deepgram Nova-3/2 supports 55 languages including English and Chinese, but currently has no Khmer support.": "Deepgram Nova-3/2 supports 55 languages including English and Chinese, but currently has no Khmer support."
 }

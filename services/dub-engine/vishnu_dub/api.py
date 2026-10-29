@@ -209,10 +209,14 @@ class TTSStreamingResponse(BaseModel):
 
 settings: Optional[Settings] = None
 job_manager: Optional[JobManager] = None
+_cached_hardware_profile: Optional[HardwareProfile] = None
 
 
 def detect_hardware() -> HardwareProfile:
     """Detect hardware capabilities and assign tier."""
+    global _cached_hardware_profile
+    if _cached_hardware_profile is not None:
+        return _cached_hardware_profile
     cpu_cores = psutil.cpu_count(logical=False) or 1
     cpu_threads = psutil.cpu_count(logical=True) or 1
     ram = psutil.virtual_memory()
@@ -322,7 +326,7 @@ def detect_hardware() -> HardwareProfile:
         voxcpm_mode = "remote_only"
         recommended_batch_size = 1
 
-    return HardwareProfile(
+    profile = HardwareProfile(
         cpu_cores=cpu_cores,
         cpu_threads=cpu_threads,
         cpu_avx2=cpu_avx2,
@@ -342,6 +346,8 @@ def detect_hardware() -> HardwareProfile:
         voxcpm_mode=voxcpm_mode,
         recommended_batch_size=recommended_batch_size,
     )
+    _cached_hardware_profile = profile
+    return profile
 
 
 # ─── App Lifecycle ───────────────────────────────────────────────────────

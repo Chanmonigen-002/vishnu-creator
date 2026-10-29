@@ -139,13 +139,13 @@ export default function SmartDubbingWorkspace(props: {
         if (selectedProvider === 'edge-tts') {
           setModel('');
           setVoice(readString(session?.state.voiceCode) || '');
-          setVoiceName(readString(session?.state.voiceName) || '');
+          setVoiceName(prev => readString(session?.state.voiceName) || prev || '');
           return;
         }
         const selectedConfig = response.config.tts[selectedProvider];
         setModel(readString(session?.state.ttsModel) || selectedConfig.model);
         setVoice(readString(session?.state.voiceCode) || selectedConfig.defaultVoiceId);
-        setVoiceName(readString(session?.state.voiceName) || selectedConfig.defaultVoiceId);
+        setVoiceName(prev => readString(session?.state.voiceName) || prev || selectedConfig.defaultVoiceId);
       })
       .catch(cause => {
         if (!active) return;

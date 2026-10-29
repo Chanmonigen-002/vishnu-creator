@@ -830,6 +830,8 @@ describe('VideoTranslationWorkspace task controls', () => {
             progress: { inputResultVersion: request.input.inputResultVersion!, phase: 'downloading', percent: 40 } }),
             stageId: 'prepare-source-video', executor: 'download' }]
         };
+      } else if (request.action === 'edit-subtitle') {
+        return new Promise(() => {});
       } else current = { ...current, revision: current.revision + 1, state: { ...current.state, ...request.input.patch as object } };
       return { job: current };
     });

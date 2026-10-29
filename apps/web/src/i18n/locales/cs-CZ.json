@@ -3401,5 +3401,11 @@
   "s2.1-pro-free is the free developer model. Voices are Fish Audio model IDs; pick one from the list or type it. Khmer support is not confirmed yet, so preview first.": "s2.1-pro-free je bezplatný model pro vývojáře. Hlasy jsou ID modelů Fish Audio; vyberte ze seznamu nebo zadejte vlastní. Podpora khmerštiny zatím není potvrzena, nejprve si poslechněte ukázku.",
   "Khmer output from this provider has not been verified yet. Test with a short Khmer sentence once the key works.": "Khmerský výstup tohoto poskytovatele ještě není ověřen. Jakmile klíč funguje, otestujte nejprve krátkou khmerskou větu.",
   "Khmer quality depends on the local model: Gemma 4 (gemma4:latest) produced correct Khmer in a live test; Qwen 3 and similar models may output no Khmer.": "Kvalita khmerštiny závisí na lokálním modelu: Gemma 4 (gemma4:latest) při otestování vygenerovala správnou khmerštinu; Qwen 3 a podobné modely nemusí khmerštinu vypisovat.",
-  "Voice Library": "Knihovna hlasů"
+  "Voice Library": "Knihovna hlasů",
+  "Configure video generation (Seedance, Kling, Veo, Runway, Luma, MiniMax, ComfyUI) and default models for new tasks.": "Configure video generation (Seedance, Kling, Veo, Runway, Luma, MiniMax, ComfyUI) and default models for new tasks.",
+  "Default workflow": "Default workflow",
+  "Groq offers fast Whisper transcription with a free tier and Khmer (km) support.": "Groq offers fast Whisper transcription with a free tier and Khmer (km) support.",
+  "ElevenLabs Scribe provides multilingual speech-to-text with Khmer (khm) support.": "ElevenLabs Scribe provides multilingual speech-to-text with Khmer (khm) support.",
+  "AssemblyAI supports 99 languages including Khmer (km) and provides free credit.": "AssemblyAI supports 99 languages including Khmer (km) and provides free credit.",
+  "Deepgram Nova-3/2 supports 55 languages including English and Chinese, but currently has no Khmer support.": "Deepgram Nova-3/2 supports 55 languages including English and Chinese, but currently has no Khmer support."
 }

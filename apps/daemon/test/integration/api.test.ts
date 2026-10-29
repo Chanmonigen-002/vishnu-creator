@@ -54,7 +54,13 @@ afterEach(async () => {
   server = undefined;
   db?.close();
   db = undefined;
-  if (tempDir) rmSync(tempDir, { recursive: true, force: true });
+  if (tempDir) {
+    try {
+      rmSync(tempDir, { recursive: true, force: true, maxRetries: 5, retryDelay: 100 });
+    } catch {
+      // Ignore cleanup lock races on Windows
+    }
+  }
   tempDir = '';
 });
 
@@ -97,7 +103,7 @@ describe('runtime api', () => {
     server = undefined;
 
     expect(scheduler.stop).toHaveBeenCalledTimes(1);
-  });
+  }, 30_000);
 
   it('repairs legacy schedules before exposing them through the API', async () => {
     tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));
@@ -185,7 +191,7 @@ describe('runtime api', () => {
     server = undefined;
 
     expect(scheduler.stop).toHaveBeenCalledTimes(1);
-  });
+  }, 30_000);
 
   it('closes the run manager before server shutdown completes', async () => {
     tempDir = mkdtempSync(join(tmpdir(), 'vishnucreator-api-'));

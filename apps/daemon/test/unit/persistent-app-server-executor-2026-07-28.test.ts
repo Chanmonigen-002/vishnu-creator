@@ -351,12 +351,14 @@ describe('persistent app-server executor', () => {
       item.method === 'turn/start'
     ), { timeout: 5_000 }).toBe(true);
 
+    const resultExpectation = expect(active.result).rejects.toThrow('closed before turn completion');
+
     await fixture.executor.close({
       interruptGraceMs: 20,
       terminateGraceMs: 20
     });
 
-    await expect(active.result).rejects.toThrow('closed before turn completion');
+    await resultExpectation;
     expect(isProcessAlive(started.pid)).toBe(false);
     expect(fixture.injection.close).toHaveBeenCalledTimes(1);
   });
