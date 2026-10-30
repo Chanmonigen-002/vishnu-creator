@@ -457,6 +457,8 @@ function platformFlag(targetPlatform) {
 function packageRootCandidates(targetPlatform, targetArch) {
   if (targetPlatform === 'darwin') {
     return [
+      join(releaseDir, `mac-${targetArch}`, 'Vishnu Creator.app'),
+      join(releaseDir, 'mac', 'Vishnu Creator.app'),
       join(releaseDir, `mac-${targetArch}`, 'VishnuCreator.app'),
       join(releaseDir, 'mac', 'VishnuCreator.app')
     ];

@@ -12,7 +12,7 @@ The master plan explains *why*; these files track *what is done*.
 | 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 7 | 0 | 0 | 0 | Phase 3 | met (`v4-quality-pipeline`) | Complete |
 | 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 10 | 10 | 0 | 0 | 0 | Phase 3 | met (T5.1–T5.10 + E2E cloned voice verified) | Complete |
 | 6 | [Extra creator studios](phase-6-creator-studios.md) | 9 | 8 | 0 | 1 | 0 | Phase 3 | met (E2E real file verified) | Complete (T6.3 blocked on D3) |
-| 7 | [Release](phase-7-release.md) | 7 | 6 | 1 | 0 | 0 | Phases 1–6 | — | In progress (T7.6 desktop installer build & smoke test) |
+| 7 | [Release](phase-7-release.md) | 7 | 7 | 0 | 0 | 0 | Phases 1–6 | met (`v1.0.0-khmer` + packaged E2E verified) | Complete |
 | 8 | [More AI providers (free, paid, cloud, local)](phase-8-ai-providers.md) | 11 | 5 | 6 | 0 | 0 | Phase 3 | — | In progress — see [Remaining work](phase-8-ai-providers.md#remaining-work-and-what-to-fix-2026-10-30) |
 
 ## Audit 2026-10-27
@@ -41,7 +41,7 @@ Every task marked `done` in Phases 0–5 was checked against the code, its tests
 
 ### Remaining items across all phases (2026-10-30)
 
-1. **T7.6 (Phase 7 — Windows Desktop Installer & Smoke Test):** Unblock `better-sqlite3` Electron ABI 148 native module resolution (upgrade `better-sqlite3` to `12.12.0` + `prebuild-install` in `prepare-daemon.mjs`), build the Windows Desktop directory/installer (`pnpm --filter @vishnucreator/desktop package` / `dist`), and run packaged smoke verification.
+1. ~~**T7.6 (Phase 7 — Windows Desktop Installer & Smoke Test):**~~ **Done 2026-10-30:** Packaged `apps/desktop/release/win-unpacked/Vishnu Creator.exe`, passed `verify:package` (`fuses: verified`, `privacy: verified`), passed packaged Playwright `@package-smoke` E2E tests (`2/2 passed`), and verified embedded `dub-engine-runtime` Khmer synthesis. Phase 7 is now **7/7 Complete**.
 2. **T8.3 / T8.5–T8.9 (Phase 8 — Live Provider Verification):** Code, adapters, Go CLI clients, and 42-locale UI are complete and merged on `main`. Flipping each preset from `experimental` to `supported` requires a live API call with an owner key (Groq, Azure Speech, ElevenLabs, Fish Audio, fal.ai, Stability, Runway, Luma, etc.) or a running local server (`llama.cpp`, LM Studio, vLLM, Jan, ComfyUI).
 3. **T6.3 (Phase 6 — YouTube OAuth Publish):** Blocked on owner decision `D3` (OAuth client credential policy).
 
