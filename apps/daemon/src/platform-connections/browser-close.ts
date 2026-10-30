@@ -67,7 +67,7 @@ export async function runWindowsBrowserCommand(script: string, signal: AbortSign
     const child = spawnCreatorProcess(executable, ['-NoProfile', '-NonInteractive', '-Command', script],
       { stdio: ['ignore', 'pipe', 'ignore'] }, signal);
     let output = '';
-    const timeout = setTimeout(() => { child.kill(); resolve(undefined); }, 12_000);
+    const timeout = setTimeout(() => { child.kill(); resolve(undefined); }, 25_000);
     child.stdout?.setEncoding('utf8');
     child.stdout?.on('data', chunk => {
       output += chunk;

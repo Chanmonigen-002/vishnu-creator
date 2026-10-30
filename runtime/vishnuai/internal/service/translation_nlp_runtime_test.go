@@ -12,8 +12,8 @@ import (
 )
 
 func TestNLPRuntimeReusesProcessAndRestartsAfterCancellation(t *testing.T) {
-	python, err := exec.LookPath("python3")
-	if err != nil {
+	python, err := exec.LookPath(translationNLPPython())
+	if err != nil || exec.Command(python, "-c", "pass").Run() != nil {
 		t.Skip("Python not installed")
 	}
 	t.Setenv("VISHNUAI_NLP_PYTHON", python)

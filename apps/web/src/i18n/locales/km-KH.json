@@ -3407,5 +3407,9 @@
   "Groq offers fast Whisper transcription with a free tier and Khmer (km) support.": "Groq ផ្ដល់នូវការចម្លងសំឡេង Whisper ល្បឿនលឿនបំផុត មានកម្រិតឥតគិតថ្លៃ និងគាំទ្រភាសាខ្មែរ (km)។",
   "ElevenLabs Scribe provides multilingual speech-to-text with Khmer (khm) support.": "ElevenLabs Scribe ផ្ដល់នូវការចម្លងសំឡេងជាអត្ថបទច្រើនភាសាប្រកបដោយភាពសុក្រឹតខ្ពស់ និងគាំទ្រភាសាខ្មែរ (khm)។",
   "AssemblyAI supports 99 languages including Khmer (km) and provides free credit.": "AssemblyAI គាំទ្រ 99 ភាសារួមទាំងភាសាខ្មែរ (km) និងផ្ដល់នូវក្រេឌីតឥតគិតថ្លៃ។",
-  "Deepgram Nova-3/2 supports 55 languages including English and Chinese, but currently has no Khmer support.": "Deepgram Nova-3/2 គាំទ្រ 55 ភាសារួមមានភាសាអង់គ្លេស និងចិន ប៉ុន្តែបច្ចុប្បន្នមិនទាន់គាំទ្រភាសាខ្មែរទេ។"
+  "Deepgram Nova-3/2 supports 55 languages including English and Chinese, but currently has no Khmer support.": "Deepgram Nova-3/2 គាំទ្រ 55 ភាសារួមមានភាសាអង់គ្លេស និងចិន ប៉ុន្តែបច្ចុប្បន្នមិនទាន់គាំទ្រភាសាខ្មែរទេ។",
+  "Run dubbing pipeline on local port or remote server": "ដំណើរការប្រព័ន្ធបញ្ចូលសំឡេងលើច្រកក្នុងម៉ាស៊ីនឬម៉ាស៊ីនមេពីចម្ងាយ",
+  "Automatically launch background dubbing engine process when runtime starts": "បើកដំណើរការម៉ាស៊ីនបញ្ចូលសំឡេងផ្ទៃខាងក្រោយដោយស្វ័យប្រវត្តិពេលប្រព័ន្ធចាប់ផ្តើម",
+  "Hardware Tier": "កម្រិតផ្នែករឹង",
+  "GPU": "GPU"
 }

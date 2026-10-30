@@ -1,15 +1,17 @@
-import { execFileSync } from 'node:child_process';
+import { execFile } from 'node:child_process';
 import { existsSync, rmSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { promisify } from 'node:util';
 import { describe, expect, it } from 'vitest';
 
+const execFileAsync = promisify(execFile);
 const packageDir = dirname(dirname(fileURLToPath(import.meta.url)));
 const workspaceDir = dirname(dirname(packageDir));
 const runtimeImportTestTimeoutMs = 180_000;
 
 describe('skill market runtime exports', () => {
-  it('builds from a clean dist, loads natively, and boots the workspace daemon', () => {
+  it('builds from a clean dist, loads natively, and boots the workspace daemon', async () => {
     rmSync(join(packageDir, 'dist'), { recursive: true, force: true });
 
     const packageManagerArgs = ['--filter', '@vishnucreator/daemon', 'build'];
@@ -19,7 +21,7 @@ describe('skill market runtime exports', () => {
         ? join(process.env.APPDATA, 'npm', 'node_modules', 'pnpm', 'bin', 'pnpm.cjs')
         : undefined
     ].find(candidate => candidate !== undefined && existsSync(candidate));
-    execFileSync(
+    await execFileAsync(
       packageManagerScript === undefined
         ? process.platform === 'win32' ? 'pnpm.cmd' : 'pnpm'
         : process.execPath,
@@ -28,12 +30,11 @@ describe('skill market runtime exports', () => {
         : [packageManagerScript, ...packageManagerArgs],
       {
         cwd: workspaceDir,
-        stdio: 'pipe',
         shell: packageManagerScript === undefined && process.platform === 'win32'
       }
     );
 
-    const nativeOutput = execFileSync(
+    const { stdout: nativeOutput } = await execFileAsync(
       process.execPath,
       [
         '--input-type=module',
@@ -47,12 +48,11 @@ describe('skill market runtime exports', () => {
       ],
       {
         cwd: join(workspaceDir, 'apps/daemon'),
-        encoding: 'utf8',
-        stdio: ['ignore', 'pipe', 'pipe']
+        encoding: 'utf8'
       }
     );
 
-    const daemonOutput = execFileSync(
+    const { stdout: daemonOutput } = await execFileAsync(
       process.execPath,
       [
         '--import',
@@ -79,8 +79,7 @@ describe('skill market runtime exports', () => {
       ],
       {
         cwd: join(workspaceDir, 'apps/daemon'),
-        encoding: 'utf8',
-        stdio: ['ignore', 'pipe', 'pipe']
+        encoding: 'utf8'
       }
     );
 
