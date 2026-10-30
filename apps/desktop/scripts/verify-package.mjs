@@ -126,11 +126,14 @@ assertNoUnexpectedPythonRuntime();
 assertNoLocalData();
 assertSize('app.asar', appAsar, 80 * 1024 * 1024);
 assertSize('Daemon resources', daemonDir, 250 * 1024 * 1024);
-// Includes spaCy dependencies and the English md parser (~126 MiB).
-assertSize('Creator Runtime', creatorRuntimeDir, 512 * 1024 * 1024);
+// Includes spaCy dependencies, the English md parser, ffmpeg/ffprobe, Python, Node, and Noto fonts.
+assertSize('Creator Runtime', creatorRuntimeDir, 700 * 1024 * 1024);
 assertSize('Codex Runtime', codexRuntimeDir, 450 * 1024 * 1024);
+if (existsSync(dubEngineRuntimeDir)) {
+  assertSize('Dub Engine Runtime', dubEngineRuntimeDir, 1800 * 1024 * 1024);
+}
 assertSize('Stickman assets', join(daemonDir, 'runtime', 'stickman-assets'), 16 * 1024 * 1024);
-assertSize('Desktop package', packageRoot, 1600 * 1024 * 1024);
+assertSize('Desktop package', packageRoot, 3600 * 1024 * 1024);
 await assertFuseConfiguration();
 await verifyMacPackageMetadata();
 
@@ -186,9 +189,24 @@ function assertBuildProfile() {
 
 function packagedExecutable(root) {
   if (process.platform === 'darwin') {
-    return join(root, 'Contents', 'MacOS', 'VishnuCreator');
+    const macCandidates = [
+      join(root, 'Contents', 'MacOS', 'Vishnu Creator'),
+      join(root, 'Contents', 'MacOS', 'VishnuCreator')
+    ];
+    return macCandidates.find(existsSync) ?? macCandidates[0];
   }
-  return join(root, process.platform === 'win32' ? 'VishnuCreator.exe' : 'vishnucreator');
+  if (process.platform === 'win32') {
+    const winCandidates = [
+      join(root, 'Vishnu Creator.exe'),
+      join(root, 'VishnuCreator.exe')
+    ];
+    return winCandidates.find(existsSync) ?? winCandidates[0];
+  }
+  const linuxCandidates = [
+    join(root, 'vishnucreator'),
+    join(root, 'Vishnu Creator')
+  ];
+  return linuxCandidates.find(existsSync) ?? linuxCandidates[0];
 }
 
 function assertAsarContents() {

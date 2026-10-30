@@ -4,12 +4,24 @@ import { join, resolve } from 'node:path';
 export function packagedExecutable(desktopDir: string): string {
   const packageRoot = resolvePackageRoot(desktopDir);
   if (process.platform === 'darwin') {
-    return join(packageRoot, 'Contents', 'MacOS', 'VishnuCreator');
+    const macCandidates = [
+      join(packageRoot, 'Contents', 'MacOS', 'Vishnu Creator'),
+      join(packageRoot, 'Contents', 'MacOS', 'VishnuCreator')
+    ];
+    return macCandidates.find(existsSync) ?? macCandidates[0]!;
   }
-  return join(
-    packageRoot,
-    process.platform === 'win32' ? 'VishnuCreator.exe' : 'vishnucreator'
-  );
+  if (process.platform === 'win32') {
+    const winCandidates = [
+      join(packageRoot, 'Vishnu Creator.exe'),
+      join(packageRoot, 'VishnuCreator.exe')
+    ];
+    return winCandidates.find(existsSync) ?? winCandidates[0]!;
+  }
+  const linuxCandidates = [
+    join(packageRoot, 'vishnucreator'),
+    join(packageRoot, 'Vishnu Creator')
+  ];
+  return linuxCandidates.find(existsSync) ?? linuxCandidates[0]!;
 }
 
 function resolvePackageRoot(desktopDir: string): string {
