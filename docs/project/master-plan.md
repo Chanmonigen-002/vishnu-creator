@@ -68,8 +68,8 @@
 |---|---|---|---|
 | D1 | Where heavy AI runs | **Accepted** — adaptive compute tiers | [ADR-0003](../adr/0003-adaptive-compute-tiers.md) |
 | D2 | ZastTranslate license / reuse rights (F9) | **Accepted** — clean re-implementation (Option 3) | [ADR-0005](../adr/0005-zasttranslate-code-reuse.md) |
-| D3 | YouTube auto-publish | Open — blocks T6.3 | — |
-| D4 | Qwen-Image thumbnails (needs a big GPU) | Open — blocks T6.4 | — |
+| D3 | YouTube auto-publish | **Accepted** — BYOK OAuth 2.0 + bilingual Khmer/English publish kit | [ADR-0007](../adr/0007-youtube-publish-oauth.md) |
+| D4 | Qwen-Image thumbnails (needs a big GPU) | **Accepted** — gated to ≥24 GB VRAM GPU worker (T6.4) | [ADR-0003](../adr/0003-adaptive-compute-tiers.md) |
 
 Earlier architecture decisions: [ADR-0001](../adr/0001-opencreator-fork-as-base.md) (fork base), [ADR-0002](../adr/0002-dub-engine-owned-http-service.md) (engine as owned HTTP service), [ADR-0004](../adr/0004-reference-folder-read-only.md) (reference folder policy).
 

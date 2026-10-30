@@ -14,5 +14,6 @@ Rules:
 | [0002](0002-dub-engine-owned-http-service.md) | Dub engine is an owned Python service behind HTTP | Accepted | 2026-10-25 |
 | [0003](0003-adaptive-compute-tiers.md) | Adaptive compute tiers; same final result on every PC | Accepted | 2026-10-25 |
 | [0004](0004-reference-folder-read-only.md) | `File clone Resource/` is read-only reference | Accepted (folder renamed by ADR-0006) | 2026-10-24 |
-| [0005](0005-zasttranslate-code-reuse.md) | How ZastTranslate code may be reused | **Proposed** | 2026-10-25 |
+| [0005](0005-zasttranslate-code-reuse.md) | How ZastTranslate code may be reused | Accepted | 2026-10-25 |
 | [0006](0006-reference-folder-renamed.md) | Reference sources live in `reference/` | Accepted | 2026-10-28 |
+| [0007](0007-youtube-publish-oauth.md) | YouTube publish via user-configured OAuth credentials and bilingual Khmer/English metadata kit | Accepted | 2026-10-30 |
