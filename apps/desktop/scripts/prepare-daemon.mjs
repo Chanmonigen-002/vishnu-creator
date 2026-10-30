@@ -99,29 +99,86 @@ prepareWorkspaceRuntimePackages();
 const betterSqlite3Root = dirname(realpathSync(
   resolve(targetDir, 'node_modules/better-sqlite3/package.json')
 ));
-await runStage('重建 Electron 原生 SQLite', process.execPath, [
-  resolve(nodeGypRoot, 'bin/node-gyp.js'),
-  'rebuild',
-  '--release',
-  `--target=${desktopPackageVersion('electron')}`,
-  `--arch=${targetArch}`,
-  '--dist-url=https://electronjs.org/headers',
-  `--devdir=${resolve(cacheDir, 'node-gyp')}`
-], {
-  cwd: betterSqlite3Root,
-  timeoutMs: 10 * 60_000,
-  env: {
-    ...nativeBuildEnv,
-    npm_config_runtime: 'electron',
-    npm_config_target: desktopPackageVersion('electron'),
-    npm_config_arch: targetArch,
-    npm_config_disturl: 'https://electronjs.org/headers',
-    npm_config_devdir: resolve(cacheDir, 'node-gyp'),
-    npm_config_build_from_source: 'true',
-    npm_config_offline: offline ? 'true' : 'false',
-    npm_config_update_notifier: 'false'
+const electronVersion = desktopPackageVersion('electron');
+let prebuildResolved = false;
+if (!offline && process.env.VISHNUCREATOR_FORCE_SOURCE_BUILD !== '1') {
+  try {
+    const prebuildInstallBin = require.resolve('prebuild-install/bin.js', {
+      paths: [betterSqlite3Root, rootDir]
+    });
+    await runStage('下载预编译 Electron 原生 SQLite', process.execPath, [
+      prebuildInstallBin,
+      '--runtime=electron',
+      `--target=${electronVersion}`,
+      `--arch=${targetArch}`,
+      '--tag-prefix=v'
+    ], {
+      cwd: betterSqlite3Root,
+      timeoutMs: 2 * 60_000,
+      env: {
+        ...nativeBuildEnv,
+        npm_config_runtime: 'electron',
+        npm_config_target: electronVersion,
+        npm_config_arch: targetArch,
+        npm_config_update_notifier: 'false'
+      }
+    });
+    prebuildResolved = existsSync(resolve(betterSqlite3Root, 'build/Release/better_sqlite3.node'));
+  } catch {
+    prebuildResolved = false;
   }
-});
+  if (!prebuildResolved) {
+    try {
+      const prebuildCacheDir = resolve(cacheDir, 'better-sqlite3');
+      mkdirSync(prebuildCacheDir, { recursive: true });
+      const archiveName = `better-sqlite3-v12.12.0-electron-v148-${process.platform}-${targetArch}.tar.gz`;
+      const archivePath = resolve(prebuildCacheDir, archiveName);
+      if (!existsSync(archivePath)) {
+        const url = `https://github.com/WiseLibs/better-sqlite3/releases/download/v12.12.0/${archiveName}`;
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status} fetching ${url}`);
+        writeFileSync(archivePath, Buffer.from(await response.arrayBuffer()));
+      }
+      await runStage('解压 Electron ABI 148 预编译 SQLite', 'tar', [
+        '-xzf',
+        archivePath,
+        '-C',
+        betterSqlite3Root
+      ], {
+        cwd: betterSqlite3Root,
+        timeoutMs: 60_000
+      });
+      prebuildResolved = existsSync(resolve(betterSqlite3Root, 'build/Release/better_sqlite3.node'));
+    } catch {
+      prebuildResolved = false;
+    }
+  }
+}
+if (!prebuildResolved) {
+  await runStage('重建 Electron 原生 SQLite', process.execPath, [
+    resolve(nodeGypRoot, 'bin/node-gyp.js'),
+    'rebuild',
+    '--release',
+    `--target=${electronVersion}`,
+    `--arch=${targetArch}`,
+    '--dist-url=https://electronjs.org/headers',
+    `--devdir=${resolve(cacheDir, 'node-gyp')}`
+  ], {
+    cwd: betterSqlite3Root,
+    timeoutMs: 10 * 60_000,
+    env: {
+      ...nativeBuildEnv,
+      npm_config_runtime: 'electron',
+      npm_config_target: electronVersion,
+      npm_config_arch: targetArch,
+      npm_config_disturl: 'https://electronjs.org/headers',
+      npm_config_devdir: resolve(cacheDir, 'node-gyp'),
+      npm_config_build_from_source: 'true',
+      npm_config_offline: offline ? 'true' : 'false',
+      npm_config_update_notifier: 'false'
+    }
+  });
+}
 pruneBetterSqliteBuildArtifacts(betterSqlite3Root);
 cpSync(
   resolve(rootDir, 'apps', 'daemon', 'runtime'),
