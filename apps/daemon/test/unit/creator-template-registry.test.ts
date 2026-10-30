@@ -12,7 +12,8 @@ import {
   createStickmanVideoTemplate,
   createVideoTranslationTemplate,
   createAutoClipTemplate,
-  createBlogArticleTemplate
+  createBlogArticleTemplate,
+  createYoutubePublishTemplate
 } from '../../src/creator/templates/registry.js';
 
 describe('creator template registry', () => {
@@ -430,6 +431,25 @@ describe('creator template registry', () => {
       kind: 'source_video',
       selector: 'latest-completed',
       optional: true
+    });
+  });
+
+  it('registers youtube publish template with private default and bilingual metadata outputs', () => {
+    const template = createYoutubePublishTemplate();
+
+    expect(template).toMatchObject({
+      id: 'youtube-publish',
+      version: 1,
+      renderer: 'youtube-publish',
+      outputs: [
+        { kind: 'youtube_publish_kit', required: true },
+        { kind: 'youtube_publish_markdown', required: true }
+      ]
+    });
+    expect(template.inputSchema.parse({})).toMatchObject({
+      privacyStatus: 'private',
+      categoryId: '22',
+      uploadToYoutube: false
     });
   });
 

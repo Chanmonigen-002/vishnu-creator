@@ -20,6 +20,7 @@ import { createXiaohongshuPostTemplate } from './xiaohongshu-post.js';
 import { createShortVideoScriptTemplate } from './short-video-script.js';
 import { createWechatArticleTemplate } from './wechat-article.js';
 import { createBlogArticleTemplate } from './blog-article.js';
+import { createYoutubePublishTemplate } from './youtube-publish.js';
 import type {
   CreatorTemplateDefinition,
   CreatorTemplateRegistry
@@ -40,6 +41,7 @@ export {
   createShortVideoScriptTemplate,
   createWechatArticleTemplate,
   createBlogArticleTemplate,
+  createYoutubePublishTemplate,
   createLegacyVideoDownloadTemplate,
   createVideoDownloadTemplate,
   createLegacyVideoTranslationTemplate,
@@ -62,6 +64,7 @@ export function createDefaultCreatorTemplateRegistry(): CreatorTemplateRegistry 
     createShortVideoScriptTemplate(),
     createWechatArticleTemplate(),
     createBlogArticleTemplate(),
+    createYoutubePublishTemplate(),
     createLegacyAutoClipTemplate(),
     createAutoClipTemplateV2(),
     createAutoClipTemplate(),
