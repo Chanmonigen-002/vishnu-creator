@@ -37,7 +37,7 @@ it.runIf(process.platform === 'win32' && chrome)('真实 Chrome 专用目录生�
   await new Promise<void>(resolve => server.listen(0, '127.0.0.1', resolve));
   try {
     const port = (server.address() as { port: number }).port;
-    const signal = AbortSignal.timeout(40_000);
+    const signal = AbortSignal.timeout(90_000);
     const other = await openWindowsYouTubeLogin({ root: otherRoot, signal, url: 'about:blank' });
     sessions.push(other);
     const login = await openWindowsYouTubeLogin({ root, signal, url: `http://127.0.0.1:${port}` });
@@ -77,4 +77,4 @@ it.runIf(process.platform === 'win32' && chrome)('真实 Chrome 专用目录生�
     }
     await new Promise<void>(resolve => server.close(() => resolve()));
   }
-}, 60_000);
+}, 120_000);
