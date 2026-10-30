@@ -33,8 +33,13 @@ describe('creator provider catalog', () => {
 
   it('marks only implemented providers as supported', () => {
     expect(creatorProviderCatalog.some(entry => entry.status === 'planned')).toBe(false);
-    // Phase 8 presets stay experimental until a live call is recorded (T8.5, T8.7, T8.8, T8.9).
-    const phase8Presets = ['azure', 'elevenlabs', 'fishaudio', 'fal', 'stability', 'replicate', 'together', 'comfyui', 'runway', 'luma', 'minimax'];
+    // Phase 8 presets stay experimental until a live call is recorded (T8.5, T8.6, T8.7, T8.8, T8.9).
+    const phase8Presets = [
+      'azure', 'elevenlabs', 'fishaudio',
+      'fal', 'stability', 'replicate', 'together', 'comfyui',
+      'runway', 'luma', 'minimax',
+      'groq', 'assemblyai', 'deepgram', 'gemini'
+    ];
     expect(creatorProviderCatalog
       .filter(entry => entry.kind !== 'llm' && entry.id !== 'codex-native' && !phase8Presets.includes(entry.id))
       .every(entry => entry.status === 'supported')).toBe(true);
@@ -61,8 +66,27 @@ describe('creator provider catalog', () => {
     const voices = creatorProviderCatalog.filter(entry => entry.kind === 'tts');
     const byId = Object.fromEntries(voices.map(entry => [entry.id, entry]));
     for (const id of ['azure', 'elevenlabs', 'fishaudio']) expect(byId[id]?.status).toBe('experimental');
-    expect(voices.filter(entry => entry.capabilities?.includes('khmer')).map(entry => entry.id)).toEqual(['azure']);
+    expect(byId.voxcpm).toMatchObject({
+      status: 'supported',
+      access: 'local',
+      credentials: [],
+      capabilities: expect.arrayContaining(['speech-generation', 'voice-preview', 'khmer'])
+    });
+    expect(voices.filter(entry => entry.capabilities?.includes('khmer')).map(entry => entry.id)).toEqual(['azure', 'voxcpm']);
     expect(byId.fishaudio?.models[0]?.id).toBe('s2.1-pro-free');
+  });
+
+  it('lists Phase 8 transcription presets with Khmer support flags and local whisper.cpp as supported (T8.6)', () => {
+    expect(creatorProviderCatalogById.transcription['whisper.cpp']).toMatchObject({
+      status: 'supported',
+      access: 'local',
+      capabilities: ['khmer']
+    });
+    for (const id of ['groq', 'elevenlabs', 'assemblyai', 'deepgram', 'gemini'] as const) {
+      expect(creatorProviderCatalogById.transcription[id]?.status).toBe('experimental');
+    }
+    expect(creatorProviderCatalogById.transcription.deepgram?.capabilities).toBeUndefined();
+    expect(creatorProviderCatalogById.transcription.groq?.capabilities).toContain('khmer');
   });
 
   it('keeps unverified text presets experimental and marks verified ones as supported (T8.5)', () => {

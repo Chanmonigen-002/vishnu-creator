@@ -71,7 +71,7 @@ Claude compatibility notes: the OpenAI-compatibility layer ignores JSON mode and
 | MiniMax Voice | ❓ | Paid | MiniMax console | `speech-2.8-hd`. |
 | Alibaba Cloud Voice | ❓ | Paid | Alibaba Cloud console (DashScope) | `qwen3-tts-flash`. |
 | Volcengine Voice | ❓ | Paid | Volcengine console (Doubao Voice) | Cluster + voice id. |
-| Local VoxCPM2 (dub engine) | ✅ per VoxCPM README | Free, local | — | Waits for model weights (T5.1). |
+| Local VoxCPM2 (dub engine) | ✅ per VoxCPM README | Free, local | — | Local 48 kHz voice cloning & design (`openbmb/VoxCPM2`); built-in voices (`voxcpm2_default_speaker`, `voxcpm2_training_reader`) and saved voice designs in **Settings → My Voice Library** and **Voices → Local VoxCPM2**. |
 
 Where they work: all of the above work in **Text to Speech**, **Smart Dubbing** and stick-figure videos. **Video translation** dubbing runs inside the bundled `vishnuai` CLI and now supports all of them (Azure, ElevenLabs and Fish Audio were added in T8.11); a real dubbed video per provider is still to be verified with the owner's keys.
 
@@ -79,8 +79,13 @@ Where they work: all of the above work in **Text to Speech**, **Smart Dubbing** 
 
 | Provider | Kind | Cost | Get a key | Notes |
 |---|---|---|---|---|
-| whisper.cpp | Local | Free | — | Available on Windows x64; models download in the app (tiny 78 MB, large-v3-turbo 1.6 GB, large-v2 3.1 GB, medium 1.5 GB). |
+| whisper.cpp | Local | Free | — | Available on Windows x64; models download in the app (tiny 78 MB, large-v3-turbo 1.6 GB, large-v2 3.1 GB, medium 1.5 GB). Supports Khmer (`km`). |
 | OpenAI Whisper | Cloud | Paid | https://platform.openai.com/api-keys | `whisper-1`. |
+| Groq Whisper | Cloud | Free tier + paid | https://console.groq.com/keys | `whisper-large-v3`, `whisper-large-v3-turbo`. Supports Khmer (`km`). |
+| ElevenLabs Scribe | Cloud | Free tier + paid | https://elevenlabs.io/docs/overview/administration/workspaces/api-keys | `scribe_v1`, `scribe_v2`. Supports Khmer (`khm`). |
+| AssemblyAI | Cloud | Free credit + paid | https://www.assemblyai.com/dashboard/signup | `universal`, `nano` (99 languages including `km`). |
+| Deepgram | Cloud | Free credit + paid | https://console.deepgram.com | `nova-3`, `nova-2` (55 languages; no Khmer support). |
+| Google Gemini Transcription | Cloud | Free tier + paid | https://aistudio.google.com/apikey | `gemini-3.5-transcribe` (85+ languages including Khmer). |
 | Alibaba Cloud (Aliyun) | Cloud | Paid | Aliyun console | |
 | Volcengine | Cloud | Paid | Volcengine console (Doubao Voice) | Shares TTS credentials. |
 | FunASR | Cloud | Paid | FunASR endpoint | `sensevoice`, `paraformer`, `fun-asr-nano`. |

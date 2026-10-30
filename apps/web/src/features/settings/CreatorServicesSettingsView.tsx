@@ -915,6 +915,7 @@ function TranscriptionSettings(props: SettingsGroupProps & {
           config.transcription.provider = value as CreatorTranscriptionProvider;
         })}
       />
+      <ProviderInfo kind="transcription" providerId={provider} />
       {selectedCapability?.available === false ? (
         <p className="creator-services-inline-note is-warning" role="alert">
           {l(
@@ -1438,7 +1439,7 @@ function SettingsFieldset(props: { title: string; description: string; children:
 }
 
 /** Cost, verification and key-page details for a catalog provider. */
-function ProviderInfo(props: { kind: 'llm' | 'tts' | 'image' | 'video'; providerId: string }) {
+function ProviderInfo(props: { kind: 'llm' | 'tts' | 'image' | 'video' | 'transcription'; providerId: string }) {
   const l = useLocalizedCopy();
   const preset = creatorProviderOfKind(props.kind, props.providerId);
   if (preset === undefined) return null;
