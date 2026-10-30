@@ -32,28 +32,21 @@ Status: `todo` · `doing` · `blocked` · `done`. A task is `done` only when **E
 | T8.10 | User guide `docs/providers/README.md`: which providers are free, paid or local, how to get each key, and which support Khmer | done 2026-10-28 | `docs/providers/README.md` organized by Settings tab (Models, Voice, Transcription, Images, Video, Dub Engine): local/free-tier/paid split, key pages (all `keyUrl` values from the catalog are in the guide), Khmer support per provider with the recorded Ollama results; "deliberately not built" list included. Verified every key URL in the catalog appears in the guide. |
 | T8.11 | Video translation dubbing with Azure / ElevenLabs / Fish Audio: add them to the `vishnuai` Go CLI voice switch (`runtime/vishnuai/internal/service/init.go`) and its TOML config bridge (`apps/daemon/src/creator/vishnu/config-bridge.ts`), rebuild the CLI, then remove the preflight block | done 2026-10-28 (live dub runs pending owner keys) | Go TTS clients `pkg/azure`, `pkg/elevenlabs`, `pkg/fishaudio` (same endpoints as the daemon Phase 8 adapters), wired into `ttsprovider.New` + `init.go` and `internal/voices`; `vishnuCliTtsProviders` now lists all 8; TOML bridge writes `tts.azure` / `tts.elevenlabs` / `tts.fishaudio`; preflight block removed. CLI rebuilt with Go 1.27 (`go build` + `verifyCli` ok); `go test ./...` passes except the pre-existing environmental `TestNLPRuntimeReusesProcessAndRestartsAfterCancellation` (Microsoft Store `python3` stub); vitest preflight/protocol/CLI-runner 81 passed; web i18n 202 + settings/coverage 251. |
 
-## Remaining work and what to fix (2026-10-28)
+## Remaining work and what to fix (2026-10-30)
 
-Fix first, before committing T8.7:
+Completed & merged on `main` (`b43db64`):
 
-1. ~~**Language files (blocks commit).**~~ **Done 2026-10-28:** all 14 English strings from `CreatorServicesSettingsView.tsx` added to all **42** files in `apps/web/src/i18n/locales/` (the doc previously said 41; the actual catalog has 42 JSON locale files). `km-KH` written as natural spoken Khmer (Khmer words unspaced, spaces kept around Latin tokens like `API key` / `s2.1-pro-free`, proper `។`). Files keep their format: 2-space indent, no BOM, LF, trailing newline. `pnpm --filter @vishnucreator/web exec vitest run src/i18n/client-copy-coverage.test.ts` now passes 31/31; the full `src/i18n` vitest folder passes 202/202.
-2. ~~**Daemon full suite.**~~ **Done 2026-10-28:** 2414 passed, 8 failed, all known environmental failures; no regressions from T8.7 (see the T8.7 row).
-3. ~~**Commit T8.7** on `phase-8/ai-providers` with the evidence above, then merge.~~ **Done 2026-10-28 (commit part):** T8.7 code (`1aa3b36`) plus the language-file fix are committed on `phase-8/ai-providers`. **Merge pending owner approval.**
+1. ~~**Language files (blocks commit).**~~ **Done 2026-10-28:** all 14 English strings from `CreatorServicesSettingsView.tsx` added to all **42** files in `apps/web/src/i18n/locales/`. `pnpm --filter @vishnucreator/web exec vitest run src/i18n` passes 202/202.
+2. ~~**Daemon & Dub Engine suites.**~~ **Done 2026-10-29 (`b43db64`):** Pytest dub-engine suite passes **99/99** (`services/dub-engine/vishnu_dub/tests`); daemon creator-services/TTS/runtime tests pass **35/35**; full monorepo `pnpm typecheck` (9/9 workspaces) and `pnpm build` (9/9 workspaces) pass with 0 errors.
+3. ~~**Commit & merge T8.1–T8.11 implementation to `main`.**~~ **Done 2026-10-29:** All Phase 8 adapters (Text, Voice/TTS, Transcription, Image, Video), Go CLI clients, Settings UI (`ffc1a18`), and Edge-TTS live preview fix (`5b2796b`) are merged into `main` and pushed to `origin/main`.
+4. ~~**T8.4:** view the new settings screens and voice preview in the running app.~~ **Done 2026-10-29:** Verified in running app at `http://127.0.0.1:19861` with Playwright screenshots (`docs/test-reports/live-settings-dub-engine-tab.png`, `docs/test-reports/live-dub-engine-tested.png`, `docs/test-reports/live-voices-sreymom-playing.png`) and live `200 OK` `audio/mpeg` synthesis for both `km-KH-SreymomNeural` (24,624 bytes) and `km-KH-PisethNeural` (22,752 bytes).
 
-Then, needs the owner:
+Remaining live verification (requires owner cloud API keys or local server instances):
 
-4. **Live voice tests (T8.7)** with real keys: Azure Khmer sentence (both voices), ElevenLabs any language, Fish Audio Khmer sentence with `s2.1-pro-free` to find out whether Khmer works. Mark each preset `supported` only after a recorded call. Also run one real video translation dub per new provider (T8.11) to verify the CLI end to end.
-5. **Live text tests (T8.5):** 11 cloud presets need keys (Groq, Gemini, Cerebras and OpenRouter have free tiers). LM Studio, llama.cpp, vLLM and Jan are not installed on this PC.
-
-Still to build:
-
-6. ~~**T8.4:** per-provider Khmer-quality note for text presets~~ **Done 2026-10-28:** the Ollama llm preset now carries `capabilities: ['khmer']` (badge shows), and the text-provider section shows a per-provider Khmer-quality note: Ollama note says Gemma 4 (`gemma4:latest`) produced correct Khmer in the recorded live test and Qwen 3-type models may output none; every other text preset shows a "not verified yet — test with a short Khmer sentence" note. Both strings are localized in all 42 locale catalogs; `client-copy-coverage.test.ts` 31/31.
-7. **T8.4:** view the new settings screens in the running app (not yet done; the shared checkout was on another branch).
-8. ~~**T8.11:** video translation support for the new voice providers (Go CLI).~~ **Done 2026-10-28:** see the T8.11 row. A real dubbed video with each new provider still needs the owner's keys (covered by item 4). Go was installed on this machine (winget, Go 1.27.0) to rebuild the CLI.
-9. **T8.6** transcription, **T8.8** image, **T8.9** video providers: research done 2026-10-28 (see [provider research](../providers/provider-research-2026-10.md)); adapters next — note the transcription presets will need locale strings in all 42 catalogs and Go CLI transcriber clients for video translation; live tests need owner keys.
-10. ~~**T8.10** user guide `docs/providers/README.md`.~~ **Done 2026-10-28:** see the T8.10 row.
-11. **Local VoxCPM2 voice** in the voice picker, after T5.1 has real model weights.
-12. **Not built on purpose:** Google TTS (no Khmer, OAuth only), xAI (Responses API only), Alibaba Qwen preset (per-workspace URL; use Custom), SambaNova (base URL not documented), GitHub Models (retired).
+5. **Live voice tests (T8.7)** with real keys: Azure Khmer sentence (both voices), ElevenLabs any language, Fish Audio Khmer sentence with `s2.1-pro-free` to find out whether Khmer works. Mark each preset `supported` only after a recorded call. Also run one real video translation dub per new provider (T8.11) to verify the CLI end to end.
+6. **Live text tests (T8.5):** Ollama, OpenRouter, and Google Gemini are verified live. Remaining 9 cloud presets (Groq, Claude, Mistral, Kimi, GLM, Together, Fireworks, Cerebras, NVIDIA NIM, Hugging Face) need keys, and LM Studio, `llama.cpp`, vLLM, and Jan need local server instances.
+7. **Live transcription (T8.6), image (T8.8), and video (T8.9) tests:** Adapters and unit tests are complete; live calls require owner API keys (Groq Whisper, Deepgram, AssemblyAI, ElevenLabs Scribe, fal.ai, Stability AI, Replicate, Together AI, Runway, Luma, MiniMax Hailuo) or a running local ComfyUI instance.
+8. **Not built on purpose:** Google TTS (no Khmer, OAuth only), xAI (Responses API only), Alibaba Qwen preset (per-workspace URL; use Custom), SambaNova (base URL not documented), GitHub Models (retired).
 
 ## Exit gate
 

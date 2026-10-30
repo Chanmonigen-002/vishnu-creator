@@ -7,13 +7,13 @@ The master plan explains *why*; these files track *what is done*.
 |---|---|---|---|---|---|---|---|---|---|
 | 0 | [Stabilize the baseline](phase-0-baseline.md) | 10 | 10 | 0 | 0 | 0 | — | met (`v0-baseline`) | Complete |
 | 1 | [Khmer foundation, zero GPU](phase-1-khmer-foundation.md) | 9 | 9 | 0 | 0 | 0 | Phase 0 | met (T1.8 E2E verified) | Complete |
-| 2 | [Bring the dub engine into the repo](phase-2-dub-engine-service.md) | 15 | 15 | 0 | 0 | 0 | Phase 0 · ADR-0005 (accepted) | met (72/72 pytest green) | Complete |
+| 2 | [Bring the dub engine into the repo](phase-2-dub-engine-service.md) | 15 | 15 | 0 | 0 | 0 | Phase 0 · ADR-0005 (accepted) | met (99/99 pytest green) | Complete |
 | 3 | [Daemon ↔ engine integration](phase-3-daemon-integration.md) | 14 | 14 | 0 | 0 | 0 | Phase 2 | met (`v3-daemon-integration`) | Complete |
 | 4 | [Quality upgrades into existing stages](phase-4-quality-pipeline.md) | 7 | 7 | 0 | 0 | 0 | Phase 3 | met (`v4-quality-pipeline`) | Complete |
 | 5 | [VoxCPM2 voice power](phase-5-voxcpm-voices.md) | 10 | 10 | 0 | 0 | 0 | Phase 3 | met (T5.1–T5.10 + E2E cloned voice verified) | Complete |
 | 6 | [Extra creator studios](phase-6-creator-studios.md) | 9 | 8 | 0 | 1 | 0 | Phase 3 | met (E2E real file verified) | Complete (T6.3 blocked on D3) |
-| 7 | [Release](phase-7-release.md) | 7 | 6 | 0 | 1 | 0 | Phases 1–6 | — | Complete (T7.6 blocked on clean runner) |
-| 8 | [More AI providers (free, paid, cloud, local)](phase-8-ai-providers.md) | 11 | 5 | 6 | 0 | 0 | Phase 3 | — | In progress — see [Remaining work](phase-8-ai-providers.md#remaining-work-and-what-to-fix-2026-10-28) |
+| 7 | [Release](phase-7-release.md) | 7 | 6 | 1 | 0 | 0 | Phases 1–6 | — | In progress (T7.6 desktop installer build & smoke test) |
+| 8 | [More AI providers (free, paid, cloud, local)](phase-8-ai-providers.md) | 11 | 5 | 6 | 0 | 0 | Phase 3 | — | In progress — see [Remaining work](phase-8-ai-providers.md#remaining-work-and-what-to-fix-2026-10-30) |
 
 ## Audit 2026-10-27
 
@@ -34,14 +34,16 @@ Every task marked `done` in Phases 0–5 was checked against the code, its tests
 
 ### What was verified as real
 
-- Engine tests: **45/45** at Phase 2 commit `726ec6b` and **58/58** at Phase 4 commit `eaf112e` (with the real venv and bundled ffmpeg).
-- Daemon dub-engine tests: 19/19. Khmer rules: 8/8. Khmer subtitle wrapping: 7/7. Result workspace: 55/55.
-- In the running app: Khmer Edge TTS voices (Sreymom, Piseth), the Khmer UI locale (partial), and the Dub Engine settings panel.
+- Engine tests: **45/45** at Phase 2 commit `726ec6b`, **58/58** at Phase 4 commit `eaf112e`, and **99/99** at `b43db64` (with the real venv, Demucs 4.1.0, VoxCPM2, and bundled ffmpeg).
+- Daemon dub-engine & TTS tests: 35/35 (`creator-services-api.test.ts` 16/16, `vishnu-tts-service.test.ts` 14/14, `dub-engine-runtime.test.ts` 5/5). Khmer rules: 8/8. Khmer subtitle wrapping: 7/7. Result workspace: 57/57.
+- Full workspace `pnpm typecheck` (9/9 workspaces, 0 errors) and `pnpm build` (9/9 workspaces, 0 errors) verified at `b43db64`.
+- In the running app (`http://127.0.0.1:19861`): Khmer Edge TTS voices (`km-KH-SreymomNeural`, `km-KH-PisethNeural` returning `200 OK` `audio/mpeg` after fixing `resolveEdgeTtsCommand` path resolution in `5b2796b`), the Khmer UI locale, and the refactored Dub Engine settings panel (`ffc1a18`).
 
-### Not re-checked in this audit
+### Remaining items across all phases (2026-10-30)
 
-- T1.6 subtitle render parity (script not re-run).
-- Full `pnpm typecheck` / `pnpm build` / `pnpm test` across all workspaces.
+1. **T7.6 (Phase 7 — Windows Desktop Installer & Smoke Test):** Unblock `better-sqlite3` Electron ABI 148 native module resolution (upgrade `better-sqlite3` to `12.12.0` + `prebuild-install` in `prepare-daemon.mjs`), build the Windows Desktop directory/installer (`pnpm --filter @vishnucreator/desktop package` / `dist`), and run packaged smoke verification.
+2. **T8.3 / T8.5–T8.9 (Phase 8 — Live Provider Verification):** Code, adapters, Go CLI clients, and 42-locale UI are complete and merged on `main`. Flipping each preset from `experimental` to `supported` requires a live API call with an owner key (Groq, Azure Speech, ElevenLabs, Fish Audio, fal.ai, Stability, Runway, Luma, etc.) or a running local server (`llama.cpp`, LM Studio, vLLM, Jan, ComfyUI).
+3. **T6.3 (Phase 6 — YouTube OAuth Publish):** Blocked on owner decision `D3` (OAuth client credential policy).
 
 ## How to work a task
 
