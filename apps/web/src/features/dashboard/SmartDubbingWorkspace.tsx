@@ -136,16 +136,23 @@ export default function SmartDubbingWorkspace(props: {
         const configuredProvider = response.config.tts.provider;
         const selectedProvider = readProvider(session?.state.ttsProvider) ?? configuredProvider;
         setProvider(selectedProvider);
+        const hasexplicitVoiceInState = session?.state !== undefined && 'voiceCode' in session.state;
+        const savedVoice = readString(session?.state.voiceCode);
+        const savedVoiceName = readString(session?.state.voiceName);
         if (selectedProvider === 'edge-tts') {
           setModel('');
-          setVoice(readString(session?.state.voiceCode) || '');
-          setVoiceName(prev => readString(session?.state.voiceName) || prev || '');
+          const fallbackVoice = hasexplicitVoiceInState ? savedVoice : (savedVoice || 'km-KH-SreymomNeural');
+          const fallbackName = hasexplicitVoiceInState ? savedVoiceName : (savedVoiceName || 'Sreymom');
+          setVoice(fallbackVoice);
+          setVoiceName(prev => fallbackName || prev || '');
           return;
         }
         const selectedConfig = response.config.tts[selectedProvider];
         setModel(readString(session?.state.ttsModel) || selectedConfig.model);
-        setVoice(readString(session?.state.voiceCode) || selectedConfig.defaultVoiceId);
-        setVoiceName(prev => readString(session?.state.voiceName) || prev || selectedConfig.defaultVoiceId);
+        const defaultVoice = selectedConfig.defaultVoiceId || (!hasexplicitVoiceInState ? 'km-KH-SreymomNeural' : '');
+        const defaultName = selectedConfig.defaultVoiceId || (!hasexplicitVoiceInState ? 'Sreymom' : '');
+        setVoice(savedVoice || defaultVoice);
+        setVoiceName(prev => savedVoiceName || prev || defaultName);
       })
       .catch(cause => {
         if (!active) return;
@@ -229,13 +236,6 @@ export default function SmartDubbingWorkspace(props: {
     }
     if (!voice.trim()) {
       setError(l('请选择一个可用音色', 'Select an available voice'));
-      return;
-    }
-    if (provider === 'edge-tts') {
-      setError(l(
-        '文本转语音暂不支持 Edge TTS，请先在设置中选择阿里云百炼、OpenAI 或 MiniMax',
-        'Text to Speech does not support Edge TTS. Select Alibaba Cloud, OpenAI, or MiniMax in Settings.'
-      ));
       return;
     }
     setError('');
@@ -548,7 +548,7 @@ function readLatestResult(artifacts: CreatorArtifact[]): DubbingResult | undefin
     artifact,
     fileName: readString(metadata.fileName) || `Vishnu Creator-dubbing.${readFormat(metadata.format)}`,
     size: readNonNegativeNumber(metadata.bytes),
-    provider: provider !== undefined && provider !== 'edge-tts' ? provider : 'openai',
+    provider: provider ?? 'openai',
     model: readString(metadata.model),
     voice: readString(metadata.voiceCode),
     voiceName: readString(metadata.voiceName) || readString(metadata.voiceCode),
@@ -567,6 +567,9 @@ function providerLabel(
   if (provider === 'minimax') return 'MiniMax';
   if (provider === 'volcengine') return l('火山引擎', 'Volcengine');
   if (provider === 'edge-tts') return 'Edge TTS';
+  if (provider === 'azure') return 'Azure Speech';
+  if (provider === 'elevenlabs') return 'ElevenLabs';
+  if (provider === 'fishaudio') return 'Fish Audio';
   return 'OpenAI TTS';
 }
 
@@ -624,10 +627,10 @@ function readNonNegativeNumber(value: CreatorJson | undefined): number {
 }
 
 function shouldOpenTtsSettings(
-  provider: CreatorTtsProvider,
+  _provider: CreatorTtsProvider,
   ...codes: Array<string | null | undefined>
 ): boolean {
-  return provider === 'edge-tts' || codes.some(code => (
+  return codes.some(code => (
     code === 'SMART_DUBBING_CONFIG_REQUIRED'
     || code === 'SMART_DUBBING_PROVIDER_UNSUPPORTED'
     || code === 'creator_tts_config_missing'

@@ -40,9 +40,12 @@ export function createVishnuConfigToml(
       whispercpp: {
         ...config.transcription.whisperCpp,
         // Preserve the VishnuAI 2.1 compatibility bridge for legacy models,
-        // while large-v3-turbo is supported by name end to end.
+        // while large-v3-turbo, medium, tiny, and large-v2 are supported by name end to end.
         model: config.transcription.provider === 'whisper.cpp'
           && config.transcription.whisperCpp.model !== 'large-v3-turbo'
+          && config.transcription.whisperCpp.model !== 'medium'
+          && config.transcription.whisperCpp.model !== 'tiny'
+          && config.transcription.whisperCpp.model !== 'large-v2'
           ? 'large-v2'
           : config.transcription.whisperCpp.model
       },

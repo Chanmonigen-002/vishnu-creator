@@ -196,6 +196,49 @@ async function synthesizeEdgeTts(input: {
   }
 }
 
+async function synthesizeDubEngineVoice(input: {
+  text: string;
+  voiceId: string;
+  dubEngineUrl: string;
+  signal?: AbortSignal;
+}): Promise<VishnuTtsSynthesisResult> {
+  const baseUrl = input.dubEngineUrl.replace(/\/+$/, '');
+  try {
+    const response = await fetch(`${baseUrl}/v1/tts/voices/preview`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ voice_id: input.voiceId, text: input.text }),
+      signal: input.signal
+    });
+    if (!response.ok) {
+      const errText = await response.text().catch(() => '');
+      throw new Error(`Dub Engine TTS failed (HTTP ${response.status}): ${errText}`);
+    }
+    const arrayBuffer = await response.arrayBuffer();
+    const content = Buffer.from(arrayBuffer);
+    if (content.length === 0) {
+      throw new Error('Dub Engine returned an empty audio file');
+    }
+    const contentType = response.headers.get('content-type') || '';
+    const isMp3 = contentType.includes('mpeg') || contentType.includes('mp3');
+    return {
+      content,
+      mime: isMp3 ? 'audio/mpeg' : 'audio/wav',
+      provider: 'edge-tts',
+      model: 'voxcpm2',
+      voiceId: input.voiceId,
+      format: isMp3 ? 'mp3' : 'wav',
+      language: 'km-KH'
+    };
+  } catch (error) {
+    throw new VishnuTtsServiceError(
+      'creator_tts_upstream_error',
+      `Local Dub Engine voice synthesis failed: ${error instanceof Error ? error.message : String(error)}`,
+      502
+    );
+  }
+}
+
 export type VishnuTtsService = ReturnType<typeof createVishnuTtsService>;
 
 export class VishnuTtsServiceError extends Error {
@@ -316,8 +359,18 @@ export function createVishnuTtsService(input: {
     const selected = gateway?.catalog?.find(candidate => candidate.modality === 'speech' && candidate.id === (request.model || gateway.models.speech));
     if (gateway && request.model && request.model !== gateway.models.speech && (gateway.stageRunId || !selected)) throw new VishnuTtsServiceError('VALIDATION_FAILED', 'Select an official speech model for this task', 400);
     const provider = gateway ? 'openai' : request.provider ?? configured.tts.provider;
-    if (provider === 'edge-tts') {
-      const voiceId = request.voiceId?.trim() || 'km-KH-SreymomNeural';
+    const requestedVoice = request.voiceId?.trim() || '';
+    if (!gateway && /^(?:voxcpm2|voice_|clone_|design_)/i.test(requestedVoice)) {
+      const dubEngineUrl = configured.dubEngine?.url?.trim() || `http://127.0.0.1:${configured.dubEngine?.port || 8765}`;
+      return synthesizeDubEngineVoice({
+        text,
+        voiceId: requestedVoice,
+        dubEngineUrl,
+        signal: request.signal
+      });
+    }
+    if (provider === 'edge-tts' || (!gateway && provider !== 'azure' && /^[a-z]{2,3}-[A-Z]{2}-.+Neural$/i.test(requestedVoice))) {
+      const voiceId = requestedVoice || 'km-KH-SreymomNeural';
       return synthesizeEdgeTts({
         text,
         voiceId,

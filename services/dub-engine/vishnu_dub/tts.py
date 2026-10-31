@@ -353,6 +353,7 @@ class VoxCPM2Backend(TTSBackend):
         try:
             from vishnu_dub.config import settings
             candidates = [
+                settings.model_dir / "voxcpm2",
                 settings.model_dir / "VoxCPM2",
                 settings.model_dir / "openbmb" / "VoxCPM2",
             ]

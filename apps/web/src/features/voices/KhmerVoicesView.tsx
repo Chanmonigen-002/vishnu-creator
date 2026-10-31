@@ -671,7 +671,10 @@ export function KhmerVoicesView(props: {
             {voxcpmModel?.installed ? (
               <span className="khmer-voices-ready-tag" data-testid="voxcpm-honest-status">
                 <CheckCircle2 size={14} />
-                {l('权重已就绪 (1.24 GB · 随时可用)', 'Weights Ready (1.24 GB · Ready)')}
+                {l(
+                  `权重已就绪 (${formatBytes(voxcpmModel.localSizeBytes || voxcpmModel.sizeBytes)} · 随时可用)`,
+                  `Weights Ready (${formatBytes(voxcpmModel.localSizeBytes || voxcpmModel.sizeBytes)} · Ready)`
+                )}
               </span>
             ) : isDownloading ? (
               <span className="khmer-voices-engine-badge state-starting" data-testid="voxcpm-honest-status">
