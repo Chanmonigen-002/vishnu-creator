@@ -1,24 +1,77 @@
 package whispercpp
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"io"
+	"os"
+	"os/exec"
+	"regexp"
+	"runtime"
+	"strconv"
+	"strings"
+	"sync"
+	"vishnu-ai/config"
 	"vishnu-ai/internal/resourcepath"
 	"vishnu-ai/internal/storage"
 	"vishnu-ai/internal/types"
 	"vishnu-ai/log"
 	"vishnu-ai/pkg/util"
 	"vishnu-ai/pkg/whisper"
-	"os"
-	"os/exec"
-	"regexp"
-	"strconv"
-	"strings"
 
 	"go.uber.org/zap"
 )
 
+var whispercppProgressPattern = regexp.MustCompile(`progress\s*=\s*([0-9]{1,3})%`)
+
+type whispercppProgressWriter struct {
+	mu             sync.Mutex
+	pending        string
+	lastProgress   int
+	reportProgress func(percent int)
+}
+
+func newWhispercppProgressWriter(reportProgress func(percent int)) *whispercppProgressWriter {
+	return &whispercppProgressWriter{
+		lastProgress:   -1,
+		reportProgress: reportProgress,
+	}
+}
+
+func (w *whispercppProgressWriter) Write(p []byte) (n int, err error) {
+	if w.reportProgress == nil {
+		return len(p), nil
+	}
+	w.mu.Lock()
+	defer w.mu.Unlock()
+
+	text := w.pending + string(p)
+	for _, match := range whispercppProgressPattern.FindAllStringSubmatch(text, -1) {
+		percent, err := strconv.Atoi(match[1])
+		if err != nil || percent < 0 || percent > 100 || percent <= w.lastProgress {
+			continue
+		}
+		w.lastProgress = percent
+		w.reportProgress(percent)
+	}
+	const pendingLimit = 256
+	if len(text) > pendingLimit {
+		w.pending = text[len(text)-pendingLimit:]
+	} else {
+		w.pending = text
+	}
+	return len(p), nil
+}
+
 func (c *WhispercppProcessor) Transcription(audioFile, language, workDir string) (*types.TranscriptionData, error) {
+	return c.TranscriptionWithProgress(audioFile, language, workDir, nil)
+}
+
+func (c *WhispercppProcessor) TranscriptionWithProgress(
+	audioFile, language, workDir string,
+	reportProgress func(percent int),
+) (*types.TranscriptionData, error) {
 	if err := c.ValidateLanguage(language); err != nil {
 		return nil, err
 	}
@@ -29,20 +82,50 @@ func (c *WhispercppProcessor) Transcription(audioFile, language, workDir string)
 	if err != nil {
 		return nil, err
 	}
+
+	threads := runtime.NumCPU()
+	if threads > 12 {
+		threads = 12
+	}
+	if threads < 1 {
+		threads = 1
+	}
+
 	cmdArgs := []string{
 		"-m", modelPath,
+		"-t", strconv.Itoa(threads),
 		"--output-json-full",
-		"--flash-attn",
 		"--split-on-word",
+		"--no-fallback",
+		"-mc", "0",
 		"--language", language,
 		"--output-file", name,
 		"--file", audioFile,
 	}
+	if reportProgress != nil {
+		cmdArgs = append(cmdArgs, "-pp")
+	}
+	if config.Conf.Transcribe.EnableGpuAcceleration {
+		cmdArgs = append(cmdArgs, "--flash-attn")
+	} else {
+		cmdArgs = append(cmdArgs, "--no-flash-attn")
+	}
+
 	cmd := exec.Command(storage.WhispercppPath, cmdArgs...)
 	log.GetLogger().Info("WhispercppProcessor转录开始", zap.String("cmd", cmd.String()))
-	output, err := cmd.CombinedOutput()
-	if err != nil && !strings.Contains(string(output), "output_json: saving output to") {
-		log.GetLogger().Error("WhispercppProcessor  cmd 执行失败", zap.String("output", string(output)), zap.Error(err))
+
+	var output bytes.Buffer
+	var writer io.Writer = &output
+	if reportProgress != nil {
+		writer = io.MultiWriter(&output, newWhispercppProgressWriter(reportProgress))
+	}
+	cmd.Stdout = writer
+	cmd.Stderr = writer
+
+	err = cmd.Run()
+	outputStr := output.String()
+	if err != nil && !strings.Contains(outputStr, "output_json: saving output to") {
+		log.GetLogger().Error("WhispercppProcessor  cmd 执行失败", zap.String("output", outputStr), zap.Error(err))
 		return nil, err
 	}
 	log.GetLogger().Info("WhispercppProcessor转录json生成完毕", zap.String("audio file", audioFile))

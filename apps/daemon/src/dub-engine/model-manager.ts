@@ -15,13 +15,14 @@ import {
   createWriteStream,
   existsSync,
   mkdirSync,
+  readdirSync,
   renameSync,
   statfsSync,
   statSync,
   unlinkSync,
 } from 'node:fs';
 import { homedir, platform } from 'node:os';
-import { dirname, join, resolve } from 'node:path';
+import { dirname, join, parse, resolve } from 'node:path';
 import { EventEmitter } from 'node:events';
 import { pipeline } from 'node:stream/promises';
 import {
@@ -175,6 +176,7 @@ type ActiveDownload = {
 
 export class DubModelManager extends EventEmitter {
   private modelsDir: string;
+  private isCustomDir: boolean;
   private catalog: Map<string, ModelCatalogItem> = new Map();
   private safetyMarginBytes: number;
   private activeDownloads: Map<string, ActiveDownload> = new Map();
@@ -182,6 +184,7 @@ export class DubModelManager extends EventEmitter {
 
   constructor(options: ModelManagerOptions = {}) {
     super();
+    this.isCustomDir = Boolean(options.modelsDir && options.modelsDir.trim());
     this.modelsDir = resolveModelsCacheDirectory({ customDir: options.modelsDir });
     this.safetyMarginBytes = options.safetyMarginBytes ?? DEFAULT_SAFETY_MARGIN_BYTES;
     this.customFetch = options.fetchFn ?? globalThis.fetch;
@@ -206,7 +209,46 @@ export class DubModelManager extends EventEmitter {
   }
 
   resolveLocalModelPath(item: ModelCatalogItem): string {
-    return join(this.modelsDir, item.targetSubdir, item.filename);
+    const primary = join(this.modelsDir, item.targetSubdir, item.filename);
+    if (this.isCustomDir || existsSync(primary)) {
+      return primary;
+    }
+
+    // Check alternate default model directories and HuggingFace hub cache on the same drive
+    const driveRoot = parse(this.modelsDir).root;
+    const altRoots = [
+      join(driveRoot, '.vishnucreator', 'models'),
+      join(driveRoot, 'VishnuCreatorData', 'models'),
+    ];
+    for (const altRoot of altRoots) {
+      const candidate = join(altRoot, item.targetSubdir, item.filename);
+      if (existsSync(candidate)) {
+        return candidate;
+      }
+    }
+
+    if (item.targetSubdir === 'voxcpm2') {
+      const hfHubDirs = [
+        process.env.HF_HOME ? join(process.env.HF_HOME, 'hub', 'models--openbmb--VoxCPM2', 'snapshots') : '',
+        join(driveRoot, 'AI', 'huggingface', 'hub', 'models--openbmb--VoxCPM2', 'snapshots'),
+        join(homedir(), '.cache', 'huggingface', 'hub', 'models--openbmb--VoxCPM2', 'snapshots'),
+      ].filter(Boolean);
+      for (const snapshotsDir of hfHubDirs) {
+        try {
+          if (!existsSync(snapshotsDir)) continue;
+          for (const snap of readdirSync(snapshotsDir)) {
+            const snapFile = join(snapshotsDir, snap, item.filename);
+            if (existsSync(snapFile)) {
+              return snapFile;
+            }
+          }
+        } catch {
+          // Ignore unreadable snapshot dirs
+        }
+      }
+    }
+
+    return primary;
   }
 
   /**

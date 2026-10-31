@@ -69,12 +69,40 @@ export function TtsVoicePicker(props: {
     const serviceWithLibrary = props.service as unknown as {
       listVoiceDesigns?: () => Promise<{ voices: Array<{ id: string; name: string; prompt?: string; isSample?: boolean }> }>;
     };
+    const hasVoiceLibrary = typeof serviceWithLibrary?.listVoiceDesigns === 'function';
     const ttsPromise = props.service.getTtsVoices(props.provider, props.model);
-    const libPromise = typeof serviceWithLibrary?.listVoiceDesigns === 'function'
-      ? serviceWithLibrary.listVoiceDesigns().catch(() => null)
+    const libPromise = hasVoiceLibrary
+      ? serviceWithLibrary.listVoiceDesigns!().catch(() => null)
       : Promise.resolve(null);
 
-    void Promise.all([ttsPromise, libPromise])
+    const builtinEdgeVoices: CreatorTtsVoice[] = hasVoiceLibrary ? [
+      {
+        id: 'km-KH-SreymomNeural',
+        name: 'Sreymom (ស្រីមុំ)',
+        language: 'km-KH',
+        gender: 'female',
+        provider: 'edge-tts',
+        scenario: '自然',
+        kind: 'builtin',
+        recommended: true,
+        previewLanguages: [appLanguage.split('-')[0] || 'en', 'km', 'en']
+      },
+      {
+        id: 'km-KH-PisethNeural',
+        name: 'Piseth (ពិសិដ្ឋ)',
+        language: 'km-KH',
+        gender: 'male',
+        provider: 'edge-tts',
+        scenario: '自然',
+        kind: 'builtin',
+        previewLanguages: [appLanguage.split('-')[0] || 'en', 'km', 'en']
+      }
+    ] : [];
+
+    void Promise.all([
+      hasVoiceLibrary ? ttsPromise.catch(cause => ({ voices: [] as CreatorTtsVoice[], _error: cause })) : ttsPromise,
+      libPromise
+    ])
       .then(([response, libResult]) => {
         if (!active) return;
         const libraryVoices: CreatorTtsVoice[] = (libResult?.voices ?? []).map(v => ({
@@ -86,8 +114,20 @@ export function TtsVoicePicker(props: {
           traits: { zh: [v.prompt || ''], en: [v.prompt || ''] },
           previewLanguages: [appLanguage.split('-')[0] || 'en', 'km', 'en']
         }));
-        setVoices([...response.voices, ...libraryVoices]);
-        pageIssues.resolveOperation('tts.load-voices');
+        const existingIds = new Set(response.voices.map(v => v.id));
+        const extraBuiltins = builtinEdgeVoices.filter(v => !existingIds.has(v.id));
+        const merged = [...response.voices, ...extraBuiltins, ...libraryVoices.filter(v => !existingIds.has(v.id))];
+        setVoices(merged);
+        if ('_error' in response && merged.length === 0) {
+          pageIssues.captureOperationFailure(
+            'tts.load-voices',
+            response._error,
+            l('无法加载音色列表，请检查服务配置和网络后重试。', 'Could not load voices. Check the service settings and network, then retry.'),
+            { retryable: true }
+          );
+        } else {
+          pageIssues.resolveOperation('tts.load-voices');
+        }
       })
       .catch(cause => {
         if (active) {
@@ -252,9 +292,10 @@ export function TtsVoicePicker(props: {
         const previewResult = await serviceWithPreview.previewVoiceDesign({ voiceId });
         blob = previewResult.blob;
       } else {
+        const isEdgeNeural = /^[a-z]{2,3}-[A-Z]{2}-.+Neural$/i.test(voiceId) && props.provider !== 'azure';
         const response = await props.service.previewTtsVoice({
-          provider: props.provider,
-          model: props.model,
+          provider: isEdgeNeural ? 'edge-tts' : props.provider,
+          model: isEdgeNeural ? '' : props.model,
           language,
           voiceId
         });
